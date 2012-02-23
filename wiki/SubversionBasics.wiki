@@ -9,7 +9,7 @@ For further reading, you can always check out the [http://tortoisesvn.net/docs/n
 
 == Some Warnings ==
   * The TortoiseSVN client is for Windows only. If you're on Mac or Linux, you'll need to use the [SubversionBasics#Command_Line_(a.k.a._the_hard_way) command line instructions].
-  * The LMI blocks Subversion checkouts. You will not be able to check out code to you work laptop while you're on the LMI.
+  * The work network blocks Subversion checkouts. You will not be able to check out code to you work laptop while you're on the work network.
   * All commands need to happen within your checkout directory--svn uses files hidden in your checkout directory to work.
 
 == Subversion Vocabulary ==
