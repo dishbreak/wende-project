@@ -1,15 +1,24 @@
 #summary A Brief Guide to Subversion
 <wiki:toc max_depth="2" />
 = Introduction =
-Welcome to Subversion--our software version control system. It's basically responsible for keeping track of changes to our code, so that everyone works off the same files. 
+Welcome to Subversion--our software version control system. It's basically responsible for keeping track of changes to our code in a single repository, so that everyone works off the same files. 
 
 Let's go over how to get started. 
 
-= Some Warnings =
+== Some Warnings ==
   * The TortoiseSVN client is for Windows only. If you're on Mac or Linux, you'll need to use the [SubversionBasics#Command_Line_(a.k.a._the_hard_way) command line instructions].
   * The LMI blocks Subversion checkouts. You will not be able to check out code to you work laptop while you're on the LMI.
 
+== Subversion Vocabulary ==
+Let's go over some of the things you'll do the most often while working with Subversion.
+|| Trunk || The `trunk/` folder is the code baseline. Code for demos and the final product will come from here. || 
+|| Checkout || A _checkout_ is simply a copy of the Subversion repository on your local hard drive. You'll make your changes to the code within this copy. ||
+|| Committing || A _commit_ is the act of pushing the changes within your local copy back to the repository. Typically, whenever you finish a feature, you'll commit it. Typically, your commits will go to the trunk. ||
+|| Branching || When you want to spend more time on a feature, but you don't want to try and keep up with the rest of the repository, you'll branch your code off. Instead of committing against the trunk, you'll commit against your branch ||
+|| Merging || Eventually, all branches need to come back into our trunk. With this operation, you'll combine your branch back into the trunk code. ||
+
 = TortoiseSVN (a.k.a. the easy way) =
+TortoiseSVN is a plugin of sorts that integrates Subversion into your conputer's file browser. It's one of the easiest ways to use Subversion.
 == Installing TortoiseSVN on Windows ==
 I won't go into detail in here how to get and install TortoiseSVN--your IPT leads should be able to help you with that. Only note I'll leave here is that if you'd like to use Subversion from the command line, install the command line packages.
 
@@ -44,6 +53,15 @@ If Subversion is installed, you should get something back along the lines of:
 {{{
 Type 'svn help' for usage. 
 }}}
+== Checking out a Copy of the WENDE Baseline ==
+== Committing Your Changes Back ==
+
+== Branching off the Trunk ==
+
+== Merging Back to the Trunk ==
+
+= Using Qt Creator (a.k.a. the C3 way) =
+The C3 team will be using the Qt Creator IDE, which has support for Subversion built-in. Here's how to use it.
 == Checking out a Copy of the WENDE Baseline ==
 == Committing Your Changes Back ==
 
