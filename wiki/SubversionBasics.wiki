@@ -5,7 +5,7 @@ Welcome to Subversion--our software version control system. It's basically respo
 
 Let's go over how to get started. 
 
-For further reading, you can always check out the [http://tortoisesvn.net/docs/nightly/TortoiseSVN_en/tsvn-dug.html TortoiseSVN Daily Use Guide]. For the command line tools, check out [svnbook.red-bean.com _Version Control with Subversion_], a free online book on the stuff.
+For further reading, you can always check out the [http://tortoisesvn.net/docs/nightly/TortoiseSVN_en/tsvn-dug.html TortoiseSVN Daily Use Guide]. For the command line tools, check out [http://svnbook.red-bean.com _Version Control with Subversion_], a free online book on the stuff.
 
 == Some Warnings ==
   * The TortoiseSVN client is for Windows only. If you're on Mac or Linux, you'll need to use the [SubversionBasics#Command_Line_(a.k.a._the_hard_way) command line instructions].
