@@ -110,6 +110,6 @@ Go to *Tools-->Subversion-->Update Repository*. Yep, that's it!
   # Go to *Tools-->Subversion-->Commit Project*
   # A commit dialog will show up. In the *Description*, enter a brief message describing what you did (e.g. "Added a 'Search and Destroy' mode to the Laser"). *THIS IS IMPORTANT*. It'll make it much easier to track progress as we go along.
 
-= "Help!" =
+= Help! =
 If you know Subversion well enough to help someone else out, leave your name here. If you need help with Subversion, ask one of these people. :-)
-  # Vishal Kotcherlakota
+  * Vishal Kotcherlakota
