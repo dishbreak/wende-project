@@ -5,6 +5,8 @@ Welcome to Subversion--our software version control system. It's basically respo
 
 Let's go over how to get started. 
 
+For further reading, you can always check out the [http://tortoisesvn.net/docs/nightly/TortoiseSVN_en/tsvn-dug.html TortoiseSVN Daily Use Guide].
+
 == Some Warnings ==
   * The TortoiseSVN client is for Windows only. If you're on Mac or Linux, you'll need to use the [SubversionBasics#Command_Line_(a.k.a._the_hard_way) command line instructions].
   * The LMI blocks Subversion checkouts. You will not be able to check out code to you work laptop while you're on the LMI.
@@ -13,6 +15,7 @@ Let's go over how to get started.
 Let's go over some of the things you'll do the most often while working with Subversion.
 || Trunk || The `trunk/` folder is the code baseline. Code for demos and the final product will come from here. || 
 || Checkout || A _checkout_ is simply a copy of the Subversion repository on your local hard drive. You'll make your changes to the code within this copy. ||
+|| Updating || You'll need to update your code often to keep the 
 || Committing || A _commit_ is the act of pushing the changes within your local copy back to the repository. Typically, whenever you finish a feature, you'll commit it. Typically, your commits will go to the trunk. ||
 || Branching || When you want to spend more time on a feature, but you don't want to try and keep up with the rest of the repository, you'll branch your code off. Instead of committing against the trunk, you'll commit against your branch ||
 || Merging || Eventually, all branches need to come back into our trunk. With this operation, you'll combine your branch back into the trunk code. ||
