@@ -104,7 +104,7 @@ Just kidding! You'll have to check out the code using one of the two methods abo
 == Updating Your Checkout Directory ==
 Go to *Tools-->Subversion-->Update Repository*. Yep, that's it!
 == Committing Your Changes Back ==
-  # Go to *Tools-->Subversion-->Commit Project _*
+  # Go to *Tools-->Subversion-->Commit Project*
   # A commit dialog will show up. In the *Description*, enter a brief message describing what you did (e.g. "Added a 'Search and Destroy' mode to the Laser"). *THIS IS IMPORTANT*. It'll make it much easier to track progress as we go along.
 
 = "Help!" =
