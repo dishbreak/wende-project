@@ -113,4 +113,5 @@ Go to *Tools-->Subversion-->Update Repository*. Yep, that's it!
 
 = Help! =
 If you know Subversion well enough to help someone else out, leave your name here. If you need help with Subversion, ask one of these people. :-)
+  * Will Trautman
   * Vishal Kotcherlakota
