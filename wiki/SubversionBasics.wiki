@@ -38,12 +38,12 @@ I won't go into detail in here how to get and install TortoiseSVN--your IPT lead
     * *Checkout Depth* should be *Fully recursive*
     * *Revision* should be *HEAD revision*
     * Click *OK*.
-    * A checkout dialog will show up. When the dialog shows *Completed At revision _*, the checkout is complete.
+    * A checkout dialog will show up. When the dialog shows *Completed At revision*, the checkout is complete.
   # Once the checkout completes, your *wende-project* folder will contain all the files from the Google Code repository.
 == Updating Your Checkout Directory ==
   # Open up your checkout directory.
   # Right-click in the window without selecting any folder or file, then click on *SVN Checkout*. 
-  # An update dialog will show up. When the dialog shows *Completed At revision _*, the update is complete.
+  # An update dialog will show up. When the dialog shows *Completed At revision*, the update is complete.
 == Committing Your Changes Back ==
 *_NOTE: ALWAYS do an update before you commit changes back--it keeps the trunk clean._*
   # From the Google Code page, click on the *Source* tab.
@@ -54,7 +54,7 @@ I won't go into detail in here how to get and install TortoiseSVN--your IPT lead
   # Click *OK*. Once you kick off the commit, you should be asked for a username and password. 
     * Your *username* is the email you use for Google Code.
     * Your *password* is the one that you took note of earlier.
-  # A commit dialog will show up. When the dialog shows *Completed At revision _*, the commit is complete.
+  # A commit dialog will show up. When the dialog shows *Completed At revision*, the commit is complete.
 
 = Command Line (a.k.a. the hard way) =
 I'm only half-joking. The command line may seem scary if you're not used to it, but it's pretty straightforward.
@@ -107,6 +107,7 @@ Just kidding! You'll have to check out the code using one of the two methods abo
 == Updating Your Checkout Directory ==
 Go to *Tools-->Subversion-->Update Repository*. Yep, that's it!
 == Committing Your Changes Back ==
+*_NOTE: ALWAYS do an update before you commit changes back--it keeps the trunk clean._*
   # Go to *Tools-->Subversion-->Commit Project*
   # A commit dialog will show up. In the *Description*, enter a brief message describing what you did (e.g. "Added a 'Search and Destroy' mode to the Laser"). *THIS IS IMPORTANT*. It'll make it much easier to track progress as we go along.
 
