@@ -14,13 +14,16 @@ For further reading, you can always check out the [http://tortoisesvn.net/docs/n
 
 == Subversion Vocabulary ==
 Let's go over some of the things you'll do the most often while working with Subversion.
+
 || Trunk || The `trunk/` folder is the code baseline. Code for demos and the final product will come from here. || 
 || Checkout || A _checkout_ is simply a copy of the Subversion repository on your local hard drive. You'll make your changes to the code within this copy. ||
 || Updating || While you're working on your local copy, it's possible that other people have committed changes to the trunk. To pull those changes in, you'll need to update your checkout directory. ||
 || Committing || A _commit_ is the act of pushing the changes within your local copy back to the repository. Typically, whenever you finish a feature, you'll commit it. Typically, your commits will go to the trunk. ||
-|| Branching || When you want to spend more time on a feature, but you don't want to try and keep up with the rest of the repository, you'll branch your code off. Instead of committing against the trunk, you'll commit against your branch ||
-|| Merging || Eventually, all branches need to come back into our trunk. With this operation, you'll combine your branch back into the trunk code. ||
+|| Branching || When you want to spend more time on a feature, but you don't want to try and keep up with the rest of the repository, you'll branch your code off. Instead of committing against the trunk, you'll commit against your branch. This keeps your code changes from breaking other things until you're ready. ||
+|| Merging || Eventually, all branches need to come back into our trunk. With this operation, you'll combine your branch back into the trunk code once it's stable enough. ||
+
 I'll leave branching and merging to the reader--you'll know when you'll need them.
+
 = TortoiseSVN (a.k.a. the easy way) =
 TortoiseSVN is a plugin of sorts that integrates Subversion into your conputer's file browser. It's one of the easiest ways to use Subversion.
 == Installing TortoiseSVN on Windows ==
