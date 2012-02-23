@@ -19,13 +19,33 @@ I won't go into detail in here how to get and install TortoiseSVN--your IPT lead
   # Take note of the password--you'll need it when you check code back in.
   # Open up your *Documents/My Documents* Folder (depends on your version of Windows)
   # Right-click in the window without selecting any folder or file, then click on *SVN Checkout*. Enter the following in the *Checkout* window. 
-    * *URL of Repository* is *https://wende-project.googlecode.com/svn/trunk/*
+    * *URL of Repository* is *https://wende-project.googlecode.com/svn/trunk/ *
     * *Checkout directory* should end in *wende-project*
     * *Checkout Depth* should be *Fully recursive*
     * *Revision* should be *HEAD revision*
     * Click *OK*.
-  # Once the checkout completes ,your *wende-project* 
+  # Once the checkout completes, your *wende-project* folder will contain all the files from the Google Code repository.
 
-== Committing 
+== Committing Your Changes Back ==
+
+== Branching off the Trunk ==
+
+== Merging Back to the Trunk ==
 
 = Command Line (a.k.a. the hard way) =
+
+== Check if SVN Executable Exists ==
+I'll leave it up to you to get the Subversion client installed. But before you go off trying to find it, make sure it isn't already on your system. Issue the following in a terminal:
+{{{
+svn
+}}}
+If Subversion is installed, you should get something back along the lines of:
+{{{
+Type 'svn help' for usage. 
+}}}
+== Checking out a Copy of the WENDE Baseline ==
+== Committing Your Changes Back ==
+
+== Branching off the Trunk ==
+
+== Merging Back to the Trunk ==
