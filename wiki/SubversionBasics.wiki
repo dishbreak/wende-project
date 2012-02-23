@@ -1,0 +1,31 @@
+#summary A Brief Guide to Subversion
+<wiki:toc max_depth="2" />
+= Introduction =
+Welcome to Subversion--our software version control system. It's basically responsible for keeping track of changes to our code, so that everyone works off the same files. 
+
+Let's go over how to get started. 
+
+= Some Warnings =
+  # The TortoiseSVN client is for Windows only. If you're on Mac or Linux, you'll need to use the [SubversionBasics#Command_Line_(a.k.a._the_hard_way) command line instructions].
+
+= TortoiseSVN (a.k.a. the easy way) =
+== Installing TortoiseSVN on Windows ==
+I won't go into detail in here how to get and install TortoiseSVN--your IPT leads should be able to help you with that. Only note I'll leave here is that if you'd like to use Subversion from the command line, install the command line packages.
+
+== Checking out a Copy of the WENDE Baseline ==
+
+  # From the Google Code page, click on the *Source* tab.
+  # Click on the *googlecode.com password* link.
+  # Take note of the password--you'll need it when you check code back in.
+  # Open up your *Documents/My Documents* Folder (depends on your version of Windows)
+  # Right-click in the window without selecting any folder or file, then click on *SVN Checkout*. Enter the following in the *Checkout* window. 
+    * *URL of Repository* is *https://wende-project.googlecode.com/svn/trunk/*
+    * *Checkout directory* should end in *wende-project*
+    * *Checkout Depth* should be *Fully recursive*
+    * *Revision* should be *HEAD revision*
+    * Click *OK*.
+  # Once the checkout completes ,your *wende-project* 
+
+== Committing 
+
+= Command Line (a.k.a. the hard way) =
