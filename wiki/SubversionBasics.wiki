@@ -6,7 +6,8 @@ Welcome to Subversion--our software version control system. It's basically respo
 Let's go over how to get started. 
 
 = Some Warnings =
-  # The TortoiseSVN client is for Windows only. If you're on Mac or Linux, you'll need to use the [SubversionBasics#Command_Line_(a.k.a._the_hard_way) command line instructions].
+  * The TortoiseSVN client is for Windows only. If you're on Mac or Linux, you'll need to use the [SubversionBasics#Command_Line_(a.k.a._the_hard_way) command line instructions].
+  * The LMI blocks Subversion checkouts. You will not be able to check out code to you work laptop while you're on the LMI.
 
 = TortoiseSVN (a.k.a. the easy way) =
 == Installing TortoiseSVN on Windows ==
