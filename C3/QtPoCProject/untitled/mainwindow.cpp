@@ -9,8 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     //added a line of code for the fun of it.
-    qDebug() << "Hello World! :-)";
-    QMessageBox::information(this, "Hello!", "I can make nifty dialog boxes! :-D", QMessageBox::Ok);
+//    qDebug() << "Hello World! :-)";
+//    QMessageBox::information(this, "Hello!", "I can make nifty dialog boxes! :-D", QMessageBox::Ok);
 }
 
 MainWindow::~MainWindow()
