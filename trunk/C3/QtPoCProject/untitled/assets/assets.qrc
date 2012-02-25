@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>emblem-system.svg</file>
+        <file>office-calendar.svg</file>
+        <file>utilities-system-monitor.svg</file>
+    </qresource>
+</RCC>
