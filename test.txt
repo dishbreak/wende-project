@@ -1,2 +1,3 @@
 test
 Trying out a commit 
+Making a change to test - jonathanford.wende@gmail.com 2012-02-28 22:21
