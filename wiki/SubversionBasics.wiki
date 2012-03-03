@@ -90,14 +90,17 @@ svn commit -m "Detailed message goes here" --username user@example.com
 }}}
 Where `user@example.com` is your email address for Google Code. The text in quotes after the `-m` is your log message, and it needs to describe what you did. *THIS IS IMPORTANT*. It'll make it much easier to track progress as we go along.
 You will get prompted for a password, enter the password you took note of earlier.
+
 = Using Qt Creator (a.k.a. the C3 way) =
 The C3 team will be using the Qt Creator IDE, which has support for Subversion built-in. Here's how to use it.
 == Setting Up the Subversion Plugin ==
+  # If you're on Windows, install TortoiseSVN *with the command-line utilities*.
   # From the Google Code page, click on the *Source* tab.
   # Click on the *googlecode.com password* link.
   # Take note of the password--you'll need it when you check code back in.
-  # Open up your checkout directory.
   # From the Qt Creator IDE, go to *File-->Preferences*. Click on *Version Control* in the left-hand pane.
+  # Click on the *Subversion* tab.
+  # For the *Subversion command*, enter <tt>C:\Program Files\TortoiseSVN\bin\svn.exe</tt> (Windows only)
   # Check the *Authentication* checkbox. 
     * Your *Username* is the email you use for Google Code.
     * Your *Password* is the one that you took note of earlier.
