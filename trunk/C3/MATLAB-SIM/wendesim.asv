@@ -64,8 +64,6 @@ for time = 0:dTime:maxTime
     if mod(time,updatePeriod) == 0
         %CAMERA
         [cameraRoverPosition,cameraLaserPosition] = camerasim;
-    end
-    if mod(time - systemLatency,updatePeriod) == 0
         %C3
         [DTI, TravelRange, TTI, commandedAzEl, cameraPipX, cameraPipY, cameraTheta] = c3sim(cameraRoverPosition, ...
                                                                                             cameraLaserPosition, ...
