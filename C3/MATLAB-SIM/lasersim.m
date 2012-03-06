@@ -2,17 +2,27 @@ function lasersim(commandedAzEl)
 
 %Persistent Global Data
 global laserPosition;
+global localLaserVelocity;
 global laserOrigin;
 global laserHeight;
 global laserMaxSpeed;
+global laserMinSpeed;
+global laserMinStep;
+global laserMaxAcceleration;
 global laserAzError;
 global laserElError;
 global laserAzBias;
 global laserElBias;
 global playingFieldOrigin;
 global dTime;
+global laserHysteresis;
 
-%TRANSFORM LASER POSITION INTO LASER SPACE
+if isempty(laserHysteresis)
+    laserHysteresis = [0 0];
+end
+
+
+%****************TRANSFORM LASER POSITION INTO LASER SPACE*****************
 %Translate Global X/Y into Relative X/Y Coordinate System (relative to Laser Origin)
 relativeLaserX = laserPosition(1) - laserOrigin(1);
 relativeLaserY = laserPosition(2) - laserOrigin(2);
@@ -27,15 +37,67 @@ localLaserR = (relativeLaserX^2+relativeLaserY^2)^(1/2);
 localLaserAz = atan2(localLaserX,localLaserY)*180/pi;
 localLaserEl = atan2(localLaserR,laserHeight)*180/pi;
 
-%Move Laser in Commanded Direction (In Relative Az/El)
-localLaserAz = localLaserAz + max(min(commandedAzEl(1),laserMaxSpeed),-laserMaxSpeed)*dTime;
-localLaserEl = localLaserEl + max(min(commandedAzEl(2),laserMaxSpeed),-laserMaxSpeed)*dTime;
 
-%Add Bias & Error Into Laser Movements
-localLaserAz = localLaserAz + laserAzBias*max(min(commandedAzEl(1),laserMaxSpeed),-laserMaxSpeed)*dTime + randn*laserAzError;
-localLaserEl = localLaserEl + laserElBias*max(min(commandedAzEl(2),laserMaxSpeed),-laserMaxSpeed)*dTime + randn*laserElError;
 
-%TRANSFORM LASER POSITION BACK INTO GLOBAL SPACE
+%*************************APPLY GUIDANCE COMMANDS**************************
+%Calculate Laser Velocity Limits
+laserVelocityAzLimits(1) = min(localLaserVelocity(1) + laserMaxAcceleration*dTime,laserMaxSpeed); %Azimuth Velocity Upper Limit
+laserVelocityAzLimits(2) = max(localLaserVelocity(1) - laserMaxAcceleration*dTime,-laserMaxSpeed); %Azimuth Velocity Lower Limit
+laserVelocityElLimits(1) = min(localLaserVelocity(2) + laserMaxAcceleration*dTime,laserMaxSpeed); %Elevation Velocity Upper Limit
+laserVelocityElLimits(2) = max(localLaserVelocity(2) - laserMaxAcceleration*dTime,-laserMaxSpeed); %Elevation Velocity Lower Limit
+
+%Calculate Average Laser Velocity (for this dTime)
+initialLaserVelocity = localLaserVelocity;
+finalLaserVelocity(1) = max(min(commandedAzEl(1),laserVelocityAzLimits(1)),laserVelocityAzLimits(2));
+finalLaserVelocity(2) = max(min(commandedAzEl(2),laserVelocityElLimits(1)),laserVelocityElLimits(2));
+averageLaserVelocity = (initialLaserVelocity + finalLaserVelocity)/2;
+localLaserVelocity = finalLaserVelocity;
+
+%Azimuth
+if abs(initialLaserVelocity(1)) > laserMinSpeed || abs(finalLaserVelocity(1)) > laserMinSpeed
+    %Move Laser in Commanded Direction (In Relative Az)
+    localLaserAz = localLaserAz + averageLaserVelocity(1)*dTime;
+    %Add Bias & Error Into Laser Az Movements
+    localLaserAz = localLaserAz + laserAzBias*averageLaserVelocity(1)*dTime + randn*laserAzError;
+    %Reset Laser Friction Hysteresis
+    laserHysteresis(1) = 0;
+else %Laser Must Move Minimum Step due to Friction Hysteresis
+    if abs(laserHysteresis(1) + averageLaserVelocity(1)*dTime) >= laserMinStep
+        %Move Laser 1 Minimum Step in Commanded Direction (In Relative Az)
+        localLaserAz = localLaserAz + laserMinStep;
+        %Add Bias & Error Into Laser Az Movements
+        localLaserAz = localLaserAz + laserAzBias*laserMinStep + randn*laserAzError;
+        %Reset Laser Friction Hysteresis
+        laserHysteresis(1) = 0;
+    else %Laser is stuck due to Friction Hysteresis
+        laserHysteresis(1) = laserHysteresis(1) + averageLaserVelocity(1)*dTime;
+    end
+end
+
+%Elevation
+if abs(initialLaserVelocity(2)) > laserMinSpeed || abs(finalLaserVelocity(2)) > laserMinSpeed
+    %Move Laser in Commanded Direction (In Relative El)
+    localLaserEl = localLaserEl + averageLaserVelocity(2)*dTime;
+    %Add Bias & Error Into Laser El Movements
+    localLaserEl = localLaserEl + laserElBias*averageLaserVelocity(2)*dTime + randn*laserElError;
+    %Reset Laser Friction Hysteresis
+    laserHysteresis(2) = 0;
+else %Laser Must Move Minimum Step due to Friction Hysteresis
+    if abs(laserHysteresis(2) + averageLaserVelocity(2)*dTime) >= laserMinStep
+        %Move Laser 1 Minimum Step in Commanded Direction (In Relative El)
+        localLaserEl = localLaserEl + laserMinStep;
+        %Add Bias & Error Into Laser El Movements
+        localLaserEl = localLaserEl + laserElBias*laserMinStep + randn*laserElError;
+        %Reset Laser Friction Hysteresis
+        laserHysteresis(2) = 0;
+    else %Laser is stuck due to Friction Hysteresis
+        laserHysteresis(2) = laserHysteresis(2) + averageLaserVelocity(2)*dTime;
+    end
+end
+
+
+
+%*************TRANSFORM LASER POSITION BACK INTO GLOBAL SPACE**************
 %Transform Local Az/El into Local X/Y Coordinate System
 localLaserR = tand(localLaserEl)*laserHeight;
 localLaserX = sind(localLaserAz)*localLaserR;

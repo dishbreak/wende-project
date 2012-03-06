@@ -1,11 +1,11 @@
 
-function [DTI, TravelRange, TTI, commandedAzEl, cameraPipX, cameraPipY, cameraTheta] = c3sim(cameraRoverPosition,   ...
+function [DTI, TravelRange, TTI, commandedAzEl, cameraPipX, cameraPipY, cameraTheta] = c3sim(Origins
+                                                                                             cameraRoverPosition,   ...
                                                                                              cameraLaserPosition,   ...
                                                                                              tracker_mode,          ...
                                                                                              playingFieldRadius,    ...
                                                                                              time,                  ...
-                                                                                             intilizeFilter,        ...
-                                                                                             c3Filters)
+                                                                                             intilizeFilter)
 
 %Persistent Global Data
 global cameraOrigin;
@@ -24,9 +24,9 @@ persistent timeHold;
 
 %% CALCULATE PREDICTED INTERCEPT POINT (PIP)
 if (tracker_mode == 1) %Alpha/Beta Filter
-    [cameraPipX, cameraPipY] = C3_AlphaBetaFilter(cameraRoverPosition, updatePeriod,intilizeFilter,c3Filters);
+    [cameraPipX, cameraPipY] = C3_AlphaBetaFilter(cameraRoverPosition, updatePeriod,intilizeFilter);
 else                   %Kalman Filter (1 State)
-    [cameraPipX, cameraPipY] = C3_KalmanFilter(cameraRoverPosition, updatePeriod,5,intilizeFilter,c3Filters);
+    [cameraPipX, cameraPipY] = C3_KalmanFilter(cameraRoverPosition, updatePeriod,5,intilizeFilter);
 end
 
 %% VALIDATE POSTION IN PLAYING FIELD
