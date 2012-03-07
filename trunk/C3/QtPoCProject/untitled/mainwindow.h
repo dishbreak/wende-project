@@ -14,6 +14,7 @@ class TestPanel;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    //test commit
     
 public:
     explicit MainWindow(QWidget *parent = 0);
