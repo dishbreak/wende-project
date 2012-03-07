@@ -8,11 +8,6 @@ TestPanel::TestPanel(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //create a new signal mapping
-    signalMap = new QSignalMapper(this);
-
-
-
     connect(ui->laserCommState, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(handleLaserComms(QString)));
     connect(ui->cameraCommsState, SIGNAL(currentIndexChanged(QString)),
@@ -20,11 +15,12 @@ TestPanel::TestPanel(QWidget *parent) :
     connect(ui->laserOpState, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(handleLaserOpState(QString)));
     connect(ui->cameraOpState, SIGNAL(currentIndexChanged(QString)),
-            this, SIGNAL(handleCameraOpState(QString)));
+            this, SLOT(handleCameraOpState(QString)));
     connect(ui->roverOpState, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(handleRoverOpState(QString)));
     connect(ui->laserActiveState, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(handleLaserFireState(QString)));
+    show();
 }
 
 TestPanel::~TestPanel()
