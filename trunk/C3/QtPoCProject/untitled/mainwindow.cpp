@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
-#include <QMessageBox>;
-#include <QPushButton>;
+#include <QMessageBox>
+#include <QPushButton>
 
 #include "testpanel/testpanel.h"
 
@@ -88,6 +88,10 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         break;
     case MessageCodes::LaserNotActive:
         //Set Laser Active Image to "Not Active"
+        break;
+    case MessageCodes::wendeOnline:
+    case MessageCodes::wendeOffline:
+    default:
         break;
     }
     //if LaserOp and CameraOp are both true, system is online
