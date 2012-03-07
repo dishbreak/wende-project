@@ -11,11 +11,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    testpanel/testpanel.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    MessageCodes.h \
+    testpanel/testpanel.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    testpanel/testpanel.ui
 
 RESOURCES += \
     assets/assets.qrc
