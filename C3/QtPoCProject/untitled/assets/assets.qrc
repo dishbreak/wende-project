@@ -1,7 +1,14 @@
 <RCC>
-    <qresource prefix="/images">
+    <qresource prefix="/toolbar-icons">
         <file>emblem-system.svg</file>
         <file>office-calendar.svg</file>
         <file>utilities-system-monitor.svg</file>
+    </qresource>
+    <qresource prefix="/indicators">
+        <file>green indicator.svg</file>
+    </qresource>
+    <qresource prefix="/placeholders">
+        <file>testimage.png</file>
+        <file>ppi-mockup.svg</file>
     </qresource>
 </RCC>
