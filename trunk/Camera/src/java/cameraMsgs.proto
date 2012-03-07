@@ -1,0 +1,43 @@
+package cameraMsgs;
+
+option java_package = "com.camera";
+
+message cameraStatus {
+optional bool sensorStatus = 1;
+optional bool laserOn = 2;
+optional string text = 3;
+
+enum systemStatus {
+	DOWN = 0;
+	READY = 1;
+	OPERATIONAL = 2;
+	ERROR = 3;
+	FAILED = 4;
+}
+
+message cameraTracks {
+	optional string time = 1;
+	optional sint32 numTargets = 2;
+	optional sint32 targetNumber = 3;
+
+	optional sint32 targetX = 4;
+	optional sint32 targetY = 5;
+
+	optional sint32 laserX = 6;
+	optional sint32  laserY = 7;
+	optional bool laserOn = 8;
+
+	optional sint32 targetConfidenceX = 9;
+	optional sint32 targetConfidenceY = 10;
+	optional sint32 laserConfidenceX = 11;
+	optional sint32 laserConfidenceY = 12;
+}
+
+message cameraImage {
+	optional string time = 1;
+	optional sint32 channels = 2;
+	optional sint32 sizeX = 3;
+	optional sint32 sizeY = 4;
+	optional bytes imageData = 5;
+}
+}
