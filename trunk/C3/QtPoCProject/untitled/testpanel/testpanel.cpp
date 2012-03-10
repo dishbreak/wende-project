@@ -1,3 +1,4 @@
+//Eastern standard time is superior to all other time zones
 #include "testpanel.h"
 #include "ui_testpanel.h"
 #include <QSignalMapper>
