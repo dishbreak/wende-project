@@ -12,9 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     testPanel(new TestPanel(this))
 {
     ui->setupUi(this);
-    //added a line of code for the fun of it.
-//    qDebug() << "Hello World! :-)";
-//    QMessageBox::information(this, "Hello!", "I can make nifty dialog boxes! :-D", QMessageBox::Ok);
     connect(testPanel, SIGNAL(commandSignal(MessageCodes::StatusCode)),
             this, SLOT(updatePPI(MessageCodes::StatusCode)));
 }
