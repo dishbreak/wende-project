@@ -29,6 +29,8 @@ private:
     bool wendeOperational;
     bool cameraOk;
     bool laserOk;
+    bool cameraCommsOk;
+    bool laserCommsOk;
 };
 
 #endif // MAINWINDOW_H
