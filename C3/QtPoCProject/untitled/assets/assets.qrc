@@ -1,17 +1,12 @@
 <RCC>
-    <qresource prefix="/toolbar-icons">
-        <file>emblem-system.svg</file>
-        <file>office-calendar.svg</file>
-        <file>utilities-system-monitor.svg</file>
-    </qresource>
     <qresource prefix="/indicators">
         <file>green indicator.svg</file>
         <file>acquiredIndicator.svg</file>
-        <file>activeIndicator.svg</file>
         <file>inactiveIndicator.svg</file>
         <file>unknownIndicator.svg</file>
         <file>offlineIndicator.svg</file>
         <file>goodIndicator.svg</file>
+        <file>activeIndicator.svg</file>
     </qresource>
     <qresource prefix="/placeholders">
         <file>testimage.png</file>

@@ -281,7 +281,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+                <pixmap resource="assets/assets.qrc">:/indicators/goodIndicator.svg</pixmap>
                </property>
               </widget>
              </item>
@@ -311,7 +311,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+                <pixmap resource="assets/assets.qrc">:/indicators/goodIndicator.svg</pixmap>
                </property>
               </widget>
              </item>
@@ -349,12 +349,12 @@ p, li { white-space: pre-wrap; }
                 <string notr="true">font-size: 18px;</string>
                </property>
                <property name="text">
-                <string>Communications</string>
+                <string>WENDE System</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="laserCommStatus_4">
+              <widget class="QLabel" name="widWendeStatus">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -365,7 +365,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+                <pixmap resource="assets/assets.qrc">:/indicators/goodIndicator.svg</pixmap>
                </property>
               </widget>
              </item>
@@ -379,12 +379,12 @@ p, li { white-space: pre-wrap; }
                 <string notr="true">font-size: 18px;</string>
                </property>
                <property name="text">
-                <string>Status</string>
+                <string>Rover Status</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="laserOpStatus_4">
+              <widget class="QLabel" name="label">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -395,7 +395,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+                <pixmap resource="assets/assets.qrc">:/indicators/acquiredIndicator.svg</pixmap>
                </property>
               </widget>
              </item>
@@ -409,12 +409,12 @@ p, li { white-space: pre-wrap; }
                 <string notr="true">font-size: 18px;</string>
                </property>
                <property name="text">
-                <string>Communications</string>
+                <string>Laser Status</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="laserCommStatus_5">
+              <widget class="QLabel" name="widLaserActive">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -425,7 +425,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+                <pixmap resource="assets/assets.qrc">:/indicators/activeIndicator.svg</pixmap>
                </property>
               </widget>
              </item>
@@ -479,7 +479,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+                <pixmap resource="assets/assets.qrc">:/indicators/goodIndicator.svg</pixmap>
                </property>
               </widget>
              </item>
@@ -509,7 +509,7 @@ p, li { white-space: pre-wrap; }
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+                <pixmap resource="assets/assets.qrc">:/indicators/goodIndicator.svg</pixmap>
                </property>
               </widget>
              </item>
@@ -537,39 +537,6 @@ p, li { white-space: pre-wrap; }
     </item>
    </layout>
   </widget>
-  <action name="actionSettings">
-   <property name="icon">
-    <iconset>
-     <normaloff>:/images/emblem-system.svg</normaloff>:/images/emblem-system.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Settings</string>
-   </property>
-   <property name="toolTip">
-    <string>Access WENDE Settings</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
-  <action name="actionDiagnostics">
-   <property name="icon">
-    <iconset>
-     <normaloff>:/images/utilities-system-monitor.svg</normaloff>:/images/utilities-system-monitor.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Diagnostics</string>
-   </property>
-  </action>
-  <action name="actionEvent_Log">
-   <property name="icon">
-    <iconset>
-     <normaloff>:/images/office-calendar.svg</normaloff>:/images/office-calendar.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Event Log</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
