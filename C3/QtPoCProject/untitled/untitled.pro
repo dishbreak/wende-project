@@ -23,3 +23,7 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += \
     assets/assets.qrc
+
+CONFIG += debug
+
+CONFIG += console
