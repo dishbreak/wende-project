@@ -45,7 +45,7 @@ padding: 4px;
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_17">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_16">
+     <layout class="QVBoxLayout" name="blViewingStatus">
       <item>
        <spacer name="verticalSpacer_4">
         <property name="orientation">
@@ -60,11 +60,14 @@ padding: 4px;
        </spacer>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QHBoxLayout" name="hlViewingStatus">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_15">
+         <layout class="QVBoxLayout" name="vlPPI">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
           <item>
-           <spacer name="verticalSpacer">
+           <spacer name="vsPPI">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -77,18 +80,25 @@ padding: 4px;
            </spacer>
           </item>
           <item>
-           <widget class="QGroupBox" name="groupBox_2">
+           <widget class="QGroupBox" name="gbPPI">
             <property name="title">
              <string>PPI Display</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_14">
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="lblPPI">
                <property name="minimumSize">
                 <size>
                  <width>400</width>
                  <height>400</height>
                 </size>
+               </property>
+               <property name="toolTip">
+                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Planned Position Indicator&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
                 <string/>
@@ -101,139 +111,12 @@ padding: 4px;
             </layout>
            </widget>
           </item>
-          <item>
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QVBoxLayout" name="vlLiveImage" stretch="0">
           <item>
-           <widget class="QGroupBox" name="laserOps_4">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>275</width>
-              <height>290</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <property name="title">
-             <string>Demo State</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_10">
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_11">
-               <item>
-                <widget class="QLabel" name="item_7">
-                 <property name="styleSheet">
-                  <string notr="true">font-size: 18px;</string>
-                 </property>
-                 <property name="text">
-                  <string>Communications</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="laserCommStatus_4">
-                 <property name="minimumSize">
-                  <size>
-                   <width>250</width>
-                   <height>50</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="pixmap">
-                  <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_12">
-               <item>
-                <widget class="QLabel" name="item_8">
-                 <property name="styleSheet">
-                  <string notr="true">font-size: 18px;</string>
-                 </property>
-                 <property name="text">
-                  <string>Status</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="laserOpStatus_4">
-                 <property name="minimumSize">
-                  <size>
-                   <width>250</width>
-                   <height>50</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="pixmap">
-                  <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_13">
-               <item>
-                <widget class="QLabel" name="item_9">
-                 <property name="styleSheet">
-                  <string notr="true">font-size: 18px;</string>
-                 </property>
-                 <property name="text">
-                  <string>Communications</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="laserCommStatus_5">
-                 <property name="minimumSize">
-                  <size>
-                   <width>250</width>
-                   <height>50</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="pixmap">
-                  <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox">
+           <widget class="QGroupBox" name="gbLiveImage">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -249,12 +132,12 @@ padding: 4px;
             <property name="title">
              <string>Live Image</string>
             </property>
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="lblLiveImage">
              <property name="geometry">
               <rect>
                <x>10</x>
                <y>30</y>
-               <width>263</width>
+               <width>301</width>
                <height>223</height>
               </rect>
              </property>
@@ -263,6 +146,14 @@ padding: 4px;
                <width>263</width>
                <height>223</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Live video feed&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string/>
@@ -276,181 +167,12 @@ padding: 4px;
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <layout class="QVBoxLayout" name="vlDTI">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QGroupBox" name="laserOps_2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>275</width>
-                <height>204</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font-size: 16px;</string>
-              </property>
-              <property name="title">
-               <string>Laser</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_4">
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_5">
-                 <item>
-                  <widget class="QLabel" name="item_3">
-                   <property name="styleSheet">
-                    <string notr="true">font-size: 18px;</string>
-                   </property>
-                   <property name="text">
-                    <string>Communications</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="laserCommStatus_2">
-                   <property name="minimumSize">
-                    <size>
-                     <width>250</width>
-                     <height>50</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="pixmap">
-                    <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_6">
-                 <item>
-                  <widget class="QLabel" name="item_4">
-                   <property name="styleSheet">
-                    <string notr="true">font-size: 18px;</string>
-                   </property>
-                   <property name="text">
-                    <string>Status</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="laserOpStatus_2">
-                   <property name="minimumSize">
-                    <size>
-                     <width>250</width>
-                     <height>50</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="pixmap">
-                    <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="laserOps_3">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>275</width>
-                <height>204</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font-size: 16px;</string>
-              </property>
-              <property name="title">
-               <string>Camera</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_7">
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_8">
-                 <item>
-                  <widget class="QLabel" name="item_5">
-                   <property name="styleSheet">
-                    <string notr="true">font-size: 18px;</string>
-                   </property>
-                   <property name="text">
-                    <string>Communications</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="laserCommStatus_3">
-                   <property name="minimumSize">
-                    <size>
-                     <width>250</width>
-                     <height>50</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="pixmap">
-                    <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_9">
-                 <item>
-                  <widget class="QLabel" name="item_6">
-                   <property name="styleSheet">
-                    <string notr="true">font-size: 18px;</string>
-                   </property>
-                   <property name="text">
-                    <string>Status</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="laserOpStatus_3">
-                   <property name="minimumSize">
-                    <size>
-                     <width>250</width>
-                     <height>50</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="pixmap">
-                    <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
+           <layout class="QHBoxLayout" name="hlDTI"/>
           </item>
           <item>
-           <widget class="QGroupBox" name="">
+           <widget class="QGroupBox" name="gbDTI">
             <property name="styleSheet">
              <string notr="true">font-size: 16px;</string>
             </property>
@@ -459,16 +181,26 @@ padding: 4px;
             </property>
             <layout class="QVBoxLayout" name="verticalLayout">
              <item>
-              <widget class="QTableView" name="tableView">
+              <widget class="QTableView" name="tblDTI">
+               <property name="toolTip">
+                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Distance to illumination values&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
                <property name="styleSheet">
                 <string notr="true">margin: 3px;</string>
                </property>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>90</number>
+               </attribute>
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <layout class="QHBoxLayout" name="hlExportDTI">
                <item>
-                <spacer name="horizontalSpacer">
+                <spacer name="spExportDTI">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -481,7 +213,7 @@ padding: 4px;
                 </spacer>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton">
+                <widget class="QPushButton" name="cmdExportDTI">
                  <property name="styleSheet">
                   <string notr="true">padding: 5px;</string>
                  </property>
@@ -496,6 +228,295 @@ padding: 4px;
            </widget>
           </item>
          </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="hlStatusIndicators">
+        <property name="topMargin">
+         <number>15</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="gbCameraIndicators">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>275</width>
+            <height>204</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 16px;</string>
+          </property>
+          <property name="title">
+           <string>Camera</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <layout class="QVBoxLayout" name="vlCameraComms">
+             <item>
+              <widget class="QLabel" name="lblCameraComms">
+               <property name="styleSheet">
+                <string notr="true">font-size: 18px;</string>
+               </property>
+               <property name="text">
+                <string>Communications</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="widCameraComms">
+               <property name="minimumSize">
+                <size>
+                 <width>250</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="vlCameraStatus">
+             <item>
+              <widget class="QLabel" name="lblCameraStatus">
+               <property name="styleSheet">
+                <string notr="true">font-size: 18px;</string>
+               </property>
+               <property name="text">
+                <string>Status</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="widCameraStatus">
+               <property name="minimumSize">
+                <size>
+                 <width>250</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="gbDemoIndicators">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>275</width>
+            <height>290</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="title">
+           <string>Demo State</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_11">
+             <item>
+              <widget class="QLabel" name="item_7">
+               <property name="styleSheet">
+                <string notr="true">font-size: 18px;</string>
+               </property>
+               <property name="text">
+                <string>Communications</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="laserCommStatus_4">
+               <property name="minimumSize">
+                <size>
+                 <width>250</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_12">
+             <item>
+              <widget class="QLabel" name="item_8">
+               <property name="styleSheet">
+                <string notr="true">font-size: 18px;</string>
+               </property>
+               <property name="text">
+                <string>Status</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="laserOpStatus_4">
+               <property name="minimumSize">
+                <size>
+                 <width>250</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_13">
+             <item>
+              <widget class="QLabel" name="item_9">
+               <property name="styleSheet">
+                <string notr="true">font-size: 18px;</string>
+               </property>
+               <property name="text">
+                <string>Communications</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="laserCommStatus_5">
+               <property name="minimumSize">
+                <size>
+                 <width>250</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="gbLaserIndicators">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>275</width>
+            <height>204</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 16px;</string>
+          </property>
+          <property name="title">
+           <string>Laser</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <layout class="QVBoxLayout" name="vlLaserComms">
+             <item>
+              <widget class="QLabel" name="lblLaserComms">
+               <property name="styleSheet">
+                <string notr="true">font-size: 18px;</string>
+               </property>
+               <property name="text">
+                <string>Communications</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="widLaserComms">
+               <property name="minimumSize">
+                <size>
+                 <width>250</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="vlLaserStatus">
+             <item>
+              <widget class="QLabel" name="lblLaserStatus">
+               <property name="styleSheet">
+                <string notr="true">font-size: 18px;</string>
+               </property>
+               <property name="text">
+                <string>Status</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="widLaserStatus">
+               <property name="minimumSize">
+                <size>
+                 <width>250</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="assets/assets.qrc">:/indicators/green indicator.svg</pixmap>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </item>
