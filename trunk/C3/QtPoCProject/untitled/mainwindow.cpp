@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QStatusBar>
+#include <QHBoxLayout>
 
 #include "testpanel/testpanel.h"
 
@@ -14,6 +16,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(testPanel, SIGNAL(commandSignal(MessageCodes::StatusCode)),
             this, SLOT(updatePPI(MessageCodes::StatusCode)));
+
+    //Initialise Status Bar
+    QFont font( "Arial" );
+    font.setPointSize( 20 );
+    statusBar()->setFont(font);
+    statusBar()->showMessage("WENDE System Started...");
 
     //set all bools to initial state
     wendeOperational = true;
@@ -50,12 +58,14 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         ui->widLaserComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
         //Set LaserCommsOk to true
         laserCommsOk = true;
+        statusBar()->showMessage("Laser Communication POOR");
         break;
     case MessageCodes::LaserCommsOffline:
         //Set Laser Comms Image to "Offline"
         ui->widLaserComms->setPixmap(QPixmap(":/indicators/offlineIndicator.svg"));
         //Set LaserCommsOk to false
         laserCommsOk = false;
+        statusBar()->showMessage("Laser Communication OFFLINE");
         //Set Laser State to Unknown
         updatePPI(MessageCodes::LaserUnknown);
         break;
@@ -77,6 +87,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         ui->widLaserStatus->setPixmap(QPixmap(":/indicators/offlineIndicator.svg"));
         //Set LaserOk to false
         laserOk = false;
+        statusBar()->showMessage("Laser OFFLINE");
         break;
     case MessageCodes::LaserUnknown:
         //Set Laser Status Image to "Unknown"
@@ -101,6 +112,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         ui->widCameraComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
         //set CamaraCommsOk to true
         cameraCommsOk = true;
+        statusBar()->showMessage("Camera Communications POOR");
         break;
     case MessageCodes::CameraCommsOffline:
         //Set Camera Comms Image to "Offline"
@@ -109,6 +121,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         cameraCommsOk = false;
         //Set Camera State to Unknown
         updatePPI(MessageCodes::CameraUnknown);
+        statusBar()->showMessage("Camera Communication OFFLINE");
         break;
     case MessageCodes::CameraOnline:
         if (cameraCommsOk)
@@ -158,6 +171,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
     case MessageCodes::wendeOffline:
         //Set WENDE Status Image to "Offline"
         ui->widWendeStatus->setPixmap(QPixmap(":/indicators/offlineIndicator.svg"));
+        statusBar()->showMessage("WENDE OFFLINE");
         break;
     default:
         break;
