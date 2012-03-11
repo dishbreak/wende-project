@@ -7,6 +7,7 @@
         <file>goodIndicator.svg</file>
         <file>activeIndicator.svg</file>
         <file>acquiredIndicator.svg</file>
+        <file>inactiveIndicator.svg</file>
     </qresource>
     <qresource prefix="/placeholders">
         <file>testimage.png</file>

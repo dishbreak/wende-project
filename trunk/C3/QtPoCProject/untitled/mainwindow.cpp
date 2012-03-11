@@ -149,7 +149,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         break;
     case MessageCodes::LaserNotActive:
         //Set Laser Active Image to "Not Active"
-        ui->widLaserActive->setPixmap(QPixmap("/indicators/inactiveIndicator.svg"));
+        ui->widLaserActive->setPixmap(QPixmap(":/indicators/inactiveIndicator.svg"));
         break;
     case MessageCodes::wendeOnline:
         //Set WENDE Status Image to "Online"
