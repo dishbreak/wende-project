@@ -17,11 +17,12 @@
 #define	ADJUST_TO_LIGHTING	3
 #define DETECTED_LASER	4
 #define SETTLE_FROM_ADJUST  5
+#define RESAMPLE_AFTER_ADJUST  6
 
-#define MIDDLING_SAMPLES  5
-#define ADC_DETECTOR_SAMPLE_RATE  100 //15
-#define ADC_LIGHTING_SAMPLE_RATE  100
-#define SETTLING_CYCLES  100
+#define MIDDLING_SAMPLES  20
+#define ADC_DETECTOR_SAMPLE_RATE  20
+#define ADC_LIGHTING_SAMPLE_RATE  20
+#define SETTLING_CYCLES  0  //capacitors removed
 
 //Laser Detection data struct
 typedef struct __sensor_data {
