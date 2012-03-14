@@ -2,7 +2,7 @@
 #define TESTPANEL_H
 
 #include <QMainWindow>
-#include "MessageCodes.h"
+#include "../MessageCodes.h"
 
 //forward declaration
 class QSignalMapper;
