@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QStatusBar>
 #include <QHBoxLayout>
+#include <QTableWidget>
 
 #include "testpanel/testpanel.h"
 
@@ -22,6 +23,44 @@ MainWindow::MainWindow(QWidget *parent) :
     font.setPointSize( 20 );
     statusBar()->setFont(font);
     statusBar()->showMessage("WENDE System Started...");
+
+    QTableWidget* tblDTI = new QTableWidget;
+    QGroupBox* gbDTI = new QGroupBox(tr("DTI Log"));
+    QVBoxLayout* vBox = new QVBoxLayout;
+    QPushButton* vExport = new QPushButton(tr("Export"));
+
+    //Set table row count 1 and column count 3
+    tblDTI->setRowCount(3);
+    tblDTI->setColumnCount(3);
+
+    tblDTI->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+    //Set Header Label Texts Here
+    tblDTI->setHorizontalHeaderLabels(QString("Distance-To-Illumination(m);Time-To-Illumination(s); PASS/FAIL").split(";"));
+    tblDTI->horizontalHeader()->setResizeMode(0,QHeaderView::Stretch);
+    tblDTI->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
+    tblDTI->horizontalHeader()->setResizeMode(2,QHeaderView::Stretch);
+
+    //Add Table items here
+    tblDTI->setItem(0,0,new QTableWidgetItem("1.45"));
+    tblDTI->setItem(0,1,new QTableWidgetItem("18.0"));
+    tblDTI->setItem(0,2,new QTableWidgetItem("PASS"));
+
+    tblDTI->setItem(1,0,new QTableWidgetItem("1.09"));
+    tblDTI->setItem(1,1,new QTableWidgetItem("12.0"));
+    tblDTI->setItem(1,2,new QTableWidgetItem("PASS"));
+
+    tblDTI->setItem(2,0,new QTableWidgetItem("2.10"));
+    tblDTI->setItem(2,1,new QTableWidgetItem("30.0"));
+    tblDTI->setItem(2,2,new QTableWidgetItem("FAIL"));
+
+    vBox->addWidget((tblDTI));
+    vBox->addWidget((vExport));
+
+    gbDTI->setLayout(vBox);
+    ui->hlDTI->addWidget(gbDTI);
+
+    ui->gbLiveImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     //set all bools to initial state
     wendeOperational = true;
