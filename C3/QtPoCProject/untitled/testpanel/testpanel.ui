@@ -161,13 +161,6 @@
       </item>
      </widget>
     </item>
-    <item row="6" column="1">
-     <widget class="QPushButton" name="cmdGenDTI">
-      <property name="text">
-       <string>Generate DTI</string>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -177,7 +170,7 @@
      <x>0</x>
      <y>0</y>
      <width>251</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

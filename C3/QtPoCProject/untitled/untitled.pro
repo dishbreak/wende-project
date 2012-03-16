@@ -24,6 +24,5 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     assets/assets.qrc
 
-CONFIG += debug
+CONFIG += qt debug
 
-CONFIG += console
