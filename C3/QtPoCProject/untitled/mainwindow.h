@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include "MessageCodes.h"
 
+#include <QTableWidget>
+#include <QGroupBox>
+
 namespace Ui {
 class MainWindow;
 }
@@ -22,6 +25,7 @@ public:
 
 public slots:
     void updatePPI(const MessageCodes::StatusCode &);
+    void updateDTI(double dti, double time, char * result);
     
 private:
     Ui::MainWindow *ui;
@@ -31,6 +35,8 @@ private:
     bool laserOk;
     bool cameraCommsOk;
     bool laserCommsOk;
+    QTableWidget* tblDTI;
+    QGroupBox* gbDTI;
 };
 
 #endif // MAINWINDOW_H
