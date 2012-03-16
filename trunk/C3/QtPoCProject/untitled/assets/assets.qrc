@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/indicators">
         <file>green indicator.svg</file>
-        <file>inactiveIndicator.svg</file>
         <file>unknownIndicator.svg</file>
         <file>offlineIndicator.svg</file>
         <file>goodIndicator.svg</file>
