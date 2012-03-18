@@ -18,7 +18,7 @@
 //misc defines, for debugging
 //#define SERIAL_COMM_ENABLED	Serial.begin(9600)
 
-#define PHOTO_DETECTOR_PIN		A0
+#define PHOTO_DETECTOR_PIN	A0
 #define AMBIENT_LIGHTING_PIN	A1
 #define LED_READY_PIN	        8
 #define LED_LOW_LIGHT_PIN       10
@@ -28,10 +28,10 @@
 
 //LASER DETECTION DEFINES
 #define DETECTION_THRESHOLD	23
-#define DETECTION_ERROR_LOW	11
-#define DETECTION_ERROR_HIGH    11
+#define DETECTION_ERROR_LOW	10
+#define DETECTION_ERROR_HIGH    30
 #define LIGHTING_CHANGE_THRESHOLD  3
-#define LIGHTING_CHANGE_ERROR  2
+#define LIGHTING_CHANGE_ERROR  0
 
 //Rover Processing State Machine
 #define ROVER_DEMO_STATE	0

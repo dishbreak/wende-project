@@ -5,6 +5,9 @@
 
 static sensor_data laserData;
 static sensor_data lightingData;
+static int Sensor_Offset = 0;
+static int ReInitCount = 0;
+static int offsetDirection = 0;
 
 void DetectionProcessing()
 {
@@ -14,10 +17,10 @@ void DetectionProcessing()
   int diff;
   //state machine...
   //path is init -> sample -> check lighting -> detect laser -> sample, or detected laser
+
   switch (curr_state)
   {
     case INIT_SENSORS:
- 
       //init the sensors
       if(initialize_laser_detection())
       {
@@ -31,38 +34,35 @@ void DetectionProcessing()
       break;
   		
     case SAMPLE_SENSORS:
-      //Serial.println("Sample Sensor"); 
-  			//sample adc on both channels
-      //sample if still necessary...
+
+      //sample adc on both channels
       laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE);
+//      Serial.print(laserData.inst_value);
+//      Serial.print(" - "); 
+//      Serial.print(laserData.current_value); 
+//      Serial.print(" - "); 
+//      Serial.println(Sensor_Offset);
       lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE);
-  
+
       if(laserData.sampled && lightingData.sampled)
       {
-        //check for a lighting difference
-        //small lighting changes on both sensors...
-        difference = abs(lightingData.stable_value-lightingData.current_value);
-        diff = abs(laserData.stable_value-laserData.current_value);
-        //Serial.print(difference);
-        //Serial.print(" > ");
-        //Serial.print(LIGHTING_CHANGE_THRESHOLD);
-        //Serial.print(" - ");
-        //Serial.println(diff);
-        if(difference > LIGHTING_CHANGE_THRESHOLD)
+//        Serial.print(laserData.current_value); 
+//        Serial.print(" - "); 
+//        Serial.print(lightingData.current_value); 
+//        Serial.print(" - "); 
+//        Serial.println(Sensor_Offset);
+        //check that we aren't saturated
+        if((laserData.current_value < (200+offsetDirection) && Sensor_Offset != 31) || (laserData.current_value > (900+offsetDirection) && Sensor_Offset !=0 )) 
         {
-        //    Serial.print("Adj:");
-        //    Serial.print(lightingData.current_value);
-        //    Serial.print(" - ");
-        //    Serial.println(lightingData.stable_value);
-
-  	    curr_state = ADJUST_TO_LIGHTING;
+          curr_state = ADJUST_TO_LIGHTING;
         }
-
         else
         {
-
           curr_state = DETECT_LASER;
         }
+        //shift the average history in prep for a new sample set
+        shift_average_history(&laserData);
+        shift_average_history(&lightingData);
       }
 
       break;
@@ -74,21 +74,19 @@ void DetectionProcessing()
       {
         laserData.sampled = false;
         lightingData.sampled = false;
-        lightingData.stable = false;
-        laserData.stable = false;
+//        lightingData.stable = false;
+//        laserData.stable = false;
         curr_state = SETTLE_FROM_ADJUST;
         settle = 0;
       }
       //adding fix for ambient lighting recalibration...
       //after an adjustment we need to resample before the next adjustment
       //this will ensure the sensor is stable before it actually starts resampling
-      //Jon - PLEASE VERIFY!!  This is likely what was causing false alarms!
-      //and race condition (stuck state)
       else
       {
         lightingData.sampled = false;
-        lightingData.stable = false;
-        laserData.stable = false;
+//        lightingData.stable = false;
+//        laserData.stable = false;
         laserData.sampled = false;
         //resample
         curr_state = RESAMPLE_AFTER_ADJUST;
@@ -104,6 +102,8 @@ void DetectionProcessing()
       //this allows us to step down properly versus stepping once
       if(laserData.sampled && lightingData.sampled)
       {
+        shift_average_history(&laserData);
+        shift_average_history(&lightingData);
         curr_state = ADJUST_TO_LIGHTING;
       }
       
@@ -114,6 +114,11 @@ void DetectionProcessing()
       {
         digitalWrite(LED_HIGH_LIGHT_PIN,LOW);
         curr_state = SAMPLE_SENSORS;
+      }
+      else if(settle > SETTLING_CYCLES)
+      {
+        settle=0;
+        digitalWrite(LED_HIGH_LIGHT_PIN,HIGH);
       }
       else
       {
@@ -129,7 +134,19 @@ void DetectionProcessing()
       if(DetectLaser())
       {
         curr_state = DETECTED_LASER;
+        //Display detection history information for debug
         Serial.println("DETECTED LASER");
+        Serial.print(lightingData.current_value); 
+        Serial.print("-");
+        Serial.println(lightingData.average[AVERAGE_HISTORY-1]);
+        Serial.print(laserData.current_value); 
+        Serial.print("-");
+        Serial.println(laserData.average[AVERAGE_HISTORY-1]);
+        Serial.println(Sensor_Offset);
+        for(int history_num=0; history_num<AVERAGE_HISTORY; history_num++)
+        {
+          Serial.println(laserData.average[history_num]);
+        }
       }
       else
       {
@@ -146,16 +163,24 @@ void DetectionProcessing()
       digitalWrite(LED_MID_LIGHT_PIN,HIGH);
       
       //if demo mode continue to loop
-      if(ROVER_DEMO_MODE == 1)
+//      if(ROVER_DEMO_MODE == 1)
+      //just stop to prove no false alarms
+      if(0)
       {
         laserData.sampled = false;
         lightingData.sampled = false;
         curr_state = SAMPLE_SENSORS;
       }
-      
-      //Serial.println("DETECTED LASER"); 
       break;
   }
+}
+void shift_average_history(sensor_data* data)
+{
+  for(int history_num=AVERAGE_HISTORY-1; history_num>0; history_num--)
+  {
+    data->average[history_num]=data->average[history_num-1];
+  }
+  data->average[0]=data->current_value;
 }
 
 boolean initialize_laser_detection()
@@ -167,18 +192,20 @@ boolean initialize_laser_detection()
             
     lightingData.current_value = 0;
     lightingData.total = 0;
-    lightingData.num_samples = 1;
+    lightingData.num_samples = 0;
     lightingData.address = AMBIENT_LIGHTING_PIN;
-    lightingData.stable = false;
+//    lightingData.stable = false;
     lightingData.sampled = false;
-            
+    analogRead(lightingData.address);
+
     laserData.current_value = 0;
     laserData.total = 0;
-    laserData.num_samples = 1;
+    laserData.num_samples = 0;
     laserData.address = PHOTO_DETECTOR_PIN;
-    laserData.stable = false;
+//    laserData.stable = false;
     laserData.sampled  = false;
-                
+    analogRead(laserData.address);
+
     init = true;
   }
   else
@@ -202,30 +229,45 @@ boolean initialize_laser_detection()
 boolean DetectLaser()
 {
   //compare laser detector to resistive detector?
-  int difference = 0;
   //check for a significant change...
-  difference = abs(laserData.stable_value-laserData.current_value); //needs to be tweaked
-  
-  /*
-  Serial.print(DETECTION_THRESHOLD-DETECTION_ERROR);
-  Serial.print(" < ");
-  Serial.print(difference);
-  Serial.print(" < ");
-  Serial.println(DETECTION_THRESHOLD+DETECTION_ERROR);
-  */
-  
-  if(difference > (DETECTION_THRESHOLD-DETECTION_ERROR_LOW) && difference < (DETECTION_THRESHOLD+DETECTION_ERROR_HIGH))
+  //Laser will only impart a decrease in detection voltage, ambient light can be either way
+
+  if (compair_detector(&laserData,DETECTION_ERROR_HIGH,DETECTION_ERROR_LOW) && compair_detector(&lightingData,LIGHTING_CHANGE_THRESHOLD,-LIGHTING_CHANGE_THRESHOLD) )
   {
     //detection!
     return true;
   }	
-  	return false;
+  return false;
+}
+
+boolean compair_detector(sensor_data* data, int upper_threshold, int lower_threshold)
+{
+  int init_value, difference;
+  for(int history_num=AVERAGE_HISTORY-1; history_num>(AVERAGE_HISTORY-1-COMPAIR_HISTORY); history_num--)
+  {
+    for(int init_num=0; init_num<COMPAIR_HISTORY; init_num++)
+    {
+      if (init_num == 0)
+      {
+        init_value=data->current_value;
+      }
+      else
+      {
+        init_value=data->average[init_num];        
+      }
+      difference=(data->average[history_num]-init_value);
+      if(!(difference > (lower_threshold) && difference < (upper_threshold)))
+      {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 int adjust_to_light_change(int photodetectorVal)
 {
-  static int Sensor_Offset = 0;
-  static int offsetDirection=0;
+//  static int offsetDirection=0;
 
   //if we just started adjusting...
   if (offsetDirection==0)
@@ -306,41 +348,37 @@ void Toggle_Res_Off(int pin)
 
 boolean sample_adc(sensor_data* data, int sample_rate)
 {
-  //do we need to sample?
-  //used due to different sampling rates
-  //allows for concurrent ADC execution
-  if(data->sampled == true)
-  {
-    return true;
-  }
-  
+  // keeping the readings in sync is the best option  
   boolean sampled = false;
-  data->inst_value = analogRead(data->address);
-  data->total+=data->inst_value;
   
+  data->inst_value = analogRead(data->address);
+  
+  data->total+=data->inst_value;
+  data->num_samples++;
   if(data->num_samples == sample_rate)
   { 
     //take the avg
-    data->current_value = data->total/data->num_samples;
+    data->current_value = data->total/(data->num_samples);
     
     //if we aren't stable make this the new stable value
-    if(data->stable == false)
-    {
-      data->stable_value = data->current_value;
-      data->stable = true;
-    }
+//    if(data->stable == false)
+//    {
+//      data->stable_value_2 = data->stable_value_1;
+//      data->stable_value_1 = data->current_value;
+//      data->stable = true;
+//    }
     
     //reset samples
-    data->num_samples = 1;
+    data->num_samples = 0;
     
     //reset avg
-    data->total = data->inst_value;
+    data->total = 0;//data->current_value;
     
     //set sampled to true
     sampled = true;
     
   }
-  data->num_samples++;
+
   return sampled;
 }
 
@@ -392,11 +430,11 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   data->current_value = data->total/(data->num_samples-1);
 
   //if we aren't stable make this the new stable value
-  if(data->stable == false)
-  {
-    data->stable_value = data->current_value;
-    data->stable = true;
-  }
+//  if(data->stable == false)
+//  {
+//    data->stable_value = data->current_value;
+//    data->stable = true;
+//  }
   
   return sampled;
 }

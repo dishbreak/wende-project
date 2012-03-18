@@ -11,9 +11,11 @@ void setup()
   pinMode(LED_LOW_LIGHT_PIN, OUTPUT);
   pinMode(LED_MID_LIGHT_PIN, OUTPUT);
   pinMode(LED_HIGH_LIGHT_PIN, OUTPUT);
+
 }
 
 void loop()
 {
+
   RoverProcessingRoutines();
 }

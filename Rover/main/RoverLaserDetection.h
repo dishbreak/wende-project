@@ -19,27 +19,28 @@
 #define SETTLE_FROM_ADJUST  5
 #define RESAMPLE_AFTER_ADJUST  6
 
-#define MIDDLING_SAMPLES  20
-#define ADC_DETECTOR_SAMPLE_RATE  20
-#define ADC_LIGHTING_SAMPLE_RATE  20
-#define SETTLING_CYCLES  0  //capacitors removed
+#define COMPAIR_HISTORY  2
+#define AVERAGE_HISTORY  10
+#define ADC_DETECTOR_SAMPLE_RATE  40
+#define ADC_LIGHTING_SAMPLE_RATE  40
+#define SETTLING_CYCLES  5  //capacitors removed
 
 //Laser Detection data struct
 typedef struct __sensor_data {
 	unsigned int inst_value;		//instantaneous value
 	int current_value;	//current avg'ed value
-	int stable_value;	//current stable value
 	unsigned long total;			//running total
 	unsigned int num_samples;		//number of samples
-	unsigned int samples[MIDDLING_SAMPLES];		//samples
+	int average[AVERAGE_HISTORY];		//samples
 	unsigned int address;				//location of sensor
         boolean sampled;         //enough samples?
         boolean stable;          //stable?
 } sensor_data;
 
 
-
+boolean compair_detector(sensor_data* data, int upper_threshold, int lower_threshold);
 void DetectionProcessing(void);
+void shift_average_history(sensor_data* data);
 boolean initialize_laser_detection(void);
 boolean DetectLaser(void);
 int adjust_to_light_change(int photodetectorVal);
