@@ -18,10 +18,13 @@
 
 #include <vector>
 #include <limits>
+#include <map>
 
 #include "C3Track.h"
 #include "C3Point.h"
 
+using std::map;
+using std::pair;
 using std::vector;
 using std::numeric_limits;
 
@@ -31,12 +34,10 @@ typedef struct C3_CORRELATE
 	{
 		dist		= 0.0; 
 		assignTrackIndex = -1;
-		assignPointIndex = -1;
 	}
 
 	double dist; 
 	int    assignTrackIndex;
-	int    assignPointIndex;
 } C3_CORRELATE_struct;
 
 class C3Tracker
@@ -59,5 +60,10 @@ class C3Tracker
 		void UpdateTracks(vector<C3Point> cameraRoverPositions, unsigned int time);
 
 	private:
-		void AddTrack(C3Point cameraRoverPosition, unsigned int time);
+		// determine if a point has already been assigned to the tracker 
+		bool isInMapping(map<unsigned int, C3_CORRELATE_struct> &position2track, unsigned int trackerNum);
+		// Creates a new tracker
+		unsigned int AddTrack(C3Point cameraRoverPosition, unsigned int time);
+		// Correlates a point with a tracker
+
 };

@@ -68,7 +68,7 @@ C3Point C3CircularHistory::getPoint(const unsigned int index ) const
 	return point;
 }
 // the overide operator for []
-C3Point& C3CircularHistory::operator [] (const unsigned int index)
+C3Point C3CircularHistory::operator [] (const unsigned int index)
 {
 	return this->getPoint(index);
 }

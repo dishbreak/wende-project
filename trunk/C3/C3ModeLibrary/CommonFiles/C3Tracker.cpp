@@ -30,6 +30,7 @@ void C3Tracker::UpdateTracks(vector<C3Point> cameraRoverPositions, unsigned int 
 	{
 		C3_CORRELATE_struct correlate;
 		double minValue    = numeric_limits<double>::max();
+		map<unsigned int, C3_CORRELATE_struct> position2track;
 
 		// loop over all the positions
 		for (unsigned int ii = 0; ii < cameraRoverPositions.size(); ii++)
@@ -49,19 +50,28 @@ void C3Tracker::UpdateTracks(vector<C3Point> cameraRoverPositions, unsigned int 
 					correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getPredicationPoint());
 				}
 
-				// assign to the closest tracker if with max distance
-				if (correlate.dist <= minValue  && correlate.dist <= m_maxDistance)
+
+				// assign to the closest tracker if within max distance and not in mapping list
+				if (correlate.dist <= minValue && correlate.dist <= m_maxDistance && !isInMapping(position2track, jj))
 				{
 					correlate.assignTrackIndex = jj;				// ok so this is the tracker for the point
-					correlate.assignPointIndex = ii;				// ok so this is the point for the tracker
 					minValue				   = correlate.dist;	// new min value for this point...
 				}
+				// if rejected due to mapping then what
+				// TODO ... determine which is better to use
+				//else if (correlate.dist <= minValue && correlate.dist <= m_maxDistance)
+				//{
+				//	
+				//}
 			}
+
+			// add the position to the list of mappings
+			position2track.insert(pair<unsigned int, C3_CORRELATE_struct>(ii,correlate));
 		}
 	}
 }
 
-void C3Tracker::AddTrack(C3Point cameraRoverPosition, unsigned int time)
+unsigned int C3Tracker::AddTrack(C3Point cameraRoverPosition, unsigned int time)
 {
 	// Create the new Track
 	C3Track *track = NULL;
@@ -78,4 +88,26 @@ void C3Tracker::AddTrack(C3Point cameraRoverPosition, unsigned int time)
 	{									// so track 
 		track = new C3Track(cameraRoverPosition,time,true);
 	}
+
+	//TODO ... FIX THIS
+	return 0;
+}
+
+// determine if a point has already been assigned to the tracker 
+bool C3Tracker::isInMapping(map<unsigned int, C3_CORRELATE_struct> &position2track, unsigned int trackerNum)
+{
+	bool found = false;
+
+	std::map<unsigned int, C3_CORRELATE_struct>::iterator iter;
+    
+	// loop through all items in the map..
+    for (iter = position2track.begin(); iter != position2track.end() && found == false; iter++) 
+	{
+		if (iter->second.assignTrackIndex == trackerNum)
+		{
+			found = true;
+		}
+    }
+
+	return found;
 }

@@ -31,7 +31,7 @@ class C3CircularHistory
 
 	public:
 		// the overide operator for []
-		C3Point& operator [] (const unsigned int index);
+		C3Point operator [] (const unsigned int index);
 
 	public:
 		// add a point to the circular buffer
