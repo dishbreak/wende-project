@@ -3,6 +3,7 @@
 //#endif
 
 #include "C3Point.h"
+
 C3Point::C3Point(void)
 	: X(0),
 	Y(0)

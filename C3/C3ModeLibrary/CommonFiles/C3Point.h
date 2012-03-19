@@ -1,5 +1,6 @@
 #pragma once
 
+
 class C3Point
 {
 	public:
