@@ -95,6 +95,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\CommonFiles\C3CircularHistory.h" />
     <ClInclude Include="..\CommonFiles\C3FilterClass.h" />
     <ClInclude Include="..\CommonFiles\C3Point.h" />
     <ClInclude Include="..\CommonFiles\C3Track.h" />
@@ -105,6 +106,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\CommonFiles\C3CircularHistory.cpp" />
     <ClCompile Include="..\CommonFiles\C3FilterClass.cpp" />
     <ClCompile Include="..\CommonFiles\C3Point.cpp" />
     <ClCompile Include="..\CommonFiles\C3Track.cpp" />
