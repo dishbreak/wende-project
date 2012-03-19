@@ -61,9 +61,13 @@ class C3Tracker
 
 	private:
 		// determine if a point has already been assigned to the tracker 
-		bool isInMapping(map<unsigned int, C3_CORRELATE_struct> &position2track, unsigned int trackerNum);
+		bool isInMapping(map<unsigned int, C3_CORRELATE_struct> *position2track, 
+			             unsigned int trackerNum);
 		// Creates a new tracker
-		unsigned int AddTrack(C3Point cameraRoverPosition, unsigned int time);
+		unsigned int AddTrack(C3Point cameraRoverPosition, 
+			                  unsigned int time);
 		// Correlates a point with a tracker
-
+		void correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
+			                             vector<C3Point> cameraRoverPositions, 
+										 unsigned int time);
 };

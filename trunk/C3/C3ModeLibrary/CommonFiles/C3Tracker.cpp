@@ -12,6 +12,17 @@ C3Tracker::C3Tracker(void)
 
 C3Tracker::~C3Tracker(void)
 {
+	// free the trackers
+	for(int ii = m_tracks.size(); ii >=0; ii--)
+	{
+		C3Track *track = m_tracks[ii];
+
+		delete track;
+
+		m_tracks[ii] = NULL;
+	}
+	// clear the tracks vector
+	m_tracks.clear();
 }
 
 void C3Tracker::UpdateTracks(vector<C3Point> cameraRoverPositions, unsigned int time)
@@ -28,49 +39,74 @@ void C3Tracker::UpdateTracks(vector<C3Point> cameraRoverPositions, unsigned int 
 	}
 	else // ok so tracks exist... so lets correlate the positions
 	{
-		C3_CORRELATE_struct correlate;
-		double minValue    = numeric_limits<double>::max();
+		// variable for mapping positions to tracks
 		map<unsigned int, C3_CORRELATE_struct> position2track;
+		
+		// correlate the points to trackers.
+		correlatePositions2Trackers(&position2track,cameraRoverPositions,time);
 
-		// loop over all the positions
-		for (unsigned int ii = 0; ii < cameraRoverPositions.size(); ii++)
-		{
-			// loop over all the points
-			for (unsigned int jj = 0; jj < m_tracks.size(); ii++)
-			{
-				// if there is not enough history then only use the last position...
-				if ( m_tracks[jj]->getNumHistoryPoints() <= 2 )
-				{
-					correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getLastHistoryPoint());
-				}
-				// ok... we have the history points needed so lets coorelate using the 
-				// prediction point (assumes velocity)
-				else
-				{
-					correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getPredicationPoint());
-				}
+		// Filter the points
+		// TODO ... Add in the filter code
 
+		// Compute the DTI information
+		// TODO ... Add in the DTI items
 
-				// assign to the closest tracker if within max distance and not in mapping list
-				if (correlate.dist <= minValue && correlate.dist <= m_maxDistance && !isInMapping(position2track, jj))
-				{
-					correlate.assignTrackIndex = jj;				// ok so this is the tracker for the point
-					minValue				   = correlate.dist;	// new min value for this point...
-				}
-				// if rejected due to mapping then what
-				// TODO ... determine which is better to use
-				//else if (correlate.dist <= minValue && correlate.dist <= m_maxDistance)
-				//{
-				//	
-				//}
-			}
-
-			// add the position to the list of mappings
-			position2track.insert(pair<unsigned int, C3_CORRELATE_struct>(ii,correlate));
-		}
+		// Compute the azimuth and elevation information
+		// TODO ... add in the code
 	}
 }
+// Correlates a point with a tracker
+void C3Tracker::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
+											vector<C3Point> cameraRoverPositions, 
+											unsigned int time)
+{
+	// loop over all the positions
+	for (unsigned int ii = 0; ii < cameraRoverPositions.size(); ii++)
+	{
+		C3_CORRELATE_struct correlate;
+		double minValue    = numeric_limits<double>::max();
+		
+		// loop over all the points
+		for (unsigned int jj = 0; jj < m_tracks.size(); ii++)
+		{
+			// if there is not enough history then only use the last position...
+			if ( m_tracks[jj]->getNumHistoryPoints() <= 3 )
+			{
+				correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getLastHistoryPoint());
+			}
+			// ok... we have the history points needed so lets coorelate using the 
+			// prediction point (assumes velocity)
+			else
+			{
+				correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getPredicationPoint());
+			}
 
+			// assign to the closest tracker if within max distance and not in mapping list
+			if (correlate.dist <= minValue && correlate.dist <= m_maxDistance && !isInMapping(position2track, jj))
+			{
+				correlate.assignTrackIndex = jj;				// ok so this is the tracker for the point
+				minValue				   = correlate.dist;	// new min value for this point...
+			}
+			// if rejected due to mapping then what
+			// TODO ... determine which is better to use
+			//else if (correlate.dist <= minValue && correlate.dist <= m_maxDistance)
+			//{
+			//	
+			//}
+		}
+
+		// if there was no success then repeat
+		if (correlate.assignTrackIndex == -1)
+		{
+			// Add a new track for the ii camera rover position
+			correlate.assignTrackIndex = AddTrack(cameraRoverPositions[ii],time)-1;
+			correlate.dist = 0;
+		}
+
+		// add the position to the list of mappings
+		position2track->insert(pair<unsigned int, C3_CORRELATE_struct>(ii,correlate));
+	}
+}
 unsigned int C3Tracker::AddTrack(C3Point cameraRoverPosition, unsigned int time)
 {
 	// Create the new Track
@@ -89,19 +125,24 @@ unsigned int C3Tracker::AddTrack(C3Point cameraRoverPosition, unsigned int time)
 		track = new C3Track(cameraRoverPosition,time,true);
 	}
 
+	// add the track to the array of tracks
+	m_tracks.push_back(track);
+
 	//TODO ... FIX THIS
-	return 0;
+	return m_tracks.size();
 }
 
 // determine if a point has already been assigned to the tracker 
-bool C3Tracker::isInMapping(map<unsigned int, C3_CORRELATE_struct> &position2track, unsigned int trackerNum)
+bool C3Tracker::isInMapping(map<unsigned int, C3_CORRELATE_struct> *position2track, unsigned int trackerNum)
 {
+	// flag...
 	bool found = false;
 
+	// iterator
 	std::map<unsigned int, C3_CORRELATE_struct>::iterator iter;
     
 	// loop through all items in the map..
-    for (iter = position2track.begin(); iter != position2track.end() && found == false; iter++) 
+    for (iter = position2track->begin(); iter != position2track->end() && found == false; iter++) 
 	{
 		if (iter->second.assignTrackIndex == trackerNum)
 		{
@@ -109,5 +150,6 @@ bool C3Tracker::isInMapping(map<unsigned int, C3_CORRELATE_struct> &position2tra
 		}
     }
 
+	// returns if the tracker has already been used
 	return found;
 }
