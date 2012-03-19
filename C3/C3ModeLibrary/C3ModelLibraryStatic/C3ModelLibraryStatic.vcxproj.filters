@@ -93,6 +93,9 @@
     <ClCompile Include="..\CommonFiles\C3Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CommonFiles\C3CircularHistory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CommonFiles\C3FilterClass.h">
@@ -108,6 +111,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonFiles\C3Utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonFiles\C3CircularHistory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
