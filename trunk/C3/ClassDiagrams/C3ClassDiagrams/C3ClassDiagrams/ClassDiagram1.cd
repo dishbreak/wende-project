@@ -1,1 +1,94 @@
- 
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="C3CircularHistory">
+    <Position X="6.5" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAASAAAACAgAAABAAAIAACA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3CircularHistory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C3FilterClass">
+    <Position X="11" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BQAAAAAAQEAAACAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3FilterClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C3Point">
+    <Position X="9.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAQAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Point.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C3Track">
+    <Position X="4" Y="2.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEABAAAAgAAACAAAAAAAAEAQAAAAABAAAAAAAAIBAAI=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Track.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C3Tracker">
+    <Position X="8.75" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAIAGQBAAAAAAgAAAIAAQAACAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Tracker.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C3Utilities">
+    <Position X="6.5" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Utilities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="__unnamed_002e_1">
+    <Position X="4" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3FilterClass.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_002e_2">
+    <Position X="2.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAgAIgMOnAQQA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3FilterClass.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="C3_CORRELATE">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Tracker.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="AlphaBetaState" Collapsed="true">
+    <Position X="4" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3FilterClass.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="KalmanVariables" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3FilterClass.h</FileName>
+    </TypeIdentifier>
+    <AliasOfLine Type="__unnamed_002e_2" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.062" Y="1.75" />
+        <Point X="3.062" Y="1.014" />
+      </Path>
+    </AliasOfLine>
+  </Typedef>
+  <Typedef Name="C3_CORRELATE_struct" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Tracker.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="Tahoma" Size="8.4" />
+</ClassDiagram>
