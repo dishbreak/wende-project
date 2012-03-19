@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Eigen">
+      <UniqueIdentifier>{52b38f6c-64dd-4885-824c-18eb125609cc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="..\..\..\eigen\Eigen\Array">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Cholesky">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Core">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Dense">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Eigen">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Eigen2Support">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Eigenvalues">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Geometry">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Householder">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Jacobi">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\LeastSquares">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\LU">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\QR">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\QtAlignedMalloc">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\Sparse">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\StdDeque">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\StdList">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\StdVector">
+      <Filter>Eigen</Filter>
+    </None>
+    <None Include="..\..\..\eigen\Eigen\SVD">
+      <Filter>Eigen</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\CommonFiles\C3FilterClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonFiles\C3Point.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonFiles\C3Track.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonFiles\C3Tracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonFiles\C3Utilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\CommonFiles\C3FilterClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonFiles\C3Point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonFiles\C3Track.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonFiles\C3Tracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonFiles\C3Utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
