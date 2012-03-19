@@ -5,7 +5,7 @@
 #include <math.h>
 
 C3FilterClass::C3FilterClass(void) :
-	m_isInit(false)
+			   m_isInit(false)
 {
 	// Setup the Kalman Filter State
 	{
@@ -61,7 +61,6 @@ C3FilterClass::C3FilterClass(double processNoise) :
 		}		
 	}
 }
-
 C3FilterClass::C3FilterClass(const C3FilterClass &rhs)
 {
 	*this = rhs;
@@ -95,6 +94,7 @@ C3Point C3FilterClass::FilterInput(C3Point cameraRoverPositions, double updateTi
 	{
 		m_kalman.X(0,0) = crPos(0,0);
 		m_kalman.X(1,0) = crPos(0,1);
+		this->m_isInit  = true;
 	}
 
 	// setup the F matrix

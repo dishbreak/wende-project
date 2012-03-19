@@ -9,34 +9,42 @@
 //	m_Filter			--> Alpha/Beta or Kalman filter for predictions
 //  m_PredictionPoint	--> The last predicted point from above filter
 //  m_historyPoints     --> History of camera perceived rover positions
-//  m_ProsecuteTrack    --> Flag to determine wheter or not to point the laser
-//  m_time              --> The time the track was started
+//  m_isProsecuteTrack  --> Flag to determine wheter or not to point the laser
+//  m_startTime         --> The time the track was started
 //
 //---Member Functions---
 //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include <vector>
 #include "C3Point.h"
 #include "C3FilterClass.h"
-using std::vector;
+#include "C3CircularHistory.h"
 
 class C3Track
 {
 	private:
 		// Filter for tracking purposes
-		C3FilterClass   m_Filter;
+		C3FilterClass		m_filter;
 		// Last predicted point
-		C3Point			m_PredictionPoint;
+		C3Point				m_predictionPoint;
 		// History of points for prosecution
-		vector<C3Point>	m_historyPoints;
+		C3CircularHistory	m_historyPoints;
 		// Flag to determine if laser commands are used
-		bool			m_ProsecuteTrack;
+		bool				m_isProsecuteTrack;
 		// The starting time of the track
-		unsigned int    m_time;
+		unsigned int		m_startTime;
 
 	public:
-		C3Track(void);
-		C3Track(C3Point cameraRoverPosition, unsigned int time);
+		// Cononical Functions
+		C3Track(C3Point cameraRoverPosition, unsigned int time, bool isProsecuteTrack);
 		~C3Track(void);
+
+	public:
+		// returns the number of points contained in the history array
+		unsigned int getNumHistoryPoints() const;
+		// returns the last saved point containd in the history array
+		C3Point getLastHistoryPoint() const;
+		// returns the last prediction from the kalman filter
+		C3Point getPredicationPoint() const;
+
 };
