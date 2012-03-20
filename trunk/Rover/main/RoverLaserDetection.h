@@ -27,11 +27,12 @@
 
 //Laser Detection data struct
 typedef struct __sensor_data {
-	unsigned int inst_value;		//instantaneous value
-	int current_value;	//current avg'ed value
+	int inst_value;		//instantaneous value
+        int old_value;          //previous moving value
+	int current_value;	//current moving value
 	unsigned long total;			//running total
 	unsigned int num_samples;		//number of samples
-	int average[AVERAGE_HISTORY];		//samples
+	int samples[AVERAGE_HISTORY];		//samples
 	unsigned int address;				//location of sensor
         boolean sampled;         //enough samples?
         boolean stable;          //stable?
