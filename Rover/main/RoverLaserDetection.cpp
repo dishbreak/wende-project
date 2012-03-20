@@ -52,6 +52,7 @@ void DetectionProcessing()
 //        Serial.print(" - "); 
 //        Serial.println(Sensor_Offset);
         //check that we aren't saturated
+        //added: if we are saturated we want to *attempt* to use one sensor for both detection/recalibration...
         if((laserData.current_value < (200+offsetDirection) && Sensor_Offset != 31) || (laserData.current_value > (900+offsetDirection) && Sensor_Offset !=0 )) 
         {
           curr_state = ADJUST_TO_LIGHTING;
@@ -61,8 +62,8 @@ void DetectionProcessing()
           curr_state = DETECT_LASER;
         }
         //shift the average history in prep for a new sample set
-        shift_average_history(&laserData);
-        shift_average_history(&lightingData);
+        //shift_average_history(&laserData);
+        //shift_average_history(&lightingData);
       }
 
       break;
@@ -102,8 +103,8 @@ void DetectionProcessing()
       //this allows us to step down properly versus stepping once
       if(laserData.sampled && lightingData.sampled)
       {
-        shift_average_history(&laserData);
-        shift_average_history(&lightingData);
+      //  shift_average_history(&laserData);
+      //  shift_average_history(&lightingData);
         curr_state = ADJUST_TO_LIGHTING;
       }
       
@@ -138,14 +139,14 @@ void DetectionProcessing()
         Serial.println("DETECTED LASER");
         Serial.print(lightingData.current_value); 
         Serial.print("-");
-        Serial.println(lightingData.average[AVERAGE_HISTORY-1]);
+        Serial.println(lightingData.samples[AVERAGE_HISTORY-1]);
         Serial.print(laserData.current_value); 
         Serial.print("-");
-        Serial.println(laserData.average[AVERAGE_HISTORY-1]);
+        Serial.println(laserData.samples[AVERAGE_HISTORY-1]);
         Serial.println(Sensor_Offset);
         for(int history_num=0; history_num<AVERAGE_HISTORY; history_num++)
         {
-          Serial.println(laserData.average[history_num]);
+          Serial.println(laserData.samples[history_num]);
         }
       }
       else
@@ -174,6 +175,8 @@ void DetectionProcessing()
       break;
   }
 }
+
+/* Moving avg removes this need
 void shift_average_history(sensor_data* data)
 {
   for(int history_num=AVERAGE_HISTORY-1; history_num>0; history_num--)
@@ -182,6 +185,7 @@ void shift_average_history(sensor_data* data)
   }
   data->average[0]=data->current_value;
 }
+*/
 
 boolean initialize_laser_detection()
 {
@@ -231,8 +235,11 @@ boolean DetectLaser()
   //compare laser detector to resistive detector?
   //check for a significant change...
   //Laser will only impart a decrease in detection voltage, ambient light can be either way
+  int difference_detector = abs(laserData.inst_value - laserData.current_value);
+  int difference_lighting = abs(lightingData.inst_value - lightingData.current_value);
 
-  if (compair_detector(&laserData,DETECTION_ERROR_HIGH,DETECTION_ERROR_LOW) && compair_detector(&lightingData,LIGHTING_CHANGE_THRESHOLD,-LIGHTING_CHANGE_THRESHOLD) )
+  if ((difference_detector > DETECTION_ERROR_LOW && difference_detector < DETECTION_ERROR_HIGH) && 
+      (difference_lighting < LIGHTING_CHANGE_THRESHOLD))
   {
     //detection!
     return true;
@@ -240,6 +247,7 @@ boolean DetectLaser()
   return false;
 }
 
+/* this is slow!
 boolean compair_detector(sensor_data* data, int upper_threshold, int lower_threshold)
 {
   int init_value, difference;
@@ -264,6 +272,7 @@ boolean compair_detector(sensor_data* data, int upper_threshold, int lower_thres
   }
   return true;
 }
+*/
 
 int adjust_to_light_change(int photodetectorVal)
 {
@@ -346,6 +355,7 @@ void Toggle_Res_Off(int pin)
   pinMode( pin, INPUT );
 }
 
+/* old
 boolean sample_adc(sensor_data* data, int sample_rate)
 {
   // keeping the readings in sync is the best option  
@@ -381,8 +391,8 @@ boolean sample_adc(sensor_data* data, int sample_rate)
 
   return sampled;
 }
-
-/* Moving average, removed for now...
+*/
+/* Moving average */
 boolean sample_adc(sensor_data* data, int sample_rate)
 {
   //do we need to sample?
@@ -425,6 +435,8 @@ boolean sample_adc(sensor_data* data, int sample_rate)
     data->samples[data->num_samples-1] = data->inst_value;
     data->num_samples++;    
   }
+  //save off old value
+  data->old_value = data->current_value;
   
   //new avg
   data->current_value = data->total/(data->num_samples-1);
@@ -438,4 +450,4 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   
   return sampled;
 }
-*/
+
