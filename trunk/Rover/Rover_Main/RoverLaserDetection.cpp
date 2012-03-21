@@ -25,7 +25,7 @@ void DetectionProcessing()
       if(initialize_laser_detection())
       {
         digitalWrite(LED_LOW_LIGHT_PIN,LOW);
-        curr_state = SETTLE_FROM_ADJUST;
+        curr_state = ADJUST_TO_LIGHTING;
 //        curr_state = SAMPLE_SENSORS;   
       }
       else
@@ -65,6 +65,8 @@ void DetectionProcessing()
         //shift the average history in prep for a new sample set
         //shift_average_history(&laserData);
         //shift_average_history(&lightingData);
+        laserData.sampled = false;
+        lightingData.sampled = false;
       }
 
       break;
@@ -74,11 +76,10 @@ void DetectionProcessing()
       //Serial.println("Adjust to Lighting"); 
       if(adjust_to_light_change(laserData.current_value) == 0)
       {
+        laserData.sample_index = 0;
+        lightingData.sample_index = 0;
         laserData.sampled = false;
         lightingData.sampled = false;
-
-//        lightingData.stable = false;
-//        laserData.stable = false;
         curr_state = SETTLE_FROM_ADJUST;
         settle = 0;
       }
@@ -87,14 +88,11 @@ void DetectionProcessing()
       //this will ensure the sensor is stable before it actually starts resampling
       else
       {
-        lightingData.sampled = false;
-//        lightingData.stable = false;
-//        laserData.stable = false;
         laserData.sampled = false;
-        laserData.sample_index = 0;
-        lightingData.sample_index = 0;
+        lightingData.sampled = false;
         //resample
-        curr_state = RESAMPLE_AFTER_ADJUST;
+        //curr_state = RESAMPLE_AFTER_ADJUST;
+        curr_state = SAMPLE_SENSORS;
       }
       break;			
   
@@ -107,6 +105,8 @@ void DetectionProcessing()
       //this allows us to step down properly versus stepping once
       if(laserData.sampled && lightingData.sampled)
       {
+        laserData.sampled = false;
+        lightingData.sampled = false;
       //  shift_average_history(&laserData);
       //  shift_average_history(&lightingData);
         curr_state = ADJUST_TO_LIGHTING;
@@ -118,7 +118,8 @@ void DetectionProcessing()
       if(settle == SETTLING_CYCLES)
       {
         digitalWrite(LED_HIGH_LIGHT_PIN,LOW);
-        curr_state = SAMPLE_SENSORS;
+        curr_state = RESAMPLE_AFTER_ADJUST;
+//        curr_state = SAMPLE_SENSORS;
       }
       else if(settle > SETTLING_CYCLES)
       {
@@ -138,17 +139,18 @@ void DetectionProcessing()
       //Serial.println("DETECT LASER"); 
       if(DetectLaser())
       {
+        digitalWrite(LED_MID_LIGHT_PIN,HIGH);
         curr_state = DETECTED_LASER;
         //Display detection history information for debug
         Serial.println("DETECTED LASER");
         Serial.print("Lighting current / Historic = ");
         Serial.print(lightingData.current_value); 
         Serial.print("-");
-        Serial.println(lightingData.old_value[lightingData.history_index-1]);
+        Serial.println(lightingData.old_value[0]);
         Serial.print("Laser current / Historic = ");
         Serial.print(laserData.current_value); 
         Serial.print("-");
-        Serial.println(laserData.old_value[laserData.history_index-1]);
+        Serial.println(laserData.old_value[0]);
         Serial.print("Sensor Offset = ");
         Serial.println(Sensor_Offset);
         Serial.println("History:");
@@ -175,11 +177,10 @@ void DetectionProcessing()
   		
     case DETECTED_LASER:
       digitalWrite(LED_MID_LIGHT_PIN,HIGH);
-      
       //if demo mode continue to loop
 //      if(ROVER_DEMO_MODE == 1)
       //just stop to prove no false alarms
-      if(0)
+      if (0)
       {
         laserData.sampled = false;
         lightingData.sampled = false;
@@ -226,23 +227,20 @@ boolean initialize_laser_detection()
 //    analogRead(laserData.address);
 
     init = true;
+    return false;
   }
-  else
-  {
-    //sample if still necessary...
-    laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE);
-    lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE);
+  //sample if still necessary...
+  laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE);
+  lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE);
                 
-    if(laserData.sampled && lightingData.sampled)
-    {
-      //ready for resampling
-      laserData.sampled = false;
-      lightingData.sampled = false;
-
-      return true;	
-    }
+  if(laserData.sampled && lightingData.sampled)
+  {
+    //ready for resampling
+    laserData.sampled = false;
+    lightingData.sampled = false;
+    return true;	
   }
-  return false;	
+  return false;
 }
 
 boolean DetectLaser()
@@ -250,8 +248,17 @@ boolean DetectLaser()
   //compare laser detector to resistive detector?
   //check for a significant change...
   //Laser will only impart a decrease in detection voltage, ambient light can be either way
-  int difference_detector = laserData.old_value[laserData.history_index-1] - laserData.current_value;
-  int difference_lighting = abs(lightingData.old_value[lightingData.history_index-1] - lightingData.current_value);
+//  int difference_detector = laserData.old_value[laserData.history_index-1] - laserData.current_value;
+  int difference_detector = laserData.old_value[0] - laserData.current_value;
+  int difference_lighting = abs(lightingData.old_value[0] - lightingData.current_value);
+//  int difference_lighting = abs(lightingData.old_value[lightingData.history_index-1] - lightingData.current_value);
+//Serial.print(laserData.inst_value);
+//Serial.print(" - ");
+//Serial.print(laserData.current_value);
+//Serial.print(" - ");
+//Serial.print(laserData.old_value[0]);
+//Serial.print(" - ");
+//Serial.println(difference_detector);
 
   if ((difference_detector > DETECTION_ERROR_LOW && difference_detector < DETECTION_ERROR_HIGH) && 
       (difference_lighting < LIGHTING_CHANGE_THRESHOLD))
@@ -426,23 +433,27 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   
   if(data->sample_index == sample_rate-1)
   {
-    
-    //keep a history, allows for comparison of older non instantaneous results
-    if(data->old_sample_count == 2)
-    {
-      
-      if(data->history_index == AVERAGE_HISTORY)
+      if ( data->samples[sample_rate-1] == 0)
       {
-        data->history_index = 0;
+        data->samples[sample_rate-1] = data->inst_value;
       }
-      
-      //now set old history to new current
-      data->old_value[data->history_index] = data->current_value;
-      
-      //start counter over
-      data->old_sample_count = 0;
-      data->history_index++;
-    }
+    
+//    //keep a history, allows for comparison of older non instantaneous results
+//    if(data->old_sample_count == AVERAGE_HISTORY)
+//    {
+//      
+//      if(data->history_index == AVERAGE_HISTORY)
+//      {
+//        data->history_index = 0;
+//      }
+//      
+//      //now set old history to new current
+//      data->old_value[data->history_index] = data->current_value;
+//      
+//      //start counter over
+//      data->old_sample_count = 0;
+//      data->history_index++;
+//    }
     
     //moving average
     //find the last value
@@ -457,13 +468,29 @@ boolean sample_adc(sensor_data* data, int sample_rate)
     {
       data->samples[i-1] = data->samples[i];
     }
-
+    for(int i = 1; i < AVERAGE_HISTORY; i++)
+    {
+      data->old_value[i-1] = data->old_value[i];
+    }
     //add the top value
     data->samples[sample_rate-1] = data->inst_value;
+    data->old_value[AVERAGE_HISTORY-1]=data->current_value;
+    data->total=0;
+    for(int i = sample_rate-AVERAGE_HISTORY; i < sample_rate; i++)
+    {
+      data->total+=data->samples[i];
+    }
+    data->current_value = data->total/AVERAGE_HISTORY;
+    data->old_value[0]=0;
+    for(int i = 0; i < AVERAGE_HISTORY; i++)
+    {
+      data->old_value[0] += data->samples[i];
+    }
+    data->old_value[0]=data->old_value[0]/AVERAGE_HISTORY;
     
     //increment old samples
     //used to stored a history
-    data->old_sample_count++;
+//    data->old_sample_count++;
     
     //sampled enough...
     sampled = true;
@@ -478,10 +505,12 @@ boolean sample_adc(sensor_data* data, int sample_rate)
     //else just set data->sample[sample_index] to newest value (not enough samples)
     data->samples[data->sample_index] = data->inst_value;
     data->sample_index++;
+    data->current_value = data->total/(data->sample_index+1);
   }
   
   //new avg
-  data->current_value = data->total/(data->sample_index+1);
+//  data->current_value = data->total/(data->sample_index+1);
+
 
   //if we aren't stable make this the new stable value
 //  if(data->stable == false)
