@@ -22,7 +22,7 @@
 #define AVERAGE_HISTORY  30
 #define ADC_DETECTOR_SAMPLE_RATE  90
 #define ADC_LIGHTING_SAMPLE_RATE  90
-#define SETTLING_CYCLES  5  //capacitors removed
+#define SETTLING_CYCLES  100  //capacitors removed
 
 //Laser Detection data struct
 typedef struct __sensor_data {
