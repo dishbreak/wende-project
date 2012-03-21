@@ -25,7 +25,8 @@ void DetectionProcessing()
       if(initialize_laser_detection())
       {
         digitalWrite(LED_LOW_LIGHT_PIN,LOW);
-        curr_state = SAMPLE_SENSORS;   
+        curr_state = SETTLE_FROM_ADJUST;
+//        curr_state = SAMPLE_SENSORS;   
       }
       else
       {
@@ -75,6 +76,7 @@ void DetectionProcessing()
       {
         laserData.sampled = false;
         lightingData.sampled = false;
+
 //        lightingData.stable = false;
 //        laserData.stable = false;
         curr_state = SETTLE_FROM_ADJUST;
@@ -89,6 +91,8 @@ void DetectionProcessing()
 //        lightingData.stable = false;
 //        laserData.stable = false;
         laserData.sampled = false;
+        laserData.sample_index = 0;
+        lightingData.sample_index = 0;
         //resample
         curr_state = RESAMPLE_AFTER_ADJUST;
       }
@@ -137,14 +141,23 @@ void DetectionProcessing()
         curr_state = DETECTED_LASER;
         //Display detection history information for debug
         Serial.println("DETECTED LASER");
+        Serial.print("Lighting current / Historic = ");
         Serial.print(lightingData.current_value); 
         Serial.print("-");
-        Serial.println(lightingData.samples[AVERAGE_HISTORY-1]);
+        Serial.println(lightingData.old_value[lightingData.history_index]);
+        Serial.print("Laser current / Historic = ");
         Serial.print(laserData.current_value); 
         Serial.print("-");
-        Serial.println(laserData.samples[AVERAGE_HISTORY-1]);
+        Serial.println(laserData.old_value[laserData.history_index]);
+        Serial.print("Sensor Offset = ");
         Serial.println(Sensor_Offset);
+        Serial.println("History:");
         for(int history_num=0; history_num<AVERAGE_HISTORY; history_num++)
+        {
+          Serial.println(laserData.old_value[history_num]);
+        }
+        Serial.println("Laser Samples:");
+        for(int history_num=0; history_num<ADC_DETECTOR_SAMPLE_RATE; history_num++)
         {
           Serial.println(laserData.samples[history_num]);
         }
@@ -237,7 +250,7 @@ boolean DetectLaser()
   //compare laser detector to resistive detector?
   //check for a significant change...
   //Laser will only impart a decrease in detection voltage, ambient light can be either way
-  int difference_detector = abs(laserData.old_value[laserData.history_index] - laserData.current_value);
+  int difference_detector = laserData.old_value[laserData.history_index] - laserData.current_value;
   int difference_lighting = abs(lightingData.old_value[lightingData.history_index] - lightingData.current_value);
 
   if ((difference_detector > DETECTION_ERROR_LOW && difference_detector < DETECTION_ERROR_HIGH) && 
