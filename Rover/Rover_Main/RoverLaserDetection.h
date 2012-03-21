@@ -20,19 +20,20 @@
 #define RESAMPLE_AFTER_ADJUST  6
 
 #define AVERAGE_HISTORY  10
-#define ADC_DETECTOR_SAMPLE_RATE  40
-#define ADC_LIGHTING_SAMPLE_RATE  40
+#define ADC_DETECTOR_SAMPLE_RATE  10
+#define ADC_LIGHTING_SAMPLE_RATE  10
 #define SETTLING_CYCLES  5  //capacitors removed
 
 //Laser Detection data struct
 typedef struct __sensor_data {
 	int inst_value;		//instantaneous value
-        int old_value;          //previous moving value
+        int old_value[AVERAGE_HISTORY];          //previous moving value
+        unsigned int history_index;
 	int current_value;	//current moving value
         int old_sample_count;
 	unsigned long total;			//running total
-	unsigned int num_samples;		//number of samples
-	int samples[AVERAGE_HISTORY];		//samples
+	unsigned int sample_index;		//number of samples
+	int samples[ADC_DETECTOR_SAMPLE_RATE];		//samples
 	unsigned int address;				//location of sensor
         boolean sampled;         //enough samples?
         boolean stable;          //stable?
