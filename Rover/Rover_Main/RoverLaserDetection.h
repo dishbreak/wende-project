@@ -19,9 +19,9 @@
 #define SETTLE_FROM_ADJUST  5
 #define RESAMPLE_AFTER_ADJUST  6
 
-#define AVERAGE_HISTORY  10
-#define ADC_DETECTOR_SAMPLE_RATE  10
-#define ADC_LIGHTING_SAMPLE_RATE  10
+#define AVERAGE_HISTORY  30
+#define ADC_DETECTOR_SAMPLE_RATE  90
+#define ADC_LIGHTING_SAMPLE_RATE  90
 #define SETTLING_CYCLES  5  //capacitors removed
 
 //Laser Detection data struct
