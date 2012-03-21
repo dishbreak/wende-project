@@ -144,11 +144,11 @@ void DetectionProcessing()
         Serial.print("Lighting current / Historic = ");
         Serial.print(lightingData.current_value); 
         Serial.print("-");
-        Serial.println(lightingData.old_value[lightingData.history_index]);
+        Serial.println(lightingData.old_value[lightingData.history_index-1]);
         Serial.print("Laser current / Historic = ");
         Serial.print(laserData.current_value); 
         Serial.print("-");
-        Serial.println(laserData.old_value[laserData.history_index]);
+        Serial.println(laserData.old_value[laserData.history_index-1]);
         Serial.print("Sensor Offset = ");
         Serial.println(Sensor_Offset);
         Serial.println("History:");
@@ -250,8 +250,8 @@ boolean DetectLaser()
   //compare laser detector to resistive detector?
   //check for a significant change...
   //Laser will only impart a decrease in detection voltage, ambient light can be either way
-  int difference_detector = laserData.old_value[laserData.history_index] - laserData.current_value;
-  int difference_lighting = abs(lightingData.old_value[lightingData.history_index] - lightingData.current_value);
+  int difference_detector = laserData.old_value[laserData.history_index-1] - laserData.current_value;
+  int difference_lighting = abs(lightingData.old_value[lightingData.history_index-1] - lightingData.current_value);
 
   if ((difference_detector > DETECTION_ERROR_LOW && difference_detector < DETECTION_ERROR_HIGH) && 
       (difference_lighting < LIGHTING_CHANGE_THRESHOLD))
@@ -428,7 +428,7 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   {
     
     //keep a history, allows for comparison of older non instantaneous results
-    if(data->old_sample_count == sample_rate)
+    if(data->old_sample_count == 2)
     {
       
       if(data->history_index == AVERAGE_HISTORY)
