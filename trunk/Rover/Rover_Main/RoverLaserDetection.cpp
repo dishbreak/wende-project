@@ -74,12 +74,33 @@ void DetectionProcessing()
     case ADJUST_TO_LIGHTING:
       //check for lighting adjustments
       //Serial.println("Adjust to Lighting"); 
-      if(adjust_to_light_change(laserData.current_value) == 0)
+      if(adjust_to_light_change(laserData.current_value) == 1)
       {
-        laserData.sample_index = 0;
         lightingData.sample_index = 0;
-        laserData.sampled = false;
+        lightingData.current_value = 0;
+        lightingData.total = 0;
+        lightingData.history_index = 0;
         lightingData.sampled = false;
+        
+        laserData.current_value = 0;
+        laserData.sample_index = 0;
+        laserData.total = 0;
+        laserData.history_index = 0;
+        laserData.sampled = false;
+        
+        for(int i = 0; i < ADC_DETECTOR_SAMPLE_RATE; i++)
+        {
+           laserData.samples[i] = 0;
+        }
+        for(int i = 0; i < ADC_LIGHTING_SAMPLE_RATE; i++)
+        {
+           lightingData.samples[i] = 0;
+        }
+        for(int i = 0; i < AVERAGE_HISTORY; i++)
+        {
+          laserData.old_value[i] = 0;
+          lightingData.old_value[i] = 0;
+        }
         curr_state = SETTLE_FROM_ADJUST;
         settle = 0;
       }
@@ -93,6 +114,7 @@ void DetectionProcessing()
         //resample
         //curr_state = RESAMPLE_AFTER_ADJUST;
         curr_state = SAMPLE_SENSORS;
+        
       }
       break;			
   
@@ -100,7 +122,6 @@ void DetectionProcessing()
       //resample sensors
       laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE);
       lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE);
-      
       //if we have a new sample, go back to the lighting adjust
       //this allows us to step down properly versus stepping once
       if(laserData.sampled && lightingData.sampled)
@@ -153,14 +174,11 @@ void DetectionProcessing()
         Serial.println(laserData.old_value[0]);
         Serial.print("Sensor Offset = ");
         Serial.println(Sensor_Offset);
-        Serial.println("History:");
-        for(int history_num=0; history_num<AVERAGE_HISTORY; history_num++)
-        {
-          Serial.println(laserData.old_value[history_num]);
-        }
-        Serial.println("Laser Samples:");
+        Serial.println("Laser Samples: (Ambient Laser)");
         for(int history_num=0; history_num<ADC_DETECTOR_SAMPLE_RATE; history_num++)
         {
+          Serial.print(lightingData.samples[history_num]);
+          Serial.print(" ");
           Serial.println(laserData.samples[history_num]);
         }
       }
