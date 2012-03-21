@@ -19,24 +19,24 @@
 #define SETTLE_FROM_ADJUST  5
 #define RESAMPLE_AFTER_ADJUST  6
 
+#define MAX_SAMPLES  100
 #define AVERAGE_HISTORY  30
-#define ADC_DETECTOR_SAMPLE_RATE  90
-#define ADC_LIGHTING_SAMPLE_RATE  90
+#define ADC_DETECTOR_SAMPLE_RATE  30
+#define ADC_LIGHTING_SAMPLE_RATE  5
+#define DETECTOR_AVG_RATE  10
+#define LIGHTING_AVG_RATE  1
 #define SETTLING_CYCLES  100  //capacitors removed
 
 //Laser Detection data struct
 typedef struct __sensor_data {
 	int inst_value;		//instantaneous value
-        int old_value[AVERAGE_HISTORY];          //previous moving value
-        unsigned int history_index;
-	int current_value;	//current moving value
-        int old_sample_count;
+	int historic_value;	        //moving average value
+        int current_value;      //current value, based on averaging a set number of samples
 	unsigned long total;			//running total
-	unsigned int sample_index;		//number of samples
-	int samples[ADC_DETECTOR_SAMPLE_RATE];		//samples
+        unsigned int sample_index;
+	int samples[MAX_SAMPLES];		//samples
 	unsigned int address;				//location of sensor
         boolean sampled;         //enough samples?
-        boolean stable;          //stable?
 } sensor_data;
 
 
@@ -49,7 +49,7 @@ int adjust_to_light_change(int photodetectorVal);
 void Adjust_Current_Sync(int value);
 void Toggle_Res_On(int pin);
 void Toggle_Res_Off(int pin);
-boolean sample_adc(sensor_data* data, int sample_rate);
+boolean sample_adc(sensor_data* data, int sample_rate, int avg_rate);
 boolean sample_adc(sensor_data* data);
 
 
