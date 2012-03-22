@@ -388,15 +388,17 @@ boolean sample_adc(sensor_data* data, int sample_rate, int avg_rate)
     data->total=0;
     int avg_total = 0;
     for(int i = 0; i < sample_rate; i++)
-    {
-      data->total+=data->samples[i];
-      
+    { 
       if(i >= (sample_rate-avg_rate))
       {
         avg_total+=data->samples[i];
       }
+      else
+      {
+        data->total+=data->samples[i];
+      }
     }
-    data->historic_value = data->total/sample_rate;
+    data->historic_value = data->total/(sample_rate-avg_rate);
     //"instant" average
     data->current_value = avg_total/avg_rate;
     
