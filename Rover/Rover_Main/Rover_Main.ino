@@ -11,7 +11,11 @@ void setup()
   pinMode(LED_LOW_LIGHT_PIN, OUTPUT);
   pinMode(LED_MID_LIGHT_PIN, OUTPUT);
   pinMode(LED_HIGH_LIGHT_PIN, OUTPUT);
-
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(7, OUTPUT);
 }
 
 void loop()
