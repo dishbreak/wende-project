@@ -38,12 +38,14 @@ void DetectionProcessing()
 
       //sample adc on both channels
       laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE, DETECTOR_AVG_RATE);
+      delay(SETTLING_TIME);
 //      Serial.print(laserData.inst_value);
 //      Serial.print(" - "); 
 //      Serial.print(laserData.current_value); 
 //      Serial.print(" - "); 
 //      Serial.println(Sensor_Offset);
       lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE, LIGHTING_AVG_RATE);
+      delay(SETTLING_TIME);
 
       if(laserData.sampled && lightingData.sampled)
       {
@@ -60,7 +62,28 @@ void DetectionProcessing()
         }
         else
         {
-          curr_state = DETECT_LASER;
+          int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
+          if(difference_lighting > LIGHTING_CHANGE_THRESHOLD)
+          {
+            //reset info
+            lightingData.sample_index = 0;
+            lightingData.current_value = 0;
+            lightingData.historic_value = 0;
+            lightingData.total = 0;
+            lightingData.sampled = false;
+            
+            laserData.current_value = 0;
+            laserData.historic_value = 0;
+            laserData.sample_index = 0;
+            laserData.total = 0;
+            laserData.sampled = false;
+            
+            curr_state = SAMPLE_SENSORS;
+          }
+          else
+          {
+            curr_state = DETECT_LASER;
+          }
         }
         //shift the average history in prep for a new sample set
         //shift_average_history(&laserData);
@@ -117,7 +140,9 @@ void DetectionProcessing()
     case RESAMPLE_AFTER_ADJUST:
       //resample sensors
       laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE,DETECTOR_AVG_RATE);
+      delay(SETTLING_TIME);
       lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE,LIGHTING_AVG_RATE);
+      delay(SETTLING_TIME);
       //if we have a new sample, go back to the lighting adjust
       //this allows us to step down properly versus stepping once
       if(laserData.sampled && lightingData.sampled)
@@ -230,7 +255,9 @@ boolean initialize_laser_detection()
   }
   //sample if still necessary...
   laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE,DETECTOR_AVG_RATE);
+  delay(SETTLING_TIME);
   lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE,LIGHTING_AVG_RATE);
+  delay(SETTLING_TIME);
                 
   if(laserData.sampled && lightingData.sampled)
   {
@@ -339,14 +366,14 @@ void Adjust_Current_Sync(int value)
 
 void Toggle_Res_On(int pin)
 {
-  pinMode( pin, OUTPUT );
+//  pinMode( pin, OUTPUT );
   digitalWrite( pin, HIGH );
 }
 
 void Toggle_Res_Off(int pin)
 {
   digitalWrite( pin, LOW );
-  pinMode( pin, INPUT );
+  //pinMode( pin, INPUT );
 }
 
 /* Moving average */

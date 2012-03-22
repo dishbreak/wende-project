@@ -20,12 +20,13 @@
 #define RESAMPLE_AFTER_ADJUST  6
 
 #define MAX_SAMPLES  100
-#define AVERAGE_HISTORY  30
+
 #define ADC_DETECTOR_SAMPLE_RATE  30
 #define ADC_LIGHTING_SAMPLE_RATE  5
 #define DETECTOR_AVG_RATE  10
 #define LIGHTING_AVG_RATE  1
 #define SETTLING_CYCLES  100  //capacitors removed
+#define SETTLING_TIME  2      //2ms to settle...sigh
 
 //Laser Detection data struct
 typedef struct __sensor_data {
