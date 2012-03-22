@@ -37,15 +37,13 @@ void DetectionProcessing()
     case SAMPLE_SENSORS:
 
       //sample adc on both channels
-      laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE, DETECTOR_AVG_RATE);
-      delay(SETTLING_TIME);
+      laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE);
 //      Serial.print(laserData.inst_value);
 //      Serial.print(" - "); 
 //      Serial.print(laserData.current_value); 
 //      Serial.print(" - "); 
 //      Serial.println(Sensor_Offset);
-      lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE, LIGHTING_AVG_RATE);
-      delay(SETTLING_TIME);
+      lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE);
 
       if(laserData.sampled && lightingData.sampled)
       {
@@ -62,6 +60,7 @@ void DetectionProcessing()
         }
         else
         {
+          /*
           int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
           if(difference_lighting > LIGHTING_CHANGE_THRESHOLD)
           {
@@ -84,6 +83,8 @@ void DetectionProcessing()
           {
             curr_state = DETECT_LASER;
           }
+          */
+          curr_state = DETECT_LASER;
         }
         //shift the average history in prep for a new sample set
         //shift_average_history(&laserData);
@@ -139,10 +140,10 @@ void DetectionProcessing()
   
     case RESAMPLE_AFTER_ADJUST:
       //resample sensors
-      laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE,DETECTOR_AVG_RATE);
-      delay(SETTLING_TIME);
-      lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE,LIGHTING_AVG_RATE);
-      delay(SETTLING_TIME);
+      laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE);
+//      delay(SETTLING_TIME);
+      lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE);
+//      delay(SETTLING_TIME);
       //if we have a new sample, go back to the lighting adjust
       //this allows us to step down properly versus stepping once
       if(laserData.sampled && lightingData.sampled)
@@ -175,6 +176,7 @@ void DetectionProcessing()
       break;
   
     case DETECT_LASER:
+    
       //check for a laser detection
       //Serial.println("DETECT LASER"); 
       if(DetectLaser())
@@ -254,10 +256,10 @@ boolean initialize_laser_detection()
     return false;
   }
   //sample if still necessary...
-  laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE,DETECTOR_AVG_RATE);
-  delay(SETTLING_TIME);
-  lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE,LIGHTING_AVG_RATE);
-  delay(SETTLING_TIME);
+  laserData.sampled = sample_adc(&laserData, ADC_DETECTOR_SAMPLE_RATE);
+  //delay(SETTLING_TIME);
+  lightingData.sampled = sample_adc(&lightingData, ADC_LIGHTING_SAMPLE_RATE);
+  //delay(SETTLING_TIME);
                 
   if(laserData.sampled && lightingData.sampled)
   {
@@ -275,8 +277,16 @@ boolean DetectLaser()
   //check for a significant change...
   //Laser will only impart a decrease in detection voltage, ambient light can be either way
 //  int difference_detector = laserData.old_value[laserData.history_index-1] - laserData.current_value;
-  int difference_detector = laserData.historic_value - laserData.current_value;
   int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
+
+  if(difference_lighting > LIGHTING_CHANGE_THRESHOLD)
+  {
+    lightingData.historic_value = lightingData.current_value;
+    laserData.historic_value = laserData.current_value;
+    difference_lighting = 0;
+  }
+
+  int difference_detector = laserData.historic_value - laserData.current_value;
 //  int difference_lighting = abs(lightingData.old_value[lightingData.history_index-1] - lightingData.current_value);
 //Serial.print(laserData.inst_value);
 //Serial.print(" - ");
@@ -377,7 +387,7 @@ void Toggle_Res_Off(int pin)
 }
 
 /* Moving average */
-boolean sample_adc(sensor_data* data, int sample_rate, int avg_rate)
+boolean sample_adc(sensor_data* data, int sample_rate)
 {
   static int old_sample_count = 0;
   //do we need to sample?
@@ -413,31 +423,26 @@ boolean sample_adc(sensor_data* data, int sample_rate, int avg_rate)
     data->samples[sample_rate-1] = data->inst_value;
 
     data->total=0;
-    int avg_total = 0;
+
     for(int i = 0; i < sample_rate; i++)
     { 
-      if(i >= (sample_rate-avg_rate))
-      {
-        avg_total+=data->samples[i];
-      }
       data->total+=data->samples[i];
     }
-    data->historic_value = data->total/(sample_rate);
-    //"instant" average
-    data->current_value = avg_total/avg_rate;
+
+    //"moving" average
+    data->current_value = data->total/(sample_rate);
     
     //sampled enough...
     sampled = true;
   }
   else
-  {
-    //new sample, no history
-    data->historic_value = data->current_value; 
-    
+  { 
     //else just set data->sample[sample_index] to newest value (not enough samples)
     data->samples[data->sample_index] = data->inst_value;
     data->sample_index++;
     data->current_value = data->total/(data->sample_index+1);
+    //new sample, no history
+    data->historic_value = data->current_value;
   }
   
   //new avg

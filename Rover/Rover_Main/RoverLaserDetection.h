@@ -21,10 +21,8 @@
 
 #define MAX_SAMPLES  100
 
-#define ADC_DETECTOR_SAMPLE_RATE  20
-#define ADC_LIGHTING_SAMPLE_RATE  5
-#define DETECTOR_AVG_RATE  10
-#define LIGHTING_AVG_RATE  1
+#define ADC_DETECTOR_SAMPLE_RATE  10
+#define ADC_LIGHTING_SAMPLE_RATE  10
 #define SETTLING_CYCLES  100  //capacitors removed
 #define SETTLING_TIME  2      //2ms to settle...sigh
 
@@ -50,7 +48,7 @@ int adjust_to_light_change(int photodetectorVal);
 void Adjust_Current_Sync(int value);
 void Toggle_Res_On(int pin);
 void Toggle_Res_Off(int pin);
-boolean sample_adc(sensor_data* data, int sample_rate, int avg_rate);
+boolean sample_adc(sensor_data* data, int sample_rate);
 boolean sample_adc(sensor_data* data);
 
 
