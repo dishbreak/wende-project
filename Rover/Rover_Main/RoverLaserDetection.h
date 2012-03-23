@@ -34,6 +34,8 @@ typedef struct __sensor_data {
 	unsigned long total;			//running total
         unsigned int sample_index;
 	int samples[MAX_SAMPLES];		//samples
+        int history[MAX_SAMPLES];
+        unsigned int history_index;
 	unsigned int address;				//location of sensor
         boolean sampled;         //enough samples?
 } sensor_data;
