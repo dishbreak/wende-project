@@ -60,7 +60,7 @@ void DetectionProcessing()
         }
         else
         {
-          /*
+          
           int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
           if(difference_lighting > LIGHTING_CHANGE_THRESHOLD)
           {
@@ -83,8 +83,6 @@ void DetectionProcessing()
           {
             curr_state = DETECT_LASER;
           }
-          */
-          curr_state = DETECT_LASER;
         }
         //shift the average history in prep for a new sample set
         //shift_average_history(&laserData);
@@ -198,9 +196,9 @@ void DetectionProcessing()
         Serial.println("Laser Samples: (Ambient Laser)");
         for(int history_num=0; history_num<MAX_SAMPLES; history_num++)
         {
-          Serial.print(lightingData.samples[history_num]);
+          Serial.print(lightingData.history[history_num]);
           Serial.print(" ");
-          Serial.println(laserData.samples[history_num]);
+          Serial.println(laserData.history[history_num]);
         }
       }
       else
@@ -242,6 +240,7 @@ boolean initialize_laser_detection()
     lightingData.sample_index = 0;
     lightingData.address = AMBIENT_LIGHTING_PIN;
     lightingData.sampled = false;
+    lightingData.history_index = 0;
 //    analogRead(lightingData.address);
 
     laserData.current_value = 0;
@@ -250,6 +249,7 @@ boolean initialize_laser_detection()
     laserData.sample_index = 0;
     laserData.address = PHOTO_DETECTOR_PIN;
     laserData.sampled  = false;
+    laserData.history_index = 0;
 //    analogRead(laserData.address);
 
     init = true;
@@ -278,14 +278,14 @@ boolean DetectLaser()
   //Laser will only impart a decrease in detection voltage, ambient light can be either way
 //  int difference_detector = laserData.old_value[laserData.history_index-1] - laserData.current_value;
   int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
-
+/*
   if(difference_lighting > LIGHTING_CHANGE_THRESHOLD)
   {
     lightingData.historic_value = lightingData.current_value;
     laserData.historic_value = laserData.current_value;
     difference_lighting = 0;
   }
-
+*/
   int difference_detector = laserData.historic_value - laserData.current_value;
 //  int difference_lighting = abs(lightingData.old_value[lightingData.history_index-1] - lightingData.current_value);
 //Serial.print(laserData.inst_value);
@@ -389,7 +389,6 @@ void Toggle_Res_Off(int pin)
 /* Moving average */
 boolean sample_adc(sensor_data* data, int sample_rate)
 {
-  static int old_sample_count = 0;
   //do we need to sample?
   //used due to different sampling rates
   //allows for concurrent ADC execution
@@ -399,9 +398,15 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   //  return true;
   //}
   
+  if(data->history_index == MAX_SAMPLES)
+  {
+    data->history_index = 0;
+  }
+  
   int lastVal = 0;
   boolean sampled = false;
   data->inst_value = analogRead(data->address);
+  data->history[data->history_index] = data->inst_value;
   data->total+=data->inst_value;
   
   if(data->sample_index == sample_rate)
@@ -447,7 +452,7 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   
   //new avg
 //  data->current_value = data->total/(data->sample_index+1);
-  
+  data->history_index++;
   return sampled;
 }
 
