@@ -54,7 +54,7 @@ void DetectionProcessing()
 //        Serial.println(Sensor_Offset);
         //check that we aren't saturated
         //added: if we are saturated we want to *attempt* to use one sensor for both detection/recalibration...
-        if((laserData.current_value < (200+offsetDirection) && Sensor_Offset != 31) || (laserData.current_value > (900+offsetDirection) && Sensor_Offset !=0 )) 
+        if((laserData.current_value/ADC_DETECTOR_SAMPLE_RATE < (200+offsetDirection) && Sensor_Offset != 31) || (laserData.current_value/ADC_DETECTOR_SAMPLE_RATE > (900+offsetDirection) && Sensor_Offset !=0 )) 
         {
           curr_state = ADJUST_TO_LIGHTING;
         }
@@ -62,22 +62,17 @@ void DetectionProcessing()
         {
           
           int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
-          int difference_detector = abs(laserData.historic_value - laserData.current_value);
-          if((difference_lighting > LIGHTING_CHANGE_THRESHOLD_LOW && difference_detector < LASER_CHANGE_THRESHOLD_LOW) ||
-             (difference_lighting > LIGHTING_CHANGE_THRESHOLD_MID && difference_detector < LASER_CHANGE_THRESHOLD_HIGH) ||
-             (difference_lighting > LIGHTING_CHANGE_THRESHOLD_HIGH))
+          if(difference_lighting > LIGHTING_CHANGE_THRESHOLD_MID*ADC_LIGHTING_SAMPLE_RATE)
           {
             //reset info
             lightingData.sample_index = 0;
             lightingData.current_value = 0;
             lightingData.historic_value = 0;
-            lightingData.total = 0;
             lightingData.sampled = false;
             
             laserData.current_value = 0;
             laserData.historic_value = 0;
             laserData.sample_index = 0;
-            laserData.total = 0;
             laserData.sampled = false;
             
             curr_state = SAMPLE_SENSORS;
@@ -100,18 +95,16 @@ void DetectionProcessing()
     case ADJUST_TO_LIGHTING:
       //check for lighting adjustments
       //Serial.println("Adjust to Lighting"); 
-      if(adjust_to_light_change(laserData.current_value) == 1)
+      if(adjust_to_light_change(laserData.current_value/ADC_DETECTOR_SAMPLE_RATE) == 1)
       {
         lightingData.sample_index = 0;
         lightingData.current_value = 0;
         lightingData.historic_value = 0;
-        lightingData.total = 0;
         lightingData.sampled = false;
         
         laserData.current_value = 0;
         laserData.historic_value = 0;
         laserData.sample_index = 0;
-        laserData.total = 0;
         laserData.sampled = false;
         
         for(int i = 0; i < ADC_DETECTOR_SAMPLE_RATE; i++)
@@ -240,7 +233,6 @@ boolean initialize_laser_detection()
             
     lightingData.current_value = 0;
     lightingData.historic_value = 0;
-    lightingData.total = 0;
     lightingData.sample_index = 0;
     lightingData.address = AMBIENT_LIGHTING_PIN;
     lightingData.sampled = false;
@@ -248,7 +240,6 @@ boolean initialize_laser_detection()
 
     laserData.current_value = 0;
     laserData.historic_value = 0;
-    laserData.total = 0;
     laserData.sample_index = 0;
     laserData.address = PHOTO_DETECTOR_PIN;
     laserData.sampled  = false;
@@ -299,7 +290,8 @@ boolean DetectLaser()
 //Serial.print(" - ");
 //Serial.println(difference_detector);
 
-  if ((difference_detector > DETECTION_ERROR_LOW && difference_detector < DETECTION_ERROR_HIGH))
+  if ((difference_detector > DETECTION_ERROR_LOW*ADC_DETECTOR_SAMPLE_RATE && difference_detector < DETECTION_ERROR_HIGH*ADC_DETECTOR_SAMPLE_RATE) && 
+      (difference_lighting < LIGHTING_CHANGE_THRESHOLD_MID*ADC_LIGHTING_SAMPLE_RATE))
   {
     //detection!
     return true;
@@ -391,7 +383,6 @@ void Toggle_Res_Off(int pin)
 /* Moving average */
 boolean sample_adc(sensor_data* data, int sample_rate)
 {
-  static int old_sample_count = 0;
   //do we need to sample?
   //used due to different sampling rates
   //allows for concurrent ADC execution
@@ -404,7 +395,6 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   int lastVal = 0;
   boolean sampled = false;
   data->inst_value = analogRead(data->address);
-  data->total+=data->inst_value;
   
   if(data->history_index == MAX_SAMPLES)
   {
@@ -431,16 +421,13 @@ boolean sample_adc(sensor_data* data, int sample_rate)
     //add the top value
     data->samples[sample_rate-1] = data->inst_value;
 
-    data->total=0;
+    data->current_value=0;
 
     for(int i = 0; i < sample_rate; i++)
     { 
-      data->total+=data->samples[i];
+      data->current_value+=data->samples[i];
     }
 
-    //"moving" average
-    data->current_value = (data->total+sample_rate/2)/(sample_rate);
-    
     //sampled enough...
     sampled = true;
   }
@@ -449,7 +436,7 @@ boolean sample_adc(sensor_data* data, int sample_rate)
     //else just set data->sample[sample_index] to newest value (not enough samples)
     data->samples[data->sample_index] = data->inst_value;
     data->sample_index++;
-    data->current_value = (data->total+data->sample_index/2)/(data->sample_index);
+    data->current_value += data->inst_value;
     //new sample, no history
     data->historic_value = data->current_value;
   }

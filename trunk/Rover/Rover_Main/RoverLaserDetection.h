@@ -31,7 +31,6 @@ typedef struct __sensor_data {
 	int inst_value;		//instantaneous value
 	int historic_value;	        //moving average value
         int current_value;      //current value, based on averaging a set number of samples
-	unsigned long total;			//running total
         unsigned int sample_index;
 	int samples[MAX_SAMPLES];		//samples
         int history[MAX_SAMPLES];
