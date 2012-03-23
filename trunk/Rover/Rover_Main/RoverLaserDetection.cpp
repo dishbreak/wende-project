@@ -404,7 +404,7 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   data->inst_value = analogRead(data->address);
   data->total+=data->inst_value;
   
-  if(data->sample_index == sample_rate-1)
+  if(data->sample_index == sample_rate)
   {
     if( data->samples[sample_rate-1] == 0)
     {
