@@ -60,9 +60,12 @@ void DetectionProcessing()
         }
         else
         {
-          /*
+          
           int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
-          if(difference_lighting > LIGHTING_CHANGE_THRESHOLD)
+          int difference_detector = abs(laserData.historic_value - laserData.current_value);
+          if((difference_lighting > LIGHTING_CHANGE_THRESHOLD_LOW && difference_detector < LASER_CHANGE_THRESHOLD_LOW) ||
+             (difference_lighting > LIGHTING_CHANGE_THRESHOLD_MID && difference_detector < LASER_CHANGE_THRESHOLD_HIGH) ||
+             (difference_lighting > LIGHTING_CHANGE_THRESHOLD_HIGH))
           {
             //reset info
             lightingData.sample_index = 0;
@@ -83,9 +86,7 @@ void DetectionProcessing()
           {
             curr_state = DETECT_LASER;
           }
-          */
           
-          curr_state = DETECT_LASER;
         }
         //shift the average history in prep for a new sample set
         //shift_average_history(&laserData);
@@ -279,13 +280,14 @@ boolean DetectLaser()
   //Laser will only impart a decrease in detection voltage, ambient light can be either way
 //  int difference_detector = laserData.old_value[laserData.history_index-1] - laserData.current_value;
   int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
-
+/*
   if(difference_lighting > LIGHTING_CHANGE_THRESHOLD)
   {
     lightingData.historic_value = lightingData.current_value;
     laserData.historic_value = laserData.current_value;
     difference_lighting = 0;
   }
+*/
 
   int difference_detector = laserData.historic_value - laserData.current_value;
 //  int difference_lighting = abs(lightingData.old_value[lightingData.history_index-1] - lightingData.current_value);
@@ -297,8 +299,7 @@ boolean DetectLaser()
 //Serial.print(" - ");
 //Serial.println(difference_detector);
 
-  if ((difference_detector > DETECTION_ERROR_LOW && difference_detector < DETECTION_ERROR_HIGH) && 
-      (difference_lighting < LIGHTING_CHANGE_THRESHOLD))
+  if ((difference_detector > DETECTION_ERROR_LOW && difference_detector < DETECTION_ERROR_HIGH))
   {
     //detection!
     return true;
