@@ -19,7 +19,7 @@
 #define SETTLE_FROM_ADJUST  5
 #define RESAMPLE_AFTER_ADJUST  6
 
-#define MAX_SAMPLES  100
+#define MAX_SAMPLES  200
 
 #define ADC_DETECTOR_SAMPLE_RATE  10
 #define ADC_LIGHTING_SAMPLE_RATE  10
@@ -34,6 +34,8 @@ typedef struct __sensor_data {
 	unsigned long total;			//running total
         unsigned int sample_index;
 	int samples[MAX_SAMPLES];		//samples
+        int history[MAX_SAMPLES];
+        unsigned int history_index;
 	unsigned int address;				//location of sensor
         boolean sampled;         //enough samples?
 } sensor_data;
