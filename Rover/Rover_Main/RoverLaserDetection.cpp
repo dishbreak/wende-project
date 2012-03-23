@@ -83,6 +83,8 @@ void DetectionProcessing()
           {
             curr_state = DETECT_LASER;
           }
+          
+          //curr_state = DETECT_LASER;
         }
         //shift the average history in prep for a new sample set
         //shift_average_history(&laserData);
@@ -276,14 +278,14 @@ boolean DetectLaser()
   //Laser will only impart a decrease in detection voltage, ambient light can be either way
 //  int difference_detector = laserData.old_value[laserData.history_index-1] - laserData.current_value;
   int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
-/*
+
   if(difference_lighting > LIGHTING_CHANGE_THRESHOLD)
   {
     lightingData.historic_value = lightingData.current_value;
     laserData.historic_value = laserData.current_value;
     difference_lighting = 0;
   }
-*/
+
   int difference_detector = laserData.historic_value - laserData.current_value;
 //  int difference_lighting = abs(lightingData.old_value[lightingData.history_index-1] - lightingData.current_value);
 //Serial.print(laserData.inst_value);
@@ -374,19 +376,20 @@ void Adjust_Current_Sync(int value)
 
 void Toggle_Res_On(int pin)
 {
-  pinMode( pin, OUTPUT );
+//  pinMode( pin, OUTPUT );
   digitalWrite( pin, HIGH );
 }
 
 void Toggle_Res_Off(int pin)
 {
   digitalWrite( pin, LOW );
-  pinMode( pin, INPUT );
+  //pinMode( pin, INPUT );
 }
 
 /* Moving average */
 boolean sample_adc(sensor_data* data, int sample_rate)
 {
+  static int old_sample_count = 0;
   //do we need to sample?
   //used due to different sampling rates
   //allows for concurrent ADC execution
@@ -401,7 +404,7 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   data->inst_value = analogRead(data->address);
   data->total+=data->inst_value;
   
-  if(data->sample_index == sample_rate)
+  if(data->sample_index == sample_rate-1)
   {
     if( data->samples[sample_rate-1] == 0)
     {
@@ -444,6 +447,7 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   
   //new avg
 //  data->current_value = data->total/(data->sample_index+1);
+  
   return sampled;
 }
 
