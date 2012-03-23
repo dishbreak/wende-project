@@ -196,9 +196,9 @@ void DetectionProcessing()
         Serial.println("Laser Samples: (Ambient Laser)");
         for(int history_num=0; history_num<MAX_SAMPLES; history_num++)
         {
-          Serial.print(lightingData.history[history_num]);
+          Serial.print(lightingData.samples[history_num]);
           Serial.print(" ");
-          Serial.println(laserData.history[history_num]);
+          Serial.println(laserData.samples[history_num]);
         }
       }
       else
@@ -240,7 +240,6 @@ boolean initialize_laser_detection()
     lightingData.sample_index = 0;
     lightingData.address = AMBIENT_LIGHTING_PIN;
     lightingData.sampled = false;
-    lightingData.history_index = 0;
 //    analogRead(lightingData.address);
 
     laserData.current_value = 0;
@@ -249,7 +248,6 @@ boolean initialize_laser_detection()
     laserData.sample_index = 0;
     laserData.address = PHOTO_DETECTOR_PIN;
     laserData.sampled  = false;
-    laserData.history_index = 0;
 //    analogRead(laserData.address);
 
     init = true;
@@ -376,14 +374,14 @@ void Adjust_Current_Sync(int value)
 
 void Toggle_Res_On(int pin)
 {
-//  pinMode( pin, OUTPUT );
+  pinMode( pin, OUTPUT );
   digitalWrite( pin, HIGH );
 }
 
 void Toggle_Res_Off(int pin)
 {
   digitalWrite( pin, LOW );
-  //pinMode( pin, INPUT );
+  pinMode( pin, INPUT );
 }
 
 /* Moving average */
@@ -398,15 +396,9 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   //  return true;
   //}
   
-  if(data->history_index == MAX_SAMPLES)
-  {
-    data->history_index = 0;
-  }
-  
   int lastVal = 0;
   boolean sampled = false;
   data->inst_value = analogRead(data->address);
-  data->history[data->history_index] = data->inst_value;
   data->total+=data->inst_value;
   
   if(data->sample_index == sample_rate)
@@ -452,7 +444,6 @@ boolean sample_adc(sensor_data* data, int sample_rate)
   
   //new avg
 //  data->current_value = data->total/(data->sample_index+1);
-  data->history_index++;
   return sampled;
 }
 
