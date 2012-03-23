@@ -60,9 +60,9 @@ void DetectionProcessing()
         }
         else
         {
-          
+          /*
           int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
-          if(difference_lighting > LIGHTING_CHANGE_THRESHOLD_MID*ADC_LIGHTING_SAMPLE_RATE)
+          if(difference_lighting > LIGHTING_CHANGE_THRESHOLD_LOW)
           {
             //reset info
             lightingData.sample_index = 0;
@@ -81,13 +81,14 @@ void DetectionProcessing()
           {
             curr_state = DETECT_LASER;
           }
-          
+          */
         }
         //shift the average history in prep for a new sample set
         //shift_average_history(&laserData);
         //shift_average_history(&lightingData);
         laserData.sampled = false;
         lightingData.sampled = false;
+        curr_state = DETECT_LASER;
       }
 
       break;
@@ -271,14 +272,14 @@ boolean DetectLaser()
   //Laser will only impart a decrease in detection voltage, ambient light can be either way
 //  int difference_detector = laserData.old_value[laserData.history_index-1] - laserData.current_value;
   int difference_lighting = abs(lightingData.historic_value - lightingData.current_value);
-/*
-  if(difference_lighting > LIGHTING_CHANGE_THRESHOLD)
+
+  if(difference_lighting > LIGHTING_CHANGE_THRESHOLD_LOW)
   {
     lightingData.historic_value = lightingData.current_value;
     laserData.historic_value = laserData.current_value;
     difference_lighting = 0;
   }
-*/
+
 
   int difference_detector = laserData.historic_value - laserData.current_value;
 //  int difference_lighting = abs(lightingData.old_value[lightingData.history_index-1] - lightingData.current_value);
@@ -290,8 +291,7 @@ boolean DetectLaser()
 //Serial.print(" - ");
 //Serial.println(difference_detector);
 
-  if ((difference_detector > DETECTION_ERROR_LOW*ADC_DETECTOR_SAMPLE_RATE && difference_detector < DETECTION_ERROR_HIGH*ADC_DETECTOR_SAMPLE_RATE) && 
-      (difference_lighting < LIGHTING_CHANGE_THRESHOLD_MID*ADC_LIGHTING_SAMPLE_RATE))
+  if ((difference_detector > DETECTION_ERROR_LOW*ADC_DETECTOR_SAMPLE_RATE && difference_detector < DETECTION_ERROR_HIGH*ADC_DETECTOR_SAMPLE_RATE))
   {
     //detection!
     return true;
