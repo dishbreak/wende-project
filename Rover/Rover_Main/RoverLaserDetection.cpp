@@ -438,7 +438,7 @@ boolean sample_adc(sensor_data* data, int sample_rate)
     }
 
     //"moving" average
-    data->current_value = data->total/(sample_rate);
+    data->current_value = data->total+(sample_rate/2)/(sample_rate);
     
     //sampled enough...
     sampled = true;
@@ -448,7 +448,7 @@ boolean sample_adc(sensor_data* data, int sample_rate)
     //else just set data->sample[sample_index] to newest value (not enough samples)
     data->samples[data->sample_index] = data->inst_value;
     data->sample_index++;
-    data->current_value = data->total/(data->sample_index);
+    data->current_value = (data->total+data->sample_index/2)/(data->sample_index);
     //new sample, no history
     data->historic_value = data->current_value;
   }
