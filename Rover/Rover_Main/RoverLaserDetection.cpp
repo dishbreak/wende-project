@@ -438,7 +438,7 @@ boolean sample_adc(sensor_data* data, int sample_rate)
     }
 
     //"moving" average
-    data->current_value = data->total+(sample_rate/2)/(sample_rate);
+    data->current_value = (data->total+sample_rate/2)/(sample_rate);
     
     //sampled enough...
     sampled = true;
