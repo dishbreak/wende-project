@@ -22,6 +22,7 @@ public:
 
 public slots:
     void updatePPI(const MessageCodes::StatusCode &);
+    void openDialogue();
     
 private:
     Ui::MainWindow *ui;

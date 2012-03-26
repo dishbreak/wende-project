@@ -6,6 +6,7 @@
 #include <QStatusBar>
 #include <QHBoxLayout>
 #include <QTableWidget>
+#include <QFileDialog>
 
 #include "testpanel/testpanel.h"
 
@@ -15,8 +16,18 @@ MainWindow::MainWindow(QWidget *parent) :
     testPanel(new TestPanel(this))
 {
     ui->setupUi(this);
+
+    QTableWidget* tblDTI = new QTableWidget;
+    QGroupBox* gbDTI = new QGroupBox(tr("DTI Log"));
+    QVBoxLayout* vBox = new QVBoxLayout;
+    QPushButton* vExport = new QPushButton(tr("Export"));
+
     connect(testPanel, SIGNAL(commandSignal(MessageCodes::StatusCode)),
             this, SLOT(updatePPI(MessageCodes::StatusCode)));
+
+    connect(vExport, SIGNAL(clicked()),
+            this, SLOT(openDialogue()));
+
 
     //Initialise Status Bar
     QFont font( "Arial" );
@@ -24,22 +35,17 @@ MainWindow::MainWindow(QWidget *parent) :
     statusBar()->setFont(font);
     statusBar()->showMessage("WENDE System Started...");
 
-    QTableWidget* tblDTI = new QTableWidget;
-    QGroupBox* gbDTI = new QGroupBox(tr("DTI Log"));
-    QVBoxLayout* vBox = new QVBoxLayout;
-    QPushButton* vExport = new QPushButton(tr("Export"));
+
 
     //Set table row count 1 and column count 3
     tblDTI->setRowCount(3);
     tblDTI->setColumnCount(3);
+    //tblDTI->
 
-    tblDTI->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    tblDTI->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
 
     //Set Header Label Texts Here
-    tblDTI->setHorizontalHeaderLabels(QString("Distance-To-Illumination(m);Time-To-Illumination(s); PASS/FAIL").split(";"));
-    tblDTI->horizontalHeader()->setResizeMode(0,QHeaderView::Stretch);
-    tblDTI->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
-    tblDTI->horizontalHeader()->setResizeMode(2,QHeaderView::Stretch);
+    tblDTI->setHorizontalHeaderLabels(QString("DTI(m); TTI(s); PASS/FAIL").split(";"));
 
     //Add Table items here
     tblDTI->setItem(0,0,new QTableWidgetItem("1.45"));
@@ -54,13 +60,18 @@ MainWindow::MainWindow(QWidget *parent) :
     tblDTI->setItem(2,1,new QTableWidgetItem("30.0"));
     tblDTI->setItem(2,2,new QTableWidgetItem("FAIL"));
 
+    //tblDTI->resizeColumnsToContents();
+
+
     vBox->addWidget((tblDTI));
     vBox->addWidget((vExport));
 
     gbDTI->setLayout(vBox);
-    ui->hlDTI->addWidget(gbDTI);
+    gbDTI->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    ui->gbLiveImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    ui->vlDTI_2->addWidget(gbDTI);
+
+    ui->gbLiveImage->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     //set all bools to initial state
     wendeOperational = true;
@@ -73,6 +84,11 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::openDialogue()
+{
+   QString fileName = QFileDialog::getOpenFileName(this, tr("Export File"), "/", tr("Text Files (*.txt"));
 }
 
 void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
