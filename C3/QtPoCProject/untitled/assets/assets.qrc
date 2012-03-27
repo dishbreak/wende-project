@@ -7,6 +7,7 @@
         <file>activeIndicator.svg</file>
         <file>acquiredIndicator.svg</file>
         <file>inactiveIndicator.svg</file>
+        <file>unknownIndicatorRover.svg</file>
     </qresource>
     <qresource prefix="/placeholders">
         <file>testimage.png</file>

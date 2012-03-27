@@ -209,7 +209,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         break;
     case MessageCodes::RoverNotAcquired:
         //Set Rover Status Image to "Not Acquired"
-        ui->widRoverStatus->setPixmap(QPixmap(":/indicators/unknownIndicator.svg"));
+        ui->widRoverStatus->setPixmap(QPixmap(":/indicators/unknownIndicatorRover.svg"));
         break;
     case MessageCodes::LaserActive:
         //Set Laser Active Image to "Active"
