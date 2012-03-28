@@ -21,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QGroupBox* gbDTI = new QGroupBox(tr("DTI Log"));
     QVBoxLayout* vBox = new QVBoxLayout;
     QPushButton* vExport = new QPushButton(tr("Export"));
+    //QLabel* lblStatus = new QLabel;
+    lblStatus = new QLabel;
+    pal = new QPalette;
 
     connect(testPanel, SIGNAL(commandSignal(MessageCodes::StatusCode)),
             this, SLOT(updatePPI(MessageCodes::StatusCode)));
@@ -30,10 +33,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     //Initialise Status Bar
-    QFont font( "Arial" );
-    font.setPointSize( 20 );
-    statusBar()->setFont(font);
-    statusBar()->showMessage("WENDE System Started...");
+    QFont font("Arial");
+    font.setBold(true);
+    lblStatus->setAutoFillBackground(true);
+    QPalette pal = lblStatus->palette();
+    pal.setColor(QPalette::Window, QColor(Qt::green));
+    lblStatus->setPalette(pal);
+    lblStatus->setFont(font);
+    lblStatus->setText("WENDE System Initialized...");
+    statusBar()->addPermanentWidget(lblStatus);
 
 
 
@@ -94,33 +102,42 @@ void MainWindow::openDialogue()
 void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
 {
     qDebug() << "Got status code" << status;
+    QPalette pal = lblStatus->palette();
+
     switch(status)
     {
     case MessageCodes::LaserCommsExcellent:
         //Set Laser Comms Image to "Excellent"
         ui->widLaserComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
+        pal.setColor(QPalette::Window, QColor(Qt::green));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("WENDE System Operational.");
         //Set LaserCommsOk to true
         laserCommsOk = true;
         break;
     case MessageCodes::LaserCommsGood:
         //Set Laser Comms Image to "Good"
         ui->widLaserComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
+        lblStatus->setText("WENDE System Operational.");
         //Set LaserCommsOk to true
         laserCommsOk = true;
         break;
     case MessageCodes::LaserCommsPoor:
         //Set Laser Comms Image to "Poor"
         ui->widLaserComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
+        lblStatus->setText("WENDE System Operational.");
         //Set LaserCommsOk to true
         laserCommsOk = true;
-        statusBar()->showMessage("Laser Communication POOR");
+        lblStatus->setText("Poor Laser Comms");
         break;
     case MessageCodes::LaserCommsOffline:
         //Set Laser Comms Image to "Offline"
         ui->widLaserComms->setPixmap(QPixmap(":/indicators/offlineIndicator.svg"));
         //Set LaserCommsOk to false
         laserCommsOk = false;
-        statusBar()->showMessage("Laser Communication OFFLINE");
+        pal.setColor(QPalette::Window, QColor(Qt::red));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("Laser Comms Offline");
         //Set Laser State to Unknown
         updatePPI(MessageCodes::LaserUnknown);
         break;
@@ -129,6 +146,9 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         {
             //Set Laser Status Image to "Online" (if Comms are up)
             ui->widLaserStatus->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
+            pal.setColor(QPalette::Window, QColor(Qt::green));
+            lblStatus->setPalette(pal);
+            lblStatus->setText("WENDE System Operational.");
             //Set LaserOk to true
             laserOk = true;
         }
@@ -142,7 +162,9 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         ui->widLaserStatus->setPixmap(QPixmap(":/indicators/offlineIndicator.svg"));
         //Set LaserOk to false
         laserOk = false;
-        statusBar()->showMessage("Laser OFFLINE");
+        pal.setColor(QPalette::Window, QColor(Qt::red));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("Laser Offline");
         break;
     case MessageCodes::LaserUnknown:
         //Set Laser Status Image to "Unknown"
@@ -154,12 +176,16 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         //Set Camera Comms Image to "Excellent"
         ui->widCameraComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
         //set CamaraCommsOk to true
+        pal.setColor(QPalette::Window, QColor(Qt::green));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("WENDE System Operational.");
         cameraCommsOk = true;
         break;
     case MessageCodes::CameraCommsGood:
         //Set Camera Comms Image to "Good"
         ui->widCameraComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
         //set CamaraCommsOk to true
+        lblStatus->setText("WENDE System Operational.");
         cameraCommsOk = true;
         break;
     case MessageCodes::CameraCommsPoor:
@@ -167,7 +193,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         ui->widCameraComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
         //set CamaraCommsOk to true
         cameraCommsOk = true;
-        statusBar()->showMessage("Camera Communications POOR");
+        lblStatus->setText("Camera Comms Poor.");
         break;
     case MessageCodes::CameraCommsOffline:
         //Set Camera Comms Image to "Offline"
@@ -176,7 +202,9 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         cameraCommsOk = false;
         //Set Camera State to Unknown
         updatePPI(MessageCodes::CameraUnknown);
-        statusBar()->showMessage("Camera Communication OFFLINE");
+        pal.setColor(QPalette::Window, QColor(Qt::red));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("Camera Comms Offline.");
         break;
     case MessageCodes::CameraOnline:
         if (cameraCommsOk)
@@ -184,6 +212,9 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
             //Set Camera Status Image to "Online"
             ui->widCameraStatus->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
             //Set CameraOk to true
+            pal.setColor(QPalette::Window, QColor(Qt::green));
+            lblStatus->setPalette(pal);
+            lblStatus->setText("WENDE System Operational.");
             cameraOk = true;
         }
         else
@@ -195,12 +226,18 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         //Set Camera Status Image to "Offline"
         ui->widCameraStatus->setPixmap(QPixmap(":/indicators/offlineIndicator.svg"));
         //Set CameraOk to false
+        pal.setColor(QPalette::Window, QColor(Qt::red));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("Camera Camera Offline.");
         cameraOk = false;
         break;
     case MessageCodes::CameraUnknown:
         //Set Camera Status Image to "Unknown"
         ui->widCameraStatus->setPixmap(QPixmap(":/indicators/unknownIndicator.svg"));
         //Set CameraOk to false
+        pal.setColor(QPalette::Window, QColor(Qt::red));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("Camera State Unknown.");
         cameraOk = false;
         break;
     case MessageCodes::RoverAcquired:
@@ -210,23 +247,37 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
     case MessageCodes::RoverNotAcquired:
         //Set Rover Status Image to "Not Acquired"
         ui->widRoverStatus->setPixmap(QPixmap(":/indicators/unknownIndicatorRover.svg"));
+        pal.setColor(QPalette::Window, QColor(Qt::green));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("Rover Acquired.");
         break;
     case MessageCodes::LaserActive:
         //Set Laser Active Image to "Active"
         ui->widLaserActive->setPixmap(QPixmap(":/indicators/activeIndicator.svg"));
+        pal.setColor(QPalette::Window, QColor(Qt::green));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("Laser Energised.");
         break;
     case MessageCodes::LaserNotActive:
         //Set Laser Active Image to "Not Active"
         ui->widLaserActive->setPixmap(QPixmap(":/indicators/inactiveIndicator.svg"));
+        pal.setColor(QPalette::Window, QColor(Qt::green));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("Laser Not Energised.");
         break;
     case MessageCodes::wendeOnline:
         //Set WENDE Status Image to "Online"
         ui->widWendeStatus->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
+        pal.setColor(QPalette::Window, QColor(Qt::green));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("WENDE System Operational.");
         break;
     case MessageCodes::wendeOffline:
         //Set WENDE Status Image to "Offline"
         ui->widWendeStatus->setPixmap(QPixmap(":/indicators/offlineIndicator.svg"));
-        statusBar()->showMessage("WENDE OFFLINE");
+        pal.setColor(QPalette::Window, QColor(Qt::red));
+        lblStatus->setPalette(pal);
+        lblStatus->setText("WENDE System Offline.");
         break;
     default:
         break;

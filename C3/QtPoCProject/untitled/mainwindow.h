@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "MessageCodes.h"
+#include <QLabel>
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +28,8 @@ public slots:
 private:
     Ui::MainWindow *ui;
     TestPanel *testPanel;
+    QLabel* lblStatus;
+    QPalette* pal;
     bool wendeOperational;
     bool cameraOk;
     bool laserOk;
