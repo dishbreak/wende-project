@@ -111,21 +111,21 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         ui->widLaserComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
         pal.setColor(QPalette::Window, QColor(Qt::green));
         lblStatus->setPalette(pal);
-        lblStatus->setText("WENDE System Operational.");
+        lblStatus->setText("Laser Comms Online.");
         //Set LaserCommsOk to true
         laserCommsOk = true;
         break;
     case MessageCodes::LaserCommsGood:
         //Set Laser Comms Image to "Good"
         ui->widLaserComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
-        lblStatus->setText("WENDE System Operational.");
+        lblStatus->setText("Laser Commms Online.");
         //Set LaserCommsOk to true
         laserCommsOk = true;
         break;
     case MessageCodes::LaserCommsPoor:
         //Set Laser Comms Image to "Poor"
         ui->widLaserComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
-        lblStatus->setText("WENDE System Operational.");
+        lblStatus->setText("Laser Commms Online.");
         //Set LaserCommsOk to true
         laserCommsOk = true;
         lblStatus->setText("Poor Laser Comms");
@@ -137,7 +137,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         laserCommsOk = false;
         pal.setColor(QPalette::Window, QColor(Qt::red));
         lblStatus->setPalette(pal);
-        lblStatus->setText("Laser Comms Offline");
+        lblStatus->setText("Laser Comms Offline.");
         //Set Laser State to Unknown
         updatePPI(MessageCodes::LaserUnknown);
         break;
@@ -148,7 +148,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
             ui->widLaserStatus->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
             pal.setColor(QPalette::Window, QColor(Qt::green));
             lblStatus->setPalette(pal);
-            lblStatus->setText("WENDE System Operational.");
+            lblStatus->setText("Laser Online.");
             //Set LaserOk to true
             laserOk = true;
         }
@@ -164,7 +164,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         laserOk = false;
         pal.setColor(QPalette::Window, QColor(Qt::red));
         lblStatus->setPalette(pal);
-        lblStatus->setText("Laser Offline");
+        lblStatus->setText("Laser Offline.");
         break;
     case MessageCodes::LaserUnknown:
         //Set Laser Status Image to "Unknown"
@@ -178,14 +178,14 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         //set CamaraCommsOk to true
         pal.setColor(QPalette::Window, QColor(Qt::green));
         lblStatus->setPalette(pal);
-        lblStatus->setText("WENDE System Operational.");
+        lblStatus->setText("Camera Comms Online.");
         cameraCommsOk = true;
         break;
     case MessageCodes::CameraCommsGood:
         //Set Camera Comms Image to "Good"
         ui->widCameraComms->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
         //set CamaraCommsOk to true
-        lblStatus->setText("WENDE System Operational.");
+        lblStatus->setText("Camera Comms Online.");
         cameraCommsOk = true;
         break;
     case MessageCodes::CameraCommsPoor:
@@ -214,7 +214,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
             //Set CameraOk to true
             pal.setColor(QPalette::Window, QColor(Qt::green));
             lblStatus->setPalette(pal);
-            lblStatus->setText("WENDE System Operational.");
+            lblStatus->setText("Camera Online.");
             cameraOk = true;
         }
         else
@@ -228,7 +228,7 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         //Set CameraOk to false
         pal.setColor(QPalette::Window, QColor(Qt::red));
         lblStatus->setPalette(pal);
-        lblStatus->setText("Camera Camera Offline.");
+        lblStatus->setText("Camera Offline.");
         cameraOk = false;
         break;
     case MessageCodes::CameraUnknown:
@@ -249,35 +249,29 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
         ui->widRoverStatus->setPixmap(QPixmap(":/indicators/unknownIndicatorRover.svg"));
         pal.setColor(QPalette::Window, QColor(Qt::green));
         lblStatus->setPalette(pal);
-        lblStatus->setText("Rover Acquired.");
+        lblStatus->setText("Rover State Unknown.");
         break;
     case MessageCodes::LaserActive:
         //Set Laser Active Image to "Active"
         ui->widLaserActive->setPixmap(QPixmap(":/indicators/activeIndicator.svg"));
         pal.setColor(QPalette::Window, QColor(Qt::green));
         lblStatus->setPalette(pal);
-        lblStatus->setText("Laser Energised.");
+        lblStatus->setText("Laser Energized.");
         break;
     case MessageCodes::LaserNotActive:
         //Set Laser Active Image to "Not Active"
         ui->widLaserActive->setPixmap(QPixmap(":/indicators/inactiveIndicator.svg"));
         pal.setColor(QPalette::Window, QColor(Qt::green));
         lblStatus->setPalette(pal);
-        lblStatus->setText("Laser Not Energised.");
+        lblStatus->setText("Laser Inactive.");
         break;
     case MessageCodes::wendeOnline:
         //Set WENDE Status Image to "Online"
         ui->widWendeStatus->setPixmap(QPixmap(":/indicators/goodIndicator.svg"));
-        pal.setColor(QPalette::Window, QColor(Qt::green));
-        lblStatus->setPalette(pal);
-        lblStatus->setText("WENDE System Operational.");
         break;
     case MessageCodes::wendeOffline:
         //Set WENDE Status Image to "Offline"
         ui->widWendeStatus->setPixmap(QPixmap(":/indicators/offlineIndicator.svg"));
-        pal.setColor(QPalette::Window, QColor(Qt::red));
-        lblStatus->setPalette(pal);
-        lblStatus->setText("WENDE System Offline.");
         break;
     default:
         break;
@@ -290,6 +284,9 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
             qDebug() << "Setting WENDE Operational";
             wendeOperational = true;
             updatePPI(MessageCodes::wendeOnline);
+            pal.setColor(QPalette::Window, QColor(Qt::green));
+            lblStatus->setPalette(pal);
+            lblStatus->setText("WENDE System Operational.");
         }
     }
     //else, it's offline
@@ -300,6 +297,9 @@ void MainWindow::updatePPI(const MessageCodes::StatusCode &status)
             qDebug() << "It be broken. :-(";
             wendeOperational = false;
             updatePPI(MessageCodes::wendeOffline);
+            pal.setColor(QPalette::Window, QColor(Qt::red));
+            lblStatus->setPalette(pal);
+            lblStatus->setText("WENDE System Offline.");
         }
     }
 }
