@@ -49,6 +49,8 @@ BEGIN_MESSAGE_MAP(CClientSocketDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_START, OnBtnConnect)
 	ON_BN_CLICKED(IDC_BTN_STOP, OnBtnDisconnect)
 	ON_BN_CLICKED(IDC_BTN_SEND_STATUS, OnBtnSend)
+	ON_BN_CLICKED(IDC_BTN_SEND_IMAGE, OnBtnSend)
+	ON_BN_CLICKED(IDC_BTN_SEND_TRACK, OnBtnSend)
 	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -78,6 +80,8 @@ BOOL CClientSocketDlg::PreTranslateMessage(MSG* pMsg)
 BOOL CClientSocketDlg::OnInitDialog() 
 {
 	ASSERT( GetDlgItem(IDC_BTN_SEND_STATUS) != NULL );
+	ASSERT( GetDlgItem(IDC_BTN_SEND_IMAGE) != NULL );
+	ASSERT( GetDlgItem(IDC_BTN_SEND_TRACK) != NULL );
 	ASSERT( GetDlgItem(IDC_BTN_START) != NULL );
 	ASSERT( GetDlgItem(IDC_BTN_STOP) != NULL );
 	ASSERT( GetDlgItem(IDC_TCP) != NULL );
@@ -111,6 +115,8 @@ BOOL CClientSocketDlg::OnInitDialog()
 	// TODO: Add extra initialization here
 	m_ctlPortInc.SetRange32( 2000, 4500);
 	GetDlgItem(IDC_BTN_SEND_STATUS)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_TRACK)->EnableWindow( FALSE );
 	GetDlgItem(IDC_BTN_STOP)->EnableWindow( FALSE );
 
 	CString strLocal;
@@ -147,6 +153,8 @@ void CClientSocketDlg::OnBtnConnect()
 	{
 
 		GetDlgItem(IDC_BTN_SEND_STATUS)->EnableWindow( TRUE );
+		GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( TRUE );
+		GetDlgItem(IDC_BTN_SEND_TRACK)->EnableWindow( TRUE );
 		GetDlgItem(IDC_BTN_STOP)->EnableWindow( TRUE );
 		NextDlgCtrl();
 		GetDlgItem(IDC_BTN_START)->EnableWindow( FALSE );
@@ -190,6 +198,8 @@ void CClientSocketDlg::OnBtnDisconnect()
 		GetDlgItem(IDC_BTN_START)->EnableWindow( TRUE );
 		PrevDlgCtrl();
 		GetDlgItem(IDC_BTN_SEND_STATUS)->EnableWindow( FALSE );
+		GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( FALSE );
+		GetDlgItem(IDC_BTN_SEND_TRACK)->EnableWindow( FALSE );
 		GetDlgItem(IDC_BTN_STOP)->EnableWindow( FALSE );
 		GetDlgItem(IDC_TCP)->EnableWindow( TRUE );
 		GetDlgItem(IDC_UDP)->EnableWindow( TRUE );
