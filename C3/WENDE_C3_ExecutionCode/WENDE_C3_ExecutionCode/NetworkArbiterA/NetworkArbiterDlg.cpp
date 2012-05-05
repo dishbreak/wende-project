@@ -63,6 +63,7 @@ void CNetworkArbiterDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_IPAddress(pDX, IDC_IPADDRESS1, m_AddressControlValue);
 	DDX_Text(pDX, IDC_EDIT1, m_AddressPort);
 	DDX_Control(pDX, IDC_MESSAGE_LIST, m_pMsgCtrl);
+	DDX_Control(pDX, IDC_EDIT1, m_PortCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CNetworkArbiterDlg, CDialog)
@@ -70,8 +71,10 @@ BEGIN_MESSAGE_MAP(CNetworkArbiterDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
-	ON_NOTIFY(IPN_FIELDCHANGED, IDC_IPADDRESS1, &CNetworkArbiterDlg::OnIpnFieldchangedIpaddress1)
 	ON_WM_CREATE()
+	ON_BN_CLICKED(IDC_UPDATE_TCP, &CNetworkArbiterDlg::OnBnClickedUpdateTcp)
+	ON_NOTIFY(IPN_FIELDCHANGED, IDC_IPADDRESS1, &CNetworkArbiterDlg::OnIpnFieldchangedIpaddress1)
+	ON_EN_CHANGE(IDC_EDIT1, &CNetworkArbiterDlg::OnEnChangePort)
 END_MESSAGE_MAP()
 
 
@@ -160,14 +163,6 @@ HCURSOR CNetworkArbiterDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-void CNetworkArbiterDlg::OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult)
-{
-	LPNMIPADDRESS pIPAddr = reinterpret_cast<LPNMIPADDRESS>(pNMHDR);
-	// TODO: Add your control notification handler code here
-	*pResult = 0;
-}
-
 int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CDialog::OnCreate(lpCreateStruct) == -1)
@@ -180,6 +175,8 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CFileStatus status;
 	if( !CFile::GetStatus( szFileName, status ) )
 	{
+		m_Connection.ip = "192.168.1.65";
+		m_Connection.port = 4444;
 		// Create the file if it does not exist
 		WriteXMLFile();
 	}
@@ -233,43 +230,9 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_AddressControlValue = htonl(inet_addr(m_Connection.ip.c_str()));
 	m_AddressPort         = port;
 
-	for (int ii = 0; ii < 1/*SOCKET_COUNTS*/; ii++)
-	{
-		switch(ii)
-		{
-			case 1: 
-			{
-				m_SocketObject[ii].SetCameraMessageType(CameraPacketType::status);
-				break;
-			}
-			case 2: 
-			{
-				m_SocketObject[ii].SetCameraMessageType(CameraPacketType::track);
-				break;
-			}
-			case 3: 
-			{
-				m_SocketObject[ii].SetCameraMessageType(CameraPacketType::image);
-				break;
-			}
-			default:
-			{
-				break;
-			}
-		}
-		// Set the display event
-		m_SocketObject[ii].SetMessageWindow( &m_pMsgCtrl );
+	// start thread to bring up com scokets
+	RunThread();
 
-		while (!m_SocketObject[ii].IsOpen())
-		{
-			// To use TCP socket
-			port.Format(_T("%d"), m_Connection.port+ii);
-			m_SocketObject[ii].ConnectTo( m_Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
-		}
-		
-		// Now you may start the server/client thread to do the work for you...
-		m_SocketObject[ii].WatchComm();
-	}
 	return 0;
 }
 
@@ -295,8 +258,136 @@ void CNetworkArbiterDlg::WriteXMLFile()
 
 	TiXmlElement * cxn = new TiXmlElement( "Connection" );  
 	root->LinkEndChild( cxn );  
-	cxn->SetAttribute("ip", "192.168.1.70");
-	cxn->SetAttribute("port", 4444); // floating point attrib
+	cxn->SetAttribute("ip", m_Connection.ip.c_str());
+	cxn->SetAttribute("port", m_Connection.port); // floating point attrib
 
 	doc.SaveFile( "appsettings.xml" ); 
+}
+void CNetworkArbiterDlg::RunThread()
+{
+	HANDLE hThread;
+	UINT uiThreadId = 0;
+	hThread = (HANDLE)_beginthreadex(NULL,				       // Security attributes
+										0,					  // stack
+									 SocketStartThreadProc,   // Thread proc
+									 this,					  // Thread param
+									 CREATE_SUSPENDED,		  // creation mode
+									 &uiThreadId);			  // Thread ID
+
+	if ( NULL != hThread)
+	{
+		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
+		ResumeThread( hThread );
+		m_hThread = hThread;
+	}
+}
+///////////////////////////////////////////////////////////////////////////////
+// SocketThreadProc
+///////////////////////////////////////////////////////////////////////////////
+// DESCRIPTION:
+//     Socket Thread function.  This function is the main thread for socket
+//     communication - Asynchronous mode.
+// PARAMETERS:
+//     LPVOID pParam : Thread parameter - a CSocketComm pointer
+// NOTES:
+///////////////////////////////////////////////////////////////////////////////
+UINT WINAPI CNetworkArbiterDlg::SocketStartThreadProc(LPVOID pParam)
+{
+	CNetworkArbiterDlg* pThis = reinterpret_cast<CNetworkArbiterDlg*>( pParam );
+	// set the dialog controls..
+	CString port;
+	port.Format(_T("%d"), pThis->m_Connection.port);
+	
+	for (int ii = 0; ii < SOCKET_COUNTS; ii++)
+	{
+		switch(ii)
+		{
+			case 0: 
+			{
+				pThis->m_SocketObject[ii].SetCameraMessageType(CameraPacketType::status);
+				break;
+			}
+			case 1: 
+			{
+				pThis->m_SocketObject[ii].SetCameraMessageType(CameraPacketType::track);
+				break;
+			}
+			case 2: 
+			{
+				pThis->m_SocketObject[ii].SetCameraMessageType(CameraPacketType::image);
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+		// Set the display event
+		pThis->m_SocketObject[ii].SetMessageWindow( &pThis->m_pMsgCtrl );
+
+		while (!pThis->m_SocketObject[ii].IsOpen())
+		{
+			// To use TCP socket
+			port.Format(_T("%d"), pThis->m_Connection.port+ii);
+			pThis->m_SocketObject[ii].ConnectTo( pThis->m_Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
+		}
+		
+		// Now you may start the server/client thread to do the work for you...
+		pThis->m_SocketObject[ii].WatchComm();
+	}
+	
+	pThis->m_hThread = NULL;
+	
+	_endthreadex( 0 );
+    
+	return 1L;
+} // end SocketThreadProc
+
+void CNetworkArbiterDlg::OnBnClickedUpdateTcp()
+{
+	// Stop the thread that is running....
+	if ( NULL != m_hThread)
+	{
+		if(TerminateThread(m_hThread, 0) == FALSE)
+		{
+			// Could not force thread to exit -> call 'GetLastError()'
+		}
+	}
+	// stop all COMS...
+	for (int ii = 0; ii < SOCKET_COUNTS; ii++)
+	{
+		m_SocketObject[ii].StopComm();
+	}
+	// start all COMS with new data...
+	RunThread();
+}
+
+void CNetworkArbiterDlg::OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMIPADDRESS pIPAddr = reinterpret_cast<LPNMIPADDRESS>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	*pResult = 0;
+
+	DWORD temp = 0;
+	m_AddressControl.GetAddress(temp);
+	m_AddressControlValue = temp;
+	struct in_addr addr;
+	addr.s_addr = htonl((long)temp);
+
+	m_Connection.ip = inet_ntoa(addr);
+	WriteXMLFile();
+}
+
+void CNetworkArbiterDlg::OnEnChangePort()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+
+	m_PortCtrl.GetWindowTextA(m_AddressPort);
+	m_Connection.port = atoi(m_AddressPort);
+	WriteXMLFile();
 }

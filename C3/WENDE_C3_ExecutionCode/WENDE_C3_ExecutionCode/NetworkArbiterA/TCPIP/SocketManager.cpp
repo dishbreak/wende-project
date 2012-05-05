@@ -68,41 +68,46 @@ void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockA
 	AppendMessage( strData );
 }
 
+void CSocketManager::DecodeCameraStatusMessage(LPCTSTR strText, char* temp)
+{
+	string s((LPCTSTR)strText);
+	cameraStatus ss;
 
+	ss.ParseFromString(s);
+
+	sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
+}
+void CSocketManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp)
+{
+	string s((LPCTSTR)strText);
+	cameraStatus ss;
+
+	ss.ParseFromString(s);
+
+	sprintf(temp, "Laser=%d Time=%Iu64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
+}
+void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp)
+{
+	string s((LPCTSTR)strText);
+	cameraStatus ss;
+
+	ss.ParseFromString(s);
+
+	sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
+}
 void CSocketManager::AppendMessage(LPCTSTR strText )
 {
 	if (NULL == m_pMsgCtrl)
 		return;
+
 	char temp [256];
+	
 	switch(m_cameraMsgType)
 	{
-		case CameraPacketType::status:
-		{
-			string s((LPCTSTR)strText);
-			cameraStatus ss;
-
-			ss.ParseFromString(s);
-				
-			sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
-			/*sprintf(temp, "+Camera Status Message\n");
-			sprintf(temp, "%s|-->Laser  = %d\n",temp,ss.laseron());
-			sprintf(temp, "%s|-->Time   = %I64d\n",temp,ss.time());
-			sprintf(temp, "%s|-->Status = %d\n",temp,ss.status());
-			sprintf(temp, "%s|-->Text   = %s\n\n",temp,ss.text().c_str());*/
-			break;
-		}
-		case CameraPacketType::track:
-		{
-			break;
-		}
-		case CameraPacketType::image:
-		{
-			break;
-		}
-		default:
-			{
-				break;
-			}
+		case CameraPacketType::status: { DecodeCameraStatusMessage(strText,temp); break; }
+		case CameraPacketType::track:  { DecodeCameraTrackMessage(strText,temp); break; }
+		case CameraPacketType::image:  { DecodeCameraImageMessage(strText,temp); break; }
+		default: { break; }
 	}
 
 	/*
