@@ -37,6 +37,11 @@ protected:
 	void DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom);
 	CEdit* m_pMsgCtrl;
 	CameraPacketType m_cameraMsgType;
+	
+private:
+	void DecodeCameraStatusMessage(LPCTSTR strText, char* temp);
+	void DecodeCameraTrackMessage(LPCTSTR strText, char* temp);
+	void DecodeCameraImageMessage(LPCTSTR strText, char* temp);
 };
 
 #endif // !defined(AFX_SOCKETMANAGER_H__7403BD71_338A_4531_BD91_3D7E5B505793__INCLUDED_)

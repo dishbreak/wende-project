@@ -35,12 +35,15 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+	static UINT WINAPI SocketStartThreadProc(LPVOID pParam);
+	HANDLE      m_hThread;      // Thread handle
+
 public:
-	afx_msg void OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 
 private:
 	void WriteXMLFile();
+	void RunThread();
 
 private:
 	ConnectionSettings m_Connection;
@@ -52,4 +55,8 @@ public:
 	CString			m_AddressPort;
 	CSocketManager  m_SocketObject[SOCKET_COUNTS];
 	CEdit			m_pMsgCtrl;
+	afx_msg void OnBnClickedUpdateTcp();
+	afx_msg void OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnEnChangePort();
+	CEdit m_PortCtrl;
 };

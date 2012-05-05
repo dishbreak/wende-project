@@ -303,6 +303,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
+		<File
 			RelativePath=".\NetworkArbiterDlg.cpp"
 			>
 		</File>
