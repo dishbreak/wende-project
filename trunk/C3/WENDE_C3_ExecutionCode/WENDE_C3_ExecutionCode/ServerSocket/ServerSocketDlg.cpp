@@ -69,9 +69,11 @@ END_MESSAGE_MAP()
 
 CServerSocketDlg::CServerSocketDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CServerSocketDlg::IDD, pParent)
+	, m_CameraStatus(cameraMsgs::systemStatus::UNKNOWN)
 {
 	//{{AFX_DATA_INIT(CServerSocketDlg)
 	m_strPort = _T("2000");
+	
 	m_nSockType = SOCK_TCP;	// default TCP
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
@@ -88,6 +90,27 @@ void CServerSocketDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_SVR_PORT, m_strPort);
 	DDX_Radio(pDX, IDC_TCP, m_nSockType);
 	//}}AFX_DATA_MAP
+	DDX_Control(pDX, IDC_LASER_STATUS, m_statusLaserOnCtrl);
+	DDX_Control(pDX, IDC_BTN_SEND_IMAGE, m_CameraUnkownStatus);
+	DDX_Control(pDX, IDC_EDIT1, m_CameraStatusTextCtrl);
+	DDX_Control(pDX, IDC_TRACK_ENABLE_0, m_trackEnable0);
+	DDX_Control(pDX, IDC_TRACK_ENABLE_1, m_trackEnable1);
+	DDX_Control(pDX, IDC_TRACK_ENABLE_2, m_trackEnable2);
+	DDX_Control(pDX, IDC_TRACK_ENABLE_3, m_trackEnable3);
+	DDX_Control(pDX, IDC_TRACK_ENABLE_4, m_trackEnable4);
+	DDX_Control(pDX, IDC_TRACK_ENABLE_5, m_trackEnable5);
+	DDX_Control(pDX, IDC_TRACK_X_0, m_trackXEditBox0);
+	DDX_Control(pDX, IDC_TRACK_X_1, m_trackXEditBox1);
+	DDX_Control(pDX, IDC_TRACK_X_2, m_trackXEditBox2);
+	DDX_Control(pDX, IDC_TRACK_X_3, m_trackXEditBox3);
+	DDX_Control(pDX, IDC_TRACK_X_4, m_trackXEditBox4);
+	DDX_Control(pDX, IDC_TRACK_X_5, m_trackXEditBox5);
+	DDX_Control(pDX, IDC_TRACK_Y_0, m_trackYEditBox0);
+	DDX_Control(pDX, IDC_TRACK_Y_1, m_trackYEditBox1);
+	DDX_Control(pDX, IDC_TRACK_Y_2, m_trackYEditBox2);
+	DDX_Control(pDX, IDC_TRACK_Y_3, m_trackYEditBox3);
+	DDX_Control(pDX, IDC_TRACK_Y_4, m_trackYEditBox4);
+	DDX_Control(pDX, IDC_TRACK_Y_5, m_trackYEditBox5);
 }
 
 BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
@@ -98,9 +121,23 @@ BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_START, OnBtnStart)
 	ON_BN_CLICKED(IDC_BTN_STOP, OnBtnStop)
 	ON_WM_DESTROY()
-	ON_BN_CLICKED(IDC_BTN_SEND_STATUS, OnBtnSend)
+	ON_BN_CLICKED(IDC_BTN_SEND_STATUS, OnBtnSendStatus)
+	ON_BN_CLICKED(IDC_BTN_SEND_IMAGE, OnBtnSendImage)
+	ON_BN_CLICKED(IDC_BTN_SEND_TRACK, OnBtnSendTrack)
 	//}}AFX_MSG_MAP
 	ON_MESSAGE(WM_UPDATE_CONNECTION, OnUpdateConnection)
+	ON_BN_CLICKED(IDC_CAMERA_STATUS_DOWN, &CServerSocketDlg::OnBnClickedCameraStatusDown)
+	ON_BN_CLICKED(IDC_CAMERA_STATUS_READY, &CServerSocketDlg::OnBnClickedCameraStatusReady)
+	ON_BN_CLICKED(IDC_CAMERA_STATUS_OPERATIONAL, &CServerSocketDlg::OnBnClickedCameraStatusOperational)
+	ON_BN_CLICKED(IDC_CAMERA_STATUS_ERROR, &CServerSocketDlg::OnBnClickedCameraStatusError)
+	ON_BN_CLICKED(IDC_CAMERA_STATUS_Failed, &CServerSocketDlg::OnBnClickedCameraStatusFailed)
+	ON_BN_CLICKED(IDC_CAMERA_STATUS_UNKOWN, &CServerSocketDlg::OnBnClickedCameraStatusUnkown)
+	ON_BN_CLICKED(IDC_TRACK_ENABLE_0, &CServerSocketDlg::OnBnClickedTrackEnable0)
+	ON_BN_CLICKED(IDC_TRACK_ENABLE_1, &CServerSocketDlg::OnBnClickedTrackEnable1)
+	ON_BN_CLICKED(IDC_TRACK_ENABLE_2, &CServerSocketDlg::OnBnClickedTrackEnable2)
+	ON_BN_CLICKED(IDC_TRACK_ENABLE_3, &CServerSocketDlg::OnBnClickedTrackEnable3)
+	ON_BN_CLICKED(IDC_TRACK_ENABLE_4, &CServerSocketDlg::OnBnClickedTrackEnable4)
+	ON_BN_CLICKED(IDC_TRACK_ENABLE_5, &CServerSocketDlg::OnBnClickedTrackEnable5)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -115,8 +152,11 @@ BOOL CServerSocketDlg::PreTranslateMessage(MSG* pMsg)
 			return TRUE;
 		if (nVirtKey == VK_RETURN && (GetFocus()->m_hWnd  == m_ctlMessage.m_hWnd))
 		{
-			if (m_pCurServer->IsOpen())
-				OnBtnSend();
+			if (m_SocketManager[0].IsOpen() && m_SocketManager[1].IsOpen() && m_SocketManager[2].IsOpen())
+			{
+				CString strTex("TEST");
+				OnBtnSend(strTex,0);
+			}
 			return TRUE;
 		}
 	}
@@ -126,18 +166,18 @@ BOOL CServerSocketDlg::PreTranslateMessage(MSG* pMsg)
 
 ///////////////////////////////////////////////////////////////////////////////
 // PickNextAvailable : this is useful only for TCP socket
-void CServerSocketDlg::PickNextAvailable()
-{
-	m_pCurServer = NULL;
-	for(int i=0; i<MAX_CONNECTION; i++)
-	{
-		if (!m_SocketManager[i].IsOpen())
-		{
-			m_pCurServer = &m_SocketManager[i];
-			break;
-		}
-	}
-}
+//void CServerSocketDlg::PickNextAvailable()
+//{
+//	m_pCurServer = NULL;
+//	for(int i=0; i<MAX_CONNECTION; i++)
+//	{
+//		if (!m_SocketManager[i].IsOpen())
+//		{
+//			m_pCurServer = &m_SocketManager[i];
+//			break;
+//		}
+//	}
+//}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,37 +185,55 @@ void CServerSocketDlg::PickNextAvailable()
 bool CServerSocketDlg::StartServer()
 {
 	bool bSuccess = false;
-	if (m_pCurServer != NULL)
+	int ipPort= atoi(m_strPort);
+	CString port;
+		
+	if (m_nSockType == SOCK_TCP)
 	{
-		if (m_nSockType == SOCK_TCP)
+		// no smart addressing - we use connection oriented
+		for(int ii=0; ii<MAX_CONNECTION; ii++)
 		{
-			// no smart addressing - we use connection oriented
-			m_pCurServer->SetSmartAddressing( false );
-			bSuccess = m_pCurServer->CreateSocket( m_strPort, AF_INET, SOCK_STREAM, 0); // TCP
+			port.Format(_T("%d"), ipPort+ii);
+			m_SocketManager[ii].SetSmartAddressing( false );
+			bSuccess = m_SocketManager[ii].CreateSocket( port, AF_INET, SOCK_STREAM, 0); // TCP
 		}
-		else
+	}
+	else
+	{
+		// no smart addressing - we use connection oriented
+		for(int ii=0; ii<MAX_CONNECTION; ii++)
 		{
-			m_pCurServer->SetSmartAddressing( true );
-			bSuccess = m_pCurServer->CreateSocket( m_strPort, AF_INET, SOCK_DGRAM, SO_BROADCAST); // UDP
+			port.Format(_T("%d"), ipPort+ii);
+			m_SocketManager[ii].SetSmartAddressing( true );
+			bSuccess = m_SocketManager[ii].CreateSocket( port, AF_INET, SOCK_DGRAM, SO_BROADCAST); // UDP
 		}
+	}
 
-		if (bSuccess && m_pCurServer->WatchComm())
+	if (bSuccess && 
+		m_SocketManager[0].WatchComm() && 
+		m_SocketManager[1].WatchComm() &&
+		m_SocketManager[2].WatchComm() )
+	{
+		for(int ii=0; ii<MAX_CONNECTION; ii++)
 		{
 			GetDlgItem(IDC_BTN_SEND_STATUS)->EnableWindow( TRUE );
+			GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( TRUE );
+			GetDlgItem(IDC_BTN_SEND_TRACK)->EnableWindow( TRUE );
 			GetDlgItem(IDC_BTN_STOP)->EnableWindow( TRUE );
 			NextDlgCtrl();
 			GetDlgItem(IDC_BTN_START)->EnableWindow( FALSE );
 			GetDlgItem(IDC_TCP)->EnableWindow( FALSE );
 			GetDlgItem(IDC_UDP)->EnableWindow( FALSE );
 			CString strServer, strAddr;
-			m_pCurServer->GetLocalName( strServer.GetBuffer(256), 256);
+			m_SocketManager[ii].GetLocalName( strServer.GetBuffer(256), 256);
 			strServer.ReleaseBuffer();
-			m_pCurServer->GetLocalAddress( strAddr.GetBuffer(256), 256);
+			m_SocketManager[ii].GetLocalAddress( strAddr.GetBuffer(256), 256);
 			strAddr.ReleaseBuffer();
+			port.Format(_T("%d"), ipPort+ii);
 			CString strMsg = _T("Server: ") + strServer;
 					strMsg += _T(", @Address: ") + strAddr;
-					strMsg += _T(" is running on port ") + m_strPort + CString("\r\n");
-			m_pCurServer->AppendMessage( strMsg );
+					strMsg += _T(" is running on port ") + port + CString("\r\n");
+			m_SocketManager[ii].AppendMessage( strMsg );
 		}
 	}
 
@@ -185,6 +243,8 @@ bool CServerSocketDlg::StartServer()
 BOOL CServerSocketDlg::OnInitDialog()
 {
 	ASSERT( GetDlgItem(IDC_BTN_SEND_STATUS) != NULL );
+	ASSERT( GetDlgItem(IDC_BTN_SEND_IMAGE) != NULL );
+	ASSERT( GetDlgItem(IDC_BTN_SEND_TRACK) != NULL );
 	ASSERT( GetDlgItem(IDC_BTN_START) != NULL );
 	ASSERT( GetDlgItem(IDC_BTN_STOP) != NULL );
 
@@ -216,6 +276,8 @@ BOOL CServerSocketDlg::OnInitDialog()
 	// TODO: Add extra initialization here
 	m_ctlPortInc.SetRange32( 2000, 4500);
 	GetDlgItem(IDC_BTN_SEND_STATUS)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_TRACK)->EnableWindow( FALSE );
 	GetDlgItem(IDC_BTN_STOP)->EnableWindow( FALSE );
 
 	for(int i=0; i<MAX_CONNECTION; i++)
@@ -224,7 +286,32 @@ BOOL CServerSocketDlg::OnInitDialog()
 		m_SocketManager[i].SetServerState( true );	// run as server
 	}
 
-	PickNextAvailable();
+	m_CameraUnkownStatus.SetCheck(true);
+	//PickNextAvailable();
+	m_trackXEditBox0.SetWindowTextA("0");
+	m_trackYEditBox0.SetWindowTextA("0");
+	m_trackXEditBox1.SetWindowTextA("0");
+	m_trackYEditBox1.SetWindowTextA("0");
+	m_trackXEditBox2.SetWindowTextA("0");
+	m_trackYEditBox2.SetWindowTextA("0");
+	m_trackXEditBox3.SetWindowTextA("0");
+	m_trackYEditBox3.SetWindowTextA("0");
+	m_trackXEditBox4.SetWindowTextA("0");
+	m_trackYEditBox4.SetWindowTextA("0");
+	m_trackXEditBox5.SetWindowTextA("0");
+	m_trackYEditBox5.SetWindowTextA("0");
+	m_trackXEditBox0.EnableWindow(false);
+	m_trackYEditBox0.EnableWindow(false);
+	m_trackXEditBox1.EnableWindow(false);
+	m_trackYEditBox1.EnableWindow(false);
+	m_trackXEditBox2.EnableWindow(false);
+	m_trackYEditBox2.EnableWindow(false);
+	m_trackXEditBox3.EnableWindow(false);
+	m_trackYEditBox3.EnableWindow(false);
+	m_trackXEditBox4.EnableWindow(false);
+	m_trackYEditBox4.EnableWindow(false);
+	m_trackXEditBox5.EnableWindow(false);
+	m_trackYEditBox5.EnableWindow(false);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -288,17 +375,19 @@ LRESULT CServerSocketDlg::OnUpdateConnection(WPARAM wParam, LPARAM lParam)
 		// Server socket is now connected, we need to pick a new one
 		if (uEvent == EVT_CONSUCCESS)
 		{
-			PickNextAvailable();
+			//PickNextAvailable();
 			StartServer();
 		}
 		else if (uEvent == EVT_CONFAILURE || uEvent == EVT_CONDROP)
 		{
 			pManager->StopComm();
-			if (m_pCurServer == NULL)
-			{
-				PickNextAvailable();
+		/*	if (m_SocketManager[0] == NULL &&
+				m_SocketManager[1] == NULL &&
+				m_SocketManager[0] == NULL)
+			{*/
+				//PickNextAvailable();
 				StartServer();
-			}
+			//}
 		}
 	}
 
@@ -325,27 +414,74 @@ void CServerSocketDlg::OnBtnStop()
 	for(int i=0; i<MAX_CONNECTION; i++)
 		m_SocketManager[i].StopComm();
 
-	if (!m_pCurServer->IsOpen())
+	for(int i=0; i<MAX_CONNECTION; i++)
 	{
-		GetDlgItem(IDC_BTN_START)->EnableWindow( TRUE );
-		PrevDlgCtrl();
-		GetDlgItem(IDC_BTN_STOP)->EnableWindow( FALSE );
-		GetDlgItem(IDC_TCP)->EnableWindow( TRUE );
-		GetDlgItem(IDC_UDP)->EnableWindow( TRUE );
+		if (!m_SocketManager[i].IsOpen())
+		{
+			GetDlgItem(IDC_BTN_START)->EnableWindow( TRUE );
+			PrevDlgCtrl();
+			GetDlgItem(IDC_BTN_STOP)->EnableWindow( FALSE );
+			GetDlgItem(IDC_TCP)->EnableWindow( TRUE );
+			GetDlgItem(IDC_UDP)->EnableWindow( TRUE );
+		}
 	}
 }
 
 
-void CServerSocketDlg::OnBtnSend() 
+void CServerSocketDlg::OnBtnSendStatus()
 {
+	CString cstatus;									// serilize the message
+	m_CameraStatusTextCtrl.GetWindowTextA(cstatus);
+
+	// Get the current system time...
+	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
+	time( &osBinaryTime ) ;		// Get the current time from the 
+								// operating system.
+	
+	//Setup the camera message....
 	cameraStatus status;
-	status.set_laseron(false);
-	status.set_status(cameraMsgs::systemStatus::CAMERA_OPERATIONAL);
-	status.set_text("This is a test");
-	status.set_time(12345);
-	string temp;
+	status.set_laseron(m_statusLaserOnCtrl.GetCheck()==BST_CHECKED);	// set laser status
+	status.set_status((cameraMsgs::systemStatus)m_CameraStatus);	// set camera status
+	status.set_text(cstatus);				// set the camera text
+	status.set_time(osBinaryTime);									// set the operational time
+	string temp;													
 	status.SerializeToString(&temp);
-	CString strText(temp.c_str());
+	CString strText(temp.c_str());									// serilize the message
+	OnBtnSend(strText,0);												// send the data
+}
+void CServerSocketDlg::OnBtnSendImage() 
+{
+}
+void CServerSocketDlg::OnBtnSendTrack() 
+{
+	// Get the current system time...
+	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
+	time( &osBinaryTime ) ;		// Get the current time from the 
+								// operating system.
+	
+	cameraTracks track;
+	track.set_time(osBinaryTime);									// set the operational time
+	track.set_laseron(m_statusLaserOnCtrl.GetCheck()==BST_CHECKED);	// set laser status
+
+	CString tempString; 
+	if (m_trackEnable0.GetCheck()==BST_CHECKED)
+	{
+		cameraMsgs::track *ctrack = track.add_laser();
+		m_trackXEditBox0.GetWindowTextA(tempString);
+		ctrack->set_x(atoi(tempString));
+		m_trackYEditBox0.GetWindowTextA(tempString);
+		ctrack->set_y(atoi(tempString));
+	}
+
+	string temp;													
+	track.SerializeToString(&temp);
+	CString strText(temp.c_str());									// serilize the message
+	OnBtnSend(strText,1);												// send the data
+}
+
+void CServerSocketDlg::OnBtnSend(CString strText, int portOffset) 
+{
+	
 	int nLen = strText.GetLength();
 	stMessageProxy msgProxy;
 
@@ -369,15 +505,10 @@ void CServerSocketDlg::OnBtnSend()
 
 		// Send data to peer...
 		if (m_nSockType == SOCK_UDP)
-			m_pCurServer->WriteComm((const LPBYTE)&msgProxy, nLen, INFINITE);
+			m_SocketManager[portOffset].WriteComm((const LPBYTE)&msgProxy, nLen, INFINITE);
 		else
 		{
-			// Send to all clients
-			for(int i=0; i<MAX_CONNECTION; i++)
-			{
-				if (m_SocketManager[i].IsOpen() && m_pCurServer != &m_SocketManager[i])
-					m_SocketManager[i].WriteComm(msgProxy.byData, nLen, INFINITE);
-			}
+			m_SocketManager[portOffset].WriteComm(msgProxy.byData, nLen, INFINITE);
 		}
 	}	
 }
@@ -390,3 +521,124 @@ void CServerSocketDlg::OnDestroy()
 	CDialog::OnDestroy();
 }
 
+
+void CServerSocketDlg::OnBnClickedCameraStatusDown()
+{
+	m_CameraStatus = cameraMsgs::systemStatus::CAMERA_DOWN;
+	// TODO: Add your control notification handler code here
+}
+
+void CServerSocketDlg::OnBnClickedCameraStatusReady()
+{
+	m_CameraStatus = cameraMsgs::systemStatus::CAMERA_READY;
+	// TODO: Add your control notification handler code here
+}
+
+void CServerSocketDlg::OnBnClickedCameraStatusOperational()
+{
+	m_CameraStatus = cameraMsgs::systemStatus::CAMERA_OPERATIONAL;
+	// TODO: Add your control notification handler code here
+}
+
+void CServerSocketDlg::OnBnClickedCameraStatusError()
+{
+	m_CameraStatus = cameraMsgs::systemStatus::CAMERA_ERROR;
+	// TODO: Add your control notification handler code here
+}
+
+void CServerSocketDlg::OnBnClickedCameraStatusFailed()
+{
+	m_CameraStatus = cameraMsgs::systemStatus::CAMERA_FAILED;
+	// TODO: Add your control notification handler code here
+}
+
+void CServerSocketDlg::OnBnClickedCameraStatusUnkown()
+{
+	m_CameraStatus = cameraMsgs::systemStatus::UNKNOWN;
+	// TODO: Add your control notification handler code here
+}
+
+void CServerSocketDlg::OnBnClickedTrackEnable0()
+{
+	if(m_trackEnable0.GetCheck()==BST_CHECKED)
+	{
+		m_trackXEditBox0.EnableWindow(true);
+		m_trackYEditBox0.EnableWindow(true);
+	}
+	else
+	{
+		m_trackXEditBox0.EnableWindow(false);
+		m_trackYEditBox0.EnableWindow(false);
+	}
+}
+
+void CServerSocketDlg::OnBnClickedTrackEnable1()
+{
+	if(m_trackEnable1.GetCheck()==BST_CHECKED)
+	{
+		m_trackXEditBox1.EnableWindow(true);
+		m_trackYEditBox1.EnableWindow(true);
+	}
+	else
+	{
+		m_trackXEditBox1.EnableWindow(false);
+		m_trackYEditBox1.EnableWindow(false);
+	}
+}
+
+void CServerSocketDlg::OnBnClickedTrackEnable2()
+{
+	if(m_trackEnable2.GetCheck()==BST_CHECKED)
+	{
+		m_trackXEditBox2.EnableWindow(true);
+		m_trackYEditBox2.EnableWindow(true);
+	}
+	else
+	{
+		m_trackXEditBox2.EnableWindow(false);
+		m_trackYEditBox2.EnableWindow(false);
+	}
+
+}
+
+void CServerSocketDlg::OnBnClickedTrackEnable3()
+{
+	if(m_trackEnable3.GetCheck()==BST_CHECKED)
+	{
+		m_trackXEditBox3.EnableWindow(true);
+		m_trackYEditBox3.EnableWindow(true);
+	}
+	else
+	{
+		m_trackXEditBox3.EnableWindow(false);
+		m_trackYEditBox3.EnableWindow(false);
+	}
+}
+
+void CServerSocketDlg::OnBnClickedTrackEnable4()
+{
+	if(m_trackEnable4.GetCheck()==BST_CHECKED)
+	{
+		m_trackXEditBox4.EnableWindow(true);
+		m_trackYEditBox4.EnableWindow(true);
+	}
+	else
+	{
+		m_trackXEditBox4.EnableWindow(false);
+		m_trackYEditBox4.EnableWindow(false);
+	}
+}
+
+void CServerSocketDlg::OnBnClickedTrackEnable5()
+{
+	if(m_trackEnable5.GetCheck()==BST_CHECKED)
+	{
+		m_trackXEditBox5.EnableWindow(true);
+		m_trackYEditBox5.EnableWindow(true);
+	}
+	else
+	{
+		m_trackXEditBox5.EnableWindow(false);
+		m_trackYEditBox5.EnableWindow(false);
+	}
+}

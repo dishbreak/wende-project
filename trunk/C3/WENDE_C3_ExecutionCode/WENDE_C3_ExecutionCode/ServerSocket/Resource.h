@@ -13,12 +13,40 @@
 #define IDC_SVR_PORTINC                 1001
 #define IDC_TCP                         1002
 #define IDC_UDP                         1003
-//#define IDC_BTN_SEND                    1005
 #define IDC_BTN_START                   1006
 #define IDC_BTN_STOP                    1007
 #define IDC_MESSAGE_LIST                1008
 #define IDC_IPADDRESS                   1011
 #define IDC_BTN_SEND_STATUS             1012
+#define IDC_BTN_SEND_IMAGE              1013
+#define IDC_BTN_SEND_TRACK              1014
+#define IDC_LASER_STATUS                1018
+#define IDC_CAMERA_STATUS_DOWN          1020
+#define IDC_CAMERA_STATUS_READY         1021
+#define IDC_CAMERA_STATUS_OPERATIONAL   1022
+#define IDC_CAMERA_STATUS_ERROR         1023
+#define IDC_CAMERA_STATUS_Failed        1024
+#define IDC_CAMERA_STATUS_UNKOWN        1025
+#define IDC_EDIT1                       1026
+#define IDC_TRACK_ENABLE_0              1028
+#define IDC_TRACK_X_0                   1029
+#define IDC_TRACK_ENABLE_1              1034
+#define IDC_TRACK_X_1                   1035
+#define IDC_TRACK_Y_1                   1036
+#define IDC_TRACK_ENABLE_2              1037
+#define IDC_TRACK_X_2                   1038
+#define IDC_TRACK_Y_0                   1039
+#define IDC_TRACK_ENABLE_3              1040
+#define IDC_TRACK_X_3                   1041
+#define IDC_TRACK_Y_3                   1042
+#define IDC_TRACK_ENABLE_4              1043
+#define IDC_TRACK_X_4                   1044
+#define IDC_TRACK_Y_4                   1045
+#define IDC_TRACK_Y_2                   1046
+#define IDC_CHECK7                      1048
+#define IDC_TRACK_ENABLE_5              1048
+#define IDC_TRACK_X_5                   1049
+#define IDC_TRACK_Y_5                   1050
 
 // Next default values for new objects
 // 
@@ -26,7 +54,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1013
+#define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

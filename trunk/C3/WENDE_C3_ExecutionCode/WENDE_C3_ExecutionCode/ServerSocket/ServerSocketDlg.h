@@ -9,8 +9,11 @@
 #endif // _MSC_VER > 1000
 
 #include "SocketManager.h"
+#include "cameraMsgs.pb.h"
+#include "afxwin.h"
 
-#define MAX_CONNECTION		10
+using namespace cameraMsgs;
+#define MAX_CONNECTION		3
 
 /////////////////////////////////////////////////////////////////////////////
 // CServerSocketDlg dialog
@@ -43,10 +46,11 @@ public:
 protected:
 	HICON m_hIcon;
 	CSocketManager m_SocketManager[MAX_CONNECTION];
-	CSocketManager* m_pCurServer;
+	//CSocketManager* m_pCurServer;
 
-	void PickNextAvailable();
+	//void PickNextAvailable();
 	bool StartServer();
+	void OnBtnSend(CString strText, int portOffset);
 
 	// Generated message map functions
 	//{{AFX_MSG(CServerSocketDlg)
@@ -57,10 +61,47 @@ protected:
 	afx_msg void OnBtnStart();
 	afx_msg void OnBtnStop();
 	afx_msg void OnDestroy();
-	afx_msg void OnBtnSend();
+	afx_msg void OnBtnSendStatus();
+	afx_msg void OnBtnSendImage();
+	afx_msg void OnBtnSendTrack();
 	//}}AFX_MSG
 	afx_msg LRESULT OnUpdateConnection(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
+public:
+	CButton m_statusLaserOnCtrl;
+	cameraMsgs::systemStatus m_CameraStatus;
+	afx_msg void OnBnClickedCameraStatusDown();
+	afx_msg void OnBnClickedCameraStatusReady();
+	afx_msg void OnBnClickedCameraStatusOperational();
+	afx_msg void OnBnClickedCameraStatusError();
+	afx_msg void OnBnClickedCameraStatusFailed();
+	afx_msg void OnBnClickedCameraStatusUnkown();
+	CButton m_CameraUnkownStatus;
+	CEdit m_CameraStatusTextCtrl;
+	CButton m_trackEnable0;
+	CButton m_trackEnable1;
+	CButton m_trackEnable2;
+	CButton m_trackEnable3;
+	CButton m_trackEnable4;
+	CButton m_trackEnable5;
+	CEdit m_trackXEditBox0;
+	CEdit m_trackXEditBox1;
+	CEdit m_trackXEditBox2;
+	CEdit m_trackXEditBox3;
+	CEdit m_trackXEditBox4;
+	CEdit m_trackXEditBox5;
+	CEdit m_trackYEditBox0;
+	CEdit m_trackYEditBox1;
+	CEdit m_trackYEditBox2;
+	CEdit m_trackYEditBox3;
+	CEdit m_trackYEditBox4;
+	CEdit m_trackYEditBox5;
+	afx_msg void OnBnClickedTrackEnable0();
+	afx_msg void OnBnClickedTrackEnable1();
+	afx_msg void OnBnClickedTrackEnable2();
+	afx_msg void OnBnClickedTrackEnable3();
+	afx_msg void OnBnClickedTrackEnable4();
+	afx_msg void OnBnClickedTrackEnable5();
 };
 
 //{{AFX_INSERT_LOCATION}}
