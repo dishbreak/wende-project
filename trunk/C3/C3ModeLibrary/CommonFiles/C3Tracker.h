@@ -10,6 +10,7 @@
 //	m_tracks			  --> Contains all running tracks.
 //  m_playingFieldRadius  --> Playing Field Radius.
 //  m_PlayingFieldOrigion --> playing Field origion.
+//  m_maxDistance         --> Max Distance a point can be before it is ignorded
 //
 //---Member Functions---
 //
@@ -57,17 +58,17 @@ class C3Tracker
 		~C3Tracker(void);
 
 	public:
-		void UpdateTracks(vector<C3Point> cameraRoverPositions, unsigned int time);
+		void UpdateTracks(const vector<C3Point> cameraRoverPositions, const double time);
 
 	private:
 		// determine if a point has already been assigned to the tracker 
-		bool isInMapping(map<unsigned int, C3_CORRELATE_struct> *position2track, 
-			             unsigned int trackerNum);
+		bool isInMapping(const map<unsigned int, C3_CORRELATE_struct> *position2track, 
+			             const unsigned int trackerNum);
 		// Creates a new tracker
-		unsigned int AddTrack(C3Point cameraRoverPosition, 
-			                  unsigned int time);
+		unsigned int AddTrack(const C3Point cameraRoverPosition, 
+			                  const double time);
 		// Correlates a point with a tracker
 		void correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
-			                             vector<C3Point> cameraRoverPositions, 
-										 unsigned int time);
+			                             const vector<C3Point> cameraRoverPositions, 
+										 const double time);
 };

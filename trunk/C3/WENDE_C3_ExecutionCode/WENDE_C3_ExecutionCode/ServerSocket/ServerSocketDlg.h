@@ -102,6 +102,12 @@ public:
 	afx_msg void OnBnClickedTrackEnable3();
 	afx_msg void OnBnClickedTrackEnable4();
 	afx_msg void OnBnClickedTrackEnable5();
+	CButton m_laserEnable0;
+	CEdit m_laserXEditBox0;
+	CEdit m_laserYEditBox0;
+	afx_msg void OnBnClickedLaserEnable6();
+	afx_msg void OnBnClickedBtnSelectCameraImage();
+	CString m_imageName;
 };
 
 //{{AFX_INSERT_LOCATION}}

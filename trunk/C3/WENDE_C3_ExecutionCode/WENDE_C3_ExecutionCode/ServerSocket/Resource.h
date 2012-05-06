@@ -30,6 +30,10 @@
 #define IDC_EDIT1                       1026
 #define IDC_TRACK_ENABLE_0              1028
 #define IDC_TRACK_X_0                   1029
+#define IDC_LASER_ENABLE_6              1030
+#define IDC_LASER_X_0                   1031
+#define IDC_BUTTON1                     1032
+#define IDC_BTN_SELECT_CAMERA_IMAGE     1032
 #define IDC_TRACK_ENABLE_1              1034
 #define IDC_TRACK_X_1                   1035
 #define IDC_TRACK_Y_1                   1036
@@ -43,7 +47,7 @@
 #define IDC_TRACK_X_4                   1044
 #define IDC_TRACK_Y_4                   1045
 #define IDC_TRACK_Y_2                   1046
-#define IDC_CHECK7                      1048
+#define IDC_LASER_Y_0                   1047
 #define IDC_TRACK_ENABLE_5              1048
 #define IDC_TRACK_X_5                   1049
 #define IDC_TRACK_Y_5                   1050
@@ -54,7 +58,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1030
+#define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
