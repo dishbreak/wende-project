@@ -16,6 +16,7 @@
 #define IDC_BTN_START                   1006
 #define IDC_BTN_STOP                    1007
 #define IDC_MESSAGE_LIST                1008
+#define IDC_STATIC_PICTURE              1009
 #define IDC_IPADDRESS                   1011
 #define IDC_BTN_SEND_STATUS             1012
 #define IDC_BTN_SEND_IMAGE              1013
@@ -32,7 +33,6 @@
 #define IDC_TRACK_X_0                   1029
 #define IDC_LASER_ENABLE_6              1030
 #define IDC_LASER_X_0                   1031
-#define IDC_BUTTON1                     1032
 #define IDC_BTN_SELECT_CAMERA_IMAGE     1032
 #define IDC_TRACK_ENABLE_1              1034
 #define IDC_TRACK_X_1                   1035
@@ -58,7 +58,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1033
+#define _APS_NEXT_CONTROL_VALUE         1055
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

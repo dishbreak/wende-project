@@ -70,6 +70,7 @@ END_MESSAGE_MAP()
 CServerSocketDlg::CServerSocketDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CServerSocketDlg::IDD, pParent)
 	, m_CameraStatus(cameraMsgs::systemStatus::UNKNOWN)
+	, m_imageName("")
 {
 	//{{AFX_DATA_INIT(CServerSocketDlg)
 	m_strPort = _T("2000");
@@ -114,6 +115,7 @@ void CServerSocketDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LASER_ENABLE_6, m_laserEnable0);
 	DDX_Control(pDX, IDC_LASER_X_0, m_laserXEditBox0);
 	DDX_Control(pDX, IDC_LASER_Y_0, m_laserYEditBox0);
+	DDX_Control(pDX, IDC_STATIC_PICTURE, m_picCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
@@ -142,6 +144,7 @@ BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
 	ON_BN_CLICKED(IDC_TRACK_ENABLE_4, &CServerSocketDlg::OnBnClickedTrackEnable4)
 	ON_BN_CLICKED(IDC_TRACK_ENABLE_5, &CServerSocketDlg::OnBnClickedTrackEnable5)
 	ON_BN_CLICKED(IDC_LASER_ENABLE_6, &CServerSocketDlg::OnBnClickedLaserEnable6)
+	ON_BN_CLICKED(IDC_BTN_SELECT_CAMERA_IMAGE, &CServerSocketDlg::OnBnClickedBtnSelectCameraImage)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -458,6 +461,25 @@ void CServerSocketDlg::OnBtnSendStatus()
 }
 void CServerSocketDlg::OnBtnSendImage() 
 {
+	// Get the current system time...
+	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
+	time( &osBinaryTime ) ;		// Get the current time from the 
+								// operating system.
+	CImage tImage;
+	tImage.Load(m_imageName); // just change extension to load jpg
+	//CBitmap bitmap;
+	//bitmap.Attach(image.Detach());
+
+	//Setup the camera message....
+	cameraImage image;
+	image.set_time(osBinaryTime);									// set the operational time
+	image.set_channels(3);											// should always be a RGB image
+	//image.set_sizex();
+	//image.set_sizey();
+	string temp;													
+	image.SerializeToString(&temp);
+	CString strText(temp.c_str());									// serilize the message
+	OnBtnSend(strText,0);												// send the data
 }
 void CServerSocketDlg::OnBtnSendTrack() 
 {
@@ -664,4 +686,26 @@ void CServerSocketDlg::OnBnClickedLaserEnable6()
 		m_laserXEditBox0.EnableWindow(false);
 		m_laserYEditBox0.EnableWindow(false);
 	}
+}
+
+void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
+{
+	// TODO: Add your control notification handler code here
+	this->UpdateData();
+
+	char strFilter[] = { "All Files (*.*)|*.*||" };
+
+	CFileDialog FileDlg(TRUE, ".bcr", NULL, 0, strFilter);
+
+	if( FileDlg.DoModal() == IDOK )
+	{
+		m_imageName = FileDlg.GetPathName();
+		m_picCtrl.LoadFromFile(m_imageName);
+		return;
+	}
+	else
+	{
+		return;
+	}
+	this->UpdateData(FALSE);
 }
