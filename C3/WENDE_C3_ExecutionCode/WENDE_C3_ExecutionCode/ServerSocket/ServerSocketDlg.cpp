@@ -111,6 +111,9 @@ void CServerSocketDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TRACK_Y_3, m_trackYEditBox3);
 	DDX_Control(pDX, IDC_TRACK_Y_4, m_trackYEditBox4);
 	DDX_Control(pDX, IDC_TRACK_Y_5, m_trackYEditBox5);
+	DDX_Control(pDX, IDC_LASER_ENABLE_6, m_laserEnable0);
+	DDX_Control(pDX, IDC_LASER_X_0, m_laserXEditBox0);
+	DDX_Control(pDX, IDC_LASER_Y_0, m_laserYEditBox0);
 }
 
 BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
@@ -138,6 +141,7 @@ BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
 	ON_BN_CLICKED(IDC_TRACK_ENABLE_3, &CServerSocketDlg::OnBnClickedTrackEnable3)
 	ON_BN_CLICKED(IDC_TRACK_ENABLE_4, &CServerSocketDlg::OnBnClickedTrackEnable4)
 	ON_BN_CLICKED(IDC_TRACK_ENABLE_5, &CServerSocketDlg::OnBnClickedTrackEnable5)
+	ON_BN_CLICKED(IDC_LASER_ENABLE_6, &CServerSocketDlg::OnBnClickedLaserEnable6)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -300,6 +304,8 @@ BOOL CServerSocketDlg::OnInitDialog()
 	m_trackYEditBox4.SetWindowTextA("0");
 	m_trackXEditBox5.SetWindowTextA("0");
 	m_trackYEditBox5.SetWindowTextA("0");
+	m_laserXEditBox0.SetWindowTextA("0");
+	m_laserYEditBox0.SetWindowTextA("0");
 	m_trackXEditBox0.EnableWindow(false);
 	m_trackYEditBox0.EnableWindow(false);
 	m_trackXEditBox1.EnableWindow(false);
@@ -312,7 +318,8 @@ BOOL CServerSocketDlg::OnInitDialog()
 	m_trackYEditBox4.EnableWindow(false);
 	m_trackXEditBox5.EnableWindow(false);
 	m_trackYEditBox5.EnableWindow(false);
-
+	m_laserXEditBox0.EnableWindow(false);
+	m_laserYEditBox0.EnableWindow(false);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -467,12 +474,14 @@ void CServerSocketDlg::OnBtnSendTrack()
 	if (m_trackEnable0.GetCheck()==BST_CHECKED)
 	{
 		cameraMsgs::track *ctrack = track.add_laser();
+		
 		m_trackXEditBox0.GetWindowTextA(tempString);
 		ctrack->set_x(atoi(tempString));
 		m_trackYEditBox0.GetWindowTextA(tempString);
 		ctrack->set_y(atoi(tempString));
+		//track.
 	}
-
+	
 	string temp;													
 	track.SerializeToString(&temp);
 	CString strText(temp.c_str());									// serilize the message
@@ -640,5 +649,19 @@ void CServerSocketDlg::OnBnClickedTrackEnable5()
 	{
 		m_trackXEditBox5.EnableWindow(false);
 		m_trackYEditBox5.EnableWindow(false);
+	}
+}
+
+void CServerSocketDlg::OnBnClickedLaserEnable6()
+{
+	if(m_laserEnable0.GetCheck()==BST_CHECKED)
+	{
+		m_laserXEditBox0.EnableWindow(true);
+		m_laserYEditBox0.EnableWindow(true);
+	}
+	else
+	{
+		m_laserXEditBox0.EnableWindow(false);
+		m_laserYEditBox0.EnableWindow(false);
 	}
 }

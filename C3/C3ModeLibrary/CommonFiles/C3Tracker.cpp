@@ -25,31 +25,37 @@ C3Tracker::~C3Tracker(void)
 	m_tracks.clear();
 }
 
-void C3Tracker::UpdateTracks(vector<C3Point> cameraRoverPositions, unsigned int time)
+void C3Tracker::UpdateTracks(const vector<C3Point> cameraRoverPositions, const double time)
 {
+	// variable for mapping positions to tracks
+	map<unsigned int, C3_CORRELATE_struct> position2track;
+		
 	// If there is no existing tracks just pre create for the current frame
 	if (this->m_tracks.empty() == true)
 	{
+		C3_CORRELATE_struct correlate;
 		// Create a tracker for each new point
 		for (unsigned int ii = 0; ii < cameraRoverPositions.size(); ii++)
 		{
 			// Add a new track for the ii camera rover position
-			AddTrack(cameraRoverPositions[ii],time);
+			correlate.assignTrackIndex = AddTrack(cameraRoverPositions[ii],time)-1;
+			correlate.dist = 0;
 		}
 	}
 	else // ok so tracks exist... so lets correlate the positions
-	{
-		// variable for mapping positions to tracks
-		map<unsigned int, C3_CORRELATE_struct> position2track;
-		
+	{	
 		// correlate the points to trackers.
 		correlatePositions2Trackers(&position2track,cameraRoverPositions,time);
-
+	}
+	
+	// iterator
+	std::map<unsigned int, C3_CORRELATE_struct>::iterator iter;
+    
+	// loop through all items in the map..
+    for (iter = position2track.begin(); iter != position2track.end(); iter++) 
+	{
 		// Filter the points
-		// TODO ... Add in the filter code
-
-		// Compute the DTI information
-		// TODO ... Add in the DTI items
+		m_tracks[iter->second.assignTrackIndex]->UpdateTrack(cameraRoverPositions[iter->first],time);
 
 		// Compute the azimuth and elevation information
 		// TODO ... add in the code
@@ -57,8 +63,8 @@ void C3Tracker::UpdateTracks(vector<C3Point> cameraRoverPositions, unsigned int 
 }
 // Correlates a point with a tracker
 void C3Tracker::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
-											vector<C3Point> cameraRoverPositions, 
-											unsigned int time)
+											const vector<C3Point> cameraRoverPositions, 
+											const double time)
 {
 	// loop over all the positions
 	for (unsigned int ii = 0; ii < cameraRoverPositions.size(); ii++)
@@ -107,7 +113,7 @@ void C3Tracker::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struc
 		position2track->insert(pair<unsigned int, C3_CORRELATE_struct>(ii,correlate));
 	}
 }
-unsigned int C3Tracker::AddTrack(C3Point cameraRoverPosition, unsigned int time)
+unsigned int C3Tracker::AddTrack(const C3Point cameraRoverPosition, const double time)
 {
 	// Create the new Track
 	C3Track *track = NULL;
@@ -133,13 +139,14 @@ unsigned int C3Tracker::AddTrack(C3Point cameraRoverPosition, unsigned int time)
 }
 
 // determine if a point has already been assigned to the tracker 
-bool C3Tracker::isInMapping(map<unsigned int, C3_CORRELATE_struct> *position2track, unsigned int trackerNum)
+bool C3Tracker::isInMapping(const map<unsigned int, C3_CORRELATE_struct> *position2track, 
+							const unsigned int trackerNum)
 {
 	// flag...
 	bool found = false;
 
 	// iterator
-	std::map<unsigned int, C3_CORRELATE_struct>::iterator iter;
+	std::map<unsigned int, C3_CORRELATE_struct>::const_iterator iter;
     
 	// loop through all items in the map..
     for (iter = position2track->begin(); iter != position2track->end() && found == false; iter++) 

@@ -31,13 +31,29 @@ class C3Track
 		C3CircularHistory	m_historyPoints;
 		// Flag to determine if laser commands are used
 		bool				m_isProsecuteTrack;
+		// flag to show if in playing field
+
 		// The starting time of the track
-		unsigned int		m_startTime;
+		double				m_startTime;
+		// the time at which the track leaves the playing field
+		double				m_passTime;
+		// The Distance to Illumination (DTI)
+		double				m_DTI;
+		// The Time To Illumination
+		double				m_TTI;
+		// the radius of the playing field
+		double				m_playingFieldRadius;
 
 	public:
 		// Cononical Functions
-		C3Track(C3Point cameraRoverPosition, unsigned int time, bool isProsecuteTrack);
+		C3Track(const C3Point cameraRoverPosition, const double time, const bool isProsecuteTrack, const double playingFieldRadius );
 		~C3Track(void);
+
+	public:
+		// Filter and predict next location....
+		C3Point UpdateTrack(const C3Point cameraRoverPosition, const double time);
+		// Commanded Laser Azimuth and Elevation
+		C3Point CommandLaser();
 
 	public:
 		// returns the number of points contained in the history array
@@ -46,5 +62,6 @@ class C3Track
 		C3Point getLastHistoryPoint() const;
 		// returns the last prediction from the kalman filter
 		C3Point getPredicationPoint() const;
-
+		// Return the track current DTI
+		double getDTI() const;
 };

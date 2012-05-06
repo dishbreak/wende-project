@@ -1,11 +1,20 @@
 #pragma once
 
 
+
 class C3Point
 {
 	public:
-		double X;
-		double Y;
+		union
+		{
+			double X;
+			double Azimuth;
+		};
+		union
+		{
+			double Y;
+			double Elevation;
+		};		
 
 	public:
 		C3Point(void);
