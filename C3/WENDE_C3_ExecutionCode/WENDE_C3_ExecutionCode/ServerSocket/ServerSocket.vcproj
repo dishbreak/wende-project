@@ -241,6 +241,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\PictureCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="ServerSocket.cpp"
 				>
 				<FileConfiguration
@@ -377,6 +381,10 @@
 			</File>
 			<File
 				RelativePath="ClientSocketDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PictureCtrl.h"
 				>
 			</File>
 			<File

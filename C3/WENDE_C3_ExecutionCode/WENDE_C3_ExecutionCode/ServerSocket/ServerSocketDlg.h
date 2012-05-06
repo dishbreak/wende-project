@@ -11,6 +11,8 @@
 #include "SocketManager.h"
 #include "cameraMsgs.pb.h"
 #include "afxwin.h"
+#include "atlimage.h"
+#include "PictureCtrl.h"
 
 using namespace cameraMsgs;
 #define MAX_CONNECTION		3
@@ -108,6 +110,8 @@ public:
 	afx_msg void OnBnClickedLaserEnable6();
 	afx_msg void OnBnClickedBtnSelectCameraImage();
 	CString m_imageName;
+	CPictureCtrl m_picCtrl;
+	CImage  m_CameraImage;
 };
 
 //{{AFX_INSERT_LOCATION}}
