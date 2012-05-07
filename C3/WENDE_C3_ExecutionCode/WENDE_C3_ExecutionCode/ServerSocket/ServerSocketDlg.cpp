@@ -461,25 +461,38 @@ void CServerSocketDlg::OnBtnSendStatus()
 }
 void CServerSocketDlg::OnBtnSendImage() 
 {
+	static char bytes[1024*1024*3];
 	// Get the current system time...
 	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
 	time( &osBinaryTime ) ;		// Get the current time from the 
 								// operating system.
 	CImage tImage;
 	tImage.Load(m_imageName); // just change extension to load jpg
-	//CBitmap bitmap;
-	//bitmap.Attach(image.Detach());
-
+	
 	//Setup the camera message....
 	cameraImage image;
 	image.set_time(osBinaryTime);									// set the operational time
 	image.set_channels(3);											// should always be a RGB image
-	//image.set_sizex();
-	//image.set_sizey();
+	image.set_sizex(tImage.GetWidth());
+	image.set_sizey(tImage.GetHeight());
+	int ll = 0;
+	for (int ii = 0; ii < tImage.GetHeight(); ii++)
+	{
+		for (int jj = 0; jj < tImage.GetWidth(); jj++)
+		{
+			UPixel Pixel;
+			Pixel.c=tImage.GetPixel(jj,ii);;
+			bytes[ll+0] = Pixel.chars.cRed;
+			bytes[ll+1] = Pixel.chars.cGreen;
+			bytes[ll+2] = Pixel.chars.cBlue;
+			ll +=3;
+		}
+	}
+	image.set_imagedata(bytes, tImage.GetWidth()*tImage.GetHeight()*3);
 	string temp;													
 	image.SerializeToString(&temp);
 	CString strText(temp.c_str());									// serilize the message
-	OnBtnSend(strText,0);												// send the data
+	OnBtnSend(strText,2);												// send the data
 }
 void CServerSocketDlg::OnBtnSendTrack() 
 {
