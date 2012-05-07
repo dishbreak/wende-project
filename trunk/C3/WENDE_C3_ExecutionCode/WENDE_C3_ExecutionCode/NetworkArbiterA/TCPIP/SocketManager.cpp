@@ -105,11 +105,11 @@ void CSocketManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp)
 void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp)
 {
 	string s((LPCTSTR)strText);
-	cameraStatus ss;
+	cameraImage im;
 
-	ss.ParseFromString(s);
+	im.ParseFromString(s);
 
-	sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
+	//sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
 }
 void CSocketManager::AppendMessage(LPCTSTR strText )
 {
