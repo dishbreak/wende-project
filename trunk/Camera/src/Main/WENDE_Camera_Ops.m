@@ -47,14 +47,14 @@ while(n~=2)
     if TestMode
         imshow(CameraSystem.currFrame)
         hold on
-        CameraSystem.PlotDetection(CameraSystem.col,CameraSystem.row,'r')
+        CameraSystem.PlotDetection(CameraSystem.bb,'r')
     end
     CameraSystem = ProcessRoverFrame(CameraSystem);
     CameraSystem = findRoverSep(CameraSystem);
     %testSep(n) = CameraSystem.roverSep;
     if TestMode
-        CameraSystem.PlotDetection(CameraSystem.colObj1,CameraSystem.rowObj1,'g')
-        CameraSystem.PlotDetection(CameraSystem.colObj2,CameraSystem.rowObj2,'g')
+        CameraSystem.PlotDetection(CameraSystem.bbObj1,'g')
+        CameraSystem.PlotDetection(CameraSystem.bbObj2,'g')
         hold off
         %f(n)=getframe;
     end
