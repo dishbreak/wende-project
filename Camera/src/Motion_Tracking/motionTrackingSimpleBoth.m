@@ -4,6 +4,7 @@ clear
 close all
 warning off all
 clc
+%configuration parameters
 color = 1;
 numframes=200;
 brightness = 80;
@@ -12,6 +13,7 @@ exposure = -10;
 saturation = 200;
 sharpness = 50;
 whitebalance =2500;
+%Set config parameters
 vid = videoinput('winvideo', 1, 'YUY2_1280x720');
 src = getselectedsource(vid);
 set(vid,'ReturnedColorSpace','rgb')
@@ -34,11 +36,7 @@ try
         samples(:,:,:,i) = getdata(vid);
         
     end
-    %     bg = uint8(mean(samples,4));
-    %     std = uint8(std(double(samples),1,4));
-    %     std = rgb2gray(std);
     bg = getdata(vid);
-    %tol = 6.*std;
     tol = uint8(20*ones(720,1280));
     i=1;
     bg=wiener2(rgb2gray(bg),[5 5]);
@@ -48,13 +46,10 @@ try
     while(vid.FramesAcquired<=numframes)
         im1 = getdata(vid);
         im=wiener2(rgb2gray(im1),[5 5]);
-        %se = strel('square',5);
-        %im = imfill(im,'holes');
         brighterThanBg = (im > bg + tol);
         darkerThanBg = (im < bg - tol);
         Im2 = (brighterThanBg | darkerThanBg);
         Im = Im2;%bwareaopen(Im2,3);
-        %imshow(Im)
         obj(:,:,1) = double(im1(:,:,1)).*Im;
         obj(:,:,2) = double(im1(:,:,2)).*Im;
         obj(:,:,3) = double(im1(:,:,3)).*Im;
@@ -63,21 +58,13 @@ try
         target = im2bw(target,0.05);
         tarStats = regionprops(target, 'Area','BoundingBox', 'Centroid');
         [~,tarObject]=max([tarStats.Area]);
-%         if isempty(tarStats)
-%             tarStats = regionprops(obj, 'Area','BoundingBox', 'Centroid');
-%             [~,tarObject]=max([tarStats.Area]);
-%         end
-try
-        obj(round(tarStats(tarObject).Centroid(2)-20):round(tarStats(tarObject).Centroid(2)+20),round(tarStats(tarObject).Centroid(1)-20):round(tarStats(tarObject).Centroid(1)+20)) = zeros(41,41);
-end
-        %laser = imsubtract(rgb2gray(obj),obj(:,:,1));
+        
+        try
+            obj(round(tarStats(tarObject).Centroid(2)-20):round(tarStats(tarObject).Centroid(2)+20),round(tarStats(tarObject).Centroid(1)-20):round(tarStats(tarObject).Centroid(1)+20)) = zeros(41,41);
+        end
         laser = im2bw(obj(:,:,1),0.30);
         lasStats = regionprops(laser, 'Area','BoundingBox', 'Centroid');
         [~,lasObject]=max([lasStats.Area]);
-%         if isempty(lasStats)
-%             lasStats = regionprops(obj, 'Area','BoundingBox', 'Centroid');
-%             [~,lasObject]=max([lasStats.Area]);
-%         end
         imshow(im1)
         
         hold on
