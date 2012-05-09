@@ -375,7 +375,6 @@ void CNetworkArbiterDlg::OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pRe
 	addr.s_addr = htonl((long)temp);
 
 	m_Connection.ip = inet_ntoa(addr);
-	WriteXMLFile();
 }
 
 void CNetworkArbiterDlg::OnEnChangePort()
@@ -389,5 +388,4 @@ void CNetworkArbiterDlg::OnEnChangePort()
 
 	m_PortCtrl.GetWindowTextA(m_AddressPort);
 	m_Connection.port = atoi(m_AddressPort);
-	WriteXMLFile();
 }

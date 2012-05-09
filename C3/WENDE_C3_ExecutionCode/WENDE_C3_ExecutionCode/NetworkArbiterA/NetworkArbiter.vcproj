@@ -128,7 +128,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="D:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\NetworkArbiterA\;D:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\NetworkArbiterA\google;.;google"
+				AdditionalIncludeDirectories=".;google"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="false"
 				RuntimeLibrary="0"

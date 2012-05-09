@@ -32,7 +32,22 @@ const UINT EVT_ZEROLENGTH = 0x0003;	// Zero length message
 CSocketManager::CSocketManager()
 : m_pMsgCtrl(NULL), m_cameraMsgType(CameraPacketType::status)
 {
-	
+	m_LaserCommand.Acquire("SHM_C3_LASER_STATUS",
+						   "SHM_C3_LASER_STATUS_MUTEX",
+						   "SHM_C3_LASER_STATUS_EVENT1",
+						   "SHM_C3_LASER_STATUS_EVENT2");
+	m_CameraStatus.Acquire("SHM_C3_CAMERA_STAUTS",
+						   "SHM_C3_CAMERA_STATUS_MUTEX",
+						   "SHM_C3_CAMERA_STATUS_EVENT1",
+						   "SHM_C3_CAMERA_STATUS_EVENT2");
+	m_CameraTracks.Acquire("SHM_C3_CAMERA_TRACK",
+						   "SHM_C3_CAMERA_TRACK_MUTEX",
+						   "SHM_C3_CAMERA_TRACK_EVENT1",
+						   "SHM_C3_CAMERA_TRACK_EVENT2");
+	m_CameraImage.Acquire( "SHM_C3_CAMERA_IMAGE",
+						   "SHM_C3_CAMERA_IMAGE_MUTEX",
+						   "SHM_C3_CAMERA_IMAGE_EVENT1",
+						   "SHM_C3_CAMERA_IMAGE_EVENT2");	
 }
 
 CSocketManager::~CSocketManager()
