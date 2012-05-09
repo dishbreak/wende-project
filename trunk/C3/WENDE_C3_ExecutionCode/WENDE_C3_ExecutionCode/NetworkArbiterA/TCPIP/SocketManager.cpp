@@ -32,7 +32,7 @@ const UINT EVT_ZEROLENGTH = 0x0003;	// Zero length message
 CSocketManager::CSocketManager()
 : m_pMsgCtrl(NULL), m_cameraMsgType(CameraPacketType::status)
 {
-
+	
 }
 
 CSocketManager::~CSocketManager()
@@ -84,6 +84,31 @@ void CSocketManager::DecodeCameraStatusMessage(LPCTSTR strText, char* temp)
 	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 	sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss.status());
 	sprintf(temp, "%s\r\n\r\n", temp);
+
+	// aquire the mutex
+	if (m_CameraStatus.isCreated() &&  m_CameraStatus.WaitForCommunicationEventMutex() == TRUE)
+	{
+		// write the data
+		m_CameraStatus->PacketNumber = cameraStatusMessageCount;
+		m_CameraStatus->LaserOnOf	 = ss.laseron();
+		m_CameraStatus->ProcessID    = m_CameraStatus.GetProcessID();
+		m_CameraStatus->Status		 = ss.status();
+		m_CameraStatus->SubsystemId  = 0;
+		m_CameraStatus->Time		 = static_cast<DWORD>(ss.time());
+		//m_CameraStatus->textStr    = ss.Text();
+		m_CameraStatus->ValidChars	 = 0; 
+		// Set the event
+		if (m_CameraStatus.isServer() == TRUE)
+		{
+			m_CameraStatus.SetEventServer();
+		}
+		else
+		{
+			m_CameraStatus.SetEventClient();
+		}
+		// release the mutex
+		m_CameraStatus.ReleaseMutex();
+	}
 }
 void CSocketManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp)
 {
