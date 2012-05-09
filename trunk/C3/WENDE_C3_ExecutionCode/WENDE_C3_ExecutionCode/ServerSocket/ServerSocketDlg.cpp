@@ -73,7 +73,7 @@ CServerSocketDlg::CServerSocketDlg(CWnd* pParent /*=NULL*/)
 	, m_imageName("")
 {
 	//{{AFX_DATA_INIT(CServerSocketDlg)
-	m_strPort = _T("2000");
+	m_strPort = _T("4444");
 	
 	m_nSockType = SOCK_TCP;	// default TCP
 	//}}AFX_DATA_INIT

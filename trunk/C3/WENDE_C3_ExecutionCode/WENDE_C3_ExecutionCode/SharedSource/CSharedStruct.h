@@ -8,16 +8,19 @@
 #endif // _MSC_VER > 1000
 
 #include "Aclapi.h"
+#include <string>
+
+using std::string;
 
 template <class StructType>
 class CSharedStruct
 {
 private:
 	// file names
-	char m_hSharedName[MAX_PATH];	// User provided Shared mem file name	
-	char m_MutexName[MAX_PATH];		// user provided mutex1 name (Struct Data)
-	char m_Event1[MAX_PATH];		// user provided server event name
-	char m_Event2[MAX_PATH];		// user provided client event name
+	string m_hSharedName;	// User provided Shared mem file name	
+	string m_MutexName;		// user provided mutex1 name (Struct Data)
+	string m_Event1;		// user provided server event name
+	string m_Event2;		// user provided client event name
 	// Shared Memory
 	HANDLE		m_hFileMapping;		// Handle to shared memory file
 	StructType *m_pvData;			// Pointer to shared memory
@@ -35,19 +38,19 @@ public:
 	// Defualt Constructor (cononical)
 	CSharedStruct();
 	// Overide constructor (Should use)
-	CSharedStruct(char *memName,
-				  char *mutexName,
-				  char *eventClientName,
-				  char *eventServerName);
+	CSharedStruct(string memName,
+				  string mutexName,
+				  string eventClientName,
+				  string eventServerName);
 	// Default Constructor
 	~CSharedStruct();
 	// Releases all shm data and frees handles
 	VOID Release();
 	// starts shm, mutex, and events
-	BOOL Acquire(char *memName,
-				 char *mutexName,
-				 char *eventClientName,
-				 char *eventServerName);
+	BOOL Acquire(string memName,
+				 string mutexName,
+				 string eventClientName,
+				 string eventServerName);
 
 	// Allow access to shared memory data
 	StructType *operator->();
@@ -88,10 +91,10 @@ CSharedStruct<StructType>::CSharedStruct()	// DEFAULT CONSTRUCTOR (CONONICAL)
 {
 	m_hFileMapping  = NULL;
 	m_ProcessID		= ::GetCurrentProcessId();
-	strcpy(m_hSharedName,"ApplicationSpecificSharedMem");
-	strcpy(m_MutexName  ,"ApplicationSpecificMutex");
-	strcpy(m_Event1     ,"MyFileEventObject1");
-	strcpy(m_Event2     ,"MyFileEventObject2");
+	m_hSharedName   = "ApplicationSpecificSharedMem";
+	m_MutexName     = "ApplicationSpecificMutex";
+	m_Event1        = "MyFileEventObject1";
+	m_Event2        = "MyFileEventObject2";
 }
 // FUNCTION NAME: CSharedStruct
 //       PURPOSE: default destructor for shared memory application
@@ -112,10 +115,10 @@ CSharedStruct<StructType>::~CSharedStruct()
 //       
 //    NOTE: Sould be used!!!!
 template <class StructType>
-CSharedStruct<StructType>::CSharedStruct(char *memName,
-										 char* mutexName,
-										 char* eventClientName,
-										 char* eventServerName)
+CSharedStruct<StructType>::CSharedStruct(string memName,
+										 string mutexName,
+										 string eventClientName,
+										 string eventServerName)
 {
 	// get process id
 	m_ProcessID		= ::GetCurrentProcessId();
@@ -162,10 +165,10 @@ VOID CSharedStruct<StructType>::Release()
 // FUNCTION NAME: CSharedStruct
 //       PURPOSE: Sets up shared mem, maps mem, creates mutex, creates events
 template <class StructType>
-BOOL CSharedStruct<StructType>::Acquire(char *memName,
-										char *mutexName,
-										char *eventClientName,
-										char *eventServerName)
+BOOL CSharedStruct<StructType>::Acquire(string memName,
+										string mutexName,
+										string eventClientName,
+										string eventServerName)
 {
 	//Check and see if already exists
 	if (m_hFileMapping != NULL)
@@ -175,7 +178,7 @@ BOOL CSharedStruct<StructType>::Acquire(char *memName,
 
 	// Try to create file mapping object (assume that this is the server)
 	m_dwMaxDataSize = 0;
-	m_hFileMapping = CreateFileMapping (INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(StructType), memName);
+	m_hFileMapping = CreateFileMapping (INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(StructType), memName.c_str());
 
 	// OK... so we could not create the shm
 	// so attempt to connect to the shm
@@ -188,7 +191,7 @@ BOOL CSharedStruct<StructType>::Acquire(char *memName,
 	// attach to mem
 	if (err == ERROR_ALREADY_EXISTS) 
 	{
-		m_hFileMapping = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,(LPCSTR)memName);
+		m_hFileMapping = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,(LPCSTR)memName.c_str());
 	} 
 	// set server flag as this is the process that created the shm
 	else 
@@ -211,16 +214,16 @@ BOOL CSharedStruct<StructType>::Acquire(char *memName,
 
 	// More complicated ACLs are left as an exercise for the reader
 	// (because I sure as hell can't figure them out!)
-	SetNamedSecurityInfo(memName, SE_KERNEL_OBJECT, DACL_SECURITY_INFORMATION, 0, 0, (PACL) NULL, NULL);
+	//SetNamedSecurityInfo(memName.c_str(), SE_KERNEL_OBJECT, DACL_SECURITY_INFORMATION, 0, 0, (PACL) NULL, NULL);
 
 	// get the size of the shm
 	m_dwMaxDataSize = sizeof(StructType);
 
 	// copy over the handle names
-	strncpy(m_hSharedName, memName        , MAX_PATH - 1);
-	strncpy(m_MutexName  , mutexName      , MAX_PATH - 1);
-	strncpy(m_Event1     , eventClientName, MAX_PATH - 1);
-	strncpy(m_Event2     , eventServerName, MAX_PATH - 1);
+	m_hSharedName = memName;
+	m_MutexName   = mutexName;
+	m_Event1      = eventClientName;
+	m_Event2      = eventServerName;
 	
 	// Map the shared mem
 	m_pvData = (StructType *) MapViewOfFile( m_hFileMapping, FILE_MAP_READ | FILE_MAP_WRITE, 0, 0, 0);
@@ -233,9 +236,9 @@ BOOL CSharedStruct<StructType>::Acquire(char *memName,
 	}
 
 	/*Create communication events*/
-	m_MutexStruct	= ::CreateMutex(NULL,FALSE,      (LPCSTR)m_MutexName);
-	m_EventServer	= ::CreateEvent(NULL,FALSE,FALSE,(LPCSTR)m_Event1);
-	m_EventClient	= ::CreateEvent(NULL,FALSE,FALSE,(LPCSTR)m_Event2);
+	m_MutexStruct	= ::CreateMutex(NULL,FALSE,      (LPCSTR)m_MutexName.c_str());
+	m_EventServer	= ::CreateEvent(NULL,FALSE,FALSE,(LPCSTR)m_Event1.c_str());
+	m_EventClient	= ::CreateEvent(NULL,FALSE,FALSE,(LPCSTR)m_Event2.c_str());
 
 	// set to created
 	m_bCreated = true;
@@ -285,18 +288,90 @@ template <class StructType>
 DWORD CSharedStruct<StructType>::WaitForCommunicationEventServer()
 {
 	DWORD result = WaitForSingleObject(m_EventServer,5000L);
+	
+	switch (result)
+	{
+		case WAIT_ABANDONED:
+			{
+				break;
+			}
+		case WAIT_OBJECT_0:
+			{
+				break;
+			}
+		case WAIT_TIMEOUT:
+			{
+				break;
+			}
+		case WAIT_FAILED:
+			{
+				break;
+			}
+		default:
+			{
+				break;
+			}
+	}
 	return result;
 }
 template <class StructType>
 DWORD CSharedStruct<StructType>::WaitForCommunicationEventClient()
 {
 	DWORD result = WaitForSingleObject(m_EventClient,5000L);
+	
+	switch (result)
+	{
+		case WAIT_ABANDONED:
+			{
+				break;
+			}
+		case WAIT_OBJECT_0:
+			{
+				break;
+			}
+		case WAIT_TIMEOUT:
+			{
+				break;
+			}
+		case WAIT_FAILED:
+			{
+				break;
+			}
+		default:
+			{
+				break;
+			}
+	}
 	return result;
 }
 template <class StructType>
 DWORD CSharedStruct<StructType>::WaitForCommunicationEventMutex()
 {
 	DWORD result = WaitForSingleObject(m_MutexStruct,5000L);
+
+	switch (result)
+	{
+		case WAIT_ABANDONED:
+			{
+				break;
+			}
+		case WAIT_OBJECT_0:
+			{
+				break;
+			}
+		case WAIT_TIMEOUT:
+			{
+				break;
+			}
+		case WAIT_FAILED:
+			{
+				break;
+			}
+		default:
+			{
+				break;
+			}
+	}
 	return result;
 }
 template <class StructType>

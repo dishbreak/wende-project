@@ -23,7 +23,7 @@ CClientSocketDlg::CClientSocketDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CClientSocketDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CClientSocketDlg)
-	m_strPort = _T("2000");
+	m_strPort = _T("4444");
 	m_nSockType = SOCK_TCP;	// default TCP
 	//}}AFX_DATA_INIT
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);

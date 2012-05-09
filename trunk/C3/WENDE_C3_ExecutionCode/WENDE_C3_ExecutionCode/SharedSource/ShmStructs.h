@@ -6,7 +6,6 @@
 #define SHM_MAX_LASERS      10
 #define SHM_MAX_IMAGE_SIZE  1024*1024*3
 
-#pragma pack(1)
 typedef struct{
 	DWORD  ProcessID;
 	DWORD  Time;
@@ -18,7 +17,6 @@ typedef struct{
 	// TODO PERFORMANCE COUNTER - FIX
 }LASER_POINT_DIRECTION_SHM;
 
-#pragma pack(1)
 typedef struct {
 	DWORD  ProcessID;
 	DWORD  Time;
@@ -35,13 +33,11 @@ typedef struct {
 }CAMERA_STATUS_MSG_SHM;
 
 
-#pragma pack(1)
 typedef struct{
 	INT32 X;
 	INT32 Y;
 }CAMERA_TRACK;
 
-#pragma pack(1)
 typedef struct{
 	DWORD		 ProcessID;
 	DWORD        Time;
@@ -58,7 +54,6 @@ typedef struct{
 	// TODO PERFORMANCE COUNTER - FIX
 }CAMERA_TRACK_MSG_SHM;
 
-#pragma pack(1)
 typedef struct{
 	DWORD		 ProcessID;
 	DWORD        Time;
@@ -66,8 +61,8 @@ typedef struct{
 	UINT32		 PacketNumber;
 	UINT32		 Channels;
 	
-	SIZE		 CameraSize;
+	//SIZE		 CameraSize;
 
-	BYTE		 ImageData[SHM_MAX_IMAGE_SIZE];
+	//BYTE		 ImageData[SHM_MAX_IMAGE_SIZE];
 	// TODO PERFORMANCE COUNTER - FIX
 }CAMERA_IMAGE_MSG_SHM;
