@@ -11,21 +11,51 @@ UINT WINAPI StatusThread(LPVOID pParam);
 UINT WINAPI TrackThread (LPVOID pParam);
 UINT WINAPI ImageThread (LPVOID pParam);
 
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	HANDLE hThread;
-	UINT uiThreadId = 0;
-	hThread = (HANDLE)_beginthreadex(NULL,				       // Security attributes
+	HANDLE hThread1;
+	UINT uiThreadId1 = 0;
+	hThread1 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
 										0,					  // stack
 									 StatusThread,   // Thread proc
 									 NULL,					  // Thread param
 									 CREATE_SUSPENDED,		  // creation mode
-									 &uiThreadId);			  // Thread ID
+									 &uiThreadId1);			  // Thread ID
 
-	if ( NULL != hThread)
+	if ( NULL != hThread1)
 	{
 		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
-		ResumeThread( hThread );
+		ResumeThread( hThread1 );
+	}
+
+	HANDLE hThread2;
+	UINT uiThreadId2 = 0;
+	hThread2 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
+										0,					  // stack
+									 TrackThread,   // Thread proc
+									 NULL,					  // Thread param
+									 CREATE_SUSPENDED,		  // creation mode
+									 &uiThreadId2);			  // Thread ID
+
+	if ( NULL != hThread2)
+	{
+		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
+		ResumeThread( hThread2 );
+	}
+	HANDLE hThread3;
+	UINT uiThreadId3 = 0;
+	hThread3 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
+										0,					   // stack
+									 ImageThread,			   // Thread proc
+									 NULL,					   // Thread param
+									 CREATE_SUSPENDED,		   // creation mode
+									 &uiThreadId3);			   // Thread ID
+
+	if ( NULL != hThread3)
+	{
+		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
+		ResumeThread( hThread3 );
 	}
 
 	while (1)
@@ -68,6 +98,10 @@ UINT WINAPI StatusThread (LPVOID pParam)
 				// release the mutex
 				m_CameraStatus.ReleaseMutex();
 			}
+			else
+			{
+				// unable to get mutex???
+			}
 		}
 		else
 		{
@@ -88,6 +122,28 @@ UINT WINAPI TrackThread (LPVOID pParam)
 						   "SHM_C3_CAMERA_TRACK_EVENT2");
 	while(1)
 	{
+		// aquire the mutex
+		if (m_CameraTracks.isCreated() && m_CameraTracks.WaitForCommunicationEventServer() == WAIT_OBJECT_0)
+		{
+			if (m_CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+			{
+				// Read the data
+
+				// Set the event
+				m_CameraTracks.SetEventClient();
+				
+				// release the mutex
+				m_CameraTracks.ReleaseMutex();
+			}
+			else
+			{
+				// unable to get mutex???
+			}
+		}
+		else
+		{
+			// loss of comm
+		}
 	}
 
 	_endthreadex( 0 );
@@ -103,6 +159,28 @@ UINT WINAPI ImageThread (LPVOID pParam)
 						   "SHM_C3_CAMERA_IMAGE_EVENT2");	
 	while(1)
 	{
+				// aquire the mutex
+		if (m_CameraImage.isCreated() && m_CameraImage.WaitForCommunicationEventServer() == WAIT_OBJECT_0)
+		{
+			if (m_CameraImage.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+			{
+				// Read the data
+
+				// Set the event
+				m_CameraImage.SetEventClient();
+				
+				// release the mutex
+				m_CameraImage.ReleaseMutex();
+			}
+			else
+			{
+				// unable to get mutex???
+			}
+		}
+		else
+		{
+			// loss of comm
+		}
 	}
 
 	_endthreadex( 0 );

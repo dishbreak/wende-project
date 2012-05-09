@@ -1,3 +1,22 @@
+//
+///     File Name: CSharedStruct.h (based on my VideoSharedMemory.h and template example from web)
+///	   Programmer: Benjamin Kurt Heiner
+///	 Date Created: 06/20/2007
+/// Date Modified: --/--/----
+///
+///       Purpose: The folowin file contains all structures and classdes 
+///                used for syncronized data messages.
+///
+///
+///     -Structures-
+///
+///		User defined via templates
+///
+///		- Classes -
+///
+///	  CSharedMemory - holds all creation and controls functions for 
+///                   the shared memory application
+
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_CSharedStruct_H__86467BA6_5AFA_11D3_863D_00A0244A9CA7__INCLUDED_)
@@ -11,6 +30,8 @@
 #include <string>
 
 using std::string;
+
+#define SHM_TIME_OUT        5000L
 
 template <class StructType>
 class CSharedStruct
@@ -199,23 +220,6 @@ BOOL CSharedStruct<StructType>::Acquire(string memName,
 		m_Server = TRUE;
 	}
 
-	// --- BKH --- This is only pre-existing comment
-	// --- BKH --- not sure on why use 
-	// OK, if we're the first person to create this
-	// file mapping object
-	// we want to clear the ACL, so
-	// anyone else can access this object
-	//
-	// If we don't do this, and a service creates the file mapping
-	// User processes won't be able to access it.
-
-	// So, we set the DACL to NULL, which effectively
-	// grants Everyone All Access
-
-	// More complicated ACLs are left as an exercise for the reader
-	// (because I sure as hell can't figure them out!)
-	//SetNamedSecurityInfo(memName.c_str(), SE_KERNEL_OBJECT, DACL_SECURITY_INFORMATION, 0, 0, (PACL) NULL, NULL);
-
 	// get the size of the shm
 	m_dwMaxDataSize = sizeof(StructType);
 
@@ -287,7 +291,7 @@ BOOL CSharedStruct<StructType>::ReleaseMutex()
 template <class StructType>
 DWORD CSharedStruct<StructType>::WaitForCommunicationEventServer()
 {
-	DWORD result = WaitForSingleObject(m_EventServer,5000L);
+	DWORD result = WaitForSingleObject(m_EventServer,SHM_TIME_OUT);
 	
 	switch (result)
 	{
@@ -317,7 +321,7 @@ DWORD CSharedStruct<StructType>::WaitForCommunicationEventServer()
 template <class StructType>
 DWORD CSharedStruct<StructType>::WaitForCommunicationEventClient()
 {
-	DWORD result = WaitForSingleObject(m_EventClient,5000L);
+	DWORD result = WaitForSingleObject(m_EventClient,SHM_TIME_OUT);
 	
 	switch (result)
 	{
@@ -347,7 +351,7 @@ DWORD CSharedStruct<StructType>::WaitForCommunicationEventClient()
 template <class StructType>
 DWORD CSharedStruct<StructType>::WaitForCommunicationEventMutex()
 {
-	DWORD result = WaitForSingleObject(m_MutexStruct,5000L);
+	DWORD result = WaitForSingleObject(m_MutexStruct,SHM_TIME_OUT);
 
 	switch (result)
 	{
