@@ -977,7 +977,9 @@ DWORD CSocketComm::WriteComm(const LPBYTE lpBuffer, DWORD dwCount, DWORD dwTimeo
             res = (int) dwCount - nOffset;
         }
         else // Send to peer-connection
+		{
             res = send( s, (LPCSTR)lpBuffer, dwCount, 0);
+		}
     }
     dwBytesWritten = (DWORD)((res >= 0)?(res) : (-1L));
 

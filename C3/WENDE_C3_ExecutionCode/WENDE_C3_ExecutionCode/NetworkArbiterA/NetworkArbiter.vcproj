@@ -22,7 +22,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
-			CharacterSet="2"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -49,7 +49,7 @@
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="2"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="1"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -307,7 +307,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\ClassDiagram11.cd"
+			RelativePath=".\CSharedStruct.h"
 			>
 		</File>
 		<File
@@ -320,6 +320,10 @@
 		</File>
 		<File
 			RelativePath=".\ReadMe.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\ShmStructs.h"
 			>
 		</File>
 	</Files>
