@@ -61,8 +61,8 @@ typedef struct{
 	UINT32		 PacketNumber;
 	UINT32		 Channels;
 	
-	//SIZE		 CameraSize;
+	SIZE		 CameraSize;
 
-	//BYTE		 ImageData[SHM_MAX_IMAGE_SIZE];
+	BYTE		 ImageData[SHM_MAX_IMAGE_SIZE];
 	// TODO PERFORMANCE COUNTER - FIX
 }CAMERA_IMAGE_MSG_SHM;

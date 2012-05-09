@@ -4,7 +4,8 @@
 #include "stdafx.h"
 #include "CSharedStruct.h"
 #include "ShmStructs.h"
-#include "time.h"
+#include <time.h>
+//#include <Streams.h>
 #include <process.h>
 
 UINT WINAPI StatusThread(LPVOID pParam);
@@ -164,7 +165,27 @@ UINT WINAPI ImageThread (LPVOID pParam)
 		{
 			if (m_CameraImage.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-				// Read the data
+				//// Read the data
+				//LPBITMAPINFOHEADER  pdib = (LPBITMAPINFOHEADER) m_CameraImage->ImageData;
+				//BITMAPFILEHEADER    hdr;
+				//DWORD               dwSize;
+				//// Initialize the bitmap header.
+				//dwSize				= DibSize(pdib);
+				//hdr.bfType          = BFT_BITMAP;
+				//hdr.bfSize          = dwSize + sizeof(BITMAPFILEHEADER);
+				//hdr.bfReserved1     = 0;
+				//hdr.bfReserved2     = 0;
+				//hdr.bfOffBits       = (DWORD)sizeof(BITMAPFILEHEADER) + pdib->biSize + DibPaletteSize(pdib);
+
+				//CFile file;
+				//if(!file.Open("test.bmp",CFile::modeWrite | CFile::modeCreate,NULL))
+				//	return;
+
+				//// Write the bitmap header and bitmap bits to the file.
+				//file.Write((LPCVOID) &hdr, sizeof(BITMAPFILEHEADER));
+				//file.Write(m_CameraImage.ReadFromSharedMemoryDataInfo(), dwSize);
+
+				//file.Close();
 
 				// Set the event
 				m_CameraImage.SetEventClient();
