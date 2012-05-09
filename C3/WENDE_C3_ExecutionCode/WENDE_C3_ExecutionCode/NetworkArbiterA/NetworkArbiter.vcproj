@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;google"
+				AdditionalIncludeDirectories=".;google;../SharedSource"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -128,7 +128,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".;google"
+				AdditionalIncludeDirectories=".;google;../SharedSource"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="false"
 				RuntimeLibrary="0"
@@ -307,7 +307,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\CSharedStruct.h"
+			RelativePath="..\SharedSource\CSharedStruct.h"
 			>
 		</File>
 		<File
@@ -323,7 +323,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\ShmStructs.h"
+			RelativePath="..\SharedSource\ShmStructs.h"
 			>
 		</File>
 	</Files>
