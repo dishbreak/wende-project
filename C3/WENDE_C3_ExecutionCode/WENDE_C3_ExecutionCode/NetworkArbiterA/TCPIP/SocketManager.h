@@ -10,6 +10,8 @@
 #endif // _MSC_VER > 1000
 
 #include "SocketComm.h"
+#include "ShmStructs.h"
+#include "CSharedStruct.h"
 
 #define WM_UPDATE_CONNECTION	WM_APP+0x1234
 
@@ -42,6 +44,11 @@ private:
 	void DecodeCameraStatusMessage(LPCTSTR strText, char* temp);
 	void DecodeCameraTrackMessage(LPCTSTR strText, char* temp);
 	void DecodeCameraImageMessage(LPCTSTR strText, char* temp);
+
+	CSharedStruct<LASER_POINT_DIRECTION_SHM> m_LaserCommand;
+	CSharedStruct<CAMERA_STATUS_MSG_SHM>	 m_CameraStatus;
+	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;
+	CSharedStruct<CAMERA_IMAGE_MSG_SHM>		 m_CameraImage;
 };
 
 #endif // !defined(AFX_SOCKETMANAGER_H__7403BD71_338A_4531_BD91_3D7E5B505793__INCLUDED_)
