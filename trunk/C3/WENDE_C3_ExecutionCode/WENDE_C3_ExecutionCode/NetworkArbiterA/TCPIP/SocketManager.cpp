@@ -47,7 +47,7 @@ CSocketManager::CSocketManager()
 	m_CameraImage.Acquire( "SHM_C3_CAMERA_IMAGE",
 						   "SHM_C3_CAMERA_IMAGE_MUTEX",
 						   "SHM_C3_CAMERA_IMAGE_EVENT1",
-						   "SHM_C3_CAMERA_IMAGE_EVENT2");	
+						   "SHM_C3_CAMERA_IMAGE_EVENT2");
 }
 
 CSocketManager::~CSocketManager()
@@ -92,6 +92,7 @@ void CSocketManager::DecodeCameraStatusMessage(LPCTSTR strText, char* temp)
 
 	ss.ParseFromString(s);
 
+	strcpy(temp,strText);
 	sprintf(temp, "+CAMERA STATUS MESSAGE(%d)\r\n", ++cameraStatusMessageCount);
 	sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,ss.laseron());
 	time_t now = ss.time();
@@ -101,26 +102,19 @@ void CSocketManager::DecodeCameraStatusMessage(LPCTSTR strText, char* temp)
 	sprintf(temp, "%s\r\n\r\n", temp);
 
 	// aquire the mutex
-	if (m_CameraStatus.isCreated() &&  m_CameraStatus.WaitForCommunicationEventMutex() == TRUE)
+	if (m_CameraStatus.isCreated() &&  
+		m_CameraStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 	{
 		// write the data
 		m_CameraStatus->PacketNumber = cameraStatusMessageCount;
 		m_CameraStatus->LaserOnOf	 = ss.laseron();
 		m_CameraStatus->ProcessID    = m_CameraStatus.GetProcessID();
 		m_CameraStatus->Status		 = ss.status();
-		m_CameraStatus->SubsystemId  = 0;
-		m_CameraStatus->Time		 = static_cast<DWORD>(ss.time());
-		//m_CameraStatus->textStr    = ss.Text();
+		m_CameraStatus->SubsystemId  = 3;
+		m_CameraStatus->Time		 = ss.time();
 		m_CameraStatus->ValidChars	 = 0; 
 		// Set the event
-		if (m_CameraStatus.isServer() == TRUE)
-		{
-			m_CameraStatus.SetEventServer();
-		}
-		else
-		{
-			m_CameraStatus.SetEventClient();
-		}
+		m_CameraStatus.SetEventServer();
 		// release the mutex
 		m_CameraStatus.ReleaseMutex();
 	}
@@ -149,14 +143,14 @@ void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp)
 
 	im.ParseFromString(s);
 
-	//sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
+	////sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
 }
 void CSocketManager::AppendMessage(LPCTSTR strText )
 {
 	if (NULL == m_pMsgCtrl)
 		return;
 
-	char temp [256];
+	char temp [1024];
 	
 	switch(m_cameraMsgType)
 	{
