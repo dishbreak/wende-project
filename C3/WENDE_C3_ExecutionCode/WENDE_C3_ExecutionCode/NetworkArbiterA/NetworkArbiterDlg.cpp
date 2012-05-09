@@ -178,51 +178,53 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_Connection.ip = "192.168.1.65";
 		m_Connection.port = 4444;
 		// Create the file if it does not exist
-		WriteXMLFile();
+		//WriteXMLFile();
 	}
+		m_Connection.ip = "192.168.1.65";
+		m_Connection.port = 4444;
 	
-	// Read in the file
-	TiXmlDocument doc(szFileName);
-	bool loadOkay = doc.LoadFile();
-	if (loadOkay)
-	{
-			
-		TiXmlHandle hDoc(&doc);
-		TiXmlElement* pElem;
-		TiXmlHandle hRoot(0);
-		///////////////
-		// block: name
-		///////////////
-		pElem=hDoc.FirstChildElement().Element();
-		// should always have a valid root but handle gracefully if it does
-		if (pElem)
-		{
-			CString name=pElem->Value();
-			// save this for later
-			hRoot=TiXmlHandle(pElem);
-			/////////////////////
-			// block: connection
-			/////////////////////
-			pElem=hRoot.FirstChild("Connection").Element();
-			if (pElem)
-			{
-				m_Connection.ip   = pElem->Attribute("ip");
-				m_Connection.port = atoi(pElem->Attribute("port"));	
-			}
-			else
-			{
-				// ERROR ????
-			}
-		}
-		else
-		{
-			// ERROR ????
-		}
-	}
-	else
-	{
-		// ERROR ????	
-	}
+	//// Read in the file
+	//TiXmlDocument doc(szFileName);
+	//bool loadOkay = doc.LoadFile();
+	//if (loadOkay)
+	//{
+	//		
+	//	TiXmlHandle hDoc(&doc);
+	//	TiXmlElement* pElem;
+	//	TiXmlHandle hRoot(0);
+	//	///////////////
+	//	// block: name
+	//	///////////////
+	//	pElem=hDoc.FirstChildElement().Element();
+	//	// should always have a valid root but handle gracefully if it does
+	//	if (pElem)
+	//	{
+	//		CString name=pElem->Value();
+	//		// save this for later
+	//		hRoot=TiXmlHandle(pElem);
+	//		/////////////////////
+	//		// block: connection
+	//		/////////////////////
+	//		pElem=hRoot.FirstChild("Connection").Element();
+	//		if (pElem)
+	//		{
+	//			m_Connection.ip   = pElem->Attribute("ip");
+	//			m_Connection.port = atoi(pElem->Attribute("port"));	
+	//		}
+	//		else
+	//		{
+	//			// ERROR ????
+	//		}
+	//	}
+	//	else
+	//	{
+	//		// ERROR ????
+	//	}
+	//}
+	//else
+	//{
+	//	// ERROR ????	
+	//}
 
 	// set the dialog controls..
 	CString port;
