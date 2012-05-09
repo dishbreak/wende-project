@@ -37,7 +37,6 @@ public:
 	// Overide constructor (Should use)
 	CSharedStruct(char *memName,
 				  char *mutexName,
-				  char *mutexStructName,
 				  char *eventClientName,
 				  char *eventServerName);
 	// Default Constructor
@@ -47,7 +46,6 @@ public:
 	// starts shm, mutex, and events
 	BOOL Acquire(char *memName,
 				 char *mutexName,
-				 char *mutexStructName,
 				 char *eventClientName,
 				 char *eventServerName);
 
@@ -109,7 +107,6 @@ CSharedStruct<StructType>::~CSharedStruct()
 //    Parameters: 
 //		char* memName
 //		char* mutexName 
-//		char* mutexStructName 
 //		char* eventClientName
 //		char* eventServerName
 //       
@@ -117,7 +114,6 @@ CSharedStruct<StructType>::~CSharedStruct()
 template <class StructType>
 CSharedStruct<StructType>::CSharedStruct(char *memName,
 										 char* mutexName,
-										 char* mutexStructName,
 										 char* eventClientName,
 										 char* eventServerName)
 {
@@ -128,7 +124,6 @@ CSharedStruct<StructType>::CSharedStruct(char *memName,
 	// Setup shared memory
 	Acquire(memName,
 		    mutexName,
-		    mutexStructName,
 		    eventClientName,
 		    eventServerName);
 }
@@ -169,7 +164,6 @@ VOID CSharedStruct<StructType>::Release()
 template <class StructType>
 BOOL CSharedStruct<StructType>::Acquire(char *memName,
 										char *mutexName,
-										char *mutexStructName,
 										char *eventClientName,
 										char *eventServerName)
 {
@@ -185,16 +179,17 @@ BOOL CSharedStruct<StructType>::Acquire(char *memName,
 
 	// OK... so we could not create the shm
 	// so attempt to connect to the shm
+	int err = GetLastError();
 	if (m_hFileMapping == NULL)
 	{
-		int err = GetLastError();
-		// attach to mem
-		if (err == ERROR_ALREADY_EXISTS) 
-		{
-			m_MapFile = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,(LPCSTR)memName);
-		} 
 		return FALSE;
 	}
+		
+	// attach to mem
+	if (err == ERROR_ALREADY_EXISTS) 
+	{
+		m_hFileMapping = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,(LPCSTR)memName);
+	} 
 	// set server flag as this is the process that created the shm
 	else 
 	{
@@ -223,7 +218,7 @@ BOOL CSharedStruct<StructType>::Acquire(char *memName,
 
 	// copy over the handle names
 	strncpy(m_hSharedName, memName        , MAX_PATH - 1);
-	strncpy(m_MutexName  , mutexStructName, MAX_PATH - 1);
+	strncpy(m_MutexName  , mutexName      , MAX_PATH - 1);
 	strncpy(m_Event1     , eventClientName, MAX_PATH - 1);
 	strncpy(m_Event2     , eventServerName, MAX_PATH - 1);
 	
