@@ -12,6 +12,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CPictureCtrlDemo", "CPictureCtrlDemo\CPictureCtrlDemo\CPictureCtrlDemo.vcproj", "{43D0F91C-FEF7-4308-9A7A-48391FCCB4A0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra Files", "Extra Files", "{B6EBCFEB-AC8F-4E3C-94C9-B9CB9ABBCA94}"
+	ProjectSection(SolutionItems) = preProject
+		SharedSource\SharedMemoryWrapper.cpp = SharedSource\SharedMemoryWrapper.cpp
+		SharedSource\SharedMemoryWrapper.h = SharedSource\SharedMemoryWrapper.h
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C3GUIStub", "C3GUIStub\C3GUIStub.vcproj", "{9E19B9BC-3C3C-4767-814E-54A92875428D}"
 EndProject
