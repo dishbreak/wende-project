@@ -1,0 +1,41 @@
+package cameraMsgs;
+
+message cameraStatus {
+	optional int64 time = 1;
+	optional systemStatus status = 2 [default = UNKNOWN];
+	optional bool laserOn = 3;
+	optional string text = 4;
+}
+
+enum systemStatus {
+	CAMERA_DOWN = 0;
+	CAMERA_READY = 1;
+	CAMERA_OPERATIONAL = 2;
+	CAMERA_ERROR = 3;
+	CAMERA_FAILED = 4;
+	UNKNOWN = 5;
+}
+
+message track {
+	optional sint32 x = 1;
+	optional sint32 y = 2;
+}
+
+message cameraTracks {
+	optional int64 time = 1;
+	optional systemStatus status = 2 [default = UNKNOWN];
+	
+	repeated track target = 3;
+
+	repeated track laser = 4;
+	optional bool laserOn = 5;
+}
+
+message cameraImage {
+	optional int64 time = 1;
+	optional sint32 channels = 2;
+	optional sint32 sizeX = 3;
+	optional sint32 sizeY = 4;
+	optional bytes imageData = 5;
+}
+

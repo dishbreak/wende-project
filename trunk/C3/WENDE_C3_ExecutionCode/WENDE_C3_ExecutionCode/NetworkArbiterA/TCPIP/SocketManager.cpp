@@ -143,6 +143,29 @@ void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp)
 
 	im.ParseFromString(s);
 
+	// Read the data
+	LPBITMAPINFOHEADER  pdib = (LPBITMAPINFOHEADER) m_CameraImage->ImageData;
+	BITMAPFILEHEADER    hdr;
+	DWORD               dwSize;
+	
+	// Initialize the bitmap header.
+	dwSize				= DibSize(pdib);
+	hdr.bfType          = BFT_BITMAP;
+	hdr.bfSize          = dwSize + sizeof(BITMAPFILEHEADER);
+	hdr.bfReserved1     = 0;
+	hdr.bfReserved2     = 0;
+	hdr.bfOffBits       = (DWORD)sizeof(BITMAPFILEHEADER) + pdib->biSize + DibPaletteSize(pdib);
+
+	CFile file;
+	if(!file.Open("test.bmp",CFile::modeWrite | CFile::modeCreate,NULL))
+		return;
+
+	// Write the bitmap header and bitmap bits to the file.
+	file.Write((LPCVOID) &hdr, sizeof(BITMAPFILEHEADER));
+	file.Write(m_CameraImage.ReadFromSharedMemoryDataInfo(), dwSize);
+
+	file.Close();
+
 	////sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
 }
 void CSocketManager::AppendMessage(LPCTSTR strText )
