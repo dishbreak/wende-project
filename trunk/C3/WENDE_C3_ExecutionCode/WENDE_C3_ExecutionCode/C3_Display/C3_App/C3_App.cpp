@@ -4,6 +4,7 @@
 #include "C3_User_Interface.h"
 #include "Test_Driver.h"
 #include "CNetworkMonitor.h"
+#include <process.h>
 
 using namespace C3_App;
 
@@ -23,6 +24,12 @@ int main(array<System::String ^> ^args)
 	td.Show();
 
     Application::Run(gcnew C3_User_Interface());
+    
+    //Ensure that the threads run
+    while(1)
+    {
+//        Sleep (10000);
+    }
 	
 	return 0;
 }

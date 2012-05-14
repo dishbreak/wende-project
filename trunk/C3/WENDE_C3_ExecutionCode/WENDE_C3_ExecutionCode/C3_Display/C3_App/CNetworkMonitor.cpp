@@ -55,10 +55,10 @@ void CNetworkMonitor::InitializeThread()
 		ResumeThread( hThread3 );
 	}
 
-	while (1)
-	{
-		Sleep (100);
-	}
+	//while (1)
+	//{
+	//	Sleep (100);
+	//}
 	
 	//return 0;
 
