@@ -21,8 +21,8 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
-			ManagedExtensions="2"
+			CharacterSet="2"
+			ManagedExtensions="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -191,48 +191,6 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
-			>
-			<File
-				RelativePath=".\AssemblyInfo.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\C3_App.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CDisplayManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CNetworkMonitor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\stdafx.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
-		</Filter>
-		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
@@ -297,6 +255,48 @@
 			<File
 				RelativePath=".\app.rc"
 				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
+			<File
+				RelativePath=".\AssemblyInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\C3_App.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CDisplayManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CNetworkMonitor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
