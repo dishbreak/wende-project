@@ -4,6 +4,7 @@
 #include <time.h>
 #include <process.h>
 #include "CNetworkMonitor.h"
+#include "CDisplayManager.h"
 
 UINT WINAPI StatusThread(LPVOID pParam);
 UINT WINAPI TrackThread (LPVOID pParam);
@@ -90,6 +91,12 @@ UINT WINAPI StatusThread (LPVOID pParam)
 				//sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 				//sprintf(temp, "%s|-->Status = %d   \r\n", temp,m_CameraStatus->Status);
 				//printf("%s\r\n\r\n", temp);
+
+                ////get a handle to the CDisplayManager
+                //CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+
+                ////set camera state
+                //dispman->Update_Camera_Subsystem_Indicator(m_CameraStatus->Status);
 
 				// Set the event
 				m_CameraStatus.SetEventClient();
