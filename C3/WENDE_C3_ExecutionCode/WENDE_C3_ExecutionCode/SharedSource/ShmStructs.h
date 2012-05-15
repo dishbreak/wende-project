@@ -4,7 +4,7 @@
 #define SHM_MAX_TRACKS      10
 #define SHM_MAX_LASERS      10
 /// 1024w * 1024h * 3p
-#define SHM_MAX_IMAGE_SIZE  3145728
+#define SHM_MAX_IMAGE_SIZE  320*240*3
 
 typedef struct{
 	DWORD  ProcessID;
