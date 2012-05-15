@@ -1,5 +1,4 @@
 #pragma once
-//#include "C3_User_Interface.h"
 #using <system.drawing.dll>
 
 
@@ -82,7 +81,8 @@ namespace C3_App {
 	private: System::Windows::Forms::PictureBox^  pbCameraComms;
 
 	private: System::Windows::Forms::PictureBox^  pictureBox5;
-	private: System::Windows::Forms::PictureBox^  pictureBox6;
+	public: System::Windows::Forms::PictureBox^  pbOverallStatus;
+
 
 
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
@@ -97,12 +97,14 @@ namespace C3_App {
 
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::Label^  label4;
-	private: System::Windows::Forms::PictureBox^  pictureBox7;
+	public: System::Windows::Forms::PictureBox^  pbLaserStatus;
+
 	private: System::Windows::Forms::PictureBox^  pictureBox8;
 	private: System::Windows::Forms::Panel^  pPPI;
 	private: System::Windows::Forms::Button^  cmdExport;
 	private: System::Windows::Forms::GroupBox^  gbAlerts;
 	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI;
 
 
 
@@ -145,14 +147,15 @@ namespace C3_App {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->pbLaserActivity = (gcnew System::Windows::Forms::PictureBox());
 			this->pictureBox5 = (gcnew System::Windows::Forms::PictureBox());
-			this->pictureBox6 = (gcnew System::Windows::Forms::PictureBox());
+			this->pbOverallStatus = (gcnew System::Windows::Forms::PictureBox());
 			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->pictureBox7 = (gcnew System::Windows::Forms::PictureBox());
+			this->pbLaserStatus = (gcnew System::Windows::Forms::PictureBox());
 			this->pictureBox8 = (gcnew System::Windows::Forms::PictureBox());
 			this->gbAlerts = (gcnew System::Windows::Forms::GroupBox());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->dlgExportDTI = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->flowLayoutPanel1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -165,9 +168,9 @@ namespace C3_App {
 			this->groupBox5->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserActivity))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox5))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox6))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbOverallStatus))->BeginInit();
 			this->groupBox6->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox7))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserStatus))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox8))->BeginInit();
 			this->gbAlerts->SuspendLayout();
 			this->SuspendLayout();
@@ -242,6 +245,7 @@ namespace C3_App {
 			this->cmdExport->TabIndex = 1;
 			this->cmdExport->Text = L"&Export";
 			this->cmdExport->UseVisualStyleBackColor = true;
+			this->cmdExport->Click += gcnew System::EventHandler(this, &C3_User_Interface::cmdExport_Click);
 			// 
 			// dataGridView1
 			// 
@@ -326,7 +330,7 @@ namespace C3_App {
 			this->groupBox5->Controls->Add(this->label5);
 			this->groupBox5->Controls->Add(this->pbLaserActivity);
 			this->groupBox5->Controls->Add(this->pictureBox5);
-			this->groupBox5->Controls->Add(this->pictureBox6);
+			this->groupBox5->Controls->Add(this->pbOverallStatus);
 			this->groupBox5->Location = System::Drawing::Point(426, 356);
 			this->groupBox5->Name = L"groupBox5";
 			this->groupBox5->Size = System::Drawing::Size(438, 261);
@@ -381,21 +385,21 @@ namespace C3_App {
 			this->pictureBox5->TabIndex = 3;
 			this->pictureBox5->TabStop = false;
 			// 
-			// pictureBox6
+			// pbOverallStatus
 			// 
-			this->pictureBox6->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pictureBox6.Image")));
-			this->pictureBox6->Location = System::Drawing::Point(103, 43);
-			this->pictureBox6->Name = L"pictureBox6";
-			this->pictureBox6->Size = System::Drawing::Size(239, 47);
-			this->pictureBox6->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
-			this->pictureBox6->TabIndex = 2;
-			this->pictureBox6->TabStop = false;
+			this->pbOverallStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbOverallStatus.Image")));
+			this->pbOverallStatus->Location = System::Drawing::Point(103, 43);
+			this->pbOverallStatus->Name = L"pbOverallStatus";
+			this->pbOverallStatus->Size = System::Drawing::Size(239, 47);
+			this->pbOverallStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pbOverallStatus->TabIndex = 2;
+			this->pbOverallStatus->TabStop = false;
 			// 
 			// groupBox6
 			// 
 			this->groupBox6->Controls->Add(this->label3);
 			this->groupBox6->Controls->Add(this->label4);
-			this->groupBox6->Controls->Add(this->pictureBox7);
+			this->groupBox6->Controls->Add(this->pbLaserStatus);
 			this->groupBox6->Controls->Add(this->pictureBox8);
 			this->groupBox6->Location = System::Drawing::Point(870, 356);
 			this->groupBox6->Name = L"groupBox6";
@@ -422,15 +426,15 @@ namespace C3_App {
 			this->label4->TabIndex = 6;
 			this->label4->Text = L"Communications";
 			// 
-			// pictureBox7
+			// pbLaserStatus
 			// 
-			this->pictureBox7->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pictureBox7.Image")));
-			this->pictureBox7->Location = System::Drawing::Point(106, 140);
-			this->pictureBox7->Name = L"pictureBox7";
-			this->pictureBox7->Size = System::Drawing::Size(239, 47);
-			this->pictureBox7->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
-			this->pictureBox7->TabIndex = 5;
-			this->pictureBox7->TabStop = false;
+			this->pbLaserStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserStatus.Image")));
+			this->pbLaserStatus->Location = System::Drawing::Point(106, 140);
+			this->pbLaserStatus->Name = L"pbLaserStatus";
+			this->pbLaserStatus->Size = System::Drawing::Size(239, 47);
+			this->pbLaserStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pbLaserStatus->TabIndex = 5;
+			this->pbLaserStatus->TabStop = false;
 			// 
 			// pictureBox8
 			// 
@@ -489,10 +493,10 @@ namespace C3_App {
 			this->groupBox5->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserActivity))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox5))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox6))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbOverallStatus))->EndInit();
 			this->groupBox6->ResumeLayout(false);
 			this->groupBox6->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox7))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserStatus))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox8))->EndInit();
 			this->gbAlerts->ResumeLayout(false);
 			this->gbAlerts->PerformLayout();
@@ -547,6 +551,9 @@ namespace C3_App {
 				 
 			 }	  
 
+private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs^  e) {
+			 dlgExportDTI->ShowDialog();
+		 }
 };
 }
 

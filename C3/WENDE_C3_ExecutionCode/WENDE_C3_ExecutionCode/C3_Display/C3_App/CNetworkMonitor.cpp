@@ -83,21 +83,16 @@ UINT WINAPI StatusThread (LPVOID pParam)
 		{
 			if (m_CameraStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-				//// Read the data
-				//sprintf(temp, "+CAMERA STATUS MESSAGE(%d)\r\n", ++cameraStatusMessageCount);
-				//sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,m_CameraStatus->LaserOnOf);
-				//time_t now = m_CameraStatus->Time;
-				//strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
-				//sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
-				//sprintf(temp, "%s|-->Status = %d   \r\n", temp,m_CameraStatus->Status);
-				//printf("%s\r\n\r\n", temp);
-
                 ////get a handle to the CDisplayManager
                 CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
 
                 ////set camera state
                 dispman->Update_Camera_Subsystem_Indicator(m_CameraStatus->Status);
+
+				// TODO: Remove once laser interface added.
+				dispman->Update_Laser_Subsystem_Indicator(m_CameraStatus->Status);
 				dispman->Update_Laser_Activity_Indicator(m_CameraStatus->LaserOnOf);
+				dispman->Update_Overall_Status();
 
 				// Set the event
 				m_CameraStatus.SetEventClient();
