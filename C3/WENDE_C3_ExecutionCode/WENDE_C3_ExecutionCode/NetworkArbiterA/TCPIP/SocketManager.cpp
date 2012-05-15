@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 #include <atlconv.h>
+//#include <Streams.h>
 //#include "ServerSocket.h"
 #include "SocketManager.h"
 
@@ -134,6 +135,17 @@ void CSocketManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp)
 	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
 	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 	sprintf(temp, "%s|-->Status = %d   \r\n", temp,tr.status());
+	sprintf(temp, "%s|-->Tracks = %d   \r\n", temp,tr.target_size());
+	for (int ii = 0; ii < tr.target_size(); ii++)
+	{
+		::cameraMsgs::track cTrack = tr.target(ii);
+		sprintf(temp, "%s|-->Tack %d = [%d , %d]  \r\n",  temp,ii,cTrack.x(),cTrack.y());
+	}
+	sprintf(temp, "%s|-->Laser = %d   \r\n", temp,tr.laser_size());
+	for (int ii = 0; ii < tr.laser_size(); ii++)
+	{
+		sprintf(temp, "%s|-->Tack %d = [%d , %d]  \r\n", temp,ii,tr.laser(ii).x(),tr.laser(ii).y());
+	}
 	sprintf(temp, "%s\r\n\r\n", temp);
 }
 void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp)
@@ -142,29 +154,45 @@ void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp)
 	cameraImage im;
 
 	im.ParseFromString(s);
+	
+	//CImage  tImage;
+	//tImage.Create(im.sizex(),im.sizey(),8); // just change extension to load jpg
+	//
+	//int ll = 0;
+	//for (int ii = 0; ii < im.sizey(); ii++)
+	//{
+	//	for (int jj = 0; jj < im.sizex(); jj++)
+	//	{
+	//		UPixel Pixel;
+	//		Pixel.chars.cRed   = im.imagedata();
+	//		Pixel.chars.cGreen = ;
+	//		Pixel.chars.cBlue  = ;
+	//		tImage.SetPixel(jj,ii,Pixel);
+	//		ll +=3;
+	//	}
+	//}
 
 	// Read the data
-	LPBITMAPINFOHEADER  pdib = (LPBITMAPINFOHEADER) m_CameraImage->ImageData;
-	BITMAPFILEHEADER    hdr;
-	DWORD               dwSize;
-	
-	// Initialize the bitmap header.
-	dwSize				= DibSize(pdib);
-	hdr.bfType          = BFT_BITMAP;
-	hdr.bfSize          = dwSize + sizeof(BITMAPFILEHEADER);
-	hdr.bfReserved1     = 0;
-	hdr.bfReserved2     = 0;
-	hdr.bfOffBits       = (DWORD)sizeof(BITMAPFILEHEADER) + pdib->biSize + DibPaletteSize(pdib);
+	//LPBITMAPINFOHEADER  pdib = (LPBITMAPINFOHEADER) NULL;
+	//BITMAPFILEHEADER    hdr;
+	//DWORD               dwSize;
+	//// Initialize the bitmap header.
+	//dwSize				= DibSize(pdib);
+	//hdr.bfType          = BFT_BITMAP;
+	//hdr.bfSize          = dwSize + sizeof(BITMAPFILEHEADER);
+	//hdr.bfReserved1     = 0;
+	//hdr.bfReserved2     = 0;
+	//hdr.bfOffBits       = (DWORD)sizeof(BITMAPFILEHEADER) + pdib->biSize + DibPaletteSize(pdib);
 
-	CFile file;
-	if(!file.Open("test.bmp",CFile::modeWrite | CFile::modeCreate,NULL))
-		return;
+	//CFile file;
+	//if(!file.Open("test.bmp",CFile::modeWrite | CFile::modeCreate,NULL))
+	//	return;
 
-	// Write the bitmap header and bitmap bits to the file.
-	file.Write((LPCVOID) &hdr, sizeof(BITMAPFILEHEADER));
-	file.Write(m_CameraImage.ReadFromSharedMemoryDataInfo(), dwSize);
+	//// Write the bitmap header and bitmap bits to the file.
+	//file.Write((LPCVOID) &hdr, sizeof(BITMAPFILEHEADER));
+	//file.Write(m_CameraImage.ReadFromSharedMemoryDataInfo(), dwSize);
 
-	file.Close();
+	//file.Close();
 
 	////sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
 }
