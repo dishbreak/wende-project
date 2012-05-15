@@ -51,6 +51,25 @@ int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 }
 
 ////////////////////////////////////////////////////////////////////////
+// Description: Updates the Laser Activity indicator following a call 
+//				to the static instance of the C3_User_Interface object					
+// Author:		Mike Payne
+////////////////////////////////////////////////////////////////////////
+
+int CDisplayManager::Update_Laser_Activity_Indicator(int nLaserActivityStatus)
+{
+	if(nLaserActivityStatus == 1)
+		C3_User_Interface::Instance->pbLaserActivity->Image = 
+			System::Drawing::Image::FromFile ("Energized.png");
+
+	if(nLaserActivityStatus == 0)
+		C3_User_Interface::Instance->pbLaserActivity->Image = 
+			System::Drawing::Image::FromFile ("Inactive.png");
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////
 // Description: Updates the Camera communications indicator following a 
 //				call to the static instance of the C3_User_Interface 
 //				object					
