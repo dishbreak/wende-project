@@ -1,6 +1,24 @@
 #include "stdafx.h"
 #include "CDisplayManager.h"
 using namespace C3_App;
+//using namespace CDisplayManager;
+
+//initialize static pointer to 0
+CDisplayManager * CDisplayManager::displayMgr = 0;
+
+////////////////////////////////////////////////////////////////////////
+// Description: Returns a pointer to the CDisplayManager. If there is no
+//              CDisplayManager, one is new'd and returned.
+// Author:      Vishal Kotcherlakota
+////////////////////////////////////////////////////////////////////////
+CDisplayManager * CDisplayManager::getCDisplayManager()
+{
+    if(!displayMgr)
+    {
+        displayMgr = new CDisplayManager();
+    }
+    return displayMgr;
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the PPI display when the new rover position is
@@ -21,11 +39,11 @@ int CDisplayManager::Update_Rover_PPI_Position(int x, int y)
 
 int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 {
-	if(nCameraStatus == 0) 	// Status is OFFLINE
+	if(nCameraStatus > 3) 	// Status is OFFLINE
 		C3_User_Interface::Instance->pbCameraStatus->Image = 
 			System::Drawing::Image::FromFile ("Offline.jpg");
 
-	if(nCameraStatus == 1) 	// Status is ONLINE
+	if(nCameraStatus <= 2) 	// Status is ONLINE
 		C3_User_Interface::Instance->pbCameraStatus->Image = 
 			System::Drawing::Image::FromFile ("Online.jpg");
 

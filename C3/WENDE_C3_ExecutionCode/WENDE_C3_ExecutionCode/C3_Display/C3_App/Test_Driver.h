@@ -166,10 +166,11 @@ namespace C3_App {
 					 nCameraStatus = 1;
 				 else if(cboCamera->Text == "OFFLINE")
 					 nCameraStatus = 0;
-				 
-				 CDisplayManager dispman;
+				 //commented out because CDisplayManager is now a singleton
+				 //CDisplayManager dispman;
+                 CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
 
-				 dispman.Update_Camera_Subsystem_Indicator(nCameraStatus);
+				 dispman->Update_Camera_Subsystem_Indicator(nCameraStatus);
 
 				 
 			 }
