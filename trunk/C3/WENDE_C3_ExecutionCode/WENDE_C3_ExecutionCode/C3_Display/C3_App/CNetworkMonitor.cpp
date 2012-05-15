@@ -93,10 +93,10 @@ UINT WINAPI StatusThread (LPVOID pParam)
 				//printf("%s\r\n\r\n", temp);
 
                 ////get a handle to the CDisplayManager
-                //CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+                CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
 
                 ////set camera state
-                //dispman->Update_Camera_Subsystem_Indicator(m_CameraStatus->Status);
+                dispman->Update_Camera_Subsystem_Indicator(m_CameraStatus->Status);
 
 				// Set the event
 				m_CameraStatus.SetEventClient();

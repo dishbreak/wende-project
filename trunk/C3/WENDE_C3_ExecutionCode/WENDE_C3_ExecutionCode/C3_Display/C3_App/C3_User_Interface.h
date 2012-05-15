@@ -500,12 +500,12 @@ namespace C3_App {
         }
 #pragma endregion
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
-				 Graphics^ g = e->Graphics;
+				 System::Drawing::Graphics^ g = e->Graphics;
 				 g->Clear(Color::White);
 
-				 Rectangle rect = Form::ClientRectangle;
-				 Rectangle gFailureLine;
-				 Rectangle gPlayingField;
+				 System::Drawing::Rectangle rect = Form::ClientRectangle;
+				 System::Drawing::Rectangle gFailureLine;
+				 System::Drawing::Rectangle gPlayingField;
 
 				 // Draw Failure Line
 
