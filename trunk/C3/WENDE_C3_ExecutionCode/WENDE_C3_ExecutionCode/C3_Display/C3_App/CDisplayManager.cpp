@@ -39,7 +39,7 @@ int CDisplayManager::Update_Rover_PPI_Position(int x, int y)
 
 int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 {
-	if(nCameraStatus > 3) 	// Status is OFFLINE
+	if(nCameraStatus >= 3) 	// Status is OFFLINE
 		C3_User_Interface::Instance->pbCameraStatus->Image = 
 			System::Drawing::Image::FromFile ("Offline.jpg");
 
