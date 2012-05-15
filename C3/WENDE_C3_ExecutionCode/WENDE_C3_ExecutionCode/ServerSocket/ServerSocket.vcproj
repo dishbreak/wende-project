@@ -216,7 +216,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\cameraMsgs.pb.cc"
+				RelativePath="..\SharedSource\cameraMsgs.pb.cc"
 				>
 			</File>
 			<File
@@ -301,28 +301,8 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="SocketComm.cpp"
+				RelativePath="..\SharedSource\SocketComm.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="SocketManager.cpp"
@@ -380,7 +360,7 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\cameraMsgs.pb.h"
+				RelativePath="..\SharedSource\cameraMsgs.pb.h"
 				>
 			</File>
 			<File
@@ -404,7 +384,7 @@
 				>
 			</File>
 			<File
-				RelativePath="SocketComm.h"
+				RelativePath="..\SharedSource\SocketComm.h"
 				>
 			</File>
 			<File

@@ -461,34 +461,19 @@ void CServerSocketDlg::OnBtnSendStatus()
 }
 void CServerSocketDlg::OnBtnSendImage() 
 {
-	static char bytes[1024*1024*3];
 	// Get the current system time...
 	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
 	time( &osBinaryTime ) ;		// Get the current time from the 
 								// operating system.
-	CImage tImage;
-	tImage.Load(m_imageName); // just change extension to load jpg
 	
 	//Setup the camera message....
 	cameraImage image;
 	image.set_time(osBinaryTime);									// set the operational time
 	image.set_channels(3);											// should always be a RGB image
-	image.set_sizex(tImage.GetWidth());
-	image.set_sizey(tImage.GetHeight());
-	int ll = 0;
-	for (int ii = 0; ii < tImage.GetHeight(); ii++)
-	{
-		for (int jj = 0; jj < tImage.GetWidth(); jj++)
-		{
-			UPixel Pixel;
-			Pixel.c=tImage.GetPixel(jj,ii);;
-			bytes[ll+0] = Pixel.chars.cRed;
-			bytes[ll+1] = Pixel.chars.cGreen;
-			bytes[ll+2] = Pixel.chars.cBlue;
-			ll +=3;
-		}
-	}
-	image.set_imagedata(bytes, tImage.GetWidth()*tImage.GetHeight()*3);
+	image.set_sizex(tImageSize.cx);
+	image.set_sizey(tImageSize.cy);
+	image.set_imagedata(bytes, tImageSize.cx*tImageSize.cy*3);
+	
 	string temp;													
 	image.SerializeToString(&temp);
 	CString strText(temp.c_str());									// serilize the message
@@ -504,23 +489,44 @@ void CServerSocketDlg::OnBtnSendTrack()
 	cameraTracks track;
 	track.set_time(osBinaryTime);									// set the operational time
 	track.set_laseron(m_statusLaserOnCtrl.GetCheck()==BST_CHECKED);	// set laser status
-
-	CString tempString; 
-	if (m_trackEnable0.GetCheck()==BST_CHECKED)
-	{
-		cameraMsgs::track *ctrack = track.add_laser();
-		
-		m_trackXEditBox0.GetWindowTextA(tempString);
-		ctrack->set_x(atoi(tempString));
-		m_trackYEditBox0.GetWindowTextA(tempString);
-		ctrack->set_y(atoi(tempString));
-		//track.
-	}
 	
+	AddTrack(&m_trackEnable0,&m_trackXEditBox0,&m_trackYEditBox0, &track);
+	AddTrack(&m_trackEnable1,&m_trackXEditBox1,&m_trackYEditBox1, &track);
+	AddTrack(&m_trackEnable2,&m_trackXEditBox2,&m_trackYEditBox2, &track);
+	AddTrack(&m_trackEnable3,&m_trackXEditBox3,&m_trackYEditBox3, &track);
+	AddTrack(&m_trackEnable4,&m_trackXEditBox4,&m_trackYEditBox4, &track);
+	AddTrack(&m_trackEnable5,&m_trackXEditBox5,&m_trackYEditBox5, &track);
+	AddTrack(&m_laserEnable0,&m_laserXEditBox0,&m_laserYEditBox0, &track);
+
 	string temp;													
 	track.SerializeToString(&temp);
 	CString strText(temp.c_str());									// serilize the message
 	OnBtnSend(strText,1);												// send the data
+}
+void CServerSocketDlg::AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track)
+{
+	static CString tempString;
+	if (buttom->GetCheck()==BST_CHECKED)
+	{
+		::cameraMsgs::track *cTrack = track->add_laser();
+		x->GetWindowTextA(tempString);
+		cTrack->set_x(atoi(tempString));
+	    y->GetWindowTextA(tempString);
+		cTrack->set_y(atoi(tempString));
+	}
+}
+
+void CServerSocketDlg::AddTrack(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track)
+{
+	static CString tempString;
+	if (buttom->GetCheck()==BST_CHECKED)
+	{
+		::cameraMsgs::track *cTrack = track->add_target();
+		x->GetWindowTextA(tempString);
+		cTrack->set_x(atoi(tempString));
+	    y->GetWindowTextA(tempString);
+		cTrack->set_y(atoi(tempString));
+	}
 }
 
 void CServerSocketDlg::OnBtnSend(CString strText, int portOffset) 
@@ -714,6 +720,25 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 	{
 		m_imageName = FileDlg.GetPathName();
 		m_picCtrl.LoadFromFile(m_imageName);
+		CImage  tImage;
+		tImage.Load(m_imageName); // just change extension to load jpg
+		
+		int ll = 0;
+		for (int ii = 0; ii < tImage.GetHeight(); ii++)
+		{
+			for (int jj = 0; jj < tImage.GetWidth(); jj++)
+			{
+				UPixel Pixel;
+				Pixel.c=tImage.GetPixel(jj,ii);;
+				bytes[ll+0] = Pixel.chars.cRed;
+				bytes[ll+1] = Pixel.chars.cGreen;
+				bytes[ll+2] = Pixel.chars.cBlue;
+				ll +=3;
+			}
+		}
+
+		tImageSize.cx = tImage.GetWidth();
+		tImageSize.cy = tImage.GetHeight();
 		return;
 	}
 	else

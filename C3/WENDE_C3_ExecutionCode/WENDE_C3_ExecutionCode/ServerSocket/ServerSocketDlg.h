@@ -13,7 +13,7 @@
 #include "afxwin.h"
 #include "atlimage.h"
 #include "PictureCtrl.h"
-
+#include "ShmStructs.h"
 using namespace cameraMsgs;
 #define MAX_CONNECTION		3
 
@@ -110,8 +110,12 @@ public:
 	afx_msg void OnBnClickedLaserEnable6();
 	afx_msg void OnBnClickedBtnSelectCameraImage();
 	CString m_imageName;
+	char bytes[SHM_MAX_IMAGE_SIZE];
 	CPictureCtrl m_picCtrl;
 	CImage  m_CameraImage;
+	SIZE    tImageSize;
+	void AddTrack(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
+	void AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
 };
 
 //{{AFX_INSERT_LOCATION}}
