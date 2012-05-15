@@ -52,7 +52,7 @@ protected:
 
 	//void PickNextAvailable();
 	bool StartServer();
-	void OnBtnSend(CString strText, int portOffset);
+	void OnBtnSend(CString strText, int portOffset, int size,  int type);
 
 	// Generated message map functions
 	//{{AFX_MSG(CServerSocketDlg)

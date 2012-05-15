@@ -162,7 +162,7 @@ BOOL CServerSocketDlg::PreTranslateMessage(MSG* pMsg)
 			if (m_SocketManager[0].IsOpen() && m_SocketManager[1].IsOpen() && m_SocketManager[2].IsOpen())
 			{
 				CString strTex("TEST");
-				OnBtnSend(strTex,0);
+				OnBtnSend(strTex,0,strTex.GetLength(),0);
 			}
 			return TRUE;
 		}
@@ -457,7 +457,7 @@ void CServerSocketDlg::OnBtnSendStatus()
 	string temp;													
 	status.SerializeToString(&temp);
 	CString strText(temp.c_str());									// serilize the message
-	OnBtnSend(strText,0);												// send the data
+	OnBtnSend(strText,0,strText.GetLength(),0);												// send the data
 }
 void CServerSocketDlg::OnBtnSendImage() 
 {
@@ -477,7 +477,7 @@ void CServerSocketDlg::OnBtnSendImage()
 	string temp;													
 	image.SerializeToString(&temp);
 	CString strText(temp.c_str());									// serilize the message
-	OnBtnSend(strText,2);												// send the data
+	OnBtnSend(strText,2,strText.GetLength(),2);												// send the data
 }
 void CServerSocketDlg::OnBtnSendTrack() 
 {
@@ -501,7 +501,7 @@ void CServerSocketDlg::OnBtnSendTrack()
 	string temp;													
 	track.SerializeToString(&temp);
 	CString strText(temp.c_str());									// serilize the message
-	OnBtnSend(strText,1);												// send the data
+	OnBtnSend(strText,1,strText.GetLength(),1);												// send the data
 }
 void CServerSocketDlg::AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track)
 {
@@ -529,7 +529,7 @@ void CServerSocketDlg::AddTrack(CButton *buttom, CEdit *x, CEdit *y, cameraTrack
 	}
 }
 
-void CServerSocketDlg::OnBtnSend(CString strText, int portOffset) 
+void CServerSocketDlg::OnBtnSend(CString strText, int portOffset, int size,  int type) 
 {
 	
 	int nLen = strText.GetLength();
