@@ -42,6 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\SharedSource;..\..\SharedSource"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -115,6 +116,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\SharedSource;..\..\SharedSource"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -214,15 +216,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CSharedStruct.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CShmStructs.h"
+				RelativePath="..\..\SharedSource\CSharedStruct.h"
 				>
 			</File>
 			<File
 				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\SharedSource\ShmStructs.h"
 				>
 			</File>
 			<File
