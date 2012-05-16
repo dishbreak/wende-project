@@ -138,8 +138,7 @@ void CSocketManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp)
 	sprintf(temp, "%s|-->Tracks = %d   \r\n", temp,tr.target_size());
 	for (int ii = 0; ii < tr.target_size(); ii++)
 	{
-		::cameraMsgs::track cTrack = tr.target(ii);
-		sprintf(temp, "%s|-->Tack %d = [%d , %d]  \r\n",  temp,ii,cTrack.x(),cTrack.y());
+		sprintf(temp, "%s|-->Tack %d = [%d , %d]  \r\n",  temp,ii,tr.target(ii).x(),tr.target(ii).y());
 	}
 	sprintf(temp, "%s|-->Laser = %d   \r\n", temp,tr.laser_size());
 	for (int ii = 0; ii < tr.laser_size(); ii++)
@@ -147,6 +146,38 @@ void CSocketManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp)
 		sprintf(temp, "%s|-->Tack %d = [%d , %d]  \r\n", temp,ii,tr.laser(ii).x(),tr.laser(ii).y());
 	}
 	sprintf(temp, "%s\r\n\r\n", temp);
+	
+	// aquire the mutex
+	if (m_CameraTracks.isCreated() &&  
+		m_CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+	{
+		// write the data
+		m_CameraTracks->PacketNumber = cameraTrackMessageCount;
+		m_CameraTracks->LaserOnOf	 = tr.laseron();
+		m_CameraTracks->ProcessID    = m_CameraTracks.GetProcessID();
+		m_CameraTracks->Status		 = tr.status();
+		m_CameraTracks->SubsystemId  = 3;
+		m_CameraTracks->Time		 = tr.time();
+		m_CameraTracks->ValidTracks  = tr.target_size();
+		for (int ii = 0; ii < tr.target_size(); ii++)
+		{
+			m_CameraTracks->Tracks[ii].X = tr.target(ii).x();
+			m_CameraTracks->Tracks[ii].Y = tr.target(ii).y();
+		}
+		m_CameraTracks->ValidLasers  =tr.laser_size();
+		for (int ii = 0; ii < tr.laser_size(); ii++)
+		{
+			m_CameraTracks->Lasers[ii].X = tr.laser(ii).x();
+			m_CameraTracks->Lasers[ii].Y = tr.laser(ii).y();
+		}
+
+		// Set the event (GUI)
+		m_CameraTracks.SetEventServer();
+		// Set the event (Processing)
+		m_CameraTracks.SetEventServer();
+		// release the mutex
+		m_CameraTracks.ReleaseMutex();
+	}
 }
 void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp)
 {
@@ -155,22 +186,24 @@ void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp)
 
 	im.ParseFromString(s);
 	
-	//CImage  tImage;
-	//tImage.Create(im.sizex(),im.sizey(),8); // just change extension to load jpg
-	//
-	//int ll = 0;
-	//for (int ii = 0; ii < im.sizey(); ii++)
-	//{
-	//	for (int jj = 0; jj < im.sizex(); jj++)
-	//	{
-	//		UPixel Pixel;
-	//		Pixel.chars.cRed   = im.imagedata();
-	//		Pixel.chars.cGreen = ;
-	//		Pixel.chars.cBlue  = ;
-	//		tImage.SetPixel(jj,ii,Pixel);
-	//		ll +=3;
-	//	}
-	//}
+	string sss = im.imagedata();
+	CImage img;
+	img.Create(im.sizex(), im.sizey(), 24 /* bpp */, 0 /* No alpha channel */);
+	int ll =0;	
+	int nPixel = 0;
+	for(int row = 0; row < im.sizey(); row++)
+	{
+		for(int col = 0; col < im.sizex(); col++)
+		{
+			UPixel Pixel;
+			Pixel.chars.cRed   = sss[ll+0];
+			Pixel.chars.cGreen = sss[ll+1];
+			Pixel.chars.cBlue  = sss[ll+2];
+			img.SetPixel(col,row,Pixel.c);
+			ll +=3;
+		}
+	}
+	img.Save("temp.bmp");
 
 	// Read the data
 	//LPBITMAPINFOHEADER  pdib = (LPBITMAPINFOHEADER) NULL;

@@ -88,6 +88,7 @@ public:
 	BOOL isServer();
 
 	DWORD GetProcessID();
+	StructType* GetStruct()const;
 };
 
 
@@ -393,5 +394,9 @@ DWORD CSharedStruct<StructType>::GetProcessID()
 {
 	return this->m_ProcessID;
 }
-
+template <class StructType>
+StructType* CSharedStruct<StructType>::GetStruct()const
+{
+	return m_pvData;
+}
 #endif
