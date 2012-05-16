@@ -935,7 +935,7 @@ DWORD CSocketComm::WriteComm(const LPBYTE lpBuffer, DWORD dwCount, DWORD dwTimeo
         }
         else // Send to peer-connection
 		{
-		    res = send( s, (LPCSTR)lpBuffer, dwCount, 0);
+			res = send( s, (LPCSTR)lpBuffer, dwCount, 0);
 		}
     }
     dwBytesWritten = (DWORD)((res >= 0)?(res) : (-1L));
@@ -1059,3 +1059,21 @@ UINT WINAPI CSocketComm::SocketThreadProc(LPVOID pParam)
 
     return 1L;
 } // end SocketThreadProc
+int CSocketComm::GetMaxSocketSendSize()
+{
+	// Retrieve the option and print the result
+    unsigned int iVal = 0;
+	int iSize = sizeof(iVal);
+	SOCKET s = (SOCKET) m_hComm;
+   	
+    int ret = getsockopt(s, SOL_SOCKET, SO_MAX_MSG_SIZE, (char *)&iVal, &iSize);
+    if (ret == SOCKET_ERROR)
+    {
+        printf("getsockopt(SO_MAX_MSG_SIZE) failed with error code %d\n", WSAGetLastError());
+        return -1;
+    }
+    else
+        printf("getsockopt(SO_MAX_MSG_SIZE) is pretty good!\n");
+	
+	return iVal;
+}

@@ -110,7 +110,7 @@ public:
 	afx_msg void OnBnClickedLaserEnable6();
 	afx_msg void OnBnClickedBtnSelectCameraImage();
 	CString m_imageName;
-	char bytes[SHM_MAX_IMAGE_SIZE];
+	unsigned char bytes[SHM_MAX_IMAGE_SIZE];
 	CPictureCtrl m_picCtrl;
 	CImage  m_CameraImage;
 	SIZE    tImageSize;

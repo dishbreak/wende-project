@@ -22,7 +22,7 @@
 #define EVT_ZEROLENGTH      0x0003  // Zero length message
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE     MAX_PATH
+#define BUFFER_SIZE     MAX_PATH*300
 #endif
 #define HOSTNAME_SIZE   MAX_PATH
 #define STRING_LENGTH   40
@@ -85,7 +85,7 @@ public:
     void CloseComm();       // Close Socket
     bool WatchComm();       // Start Socket thread
     void StopComm();        // Stop Socket thread
-
+	int GetMaxSocketSendSize();
     // Create a socket - Server side (support for multiple adapters)
     bool CreateSocketEx(LPCTSTR strHost, LPCTSTR strServiceName, int nFamily, int nType, UINT uOptions /* = 0 */);
     // Create a Socket - Server side

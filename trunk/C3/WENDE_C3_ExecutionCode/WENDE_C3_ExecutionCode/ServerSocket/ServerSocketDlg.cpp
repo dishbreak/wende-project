@@ -511,7 +511,8 @@ void CServerSocketDlg::AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTrack
 		::cameraMsgs::track *cTrack = track->add_laser();
 		x->GetWindowTextA(tempString);
 		cTrack->set_x(atoi(tempString));
-	    y->GetWindowTextA(tempString);
+	    
+		y->GetWindowTextA(tempString);
 		cTrack->set_y(atoi(tempString));
 	}
 }
@@ -558,6 +559,7 @@ void CServerSocketDlg::OnBtnSend(CString strText, int portOffset, int size,  int
 			m_SocketManager[portOffset].WriteComm((const LPBYTE)&msgProxy, nLen, INFINITE);
 		else
 		{
+			m_SocketManager[portOffset].GetMaxSocketSendSize();
 			m_SocketManager[portOffset].WriteComm(msgProxy.byData, nLen, INFINITE);
 		}
 	}	
@@ -724,12 +726,12 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 		tImage.Load(m_imageName); // just change extension to load jpg
 		
 		int ll = 0;
-		for (int ii = 0; ii < tImage.GetHeight(); ii++)
+		for(int row = 0; row < tImage.GetHeight(); row++)
 		{
-			for (int jj = 0; jj < tImage.GetWidth(); jj++)
+			for(int col = 0; col < tImage.GetWidth(); col++)
 			{
 				UPixel Pixel;
-				Pixel.c=tImage.GetPixel(jj,ii);;
+				Pixel.c=tImage.GetPixel(col,row);
 				bytes[ll+0] = Pixel.chars.cRed;
 				bytes[ll+1] = Pixel.chars.cGreen;
 				bytes[ll+2] = Pixel.chars.cBlue;
@@ -739,6 +741,24 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 
 		tImageSize.cx = tImage.GetWidth();
 		tImageSize.cy = tImage.GetHeight();
+
+		CImage img;
+		img.Create(tImage.GetWidth(), tImage.GetHeight(), 24 /* bpp */, 0 /* No alpha channel */);
+		ll =0;	
+		int nPixel = 0;
+		for(int row = 0; row < tImage.GetHeight(); row++)
+		{
+			for(int col = 0; col < tImage.GetWidth(); col++)
+			{
+				UPixel Pixel;
+				Pixel.chars.cRed   = bytes[ll+0];
+				Pixel.chars.cGreen = bytes[ll+1];
+				Pixel.chars.cBlue  = bytes[ll+2];
+				img.SetPixel(col,row,Pixel.c);
+				ll +=3;
+			}
+		}
+		img.Save("temp.bmp");
 		return;
 	}
 	else

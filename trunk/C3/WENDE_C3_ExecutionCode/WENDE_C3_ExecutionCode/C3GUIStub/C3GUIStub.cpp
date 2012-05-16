@@ -116,6 +116,10 @@ UINT WINAPI StatusThread (LPVOID pParam)
 }
 UINT WINAPI TrackThread (LPVOID pParam)
 {
+	static char timeStr[256];
+	static int cameraTrackMessageCount = 0;
+
+	CAMERA_TRACK_MSG_SHM inData; 
 	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;
 	m_CameraTracks.Acquire("SHM_C3_CAMERA_TRACK",
 						   "SHM_C3_CAMERA_TRACK_MUTEX",
@@ -128,13 +132,31 @@ UINT WINAPI TrackThread (LPVOID pParam)
 		{
 			if (m_CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-				// Read the data
-
+				inData = *m_CameraTracks.GetStruct();
 				// Set the event
 				m_CameraTracks.SetEventClient();
 				
 				// release the mutex
 				m_CameraTracks.ReleaseMutex();
+
+				// Read the data
+				printf("+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
+				printf("|-->Laser  = %d   \r\n",inData.LaserOnOf);
+				time_t now = inData.Time;
+				strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
+				printf("|-->Time   = %s   \r\n",timeStr);
+				printf("|-->Status = %d   \r\n",inData.Status);
+				printf("|-->Tracks = %d   \r\n",inData.ValidTracks);
+				for (int ii = 0; ii < inData.ValidTracks; ii++)
+				{
+					printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Tracks[ii].X,inData.Tracks[ii].Y);
+				}
+				printf("|-->Laser = %d   \r\n",inData.ValidLasers);
+				for (int ii = 0; ii < inData.ValidLasers; ii++)
+				{
+					printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Lasers[ii].X,inData.Lasers[ii].Y);
+				}
+				printf("\r\n\r\n");
 			}
 			else
 			{
