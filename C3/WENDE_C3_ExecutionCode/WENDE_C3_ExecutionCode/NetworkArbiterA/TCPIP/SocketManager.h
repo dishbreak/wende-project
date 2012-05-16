@@ -12,6 +12,7 @@
 #include "SocketComm.h"
 #include "ShmStructs.h"
 #include "CSharedStruct.h"
+#include "PictureCtrl.h"
 
 #define WM_UPDATE_CONNECTION	WM_APP+0x1234
 
@@ -56,6 +57,7 @@ protected:
 	void DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom);
 	CEdit* m_pMsgCtrl;
 	CameraPacketType m_cameraMsgType;
+	CPictureCtrl* m_picCtrl;
 	
 private:
 	void DecodeCameraStatusMessage(LPCTSTR strText, char* temp);

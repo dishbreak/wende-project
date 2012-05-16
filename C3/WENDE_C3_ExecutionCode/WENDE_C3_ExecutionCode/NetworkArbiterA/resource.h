@@ -13,6 +13,7 @@
 #define IDC_BUTTON1                     1006
 #define IDC_UPDATE_TCP                  1006
 #define IDC_MESSAGE_LIST                1008
+#define IDC_STATIC_PICTURE              1009
 
 // Next default values for new objects
 // 
