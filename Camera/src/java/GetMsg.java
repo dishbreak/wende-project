@@ -1,5 +1,5 @@
 // Jonathan Ford
-// 27 February 2012
+// 28 March 2012
 
 
 //import ReadWriteTextFileWithEncoding;
@@ -7,24 +7,20 @@ import java.io.*;
 import com.camera.*;
 import java.util.Properties;
 import java.util.Random;  // for generating graphic
-//import Queue;
 
-// class for Queue of type Item
-public class SendMsg implements Runnable{
+public class GetMsg implements Runnable{
 	static byte STATUS = 0;
 	static byte TRACKS = 1;
 	static byte IMAGE = 2;
 	int STATUS_DELAY = 250;
 	int TRACKS_DELAY = 100;
 	int IMAGE_DELAY = 1000;
-	static int MAIN_RUNTIME = 30000;
+	static int MAIN_RUNTIME = 500;
+	static int MAIN_SLEEP = 500;
 	boolean VERBOSE = true;
-	int channels = 3;
-	int sizeX = 640;
-	int sizeY = 480;
-	
 	int type = -1;
 	static boolean running = true;
+	static int clientCount = 0;
 	
 	static boolean statusMsgReady = false;
 	static boolean tracksMsgReady = false;
@@ -52,29 +48,29 @@ public class SendMsg implements Runnable{
 		return;
 	}
 	
-	public SendMsg() throws IOException
+	public GetMsg() throws IOException
 	{
 		getConfig();
-		netStat = new netIO(0, STATUS);
-		netTracks = new netIO(0, TRACKS);
-		netImage = new netIO(0, IMAGE);
+		netStat = new netIO(1, STATUS);
+		netTracks = new netIO(1, TRACKS);
+		netImage = new netIO(1, IMAGE);
 		return;
 	}
 	
-	public SendMsg(int netType) throws IOException
+	public GetMsg(int netType) throws IOException
 	{
 		type = netType;
 		getConfig();
 		p("new SendMsg type= "+ type);
 		switch (type) {
 			case 0:		//STATUS
-				netStat = new netIO(0, STATUS);
+				netStat = new netIO(1, STATUS);
 				break;
 			case 1:		//TRACKS
-				netTracks = new netIO(0, TRACKS);
+				netTracks = new netIO(1, TRACKS);
 				break;
 			case 2:		//IMAGE
-				netImage = new netIO(0, IMAGE);
+				netImage = new netIO(1, IMAGE);
 				break;
 			default:
 				p("Didn't match any cases in constructor");
@@ -87,47 +83,25 @@ public class SendMsg implements Runnable{
 	{
 		p("Run()");
 		try {
+			clientCount++;
 			switch (type) {
 				case 0:		//STATUS
-					netStat.serverInit();
-//					try {
-//						Thread.sleep( 1000 );
-//						
-//					}
-//					catch ( InterruptedException e) {
-//						e.printStackTrace();
-//					}	
-					statusRun();
+					netStat.client();
 					netStat.close();
 					break;
 				case 1:		//TRACKS
-					netTracks.serverInit();
-//					try {
-//						Thread.sleep( 900 );
-//						
-//					}
-//					catch ( InterruptedException e) {
-//						e.printStackTrace();
-//					}	
-					tracksRun();
+					netTracks.client();
 					netTracks.close();
 					break;
 				case 2:		//IMAGE
-					netImage.serverInit();
-//					try {
-//						Thread.sleep( 300 );
-//						
-//					}
-//					catch ( InterruptedException e) {
-//						e.printStackTrace();
-//					}	
-					imageRun();
+					netImage.client();
 					netImage.close();
 					break;
 				default:
 					p("Didn't match any cases in constructor");
 					break;
 			}
+			clientCount--;
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -196,6 +170,9 @@ public class SendMsg implements Runnable{
 					Thread.sleep( IMAGE_DELAY );					
 				}
 				else {
+					int channels = 3;
+					int sizeX = 640;
+					int sizeY = 480;
 					byte[] serialImage = new byte[(channels * sizeX * sizeY)];
 					
 					Random generator = new Random();
@@ -227,9 +204,9 @@ public class SendMsg implements Runnable{
 			SendMsg msg = new SendMsg();
 		}
 		else {
-			SendMsg mStatus = new SendMsg(0);  // Create object instance
-			SendMsg mTracks = new SendMsg(1);
-			SendMsg mImage = new SendMsg(2);
+			GetMsg mStatus = new GetMsg(0);  // Create object instance
+			GetMsg mTracks = new GetMsg(1);
+			GetMsg mImage = new GetMsg(2);
 			
 			Thread tStatus = new Thread(mStatus);
 			Thread tTracks = new Thread(mTracks);
@@ -244,46 +221,28 @@ public class SendMsg implements Runnable{
 			tImage.start();
 			System.out.println("tImage Started");			
 		}
-		long time = System.currentTimeMillis();
-		long duration = MAIN_RUNTIME;
-		while (System.currentTimeMillis() < time+duration) {
+//		long time = System.currentTimeMillis();
+//		long duration = MAIN_RUNTIME;
+//		while (System.currentTimeMillis() < time+duration) {
+//			//Do Nothing - everything in threads
+//			try {
+//				Thread.sleep (MAIN_RUNTIME );
+//			}
+//			catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		while (clientCount > 0) {
 			//Do Nothing - everything in threads
 			try {
-				Thread.sleep (MAIN_RUNTIME );
+				Thread.sleep (MAIN_SLEEP );
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}			
 		}
 		running	= false;	// stop threads
-		//
-//		for (int n=0; n<10; n++) {
-//
-//
-//
-//		
-//		statusMsgReady = msg.setStatus(System.currentTimeMillis(),msg.sysStatus.OPERATIONAL,false,"TEST-STRING");	// setup status message
-//		tracksMsgReady = msg.setTracks(System.currentTimeMillis(),msg.sysStatus.OPERATIONAL,targets,lasers,true);	// setup tracks message
-////		imageMsgReady = msg.setImage(System.currentTimeMillis(),image.length,image[0].length,image[0][0].length,com.google.protobuf.ByteString.copyFrom(serialImage));	// setup status message
-//		imageMsgReady = msg.setImage(System.currentTimeMillis(),channels,sizeX,sizeY,com.google.protobuf.ByteString.copyFrom(serialImage));	// setup status message
-//
-//		statusMsgReady = !(msg.sendStatus());
-//		System.out.println("Send Status");
-//				
-//		tracksMsgReady = !(msg.sendTracks(netTracks));
-//			System.out.println("Send Tracks");
-//
-//		imageMsgReady = !(msg.sendImage(netImage));
-//			System.out.println("Send Image");
 
-//		} // End For Loop		
-		// Close Network interfaces
-//		netImage.close();
-//		netTracks.close();
-//		netStat.close();
-		
-
-		//netImage.close();
 	}	// End Main Function
 	
 	
@@ -374,8 +333,5 @@ public class SendMsg implements Runnable{
 		this.IMAGE_DELAY = Integer.parseInt(configFile.getProperty("imageDelay"));
 		this.MAIN_RUNTIME = Integer.parseInt(configFile.getProperty("mainRunTime"));
 		this.VERBOSE = Boolean.parseBoolean(configFile.getProperty("verbose"));
-		this.sizeX = Integer.parseInt(configFile.getProperty("sizeX"));
-		this.sizeY = Integer.parseInt(configFile.getProperty("sizeY"));
-		this.channels = Integer.parseInt(configFile.getProperty("channels"));		
 	}
 }	// End class SendMsg
