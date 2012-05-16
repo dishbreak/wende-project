@@ -1,33 +1,10 @@
-/*
- * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
- *   - Neither the name of Oracle or the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+// NetIO - Class to handle Network Input and Output
+// Created for Lockheed Martin ELDP WENDE Project 2012
+//
+// Code Written by Jonathan Ford
+// 02-2012 thru 04-2012
+//
+
 
 import java.net.*;
 import java.util.Properties;
@@ -41,6 +18,26 @@ public class netIO{
 	int port = 1111;
 	String host = "localhost";
 	String testText = "ABC01234";
+	byte msgType = 0;
+	boolean VERBOSE = true;
+	int STATUS_DELAY = 250;
+	int TRACKS_DELAY = 100;
+	int IMAGE_DELAY = 100;
+	static int MAIN_RUNTIME = 10000;
+	
+	int count = 0;	// message counter
+	
+	long minTime = 0;
+	long maxTime = 0;
+	long avgTime = 0;
+	long cTime = 0;		// current message time
+	long pTime = 0;		// previous message time
+	long eTime = 0;		// elapsed time
+	long localProcTimeStart = 0;
+	long localProcTimeStop = 0;
+	
+	byte[] serialImage;
+	byte[][][] image;
 	
 	ServerSocket serverSocket = null;
 	Socket clientSocket = null;
@@ -55,7 +52,9 @@ public class netIO{
 	Socket cSocket= null;
 	ObjectOutputStream clientOutStream = null;
 	ObjectInputStream clientInputStream = null;
-	CameraMsgs.cameraStatus cStatusIn = null;	
+	CameraMsgs.cameraStatus cStatusIn = null;
+	CameraMsgs.cameraTracks cTracksIn = null;
+	CameraMsgs.cameraImage cImageIn = null;
 	
 	BufferedReader stdIn = null;
 	
@@ -66,6 +65,13 @@ public class netIO{
 		netStart();
 	}	
 	
+	//Constructor
+	public netIO(int duty, byte messageType) throws IOException
+	{
+		msgType = messageType;
+		role = duty;
+		netStart();
+	}	
 	// Constructor
 	public netIO(int duty, String message) throws IOException
 	{
@@ -75,12 +81,12 @@ public class netIO{
 	}
 		
 	// Constructor
-	public netIO(int duty, Queue q1) throws IOException
-	{
-		role = duty;
-		//		Queue msgQueue = q1;
-		netStart();
-	}
+//	public netIO(int duty, Queue q1) throws IOException
+//	{
+//		role = duty;
+//		//		Queue msgQueue = q1;
+//		netStart();
+//	}
 	
 	private void netStart() throws IOException
 	{
@@ -88,19 +94,21 @@ public class netIO{
 		
 		switch (role) {
 			case 0:
-				serverInit();
-				server();
+//				serverInit();	//server needs to be initialized by calling function.
+//				server();
 				break;
 			case 1:
 				clientInit();
-				client();
+//				client();
 				break;
 			default:
 				System.out.println("Something went wrong, did not recieve correct role");
 				System.err.println("Didn't choose server or client.");
 				System.exit(1);
 		}	// End Switch on 'role'
-		close();	// close sockets and IO channels
+//		System.out.println("Net Started on port" + port);
+		return;	
+//		close();	// close sockets and IO channels
 	}
 
 	public void close() throws IOException
@@ -108,7 +116,7 @@ public class netIO{
 		try {
 			if(role == 0)		// Server - Closes Server connections
 			{
-				serverOutStream.writeByte(-1);		// Write byte so client knows we are done
+				serverOutStream.writeInt(-1);		// Write byte so client knows we are done
 				serverOutStream.close();
 				serverOutStream.close();
 				clientSocket.close();
@@ -137,32 +145,52 @@ public class netIO{
 		Properties configFile = new Properties();
 		configFile.load(this.getClass().getClassLoader().getResourceAsStream("./config/net_config.txt"));
 		this.host = configFile.getProperty("host");
-		this.port = Integer.parseInt((configFile.getProperty("port")));
+		this.port = Integer.parseInt((configFile.getProperty("port"))) + msgType;	//add message type to port for unique port/message
 		this.testText = configFile.getProperty("testText");
+		this.VERBOSE = Boolean.parseBoolean(configFile.getProperty("verbose"));
+		this.STATUS_DELAY = Integer.parseInt(configFile.getProperty("statusDelay"));
+		this.TRACKS_DELAY = Integer.parseInt(configFile.getProperty("tracksDelay"));
+		this.IMAGE_DELAY = Integer.parseInt(configFile.getProperty("imageDelay"));
+		this.MAIN_RUNTIME = Integer.parseInt(configFile.getProperty("mainRunTime"));
 	}
 	// Main Class
     public static void main(String[] args) throws IOException {
-		
 
-		
-//		String host = "localhost";
 		int role = Integer.parseInt(args[0]);
-//		int port = Integer.parseInt(args[1]);
-		
-		if (args.length > 1) {
-			String message = args[1];
-			netIO msg = new netIO(role,message);
-		}
-		else {
-			netIO msg = new netIO(role);
+		byte type = 0;
+		if(args[1] != null)
+		{
+			int tempType = Integer.parseInt(args[1]);
+			type = (byte)tempType;
 		}
 
+		netIO msg = new netIO(role, type);		
+		switch (role) {
+			case 0:
+				msg.server_old();
+				break;
+			case 1:
+				msg.client();
+				break;
+			default:
+				System.out.println("Problem with Main switch on Role");
+				break;
+		}
+		msg.close();
 		System.out.println("Done with function");
 		return;
 	} // end Main Function
 	
+	public boolean setMessage(CameraMsgs.cameraStatus status)
+	{
+		msgType = 1;
+		sMsgStatus = status;
+		return true;
+	}
+		
+		
 	// Server
-	private void serverInit() throws IOException {
+	public void serverInit() throws IOException {
 					
 
 		try {
@@ -174,7 +202,8 @@ public class netIO{
 
 
 		try {
-			clientSocket = serverSocket.accept();
+			System.out.println("Waiting on Client on port "+ port);
+			clientSocket = serverSocket.accept();		// waits for client to connect
 			System.out.println("Client Accepted");
 			} catch (IOException e) {
 				System.err.println("Accept failed.");
@@ -184,17 +213,44 @@ public class netIO{
 		// define server Streams
 		serverOutStream = new ObjectOutputStream(clientSocket.getOutputStream());
 		serverInputStream = new ObjectInputStream(clientSocket.getInputStream());
-				
-		System.out.println("Ready for Inputs");
-		
+		return;
 	}	// End Server init Method
-	
-	
-	public void server() throws IOException
+
+	// overloaded server function - one for each message type
+	public void server(CameraMsgs.cameraStatus sMsg) throws IOException
 	{
-		int count = 0;
+			serverOutStream.writeInt(sMsg.getSerializedSize());
+			serverOutStream.writeByte(msgType);		// write type of message to stream
+			sMsg.writeTo(serverOutStream);
+			count++;
+	} // End Server Method
+
+	// overloaded server function - one for each message type
+	public void server(CameraMsgs.cameraTracks sMsg) throws IOException
+	{
+		serverOutStream.writeInt(sMsg.getSerializedSize());
+		serverOutStream.writeByte(msgType);		// write type of message to stream
+		sMsg.writeTo(serverOutStream);
+		count++;
+	} // End Server Method
+
+	// overloaded server function - one for each message type
+	public void server(CameraMsgs.cameraImage sMsg) throws IOException
+	{
+//		System.out.println("Image Serial Size = "+ sMsg.getSerializedSize());
+		serverOutStream.writeInt(sMsg.getSerializedSize());
+		serverOutStream.writeByte(msgType);		// write type of message to stream
+		sMsg.writeTo(serverOutStream);
+		count++;
+	} // End Server Method
+	
+
+	public void server_old() throws IOException
+	{
+		count = 0;
 		long t= System.currentTimeMillis();
-		long end = t+1000;
+		long end = t+10000;
+
 
 		while(System.currentTimeMillis() < end){
 
@@ -202,11 +258,12 @@ public class netIO{
 			sStatusBuilder = CameraMsgs.cameraStatus.newBuilder();
 					
 			// Set initial conditions and create message object
-			sMsgStatus = sStatusBuilder.setSensorStatus(true)
+			sMsgStatus = sStatusBuilder.setTime(System.currentTimeMillis())
 				.setLaserOn(true)
 				.setText("Test ProtoBuf " + count + " " + testText)
 				.build();
-			serverOutStream.writeByte(sMsgStatus.getSerializedSize()); 
+			serverOutStream.writeByte(sMsgStatus.getSerializedSize());
+			serverOutStream.writeByte(msgType);		// write type of message to stream
 			sMsgStatus.writeTo(serverOutStream);
 			count++;
 		}
@@ -219,47 +276,199 @@ public class netIO{
 		CameraMsgs.cameraStatus.Builder cStatus = CameraMsgs.cameraStatus.newBuilder();
 
 		// Set initial conditions and create message object
-		CameraMsgs.cameraStatus cMsgStatus = cStatus.setSensorStatus(true)
-			.setLaserOn(true)
+		CameraMsgs.cameraStatus cMsgStatus = cStatus.setLaserOn(true)
 			.setText("Test ProtoBuf")
 			.build();
-
-
-		try {
-			// Create network socket
-			cSocket = new Socket(host, port);
+		int tries = 1;
+		while(cSocket == null)
+		{
+			
+			try {
+				// Create network socket
+				System.out.println(tries + " -> Client connecting to "+host+" on port "+port);
+				cSocket = new Socket(host, port);
 				
-			//Create Object Streams
-			clientOutStream = new ObjectOutputStream(cSocket.getOutputStream());
-			clientInputStream = new ObjectInputStream(cSocket.getInputStream());
+				//Create Object Streams
+				clientOutStream = new ObjectOutputStream(cSocket.getOutputStream());
+				clientInputStream = new ObjectInputStream(cSocket.getInputStream());
 				
 			} catch (UnknownHostException e) {
 				System.err.println("Don't know about host: " + host);
-				System.exit(1);
+				//				System.exit(1);
 			} catch (IOException e) {
-				System.err.println("Couldn't get I/O for the connection to: " + host);
-				System.exit(1);
+				System.err.println(tries + " -> Couldn't get I/O for the connection to: " + host);
+				//				System.exit(1);
 			}
-			
+			try {
+				Thread.sleep( 1000 );
+				
+			}
+			catch ( InterruptedException e) {
+				e.printStackTrace();
+			}
+			tries++;
+		}	// End While Loop
+		
 		// Input from user for text input
 		stdIn = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Waiting for Server");
 		return;
 	}	// End clientInit Method
 	
-	private void client() throws IOException
+	public void client() throws IOException
 	{
-		byte inSize = 0;
-
-		while ((inSize = clientInputStream.readByte())  != 0) {
-			if(inSize == -1)
-			break;
+		int inSize = 0;
+		byte msgType = 0;
+		boolean error = true;
+		long startTime = System.currentTimeMillis();
+		int sCount = 0;
+		int tCount = 0;
+		int iCount = 0;
+		long msgTime = 0;
+		while ((inSize = clientInputStream.readInt())  != 0) {
+			error = true;
+//			System.out.println("inSize of " + inSize);
+			if(inSize < 0)
+			{
+				if(inSize == -1)
+					break;
+				break;
+			}
 			byte []bytes = new byte[inSize]; 
+			msgType = clientInputStream.readByte();
+			localProcTimeStart = System.currentTimeMillis();
+//			System.out.println("msgType = " + msgType + " Insize = " + inSize);
 			clientInputStream.readFully(bytes); 
-			cStatusIn = CameraMsgs.cameraStatus.parseFrom(bytes);
+			count++;
+			switch (msgType) {
+				case 0:
+					cStatusIn = CameraMsgs.cameraStatus.parseFrom(bytes);
+					break;
+				case 1:
+					cTracksIn = CameraMsgs.cameraTracks.parseFrom(bytes);
+					break;
+				case 2:
+					cImageIn = CameraMsgs.cameraImage.parseFrom(bytes);
+					break;
+				default:
+					System.out.println("message Type error " + msgType);
+					break;
+			}
+			if (cStatusIn != null) {
+				msgTime = cStatusIn.getTime();
+				p("Server("+msgType+"): Time->" + cStatusIn.getTime());
+				p("Server("+msgType+"): Status->" + cStatusIn.getStatus());
+				p("Server("+msgType+"): Laser->" + cStatusIn.getLaserOn());
+				sCount++;
+				error = false;
+			}
+			if (cTracksIn != null) {
+				msgTime = cTracksIn.getTime();
+				p("Server("+msgType+"): Time->" + cTracksIn.getTime());
+				p("Server("+msgType+"): Status->" + cTracksIn.getStatus());
+				tCount++;
+				error = false;
+			}
+			if (cImageIn != null) {
+				msgTime = cImageIn.getTime();
+				p("Server("+msgType+"): Time->" + cImageIn.getTime());
+				int channels = cImageIn.getChannels();
+				int sizeX = cImageIn.getSizeX();
+				int sizeY = cImageIn.getSizeY();
+				if (iCount == 0) {
+					serialImage = new byte[(sizeX * sizeY * channels)];
+					image = new byte[channels][sizeY][sizeX];
+				}
+				if (serialImage.length != (sizeX * sizeY * channels))
+				{
+					serialImage = new byte[(sizeX * sizeY * channels)];					
+				}
+				cImageIn.getImageData().copyTo(serialImage,0);
+				
+				if (image.length != channels && image[0].length != sizeY && image[0][0].length != sizeX) {
+					image = new byte[channels][sizeY][sizeX];
+				}
+				int index = 0;
+				for (int i = 0; i<channels; i++) {
+					for (int j = 0; j<sizeY; j++) {
+						for (int k = 0; k<sizeX; k++) {
+							image[i][j][k] = serialImage[index++];
+						}
+					}
+				}				
+				p("Server("+msgType+"): Channels->" +channels);
+				p("Server("+msgType+"): SizeX->" + sizeX);
+				p("Server("+msgType+"): SizeY->" + sizeY);
+
+//				System.out.println("Server("+msgType+"): Image->");
+				iCount++;
+				error = false;
+			}
+			if (error){
+				System.out.println("Server: error msg type = " + msgType);
+			}
+			localProcTimeStop = System.currentTimeMillis();
+			timeCalc(msgTime, localProcTimeStop - localProcTimeStart, msgType);
 		} // End While Loop
-
-		System.out.println("Server: " + cStatusIn.getText());
-
+		long endTime = System.currentTimeMillis();
+		long duration = endTime - startTime;
+		System.out.printf("\n\nStatus: %d\nTracks: %d\nImages: %d\n\n",sCount,tCount,iCount);
+		System.out.printf("\n\nMinTime: %d\nMaxTime: %d\nAvgTime: %d\n\n",minTime,maxTime,avgTime);
+		System.out.printf(" End Time : %d\nStart Time: %d\n -----------\n  Duration: %d\n",endTime,startTime,duration);
 	} // End Client method
+	
+//	public void timeCalc(long msgTime){ timeCalc(msgTime, 0);}
+	
+	public void timeCalc(long msgTime, long localDelay, byte msgType)
+	{
+		int delayTime = 0;
+		switch (msgType) {
+			case 0:
+				delayTime = STATUS_DELAY;
+				break;
+			case 1:
+				delayTime = TRACKS_DELAY;
+				break;
+			case 2:
+				delayTime = IMAGE_DELAY;
+				break;
+			default:
+				System.out.println("message Type error " + msgType);
+				break;
+		}
+				
+//		cTime = System.currentTimeMillis();
+//		eTime = cTime - msgTime;
+		long netTime = -1;
+		if (pTime == 0) {
+			eTime = 0;
+		}
+		else {
+			eTime = msgTime - pTime;
+			netTime = eTime - delayTime;
+		}		
+		pTime = msgTime;
+		if (eTime > maxTime) {
+			maxTime = eTime;
+		}
+		else if(0 < eTime && eTime < minTime)
+		{
+			minTime = eTime;
+		}
+		if (avgTime == 0) {
+			avgTime = netTime;
+		}
+		avgTime = ( avgTime + netTime ) / 2;
+		//p(String.format("\n%d\t%d\t",eTime,delayTime));
+		System.out.printf("\n(%d) Elapsed: %d\tNetDelay: %d\tLocalDelay: %d",msgType,eTime,netTime,localDelay);
+			
+	}	// End of timeCalc Function
+		
+	public void p(String printString)
+	{
+		if(VERBOSE)
+			System.out.println(printString);
+		return;
+	}
+	
 }	// End netIO Class
