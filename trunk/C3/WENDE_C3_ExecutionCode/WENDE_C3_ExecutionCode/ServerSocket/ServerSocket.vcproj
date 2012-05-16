@@ -245,7 +245,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\PictureCtrl.cpp"
+				RelativePath="..\SharedSource\PictureCtrl.cpp"
 				>
 			</File>
 			<File
@@ -368,7 +368,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PictureCtrl.h"
+				RelativePath="..\SharedSource\PictureCtrl.h"
 				>
 			</File>
 			<File

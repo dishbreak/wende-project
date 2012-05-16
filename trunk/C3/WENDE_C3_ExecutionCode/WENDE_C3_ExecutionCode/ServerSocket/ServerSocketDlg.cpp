@@ -741,24 +741,6 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 
 		tImageSize.cx = tImage.GetWidth();
 		tImageSize.cy = tImage.GetHeight();
-
-		CImage img;
-		img.Create(tImage.GetWidth(), tImage.GetHeight(), 24 /* bpp */, 0 /* No alpha channel */);
-		ll =0;	
-		int nPixel = 0;
-		for(int row = 0; row < tImage.GetHeight(); row++)
-		{
-			for(int col = 0; col < tImage.GetWidth(); col++)
-			{
-				UPixel Pixel;
-				Pixel.chars.cRed   = bytes[ll+0];
-				Pixel.chars.cGreen = bytes[ll+1];
-				Pixel.chars.cBlue  = bytes[ll+2];
-				img.SetPixel(col,row,Pixel.c);
-				ll +=3;
-			}
-		}
-		img.Save("temp.bmp");
 		return;
 	}
 	else
