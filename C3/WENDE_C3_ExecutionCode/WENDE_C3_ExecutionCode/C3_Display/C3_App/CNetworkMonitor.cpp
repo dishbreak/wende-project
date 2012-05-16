@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CSharedStruct.h"
-#include "CShmStructs.h"
+#include "ShmStructs.h"
 #include <time.h>
 #include <process.h>
 #include "CNetworkMonitor.h"
@@ -55,14 +55,6 @@ void CNetworkMonitor::InitializeThread()
 		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 		ResumeThread( hThread3 );
 	}
-
-	//while (1)
-	//{
-	//	Sleep (100);
-	//}
-	
-	//return 0;
-
 }
 
 UINT WINAPI StatusThread (LPVOID pParam)
