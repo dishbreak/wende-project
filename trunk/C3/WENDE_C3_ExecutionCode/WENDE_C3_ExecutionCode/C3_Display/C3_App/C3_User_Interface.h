@@ -55,6 +55,8 @@ namespace C3_App {
 			base::OnFormClosed(e);
 			instance = nullptr;
 		}
+	private: System::Windows::Forms::FlowLayoutPanel^  pPPIPanel;
+	protected: 
 		//~C3_User_Interface()
 		//{
 		//	if (components)
@@ -62,7 +64,7 @@ namespace C3_App {
 		//		delete components;
 		//	}
 		//}
-	private: System::Windows::Forms::FlowLayoutPanel^  flowLayoutPanel1;
+
 	protected: 
 	private: System::Windows::Forms::GroupBox^  groupBox1;
 	private: System::Windows::Forms::GroupBox^  groupBox2;
@@ -129,7 +131,7 @@ namespace C3_App {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
-			this->flowLayoutPanel1 = (gcnew System::Windows::Forms::FlowLayoutPanel());
+			this->pPPIPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->pPPI = (gcnew System::Windows::Forms::Panel());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
@@ -159,8 +161,7 @@ namespace C3_App {
 			this->pbLaserComms = (gcnew System::Windows::Forms::PictureBox());
 			this->gbAlerts = (gcnew System::Windows::Forms::GroupBox());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			//this->dlgExportDTI = (gcnew System::Windows::Forms::SaveFileDialog());
-			this->flowLayoutPanel1->SuspendLayout();
+			this->pPPIPanel->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->BeginInit();
@@ -179,19 +180,19 @@ namespace C3_App {
 			this->gbAlerts->SuspendLayout();
 			this->SuspendLayout();
 			// 
-			// flowLayoutPanel1
+			// pPPIPanel
 			// 
-			this->flowLayoutPanel1->Controls->Add(this->groupBox1);
-			this->flowLayoutPanel1->Controls->Add(this->groupBox2);
-			this->flowLayoutPanel1->Controls->Add(this->groupBox3);
-			this->flowLayoutPanel1->Controls->Add(this->groupBox4);
-			this->flowLayoutPanel1->Controls->Add(this->groupBox5);
-			this->flowLayoutPanel1->Controls->Add(this->groupBox6);
-			this->flowLayoutPanel1->Controls->Add(this->gbAlerts);
-			this->flowLayoutPanel1->Location = System::Drawing::Point(12, 12);
-			this->flowLayoutPanel1->Name = L"flowLayoutPanel1";
-			this->flowLayoutPanel1->Size = System::Drawing::Size(1329, 682);
-			this->flowLayoutPanel1->TabIndex = 0;
+			this->pPPIPanel->Controls->Add(this->groupBox1);
+			this->pPPIPanel->Controls->Add(this->groupBox2);
+			this->pPPIPanel->Controls->Add(this->groupBox3);
+			this->pPPIPanel->Controls->Add(this->groupBox4);
+			this->pPPIPanel->Controls->Add(this->groupBox5);
+			this->pPPIPanel->Controls->Add(this->groupBox6);
+			this->pPPIPanel->Controls->Add(this->gbAlerts);
+			this->pPPIPanel->Location = System::Drawing::Point(12, 12);
+			this->pPPIPanel->Name = L"pPPIPanel";
+			this->pPPIPanel->Size = System::Drawing::Size(1329, 682);
+			this->pPPIPanel->TabIndex = 0;
 			// 
 			// groupBox1
 			// 
@@ -480,10 +481,10 @@ namespace C3_App {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1344, 698);
-			this->Controls->Add(this->flowLayoutPanel1);
+			this->Controls->Add(this->pPPIPanel);
 			this->Name = L"C3_User_Interface";
 			this->Text = L"C3_Subsystem";
-			this->flowLayoutPanel1->ResumeLayout(false);
+			this->pPPIPanel->ResumeLayout(false);
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox2->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->EndInit();
