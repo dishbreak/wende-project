@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../SharedSource/;../../SharedSource;."
+				AdditionalIncludeDirectories="../SharedSource/;.;..\SharedSource\tinyxml"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -177,6 +177,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\C3ProcessingConfiguration.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -196,12 +200,32 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="..\SharedSource\tinyxml\tinystr.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\tinyxml\tinyxml.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\tinyxml\tinyxmlerror.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\tinyxml\tinyxmlparser.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\C3ProcessingConfiguration.h"
+				>
+			</File>
 			<File
 				RelativePath="..\SharedSource\CSharedStruct.h"
 				>
@@ -216,6 +240,14 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\tinyxml\tinystr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\tinyxml\tinyxml.h"
 				>
 			</File>
 		</Filter>

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<C3Processing>
+    <!--Settings for the WENDE C3 Processing Shared Memory Strings-->
+    <SHM_FILE_CAMERA_TRACK FILE="SHM_C3_CAMERA_TRACK" MUTEX="SHM_C3_CAMERA_TRACK_MUTEX" EVENT_SERVER="SHM_C3_CAMERA_TRACK_MUTEX" EVENT_CLIENT="SHM_C3_CAMERA_TRACK_MUTEX" />
+    <SHM_FILE_LASER_TRACK FILE="SHM_C3_LASER_POINTING" MUTEX="SHM_C3_LASER_POINTING_MUTEX" EVENT_SERVER="SHM_C3_LASER_POINTING_EVENT1" EVENT_CLIENT="SHM_C3_LASER_POINTING_EVENT2" />
+    <!--Settings for the WENDE C3 2-State Kalman Filter-->
+    <KALMAN_FILTER PROCESS_NOISE="9" />
+    <!--Settings for the WENDE C3 TRACK SETTINGS-->
+    <!--              ...                       -->
+    <!--              ...                       -->
+    <!--              ...                       -->
+</C3Processing>
