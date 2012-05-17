@@ -12,17 +12,18 @@
 
 //states for state machine
 #define INIT_SENSORS		0
-#define SAMPLE_SENSORS	1
-#define DETECT_LASER		2
-#define	ADJUST_TO_LIGHTING	3
-#define DETECTED_LASER	4
-#define SETTLE_FROM_ADJUST  5
-#define RESAMPLE_AFTER_ADJUST  6
+#define CALIBRATE_SENSORS       1
+#define LASER_DETECTION         2
+#define SAMPLE_SENSORS	        3
+#define DETECT_LASER		4
+#define	ADJUST_TO_LIGHTING	5
+#define DETECTED_LASER	        6
+#define SETTLE_FROM_ADJUST      7
+#define RESAMPLE_AFTER_ADJUST   8
 
-#define MAX_SAMPLES  100
+#define MAX_SAMPLES  1000
 
-#define ADC_DETECTOR_SAMPLE_RATE  10
-#define ADC_LIGHTING_SAMPLE_RATE  10
+
 #define SETTLING_CYCLES  100  //capacitors removed
 #define SETTLING_TIME  2      //2ms to settle...sigh
 
@@ -32,11 +33,13 @@ typedef struct __sensor_data {
 	int historic_value;	        //moving average value
         int current_value;      //current value, based on averaging a set number of samples
         unsigned int sample_index;
+        int sample_rate;
 	int samples[MAX_SAMPLES];		//samples
         int history[MAX_SAMPLES];
         unsigned int history_index;
 	unsigned int address;				//location of sensor
         boolean sampled;         //enough samples?
+        boolean recalibrate;      //calibrated?
 } sensor_data;
 
 
