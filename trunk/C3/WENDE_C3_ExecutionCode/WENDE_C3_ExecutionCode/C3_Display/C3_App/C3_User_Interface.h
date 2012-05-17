@@ -108,7 +108,7 @@ namespace C3_App {
 	private: System::Windows::Forms::Button^  cmdExport;
 	private: System::Windows::Forms::GroupBox^  gbAlerts;
 	private: System::Windows::Forms::TextBox^  textBox1;
-	private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI;
+	//private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
 
 
 
@@ -159,7 +159,7 @@ namespace C3_App {
 			this->pbLaserComms = (gcnew System::Windows::Forms::PictureBox());
 			this->gbAlerts = (gcnew System::Windows::Forms::GroupBox());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->dlgExportDTI = (gcnew System::Windows::Forms::SaveFileDialog());
+			//this->dlgExportDTI = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->flowLayoutPanel1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -556,7 +556,47 @@ namespace C3_App {
 			 }	  
 
 private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs^  e) {
-			 dlgExportDTI->ShowDialog();
+			 //dlgExportDTI->ShowDialog();
+			 //create a stream we can use to write to
+			 System::IO::FileStream^ srmOutput;
+			 //create strings as needed
+			 String^ rowEntry = "";
+			 //create an encoder we can use for writing
+			 System::Text::UnicodeEncoding uniEncoding;
+			 //create a new SaveFileDialog
+			 SaveFileDialog^ dlgExportDti = gcnew SaveFileDialog;
+			 //filter for CSV files, and set the filter to be the default one.
+			 dlgExportDti->Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+			 dlgExportDti->FilterIndex = 1;
+			 //set the file dialog to My Documents
+			 dlgExportDti->InitialDirectory = Environment::GetFolderPath(Environment::SpecialFolder::MyDocuments);
+			 //call ShowDialog. This won't return until the user does something. If the user clicks OK...
+			 if ( dlgExportDti->ShowDialog() == System::Windows::Forms::DialogResult::OK )
+			 {
+				 //...open the file for writing, provided we can handle it.
+				 if ( (srmOutput = safe_cast<System::IO::FileStream^>(dlgExportDti->OpenFile())) != nullptr )
+				 {
+					 //Put in the first row for the CSV file
+					 String^ topRow = "Trial Number,DTI (m),TTI (s),Pass/Fail,\n";
+					 srmOutput->Write( uniEncoding.GetBytes(topRow), 0, uniEncoding.GetByteCount(topRow));
+					 //loop through each row in the DtiLog
+					 for (int i = 0; i < (dgvDtiLog->RowCount - 1); i++)
+					 {
+						 int trialNum = i+1;
+						 //for each row, pull out the data
+						 rowEntry = String::Concat(
+							 trialNum.ToString(), ",",		//Trial Number
+							 dgvDtiLog[0,i]->Value, ",",	//TTI (s)
+							 dgvDtiLog[1,i]->Value, ",",	//DTI (m)
+							 dgvDtiLog[2,i]->Value, ",",	//Pass/Fail
+							 "\n");										//Newline
+						 srmOutput->Write( uniEncoding.GetBytes(rowEntry), 0, uniEncoding.GetByteCount(rowEntry));
+					 }
+					 //close the file pointer when it's done
+					 srmOutput->Close();
+				 }
+			 }
+			 delete dlgExportDti;
 		 }
 };
 }

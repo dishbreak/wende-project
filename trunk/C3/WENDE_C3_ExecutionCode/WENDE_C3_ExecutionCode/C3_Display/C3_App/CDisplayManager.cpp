@@ -174,5 +174,3 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 			System::Drawing::Image::FromFile ("Online.png");
 	return 0;
 }
-
-
