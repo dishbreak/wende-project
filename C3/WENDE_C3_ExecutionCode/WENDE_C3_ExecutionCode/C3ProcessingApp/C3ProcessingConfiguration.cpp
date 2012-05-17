@@ -13,23 +13,45 @@
 #include "StdAfx.h"
 #include "C3ProcessingConfiguration.h"
 #include "tinyxml.h"
+#include <iostream>
+#include <fstream>
+using namespace std;
 /////////////////////////////////////////////////////////////////////////////////
 // Function Name: C3ProcessingConfiguration 
 // Purpose: Defualt destructor (clean up mem)
 /////////////////////////////////////////////////////////////////////////////////
 C3ProcessingConfiguration::C3ProcessingConfiguration(void)
-: m_ProcessNoise(9)
 {
-	// Camera track shm strings
-	m_SHM_C3_CAMERA_TRACK			= "SHM_C3_CAMERA_TRACK";
-	m_SHM_C3_CAMERA_TRACK_MUTEX		= "SHM_C3_CAMERA_TRACK_MUTEX";
-	m_SHM_C3_CAMERA_TRACK_EVENT1	= "SHM_C3_CAMERA_TRACK_MUTEX";
-	m_SHM_C3_CAMERA_TRACK_EVENT2	= "SHM_C3_CAMERA_TRACK_MUTEX";
-	// laser track shm strings
-	m_SHM_C3_LASER_POINTING			= "SHM_C3_LASER_POINTING";
-	m_SHM_C3_LASER_POINTING_MUTEX	= "SHM_C3_LASER_POINTING_MUTEX";
-	m_SHM_C3_LASER_POINTING_EVENT1	= "SHM_C3_LASER_POINTING_EVENT1";	
-	m_SHM_C3_LASER_POINTING_EVENT2	= "SHM_C3_LASER_POINTING_EVENT2";  
+	// Configuration file
+	m_CfgFile = "C3Processing.xml";
+
+	// determine if the file exists
+    ifstream infile;
+	infile.open (m_CfgFile.c_str(), ifstream::in);
+	if (infile.good())
+	{
+		infile.close();
+		// read away
+		ReadXml();
+	}
+	else
+	{
+		// Kalman Filter Parmaeters
+		m_ProcessNoise					= 9; 
+		// Camera track shm strings
+		m_SHM_C3_CAMERA_TRACK			= "SHM_C3_CAMERA_TRACK";
+		m_SHM_C3_CAMERA_TRACK_MUTEX		= "SHM_C3_CAMERA_TRACK_MUTEX";
+		m_SHM_C3_CAMERA_TRACK_EVENT1	= "SHM_C3_CAMERA_TRACK_MUTEX";
+		m_SHM_C3_CAMERA_TRACK_EVENT2	= "SHM_C3_CAMERA_TRACK_MUTEX";
+		// laser track shm strings
+		m_SHM_C3_LASER_POINTING			= "SHM_C3_LASER_POINTING";
+		m_SHM_C3_LASER_POINTING_MUTEX	= "SHM_C3_LASER_POINTING_MUTEX";
+		m_SHM_C3_LASER_POINTING_EVENT1	= "SHM_C3_LASER_POINTING_EVENT1";	
+		m_SHM_C3_LASER_POINTING_EVENT2	= "SHM_C3_LASER_POINTING_EVENT2";  
+		
+		// TODO Add logic to check if file already exists
+		WriteXMLFile();
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////
 // Function Name: ~C3ProcessingConfiguration 
@@ -41,7 +63,7 @@ C3ProcessingConfiguration::~C3ProcessingConfiguration(void)
 void C3ProcessingConfiguration::ReadXml()
 {
 	// Read in the file
-	TiXmlDocument doc("C3Processing.xml");
+	TiXmlDocument doc(m_CfgFile.c_str());
 	bool loadOkay = doc.LoadFile();
 	
 	if (loadOkay)
@@ -155,5 +177,5 @@ void C3ProcessingConfiguration::WriteXMLFile()
 	comment3->SetValue("Settings for the WENDE C3 TRACK SETTINGS");
 	root->LinkEndChild( comment3 );
 
-	doc.SaveFile( "C3Processing.xml" ); 
+	doc.SaveFile( m_CfgFile.c_str() ); 
 }
