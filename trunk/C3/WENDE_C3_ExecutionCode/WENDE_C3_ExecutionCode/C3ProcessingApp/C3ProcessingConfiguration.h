@@ -22,6 +22,8 @@ public:
 	void ReadXml();									// reads the configuration file
 
 public:
+	//Configuration file
+	string m_CfgFile;								// The configuration file!!!
 	//Camera SHM Files
 	string m_SHM_C3_CAMERA_TRACK;					// Camera SHM File Name
 	string m_SHM_C3_CAMERA_TRACK_MUTEX;				// Camera MUTEX File Name
