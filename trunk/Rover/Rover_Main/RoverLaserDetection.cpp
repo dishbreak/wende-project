@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "RoverLaserDetection.h"
 #include "RoverDefaults.h"
+#include "RoverInterfaces.h"
 
 
 static int detector_samples[10];
@@ -35,8 +36,8 @@ void DetectionProcessing()
       for(int i = 0; i < 10; i++)
       {
         //delayMicroseconds(1000);
-        detector_samples[i] = analogRead(A0);
-        lighting_samples[i] = analogRead(A1);
+        detector_samples[i] = readLaserDetector();
+        lighting_samples[i] = readLightSensor();
         curr_detector_value += detector_samples[i];
         curr_light_value += lighting_samples[i];
       }
@@ -61,8 +62,8 @@ void DetectionProcessing()
       }
       
       //set top value
-      detector_samples[9] = analogRead(A0);
-      lighting_samples[9] = analogRead(A1);
+      detector_samples[9] = readLaserDetector();
+      lighting_samples[9] = readLightSensor();
       
       //add top value
       curr_detector_value += detector_samples[9];
