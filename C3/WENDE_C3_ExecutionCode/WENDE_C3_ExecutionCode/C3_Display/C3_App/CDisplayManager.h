@@ -25,7 +25,7 @@ public:
 
 //constructor made private to ensure this stays a singleton
 private:
-    CDisplayManager(){};
+	CDisplayManager(){};
     ~CDisplayManager(){};
     static CDisplayManager * displayMgr;
 
