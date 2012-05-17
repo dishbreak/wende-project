@@ -9,12 +9,12 @@ public:
     static CDisplayManager * getCDisplayManager();
     int Update_Rover_PPI_Position(int x, int y);
     int Update_Camera_Subsystem_Indicator(int nCameraStatus);
-    int Update_Camera_Communication_Indicator(enum eStatus);
+    int Update_Camera_Communication_Indicator(int nCameraCommStatus);
     int Update_Laser_Subsystem_Indicator(int nLaserStatus);
-    int Update_Laser_Communication_Indicator(enum eStatus);
+    int Update_Laser_Communication_Indicator(int nLaserCommStatus);
     int Update_Laser_Activity_Indicator(int nLaserActivityStatus);
 	int Update_Overall_Status(void);
-    int Update_Rover_Acquired_Indicator(enum eStatus);
+    int Update_Rover_Acquired_Indicator(int nRoverAcqStatus);
     int Store_Latest_DTI(int nDTI);
 
 	// Accessor methods to determine overall status

@@ -156,23 +156,23 @@ int CDisplayManager::Get_Laser_Status(void)
 //				object					
 // Author:		Vishal Kotcherlakota
 ////////////////////////////////////////////////////////////////////////
-//int CDisplayManager::Update_Camera_Communication_IndicatorI(int nCameraCommStatus)
-//{
-//	if (nCameraCommStatus == 0) //Status is OFFLINE
-//	{
-//		//Set Indicator Offline
-//		C3_User_Interface::Instance->pbCameraComms->Image = 
-//			System::Drawing::Image::FromFile ("Offline.jpg");
-//		//Set Subsystem Indicator Unknown
-//		//uncomment this when ready.
-//		//C3_User_Interface::Instance->pbCameraStatus->Image =
-//		//	System::Drawing::Image::FromFile ("Unknown.jpg");
-//	}
-//	if (nCameraCommStatus == 1)
-//		//Set Indicator Online
-//		C3_User_Interface::Instance->pbCameraComms->Image = 
-//			System::Drawing::Image::FromFile ("Online.jpg");
-//	return 0;
-//}
+int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus)
+{
+	if (nCameraCommStatus == 0) //Status is OFFLINE
+	{
+		//Set Indicator Offline
+		C3_User_Interface::Instance->pbCameraComms->Image = 
+			System::Drawing::Image::FromFile ("Offline.png");
+		//Set Subsystem Indicator Unknown
+		//uncomment this when ready.
+		C3_User_Interface::Instance->pbCameraStatus->Image =
+			System::Drawing::Image::FromFile ("Unknown.png");
+	}
+	if (nCameraCommStatus == 1)
+		//Set Indicator Online
+		C3_User_Interface::Instance->pbCameraComms->Image = 
+			System::Drawing::Image::FromFile ("Online.png");
+	return 0;
+}
 
 
