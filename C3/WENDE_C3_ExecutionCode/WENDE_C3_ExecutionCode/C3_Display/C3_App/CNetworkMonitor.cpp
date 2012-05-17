@@ -109,11 +109,15 @@ UINT WINAPI StatusThread (LPVOID pParam)
 }
 UINT WINAPI TrackThread (LPVOID pParam)
 {
+	CAMERA_TRACK_MSG_SHM sTrackMessage; 
 	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;
 	m_CameraTracks.Acquire("SHM_C3_CAMERA_TRACK",
 						   "SHM_C3_CAMERA_TRACK_MUTEX",
 						   "SHM_C3_CAMERA_TRACK_EVENT1",
 						   "SHM_C3_CAMERA_TRACK_EVENT2");
+	int x = 0;
+	int y = 0;
+
 	while(1)
 	{
 		// aquire the mutex
@@ -121,13 +125,20 @@ UINT WINAPI TrackThread (LPVOID pParam)
 		{
 			if (m_CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-				// Read the data
-
+				sTrackMessage = *m_CameraTracks.GetStruct();
 				// Set the event
 				m_CameraTracks.SetEventClient();
 				
 				// release the mutex
 				m_CameraTracks.ReleaseMutex();
+
+				// Will need to build this up to handle multiple tracks
+				x = sTrackMessage.Tracks->X;
+				y = sTrackMessage.Tracks->Y;
+
+				////get a handle to the CDisplayManager
+                CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+				dispman->Update_Rover_PPI_Position(x, y);
 			}
 			else
 			{

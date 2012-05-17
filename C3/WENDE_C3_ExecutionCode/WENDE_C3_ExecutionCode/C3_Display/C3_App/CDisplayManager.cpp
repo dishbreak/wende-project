@@ -31,6 +31,7 @@ CDisplayManager * CDisplayManager::getCDisplayManager()
 
 int CDisplayManager::Update_Rover_PPI_Position(int x, int y)
 {
+
 	return 0;
 }
 
