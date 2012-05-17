@@ -319,6 +319,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\SharedSource\PictureCtrl.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\SharedSource\PictureCtrl.h"
+			>
+		</File>
+		<File
 			RelativePath=".\ReadMe.txt"
 			>
 		</File>

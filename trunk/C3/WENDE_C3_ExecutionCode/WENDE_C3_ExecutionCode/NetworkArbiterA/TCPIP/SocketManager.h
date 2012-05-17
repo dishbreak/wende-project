@@ -46,8 +46,9 @@ public:
 	virtual ~CSocketManager();
 
 	void SetMessageWindow(CEdit* pMsgCtrl);
+	void SetPictureWindow(CPictureCtrl* picCtrl);
 	void SetCameraMessageType(CameraPacketType type);
-	void AppendMessage(LPCTSTR strText );
+	void AppendMessage(LPCTSTR strText, DWORD size);
 public:
 
 	virtual void OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount);
@@ -60,14 +61,15 @@ protected:
 	CPictureCtrl* m_picCtrl;
 	
 private:
-	void DecodeCameraStatusMessage(LPCTSTR strText, char* temp);
-	void DecodeCameraTrackMessage(LPCTSTR strText, char* temp);
-	void DecodeCameraImageMessage(LPCTSTR strText, char* temp);
+	void DecodeCameraStatusMessage(LPCTSTR strText, char* temp,DWORD siz);
+	void DecodeCameraTrackMessage(LPCTSTR strText, char* temp,DWORD siz);
+	void DecodeCameraImageMessage(LPCTSTR strText, char* temp,DWORD siz);
 
 	CSharedStruct<LASER_POINT_DIRECTION_SHM> m_LaserCommand;
 	CSharedStruct<CAMERA_STATUS_MSG_SHM>	 m_CameraStatus;
 	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;
 	CSharedStruct<CAMERA_IMAGE_MSG_SHM>		 m_CameraImage;
+	char inData[BUFFER_SIZE];
 };
 
 #endif // !defined(AFX_SOCKETMANAGER_H__7403BD71_338A_4531_BD91_3D7E5B505793__INCLUDED_)

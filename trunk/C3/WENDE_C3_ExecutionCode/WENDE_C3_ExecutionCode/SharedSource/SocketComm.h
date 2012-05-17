@@ -22,7 +22,7 @@
 #define EVT_ZEROLENGTH      0x0003  // Zero length message
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE     MAX_PATH*300
+#define BUFFER_SIZE     MAX_PATH*400
 #endif
 #define HOSTNAME_SIZE   MAX_PATH
 #define STRING_LENGTH   40

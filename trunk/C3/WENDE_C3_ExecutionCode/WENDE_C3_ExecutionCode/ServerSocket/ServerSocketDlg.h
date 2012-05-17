@@ -14,6 +14,8 @@
 #include "atlimage.h"
 #include "PictureCtrl.h"
 #include "ShmStructs.h"
+#include <string>
+using std::string;
 using namespace cameraMsgs;
 #define MAX_CONNECTION		3
 
@@ -52,7 +54,7 @@ protected:
 
 	//void PickNextAvailable();
 	bool StartServer();
-	void OnBtnSend(CString strText, int portOffset, int size,  int type);
+	void OnBtnSend(string strText, int portOffset, int size,  int type);
 
 	// Generated message map functions
 	//{{AFX_MSG(CServerSocketDlg)

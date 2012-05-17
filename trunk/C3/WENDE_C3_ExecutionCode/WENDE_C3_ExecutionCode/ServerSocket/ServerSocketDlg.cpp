@@ -161,8 +161,8 @@ BOOL CServerSocketDlg::PreTranslateMessage(MSG* pMsg)
 		{
 			if (m_SocketManager[0].IsOpen() && m_SocketManager[1].IsOpen() && m_SocketManager[2].IsOpen())
 			{
-				CString strTex("TEST");
-				OnBtnSend(strTex,0,strTex.GetLength(),0);
+				string strTex = "TEST";
+				OnBtnSend(strTex,0,strTex.size(),0);
 			}
 			return TRUE;
 		}
@@ -454,10 +454,8 @@ void CServerSocketDlg::OnBtnSendStatus()
 	status.set_status((cameraMsgs::systemStatus)m_CameraStatus);	// set camera status
 	status.set_text(cstatus);				// set the camera text
 	status.set_time(osBinaryTime);									// set the operational time
-	string temp;													
-	status.SerializeToString(&temp);
-	CString strText(temp.c_str());									// serilize the message
-	OnBtnSend(strText,0,strText.GetLength(),0);												// send the data
+	string strText = status.SerializeAsString();
+	OnBtnSend(strText,0,strText.size(),0);												// send the data
 }
 void CServerSocketDlg::OnBtnSendImage() 
 {
@@ -474,10 +472,9 @@ void CServerSocketDlg::OnBtnSendImage()
 	image.set_sizey(tImageSize.cy);
 	image.set_imagedata(bytes, tImageSize.cx*tImageSize.cy*3);
 	
-	string temp;													
-	image.SerializeToString(&temp);
-	CString strText(temp.c_str());									// serilize the message
-	OnBtnSend(strText,2,strText.GetLength(),2);												// send the data
+	string strText = image.SerializeAsString();
+	int size = image.ByteSize();
+	OnBtnSend(strText,2,strText.size(),2);												// send the data
 }
 void CServerSocketDlg::OnBtnSendTrack() 
 {
@@ -496,12 +493,11 @@ void CServerSocketDlg::OnBtnSendTrack()
 	AddTrack(&m_trackEnable3,&m_trackXEditBox3,&m_trackYEditBox3, &track);
 	AddTrack(&m_trackEnable4,&m_trackXEditBox4,&m_trackYEditBox4, &track);
 	AddTrack(&m_trackEnable5,&m_trackXEditBox5,&m_trackYEditBox5, &track);
-	AddTrack(&m_laserEnable0,&m_laserXEditBox0,&m_laserYEditBox0, &track);
+	AddLaser(&m_laserEnable0,&m_laserXEditBox0,&m_laserYEditBox0, &track);
 
-	string temp;													
-	track.SerializeToString(&temp);
-	CString strText(temp.c_str());									// serilize the message
-	OnBtnSend(strText,1,strText.GetLength(),1);												// send the data
+	string strText = track.SerializeAsString();
+	int size = track.ByteSize();
+	OnBtnSend(strText,1,strText.size(),1);												// send the data
 }
 void CServerSocketDlg::AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track)
 {
@@ -520,38 +516,41 @@ void CServerSocketDlg::AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTrack
 void CServerSocketDlg::AddTrack(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track)
 {
 	static CString tempString;
+	int temp = 0;
 	if (buttom->GetCheck()==BST_CHECKED)
 	{
 		::cameraMsgs::track *cTrack = track->add_target();
+		
 		x->GetWindowTextA(tempString);
-		cTrack->set_x(atoi(tempString));
+		temp = atoi(tempString);
+		cTrack->set_x(temp);
+
 	    y->GetWindowTextA(tempString);
-		cTrack->set_y(atoi(tempString));
+		temp = atoi(tempString);
+		cTrack->set_y(temp);
 	}
 }
 
-void CServerSocketDlg::OnBtnSend(CString strText, int portOffset, int size,  int type) 
+void CServerSocketDlg::OnBtnSend(string strText, int portOffset, int size,  int type) 
 {
-	
-	int nLen = strText.GetLength();
+	int nLen = size;
 	stMessageProxy msgProxy;
 
 	if (nLen > 0)
 	{
 		USES_CONVERSION;
 		//strText += _T("\r\n");
-		nLen = strText.GetLength();
 		if (m_nSockType == SOCK_UDP)
 		{
 			// send broadcast...
 			msgProxy.address.CreateFrom(_T("255.255.255.255"), m_strPort);
-			memcpy(msgProxy.byData, T2CA(strText), nLen);
+			memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
 			nLen += msgProxy.address.Size();
 		}
 		else
 		{
 			nLen = __min(sizeof(msgProxy.byData)-1, nLen+1);
-			memcpy(msgProxy.byData, T2CA(strText), nLen);
+			memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
 		}
 
 		// Send data to peer...
@@ -559,7 +558,6 @@ void CServerSocketDlg::OnBtnSend(CString strText, int portOffset, int size,  int
 			m_SocketManager[portOffset].WriteComm((const LPBYTE)&msgProxy, nLen, INFINITE);
 		else
 		{
-			m_SocketManager[portOffset].GetMaxSocketSendSize();
 			m_SocketManager[portOffset].WriteComm(msgProxy.byData, nLen, INFINITE);
 		}
 	}	
@@ -741,6 +739,24 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 
 		tImageSize.cx = tImage.GetWidth();
 		tImageSize.cy = tImage.GetHeight();
+
+		CImage img;
+		img.Create(tImage.GetWidth(), tImage.GetHeight(), 24 /* bpp */, 0 /* No alpha channel */);
+		ll =0;	
+		int nPixel = 0;
+		for(int row = 0; row < tImage.GetHeight(); row++)
+		{
+			for(int col = 0; col < tImage.GetWidth(); col++)
+			{
+				UPixel Pixel;
+				Pixel.chars.cRed   = bytes[ll+0];
+				Pixel.chars.cGreen = bytes[ll+1];
+				Pixel.chars.cBlue  = bytes[ll+2];
+				img.SetPixel(col,row,Pixel.c);
+				ll +=3;
+			}
+		}
+		img.Save("temp.bmp");
 		return;
 	}
 	else
