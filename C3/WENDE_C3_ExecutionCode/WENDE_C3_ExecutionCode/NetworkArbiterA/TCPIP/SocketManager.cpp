@@ -59,15 +59,13 @@ CSocketManager::~CSocketManager()
 
 void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom)
 {
-	CString strData;
 #ifndef UNICODE
 	USES_CONVERSION;
-	memcpy(strData.GetBuffer(dwCount), A2CT((LPSTR)lpData), dwCount);
-	strData.ReleaseBuffer(dwCount);
+	memcpy(inData, A2CT((LPSTR)lpData), dwCount);
 #else
-	MultiByteToWideChar(CP_ACP, 0, reinterpret_cast<LPCSTR>(lpData), dwCount, strData.GetBuffer(dwCount+1), dwCount+1 );
-	strData.ReleaseBuffer(dwCount);
+	MultiByteToWideChar(CP_ACP, 0, reinterpret_cast<LPCSTR>(lpData), dwCount, inData, dwCount+1 );
 #endif
+/*
 	if (!sfrom.IsNull())
 	{
 		LONG  uAddr = sfrom.GetIPAddr();
@@ -79,19 +77,19 @@ void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockA
 					(UINT)(sAddr[0]), (UINT)(sAddr[1]),
 					(UINT)(sAddr[2]), (UINT)(sAddr[3]), nPort);
 
-		strData = strAddr + strData;
+		//strData = strAddr + strData;
 	}
-	AppendMessage( strData );
+	*/
+	AppendMessage( inData, dwCount );
 }
 
-void CSocketManager::DecodeCameraStatusMessage(LPCTSTR strText, char* temp)
+void CSocketManager::DecodeCameraStatusMessage(LPCTSTR strText, char* temp,DWORD size)
 {
 	static char timeStr[256];
 	static int cameraStatusMessageCount = 0;
-	string s((LPCTSTR)strText);
 	cameraStatus ss;
 
-	ss.ParseFromString(s);
+	ss.ParseFromArray(strText,size);
 
 	strcpy(temp,strText);
 	sprintf(temp, "+CAMERA STATUS MESSAGE(%d)\r\n", ++cameraStatusMessageCount);
@@ -120,14 +118,13 @@ void CSocketManager::DecodeCameraStatusMessage(LPCTSTR strText, char* temp)
 		m_CameraStatus.ReleaseMutex();
 	}
 }
-void CSocketManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp)
+void CSocketManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp,DWORD size)
 {
 	static char timeStr[256];
 	static int cameraTrackMessageCount = 0;
-	string s((LPCTSTR)strText);
 	cameraTracks tr;
 
-	tr.ParseFromString(s);
+	tr.ParseFromArray(strText,size);
 
 	sprintf(temp, "+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
 	sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,tr.laseron());
@@ -179,57 +176,66 @@ void CSocketManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp)
 		m_CameraTracks.ReleaseMutex();
 	}
 }
-void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp)
+void CSocketManager::DecodeCameraImageMessage(LPCTSTR strText, char* temp,DWORD size)
 {
-	string s((LPCTSTR)strText);
+	static int cameraImageMessageCount = 0;
+	cameraImageMessageCount++;
 	cameraImage im;
 
-	im.ParseFromString(s);
+	im.ParseFromArray(strText,size);
 	
-	string sss = im.imagedata();
 	CImage img;
 	img.Create(im.sizex(), im.sizey(), 24 /* bpp */, 0 /* No alpha channel */);
-	int ll =0;	
-	int nPixel = 0;
+	int ll = 0;
+	string st= im.imagedata();
+	int maxL= st.size();
+	sprintf(temp, "+CAMERA IMAGE MESSAGE(%d)\r\n", maxL);
 	for(int row = 0; row < im.sizey(); row++)
 	{
 		for(int col = 0; col < im.sizex(); col++)
 		{
-			UPixel Pixel;
-			Pixel.chars.cRed   = sss[ll+0];
-			Pixel.chars.cGreen = sss[ll+1];
-			Pixel.chars.cBlue  = sss[ll+2];
-			img.SetPixel(col,row,Pixel.c);
-			ll +=3;
+			try
+			{
+				if (ll+2 < maxL)
+				{
+					img.SetPixelRGB(col,row,st.at(ll+0),st.at(ll+1),st.at(ll+2));				
+				}
+				else
+				{
+					img.SetPixelRGB(col,row,0,0,0);				
+				}
+				ll +=3;
+			}
+			catch(...)
+			{
+
+			}
 		}
 	}
-	img.Save("temp.bmp");
+	
+	CString d ("temp.bmp");
+	img.Save(d);
+	m_picCtrl->LoadFromFile(d);
 
-	// Read the data
-	//LPBITMAPINFOHEADER  pdib = (LPBITMAPINFOHEADER) NULL;
-	//BITMAPFILEHEADER    hdr;
-	//DWORD               dwSize;
-	//// Initialize the bitmap header.
-	//dwSize				= DibSize(pdib);
-	//hdr.bfType          = BFT_BITMAP;
-	//hdr.bfSize          = dwSize + sizeof(BITMAPFILEHEADER);
-	//hdr.bfReserved1     = 0;
-	//hdr.bfReserved2     = 0;
-	//hdr.bfOffBits       = (DWORD)sizeof(BITMAPFILEHEADER) + pdib->biSize + DibPaletteSize(pdib);
+	if (m_CameraImage.isCreated() &&  
+	m_CameraImage.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+	{
+		m_CameraImage->CameraSize.cx = im.sizex();
+		m_CameraImage->CameraSize.cy = im.sizey();
+		m_CameraImage->Channels     = im.channels();
+		m_CameraImage->PacketNumber = cameraImageMessageCount;
+		m_CameraImage->ProcessID    = m_CameraImage.GetProcessID();
+		m_CameraImage->Time			= im.time();
+		ZeroMemory(m_CameraImage->ImageData,im.sizex(),im.sizey(),im.channels());
+		memcpy(m_CameraImage->ImageData,im.imagedata().c_str(),maxL);
 
-	//CFile file;
-	//if(!file.Open("test.bmp",CFile::modeWrite | CFile::modeCreate,NULL))
-	//	return;
-
-	//// Write the bitmap header and bitmap bits to the file.
-	//file.Write((LPCVOID) &hdr, sizeof(BITMAPFILEHEADER));
-	//file.Write(m_CameraImage.ReadFromSharedMemoryDataInfo(), dwSize);
-
-	//file.Close();
-
-	////sprintf(temp, "Laser=%d Time=%I64d Status=%d\n\n", ss.laseron(),ss.time(),ss.status());
+		// Set the event (GUI)
+		m_CameraImage.SetEventServer();
+		// release the mutex
+		m_CameraImage.ReleaseMutex();
+	}
 }
-void CSocketManager::AppendMessage(LPCTSTR strText )
+void CSocketManager::AppendMessage(LPCTSTR strText,DWORD size )
 {
 	if (NULL == m_pMsgCtrl)
 		return;
@@ -238,9 +244,9 @@ void CSocketManager::AppendMessage(LPCTSTR strText )
 	
 	switch(m_cameraMsgType)
 	{
-		case CameraPacketType::status: { DecodeCameraStatusMessage(strText,temp); break; }
-		case CameraPacketType::track:  { DecodeCameraTrackMessage(strText,temp); break; }
-		case CameraPacketType::image:  { DecodeCameraImageMessage(strText,temp); break; }
+		case CameraPacketType::status: { DecodeCameraStatusMessage(strText,temp,size); break; }
+		case CameraPacketType::track:  { DecodeCameraTrackMessage(strText,temp,size); break; }
+		case CameraPacketType::image:  { DecodeCameraImageMessage(strText,temp,size); break; }
 		default: { break; }
 	}
 
@@ -274,7 +280,10 @@ void CSocketManager::SetMessageWindow(CEdit* pMsgCtrl)
 {
 	m_pMsgCtrl = pMsgCtrl;
 }
-
+void CSocketManager::SetPictureWindow(CPictureCtrl* picCtrl)
+{
+	m_picCtrl = picCtrl;
+}
 
 void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount)
 {
@@ -311,23 +320,28 @@ void CSocketManager::OnEvent(UINT uEvent, LPVOID lpvData)
 	CWnd* pParent = m_pMsgCtrl->GetParent();
 	if (!::IsWindow( pParent->GetSafeHwnd()))
 		return;
-
+	string tempString; 
 	switch( uEvent )
 	{
 		case EVT_CONSUCCESS:
-			AppendMessage( _T("Connection Established\r\n") );
+			tempString = "Connection Established\r\n";
+			AppendMessage( _T(tempString.c_str()), tempString.size());
 			break;
 		case EVT_CONFAILURE:
-			AppendMessage( _T("Connection Failed\r\n") );
+			tempString = "Connection Failed\r\n";
+			AppendMessage( _T(tempString.c_str()), tempString.size());
 			break;
 		case EVT_CONDROP:
-			AppendMessage( _T("Connection Abandonned\r\n") );
+			tempString = "Connection Abandonned\r\n";
+			AppendMessage( _T(tempString.c_str()), tempString.size());
 			break;
 		case EVT_ZEROLENGTH:
-			AppendMessage( _T("Zero Length Message\r\n") );
+			tempString = "Zero Length Message\r\n";
+			AppendMessage( _T(tempString.c_str()), tempString.size());
 			break;
 		default:
-			TRACE("Unknown Socket event\n");
+			tempString = "Unknown Socket event\n";
+			TRACE(tempString.c_str());
 			break;
 	}
 

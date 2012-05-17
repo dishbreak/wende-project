@@ -8,7 +8,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="C3FilterClass">
-    <Position X="11" Y="2.5" Width="2.5" />
+    <Position X="11" Y="2.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>BQAAAAAAQEAAACAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3FilterClass.h</FileName>
@@ -17,19 +17,12 @@
   <Class Name="C3Point">
     <Position X="9.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAQAAAAAAAAAAAAAAAYAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAQEAAAAAAAAAAAAAAaAA=</HashCode>
       <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Point.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="C3Track">
-    <Position X="4" Y="2.75" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AEABAAAAgAAACAAAAAAAAEAQAAAAABAAAAAAAAIBAAI=</HashCode>
-      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Track.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="C3Tracker">
-    <Position X="8.75" Y="2.5" Width="2" />
+    <Position X="8.75" Y="2.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAQAAAAAIAGQBAAAAAAgAAAIAAQAACAAAAAAAAAAA=</HashCode>
       <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Tracker.h</FileName>
@@ -42,13 +35,13 @@
       <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Utilities.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Struct Name="__unnamed_002e_1">
-    <Position X="4" Y="1.75" Width="2.25" />
+  <Class Name="C3Track">
+    <Position X="4" Y="2.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3FilterClass.h</FileName>
+      <HashCode>IEABQEAAgAAACABBAAAAAEAQAAAABBAAAAAAAAIBAAI=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Track.h</FileName>
     </TypeIdentifier>
-  </Struct>
+  </Class>
   <Struct Name="__unnamed_002e_2">
     <Position X="2.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
@@ -61,6 +54,13 @@
     <TypeIdentifier>
       <HashCode>AAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
       <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3Tracker.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_002e_1">
+    <Position X="4" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\C3ModeLibrary\CommonFiles\C3FilterClass.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Typedef Name="AlphaBetaState" Collapsed="true">

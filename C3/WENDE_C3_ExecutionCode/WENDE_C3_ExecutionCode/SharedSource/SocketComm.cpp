@@ -958,7 +958,8 @@ DWORD CSocketComm::WriteComm(const LPBYTE lpBuffer, DWORD dwCount, DWORD dwTimeo
 void CSocketComm::Run()
 {
     stMessageProxy stMsgProxy;
-    DWORD   dwBytes  = 0L;
+    DWORD   dwBytes1  = 0L;
+	DWORD   dwBytes2  = 0L;
     DWORD   dwTimeout = INFINITE;
     LPBYTE  lpData  = (LPBYTE)&stMsgProxy;
     DWORD   dwSize  = sizeof(stMsgProxy);
@@ -1003,10 +1004,10 @@ void CSocketComm::Run()
     {
         // Blocking mode: Wait for event
 		// length
-        dwBytes = ReadComm(lpData, dwSize, dwTimeout);
-	
+        dwBytes2 = ReadComm(lpData, dwSize, dwTimeout);
+		
         // Error? - need to signal error
-        if (dwBytes == (DWORD)-1L)
+        if (dwBytes2 == (DWORD)-1L)
         {
             // Do not send event if we are closing
             if (IsOpen())
@@ -1026,13 +1027,13 @@ void CSocketComm::Run()
         }
 
         // Chars received?
-        if ( bSmartAddressing && dwBytes == sizeof(SOCKADDR_IN))
+        if ( bSmartAddressing && dwBytes2 == sizeof(SOCKADDR_IN))
         {
             OnEvent( EVT_ZEROLENGTH, NULL );
         }
-        else if (dwBytes > 0L)
+        else if (dwBytes2 > 0L)
         {
-            OnDataReceived( lpData, dwBytes);
+            OnDataReceived( lpData, dwBytes2);
         }
 
         //Sleep(0);

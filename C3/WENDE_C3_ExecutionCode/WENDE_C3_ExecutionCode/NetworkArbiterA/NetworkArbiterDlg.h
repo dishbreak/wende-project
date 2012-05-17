@@ -8,6 +8,7 @@
 #include "afxwin.h"
 #include "ConnectionSettings.h"
 #include "tcpip/SocketManager.h"
+#include "PictureCtrl.h"
 
 #include "string.h"
 
@@ -59,4 +60,5 @@ public:
 	afx_msg void OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnEnChangePort();
 	CEdit m_PortCtrl;
+	CPictureCtrl m_picCtrl;
 };

@@ -64,6 +64,7 @@ void CNetworkArbiterDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1, m_AddressPort);
 	DDX_Control(pDX, IDC_MESSAGE_LIST, m_pMsgCtrl);
 	DDX_Control(pDX, IDC_EDIT1, m_PortCtrl);
+	DDX_Control(pDX, IDC_STATIC_PICTURE, m_picCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CNetworkArbiterDlg, CDialog)
@@ -324,6 +325,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketStartThreadProc(LPVOID pParam)
 		}
 		// Set the display event
 		pThis->m_SocketObject[ii].SetMessageWindow( &pThis->m_pMsgCtrl );
+		pThis->m_SocketObject[ii].SetPictureWindow( &pThis->m_picCtrl );
 
 		while (!pThis->m_SocketObject[ii].IsOpen())
 		{
