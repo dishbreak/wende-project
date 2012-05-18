@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<NetworkArbiter>
-    <!--Settings for the WENDE C3 Arbiter     -->
-    <!--IP Address of the server              -->
-    <!--Port is the starting port for messages-->
-    <Connection ip="192.168.1.65" port="4444" />
-</NetworkArbiter>

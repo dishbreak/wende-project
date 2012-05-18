@@ -3,8 +3,6 @@
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 #include <atlconv.h>
-//#include <Streams.h>
-//#include "ServerSocket.h"
 #include "SocketManager.h"
 #include <atlimage.h>
 #include "cameraMsgs.pb.h"
@@ -37,7 +35,7 @@ CSocketManager::CSocketManager()
 						   "SHM_C3_LASER_STATUS_MUTEX",
 						   "SHM_C3_LASER_STATUS_EVENT1",
 						   "SHM_C3_LASER_STATUS_EVENT2");
-	m_CameraStatus.Acquire("SHM_C3_CAMERA_STAUTS",
+	m_CameraStatus.Acquire("SHM_C3_CAMERA_STATUS",
 						   "SHM_C3_CAMERA_STATUS_MUTEX",
 						   "SHM_C3_CAMERA_STATUS_EVENT1",
 						   "SHM_C3_CAMERA_STATUS_EVENT2");
