@@ -1,0 +1,27 @@
+package laserMsgs;
+
+enum systemStatus {
+	LASER_DOWN = 0;
+	LASER_READY = 1;
+	LASER_OPERATIONAL = 2;
+	LASER_ERROR = 3;
+	LASER_FAILED = 4;
+	UNKNOWN = 5;
+}
+
+message laserStatus {
+	optional int64 time = 1;
+	optional systemStatus status = 2 [default = UNKNOWN];
+	optional string text = 3;
+}
+
+message pose {
+	optional uint32 pulseAZ = 1;
+	optional uint32 pulseEL = 2;
+}
+
+message laserPose {
+	optional int64 time = 1;	
+	optional pose target = 2;
+	optional bool laserOn = 3;
+}
