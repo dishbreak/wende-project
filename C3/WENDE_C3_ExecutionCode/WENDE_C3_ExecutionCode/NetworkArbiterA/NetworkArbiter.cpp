@@ -13,7 +13,7 @@
 
 // CNetworkArbiterApp
 
-BEGIN_MESSAGE_MAP(CNetworkArbiterApp, CWinAppEx)
+BEGIN_MESSAGE_MAP(CNetworkArbiterApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
@@ -46,7 +46,7 @@ BOOL CNetworkArbiterApp::InitInstance()
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
 
-	CWinAppEx::InitInstance();
+	CWinApp::InitInstance();
 
 	if (!AfxSocketInit())
 	{

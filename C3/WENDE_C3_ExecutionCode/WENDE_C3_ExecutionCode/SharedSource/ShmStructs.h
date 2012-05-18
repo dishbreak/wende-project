@@ -28,8 +28,8 @@ typedef long LONG;
 #define SHM_MAX_STATUS_TEXT		256			// Max stutus text size from the camera
 #define SHM_MAX_TRACKS			10			// Max number of internal tracks
 #define SHM_MAX_LASERS			10			// Max number of laser tracks
-#define SHM_MAX_IMAGE_WIDTH		320			// Max image size in width direction
-#define SHM_MAX_IMAGE_HEIGHT	240			// Max image size in the height direction
+#define SHM_MAX_IMAGE_WIDTH		320  		// Max image size in width direction
+#define SHM_MAX_IMAGE_HEIGHT	240	    	// Max image size in the height direction
 #define SHM_MAX_IAMGE_CHANNELS	3			// Max image channels 
 // Max image size
 #define SHM_MAX_IMAGE_SIZE		SHM_MAX_IMAGE_WIDTH*SHM_MAX_IMAGE_HEIGHT*SHM_MAX_IAMGE_CHANNELS	

@@ -6,7 +6,7 @@
 #include "NetworkArbiter.h"
 #include "NetworkArbiterDlg.h"
 #include "TinyXml\tinyxml.h"
-
+#include "process.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif

@@ -6,7 +6,7 @@
 //#include <Streams.h>
 //#include "ServerSocket.h"
 #include "SocketManager.h"
-
+#include <atlimage.h>
 #include "cameraMsgs.pb.h"
 #include <string>
 
