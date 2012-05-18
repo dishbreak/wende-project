@@ -37,7 +37,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	if ( NULL != hThread)
 	{
 		// set the C3 processing to a higher pri than other exe's
-		SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
+		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 		// actual start of the thread
 		ResumeThread( hThread );
 	}

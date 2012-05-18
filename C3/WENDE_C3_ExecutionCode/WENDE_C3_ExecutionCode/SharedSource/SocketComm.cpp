@@ -834,7 +834,7 @@ DWORD CSocketComm::ReadComm(LPBYTE lpBuffer, DWORD dwSize, DWORD dwTimeout)
     if ( res > 0)
     {
  		//std::read(s,lpBuffer,4);
-        res = recv( s, (LPSTR)lpBuffer, dwSize, 0);
+        res = recv( s, (LPSTR)lpBuffer, dwSize, MSG_WAITALL);
 	}
     dwBytesRead = (DWORD)((res > 0)?(res) : (-1L));
 
@@ -1003,9 +1003,14 @@ void CSocketComm::Run()
     while( IsOpen() )
     {
         // Blocking mode: Wait for event
-		// length
-        dwBytes2 = ReadComm(lpData, dwSize, dwTimeout);
-		
+		//length
+        dwBytes1 = ReadComm(lpData, sizeof(unsigned char)*4, dwTimeout);
+		DWORD readSize = (lpData[0] << 24) + 
+			             (lpData[1] << 16) + 
+						 (lpData[2] <<  8) + 
+						 (lpData[3] <<  0);
+		//packet
+		dwBytes2 = ReadComm(lpData, min(dwSize,readSize), dwTimeout);
         // Error? - need to signal error
         if (dwBytes2 == (DWORD)-1L)
         {
