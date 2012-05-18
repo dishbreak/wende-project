@@ -12,7 +12,7 @@
 #include "C3ArbiterConfiguration.h"
 #include <string>
 
-// CNetworkArbiterDlg dialog
+// CNetworkArbiterDlg dialog	
 class CNetworkArbiterDlg : public CDialog
 {
 // Construction
