@@ -22,7 +22,7 @@
 #include <map>
 
 #include "C3Track.h"
-#include "C3Point.h"
+#include "ShmStructs.h"
 
 using std::map;
 using std::pair;
@@ -47,7 +47,7 @@ class C3Tracker
 		// Array of existing tracks
 		vector<C3Track*> m_tracks;								// [1...N] where N is defined at creation
 		// Playing Field origion
-		C3Point			 m_PlayingFieldOrigion;					// [m,m]
+		C3_TRACK_POINT			 m_PlayingFieldOrigion;					// [m,m]
 		// Playing Field Radius
 		double			 m_playingFieldRadius;					// (m)
 		// Max Distance a point can be before it is ignorded
@@ -58,17 +58,17 @@ class C3Tracker
 		~C3Tracker(void);
 
 	public:
-		void UpdateTracks(const vector<C3Point> cameraRoverPositions, const double time);
+		void UpdateTracks(const vector<C3_TRACK_POINT> cameraRoverPositions, const double time);
 
 	private:
 		// determine if a point has already been assigned to the tracker 
 		bool isInMapping(const map<unsigned int, C3_CORRELATE_struct> *position2track, 
 			             const unsigned int trackerNum);
 		// Creates a new tracker
-		unsigned int AddTrack(const C3Point cameraRoverPosition, 
+		unsigned int AddTrack(const C3_TRACK_POINT cameraRoverPosition, 
 			                  const double time);
 		// Correlates a point with a tracker
 		void correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
-			                             const vector<C3Point> cameraRoverPositions, 
+			                             const vector<C3_TRACK_POINT> cameraRoverPositions, 
 										 const double time);
 };

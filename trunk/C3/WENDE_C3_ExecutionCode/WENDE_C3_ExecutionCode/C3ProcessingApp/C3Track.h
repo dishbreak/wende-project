@@ -16,7 +16,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "C3Point.h"
+#include "ShmStructs.h"
 #include "C3FilterClass.h"
 #include "C3CircularHistory.h"
 
@@ -26,7 +26,7 @@ class C3Track
 		// Filter for tracking purposes
 		C3FilterClass		m_filter;
 		// Last predicted point
-		C3Point				m_predictionPoint;
+		C3_TRACK_POINT				m_predictionPoint;
 		// History of points for prosecution
 		C3CircularHistory	m_historyPoints;
 		// Flag to determine if laser commands are used
@@ -46,22 +46,22 @@ class C3Track
 
 	public:
 		// Cononical Functions
-		C3Track(const C3Point cameraRoverPosition, const double time, const bool isProsecuteTrack, const double playingFieldRadius );
+		C3Track(const C3_TRACK_POINT cameraRoverPosition, const double time, const bool isProsecuteTrack, const double playingFieldRadius );
 		~C3Track(void);
 
 	public:
 		// Filter and predict next location....
-		C3Point UpdateTrack(const C3Point cameraRoverPosition, const double time);
+		C3_TRACK_POINT UpdateTrack(const C3_TRACK_POINT cameraRoverPosition, const double time);
 		// Commanded Laser Azimuth and Elevation
-		C3Point CommandLaser();
+		C3_TRACK_POINT CommandLaser();
 
 	public:
 		// returns the number of points contained in the history array
 		unsigned int getNumHistoryPoints() const;
 		// returns the last saved point containd in the history array
-		C3Point getLastHistoryPoint() const;
+		C3_TRACK_POINT getLastHistoryPoint() const;
 		// returns the last prediction from the kalman filter
-		C3Point getPredicationPoint() const;
+		C3_TRACK_POINT getPredicationPoint() const;
 		// Return the track current DTI
 		double getDTI() const;
 };

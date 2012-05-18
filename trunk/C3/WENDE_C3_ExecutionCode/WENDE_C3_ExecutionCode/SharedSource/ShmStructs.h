@@ -7,6 +7,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+
+typedef unsigned long       DWORD;
+typedef int                 BOOL;
+typedef unsigned char       BYTE;
+typedef unsigned short      WORD;
+typedef float               FLOAT;
+typedef signed char         INT8;
+typedef signed short        INT16;
+typedef signed int          INT32;
+typedef signed __int64      INT64;
+typedef unsigned char       UINT8;
+typedef unsigned short      UINT16;
+typedef unsigned int        UINT32;
+typedef unsigned __int64    UINT64;
+typedef char CHAR;
+typedef short SHORT;
+typedef long LONG;
+
 #define SHM_MAX_STATUS_TEXT		256			// Max stutus text size from the camera
 #define SHM_MAX_TRACKS			10			// Max number of internal tracks
 #define SHM_MAX_LASERS			10			// Max number of laser tracks
@@ -15,6 +33,12 @@
 #define SHM_MAX_IAMGE_CHANNELS	3			// Max image channels 
 // Max image size
 #define SHM_MAX_IMAGE_SIZE		SHM_MAX_IMAGE_WIDTH*SHM_MAX_IMAGE_HEIGHT*SHM_MAX_IAMGE_CHANNELS	
+
+typedef struct
+{
+    LONG        cx;
+    LONG        cy;
+} C3SIZE;
 
 /////////////////////////////////////////////////////////////////////////////////
 // Struct: CAMERA_STATUS_MSG_SHM
@@ -53,7 +77,7 @@ typedef union
 		INT32		 AZ;		// AZ Location
 		INT32		 EL;		// EL Location
 	};
-} C3_TRACK;
+} C3_TRACK_POINT;
 /////////////////////////////////////////////////////////////////////////////////
 // Struct: LASER_POINTING_MSG_SHM
 //
@@ -71,8 +95,8 @@ typedef struct{
 	UINT32       ValidLasers;
 	UINT32       SubsystemId;
 
-	C3_TRACK Tracks[SHM_MAX_TRACKS];
-	C3_TRACK Lasers[SHM_MAX_LASERS];
+	C3_TRACK_POINT Tracks[SHM_MAX_TRACKS];
+	C3_TRACK_POINT Lasers[SHM_MAX_LASERS];
 	// TODO PERFORMANCE COUNTER - FIX
 }CAMERA_TRACK_MSG_SHM;
 /////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +112,7 @@ typedef struct{
 	UINT32		 PacketNumber;						// packet number
 	UINT32		 Channels;							// number of channels in the image (i.e. 3 RGB)
 	
-	SIZE		 CameraSize;						// Number of valid bytes in the image data
+	C3SIZE		 CameraSize;						// Number of valid bytes in the image data
 													// (i.e. W*H*C=size)		
 				
 	BYTE		 ImageData[SHM_MAX_IMAGE_SIZE];		// Image data (RGB bytes)
@@ -107,6 +131,6 @@ typedef struct{
 	UINT32		 PacketNumber;						// packet number
 	UINT32		 LaserOnOff;						// Bool for Laser ON or OFF (0 or 1)
 
-	C3_TRACK	 PointLocation;						// relative pointing command
+	C3_TRACK_POINT	 PointLocation;						// relative pointing command
 	// TODO PERFORMANCE COUNTER - FIX
 }LASER_POINT_DIRECTION_SHM;
