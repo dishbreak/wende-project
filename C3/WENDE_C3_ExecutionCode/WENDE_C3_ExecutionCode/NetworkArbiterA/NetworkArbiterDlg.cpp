@@ -169,66 +169,12 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDialog::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	// Determine if file exists
-	CFile theFile;
-	char* szFileName = "appsettings.xml";
-
-	CFileStatus status;
-	if( !CFile::GetStatus( szFileName, status ) )
-	{
-		m_Connection.ip = "192.168.1.70";
-		m_Connection.port = 4444;
-		// Create the file if it does not exist
-		WriteXMLFile();
-	}
 	
-	// Read in the file
-	TiXmlDocument doc(szFileName);
-	bool loadOkay = doc.LoadFile();
-	if (loadOkay)
-	{
-			
-		TiXmlHandle hDoc(&doc);
-		TiXmlElement* pElem;
-		TiXmlHandle hRoot(0);
-		///////////////
-		// block: name
-		///////////////
-		pElem=hDoc.FirstChildElement().Element();
-		// should always have a valid root but handle gracefully if it does
-		if (pElem)
-		{
-			CString name=pElem->Value();
-			// save this for later
-			hRoot=TiXmlHandle(pElem);
-			/////////////////////
-			// block: connection
-			/////////////////////
-			pElem=hRoot.FirstChild("Connection").Element();
-			if (pElem)
-			{
-				m_Connection.ip   = pElem->Attribute("ip");
-				m_Connection.port = atoi(pElem->Attribute("port"));	
-			}
-			else
-			{
-				// ERROR ????
-			}
-		}
-		else
-		{
-			// ERROR ????
-		}
-	}
-	else
-	{
-		// ERROR ????	
-	}
 
 	// set the dialog controls..
 	CString port;
-	port.Format(_T("%d"), m_Connection.port);
-	m_AddressControlValue = htonl(inet_addr(m_Connection.ip.c_str()));
+	port.Format(_T("%d"), m_configArbiter.Connection.port);
+	m_AddressControlValue = htonl(inet_addr(m_configArbiter.Connection.ip.c_str()));
 	m_AddressPort         = port;
 
 	// start thread to bring up com scokets
@@ -237,33 +183,6 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-void CNetworkArbiterDlg::WriteXMLFile()
-{
-	// Clean up possible memory leaks... --- FIX ---
-	TiXmlDocument doc;  
-	TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
-	doc.LinkEndChild( decl );  
-
-	TiXmlElement * root = new TiXmlElement( "NetworkArbiter" );  
-	doc.LinkEndChild( root );  
-
-	TiXmlComment * comment1 = new TiXmlComment();
-	comment1->SetValue("Settings for the WENDE C3 Arbiter     " );  
-	root->LinkEndChild( comment1 );  
-	TiXmlComment * comment2 = new TiXmlComment();
-	comment2->SetValue("IP Address of the server              " );  
-	root->LinkEndChild( comment2 );
-	TiXmlComment * comment3 = new TiXmlComment();
-	comment3->SetValue("Port is the starting port for messages" );  
-	root->LinkEndChild( comment3 );  
-
-	TiXmlElement * cxn = new TiXmlElement( "Connection" );  
-	root->LinkEndChild( cxn );  
-	cxn->SetAttribute("ip", m_Connection.ip.c_str());
-	cxn->SetAttribute("port", m_Connection.port); // floating point attrib
-
-	doc.SaveFile( "appsettings.xml" ); 
-}
 void CNetworkArbiterDlg::RunThread()
 {
 	HANDLE hThread;
@@ -297,7 +216,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketStartThreadProc(LPVOID pParam)
 	CNetworkArbiterDlg* pThis = reinterpret_cast<CNetworkArbiterDlg*>( pParam );
 	// set the dialog controls..
 	CString port;
-	port.Format(_T("%d"), pThis->m_Connection.port);
+	port.Format(_T("%d"), pThis->m_configArbiter.Connection.port);
 	
 	for (int ii = 0; ii < SOCKET_COUNTS; ii++)
 	{
@@ -330,8 +249,8 @@ UINT WINAPI CNetworkArbiterDlg::SocketStartThreadProc(LPVOID pParam)
 		while (!pThis->m_SocketObject[ii].IsOpen())
 		{
 			// To use TCP socket
-			port.Format(_T("%d"), pThis->m_Connection.port+ii);
-			pThis->m_SocketObject[ii].ConnectTo( pThis->m_Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
+			port.Format(_T("%d"), pThis->m_configArbiter.Connection.port+ii);
+			pThis->m_SocketObject[ii].ConnectTo( pThis->m_configArbiter.Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
 		}
 		
 		// Now you may start the server/client thread to do the work for you...
@@ -347,7 +266,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketStartThreadProc(LPVOID pParam)
 
 void CNetworkArbiterDlg::OnBnClickedUpdateTcp()
 {
-	WriteXMLFile();
+	m_configArbiter.WriteXMLFile();
 	// Stop the thread that is running....
 	if ( NULL != m_hThread)
 	{
@@ -377,7 +296,7 @@ void CNetworkArbiterDlg::OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pRe
 	struct in_addr addr;
 	addr.s_addr = htonl((long)temp);
 
-	m_Connection.ip = inet_ntoa(addr);
+	m_configArbiter.Connection.ip = inet_ntoa(addr);
 }
 
 void CNetworkArbiterDlg::OnEnChangePort()
@@ -390,5 +309,5 @@ void CNetworkArbiterDlg::OnEnChangePort()
 	// TODO:  Add your control notification handler code here
 
 	m_PortCtrl.GetWindowTextA(m_AddressPort);
-	m_Connection.port = atoi(m_AddressPort);
+	m_configArbiter.Connection.port = atoi(m_AddressPort);
 }

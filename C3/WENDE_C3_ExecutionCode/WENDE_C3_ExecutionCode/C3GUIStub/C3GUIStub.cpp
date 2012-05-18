@@ -67,7 +67,7 @@ int _tmain(int argc, _TCHAR* argv[])
 UINT WINAPI StatusThread (LPVOID pParam)
 {
 	CSharedStruct<CAMERA_STATUS_MSG_SHM>	 m_CameraStatus;
-	m_CameraStatus.Acquire("SHM_C3_CAMERA_STAUTS",
+	m_CameraStatus.Acquire("SHM_C3_CAMERA_STATUS",
 						   "SHM_C3_CAMERA_STATUS_MUTEX",
 						   "SHM_C3_CAMERA_STATUS_EVENT1",
 						   "SHM_C3_CAMERA_STATUS_EVENT2");

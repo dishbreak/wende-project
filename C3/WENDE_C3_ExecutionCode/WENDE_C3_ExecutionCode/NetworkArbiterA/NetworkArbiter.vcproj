@@ -299,6 +299,14 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\C3ArbiterConfiguration.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\C3ArbiterConfiguration.h"
+			>
+		</File>
+		<File
 			RelativePath="..\SharedSource\cameraMsgs.pb.cc"
 			>
 		</File>

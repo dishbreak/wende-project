@@ -9,8 +9,8 @@
 #include "ConnectionSettings.h"
 #include "tcpip/SocketManager.h"
 #include "PictureCtrl.h"
-
-#include "string.h"
+#include "C3ArbiterConfiguration.h"
+#include <string>
 
 // CNetworkArbiterDlg dialog
 class CNetworkArbiterDlg : public CDialog
@@ -43,11 +43,7 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 
 private:
-	void WriteXMLFile();
 	void RunThread();
-
-private:
-	ConnectionSettings m_Connection;
 	
 public:
 	static const int SOCKET_COUNTS = 3;
@@ -61,4 +57,6 @@ public:
 	afx_msg void OnEnChangePort();
 	CEdit m_PortCtrl;
 	CPictureCtrl m_picCtrl;
+
+	C3ArbiterConfiguration m_configArbiter;
 };
