@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "C3Point.h"
+#include "ShmStructs.h"
 
 using std::vector;
 
@@ -15,7 +15,7 @@ class C3CircularHistory
 		// the size of the circular buffer
 		unsigned int m_size;
 		// the history buffer
-		vector<C3Point> m_history;
+		vector<C3_TRACK_POINT> m_history;
 		// Flag to tell that the buffer is full and not repeating indexs
 		bool m_isFull;
 
@@ -31,19 +31,19 @@ class C3CircularHistory
 
 	public:
 		// the overide operator for []
-		C3Point operator [] (const unsigned int index);
+		C3_TRACK_POINT operator [] (const unsigned int index);
 
 	public:
 		// add a point to the circular buffer
-		void addPosition(const C3Point cameraRoverPosition);
+		void addPosition(const C3_TRACK_POINT cameraRoverPosition);
 
 	public:
 		// returns the number of points in the array
 		unsigned int getNumHistoryPoints() const;
 		// returns the last point added to the history
-		C3Point getLastHistoryPoint() const;
+		C3_TRACK_POINT getLastHistoryPoint() const;
 		// returns the point at index ii from the history
-		C3Point getPoint(const unsigned int index ) const;
+		C3_TRACK_POINT getPoint(const unsigned int index ) const;
 		//
 };
 

@@ -78,14 +78,16 @@ C3FilterClass::~C3FilterClass(void)
 
 }
 
-C3Point C3FilterClass::FilterInput(C3Point cameraRoverPositions, double updateTime)	
+C3_TRACK_POINT C3FilterClass::FilterInput(C3_TRACK_POINT cameraRoverPositions, double updateTime)	
 {
 	Matrix<double, 1, 2> crPos;
 	crPos(0,0) = cameraRoverPositions.X;
 	crPos(0,1) = cameraRoverPositions.Y;
 
 	// initilize a camera 
-	C3Point cameraPoint(0,0);		
+	C3_TRACK_POINT cameraPoint;
+	cameraPoint.X = 0;
+	cameraPoint.Y = 0;
 
 	// If we have not Initilized the filter then init the filter state
 	if (this->m_isInit == false)

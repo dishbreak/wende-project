@@ -22,7 +22,7 @@ C3Tracker::~C3Tracker(void)
 	m_tracks.clear();
 }
 
-void C3Tracker::UpdateTracks(const vector<C3Point> cameraRoverPositions, const double time)
+void C3Tracker::UpdateTracks(const vector<C3_TRACK_POINT> cameraRoverPositions, const double time)
 {
 	// variable for mapping positions to tracks
 	map<unsigned int, C3_CORRELATE_struct> position2track;
@@ -60,7 +60,7 @@ void C3Tracker::UpdateTracks(const vector<C3Point> cameraRoverPositions, const d
 }
 // Correlates a point with a tracker
 void C3Tracker::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
-											const vector<C3Point> cameraRoverPositions, 
+											const vector<C3_TRACK_POINT> cameraRoverPositions, 
 											const double time)
 {
 	// loop over all the positions
@@ -110,7 +110,7 @@ void C3Tracker::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struc
 		position2track->insert(pair<unsigned int, C3_CORRELATE_struct>(ii,correlate));
 	}
 }
-unsigned int C3Tracker::AddTrack(const C3Point cameraRoverPosition, const double time)
+unsigned int C3Tracker::AddTrack(const C3_TRACK_POINT cameraRoverPosition, const double time)
 {
 	// Create the new Track
 	C3Track *track = NULL;
@@ -121,11 +121,11 @@ unsigned int C3Tracker::AddTrack(const C3Point cameraRoverPosition, const double
 	// Check to see if the track is in the playing field
 	if (dist > m_playingFieldRadius)	// outside the playing field
 	{									// so do not track
-		track = new C3Track(cameraRoverPosition,time,false);
+		track = new C3Track(cameraRoverPosition,time,false,2.0);
 	}
 	else								// inside the playing field
 	{									// so track 
-		track = new C3Track(cameraRoverPosition,time,true);
+		track = new C3Track(cameraRoverPosition,time,true,2.0);
 	}
 
 	// add the track to the array of tracks

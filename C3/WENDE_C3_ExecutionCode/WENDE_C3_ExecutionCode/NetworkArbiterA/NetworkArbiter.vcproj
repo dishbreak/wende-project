@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../SharedSource/google;../SharedSource;."
+				AdditionalIncludeDirectories="../SharedSource/google;../SharedSource;.;..\SharedSource\tinyxml"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -128,7 +128,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../SharedSource/google;../SharedSource;."
+				AdditionalIncludeDirectories="../SharedSource/google;../SharedSource;.;..\SharedSource\tinyxml"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="false"
 				RuntimeLibrary="0"
@@ -190,27 +190,27 @@
 			Name="TinyXml"
 			>
 			<File
-				RelativePath=".\tinyxml\tinystr.cpp"
+				RelativePath="..\SharedSource\tinyxml\tinystr.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\tinyxml\tinystr.h"
+				RelativePath="..\SharedSource\tinyxml\tinystr.h"
 				>
 			</File>
 			<File
-				RelativePath=".\tinyxml\tinyxml.cpp"
+				RelativePath="..\SharedSource\tinyxml\tinyxml.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\tinyxml\tinyxml.h"
+				RelativePath="..\SharedSource\tinyxml\tinyxml.h"
 				>
 			</File>
 			<File
-				RelativePath=".\tinyxml\tinyxmlerror.cpp"
+				RelativePath="..\SharedSource\tinyxml\tinyxmlerror.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\tinyxml\tinyxmlparser.cpp"
+				RelativePath="..\SharedSource\tinyxml\tinyxmlparser.cpp"
 				>
 			</File>
 		</Filter>

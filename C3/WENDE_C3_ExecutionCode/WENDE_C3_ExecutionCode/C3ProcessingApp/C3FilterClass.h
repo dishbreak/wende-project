@@ -1,8 +1,7 @@
 #pragma once
 #include <vector>
 #include "Dense"
-#include "C3Point.h"
-
+#include "ShmStructs.h"
 using namespace Eigen;
 using std::vector;
 
@@ -45,7 +44,7 @@ class C3FilterClass
 
 	// Public Functions
 	public:
-		C3Point FilterInput(C3Point cameraRoverPositions, double updateTime);	
+		C3_TRACK_POINT FilterInput(C3_TRACK_POINT cameraRoverPositions, double updateTime);	
 
 	// Private Functions
 	private:
