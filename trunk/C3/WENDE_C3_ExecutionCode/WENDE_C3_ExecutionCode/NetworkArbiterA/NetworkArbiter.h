@@ -15,7 +15,7 @@
 // See NetworkArbiter.cpp for the implementation of this class
 //
 
-class CNetworkArbiterApp : public CWinAppEx
+class CNetworkArbiterApp : public CWinApp
 {
 public:
 	CNetworkArbiterApp();
