@@ -558,6 +558,11 @@ void CServerSocketDlg::OnBtnSend(string strText, int portOffset, int size,  int 
 			m_SocketManager[portOffset].WriteComm((const LPBYTE)&msgProxy, nLen, INFINITE);
 		else
 		{
+			unsigned char sizeArray[4] = {(nLen & 0xFF000000) >> 24,
+										  (nLen & 0x00FF0000) >> 16,
+										  (nLen & 0x0000FF00) >>  8,
+										  (nLen & 0x000000FF) >>  0};
+			m_SocketManager[portOffset].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
 			m_SocketManager[portOffset].WriteComm(msgProxy.byData, nLen, INFINITE);
 		}
 	}	
