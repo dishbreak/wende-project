@@ -578,7 +578,12 @@ private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs
 				 if ( (srmOutput = safe_cast<System::IO::FileStream^>(dlgExportDti->OpenFile())) != nullptr )
 				 {
 					 //Put in the first row for the CSV file
-					 String^ topRow = "Trial Number,DTI (m),TTI (s),Pass/Fail,\n";
+					 String^ topRow = String::Concat(
+						 Column1->HeaderText, ",",
+						 Column2->HeaderText, ",",
+						 Column3->HeaderText, ",",
+						 "\n");
+					 //String^ topRow = "Trial Number,DTI (m),TTI (s),Pass/Fail,\n";
 					 srmOutput->Write( uniEncoding.GetBytes(topRow), 0, uniEncoding.GetByteCount(topRow));
 					 //loop through each row in the DtiLog
 					 for (int i = 0; i < (dgvDtiLog->RowCount - 1); i++)
@@ -587,16 +592,17 @@ private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs
 						 //for each row, pull out the data
 						 rowEntry = String::Concat(
 							 trialNum.ToString(), ",",		//Trial Number
-							 dgvDtiLog[0,i]->Value, ",",	//TTI (s)
+							 dgvDtiLog[0,i]->Value, ",",	//Date/Time
 							 dgvDtiLog[1,i]->Value, ",",	//DTI (m)
 							 dgvDtiLog[2,i]->Value, ",",	//Pass/Fail
-							 "\n");										//Newline
+							 "\n");							//Newline
 						 srmOutput->Write( uniEncoding.GetBytes(rowEntry), 0, uniEncoding.GetByteCount(rowEntry));
 					 }
 					 //close the file pointer when it's done
 					 srmOutput->Close();
 				 }
 			 }
+			 //TODO: Add set the bool for unexported data to FALSE
 			 delete dlgExportDti;
 		 }
 };
