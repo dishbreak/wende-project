@@ -240,7 +240,7 @@ namespace C3_App {
 			this->groupBox3->Size = System::Drawing::Size(452, 347);
 			this->groupBox3->TabIndex = 1;
 			this->groupBox3->TabStop = false;
-			this->groupBox3->Text = L"Performance Metrics";
+			this->groupBox3->Text = L"DTI Log";
 			// 
 			// cmdExport
 			// 
@@ -264,12 +264,12 @@ namespace C3_App {
 			// 
 			// Column1
 			// 
-			this->Column1->HeaderText = L"DTI (m)";
+			this->Column1->HeaderText = L"Date/Time";
 			this->Column1->Name = L"Column1";
 			// 
 			// Column2
 			// 
-			this->Column2->HeaderText = L"TTI (s)";
+			this->Column2->HeaderText = L"DTI (m)";
 			this->Column2->Name = L"Column2";
 			// 
 			// Column3
