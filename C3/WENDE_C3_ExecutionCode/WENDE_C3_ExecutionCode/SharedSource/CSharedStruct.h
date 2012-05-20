@@ -38,22 +38,25 @@ class CSharedStruct
 {
 private:
 	// file names
-	string m_hSharedName;	// User provided Shared mem file name	
-	string m_MutexName;		// user provided mutex1 name (Struct Data)
-	string m_Event1;		// user provided server event name
-	string m_Event2;		// user provided client event name
+	string		m_hSharedName;			// User provided Shared mem file name	
+	string		m_MutexName;			// user provided mutex1 name (Struct Data)
+	string		m_Event1;				// user provided server event name
+	string		m_Event2;				// user provided client event name
+
 	// Shared Memory
-	HANDLE		m_hFileMapping;		// Handle to shared memory file
-	StructType *m_pvData;			// Pointer to shared memory
-	DWORD		m_dwMaxDataSize;	// Size of shared memory struct
-	DWORD		m_ProcessID;		// Process ID
+	HANDLE		m_hFileMapping;			// Handle to shared memory file
+	StructType *m_pvData;				// Pointer to shared memory
+	DWORD		m_dwMaxDataSize;		// Size of shared memory struct
+	DWORD		m_ProcessID;			// Process ID
+
 	//Mutexes events
-	HANDLE m_MutexStruct;			// Mutex to synchronize Client 
-	HANDLE m_EventServer;			// Server informs client Avaliable Date
-	HANDLE m_EventClient;			// Client informs server Data Read
+	HANDLE		m_MutexStruct;			// Mutex to synchronize Client 
+	HANDLE		m_EventServer;			// Server informs client Avaliable Date
+	HANDLE		m_EventClient;			// Client informs server Data Read
+	
 	//Flags
-	BOOL   m_Server;				// determines server
-	BOOL   m_bCreated;				// determines created 
+	BOOL		m_Server;				// determines server
+	BOOL		m_bCreated;				// determines created 
 
 public:
 	// Defualt Constructor (cononical)
@@ -72,7 +75,6 @@ public:
 				 string mutexName,
 				 string eventClientName,
 				 string eventServerName);
-
 	// Allow access to shared memory data
 	StructType *operator->();
 

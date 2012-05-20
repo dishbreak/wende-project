@@ -71,6 +71,9 @@ UINT WINAPI StatusThread (LPVOID pParam)
 						   "SHM_C3_CAMERA_STATUS_MUTEX",
 						   "SHM_C3_CAMERA_STATUS_EVENT1",
 						   "SHM_C3_CAMERA_STATUS_EVENT2");
+	if (m_CameraStatus.isServer()) m_CameraStatus->ShmInfo.Clients = 0;
+	else m_CameraStatus->ShmInfo.Clients++;
+
 	static char timeStr[512];
 	static char temp[512];
 	static int cameraStatusMessageCount = 0;
@@ -123,6 +126,9 @@ UINT WINAPI TrackThread (LPVOID pParam)
 						   "SHM_C3_CAMERA_TRACK_MUTEX",
 						   "SHM_C3_CAMERA_TRACK_EVENT1",
 						   "SHM_C3_CAMERA_TRACK_EVENT2");
+	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
+	else m_CameraTracks->ShmInfo.Clients++;
+
 	while(1)
 	{
 		// aquire the mutex
@@ -178,6 +184,9 @@ UINT WINAPI ImageThread (LPVOID pParam)
 						   "SHM_C3_CAMERA_IMAGE_MUTEX",
 						   "SHM_C3_CAMERA_IMAGE_EVENT1",
 						   "SHM_C3_CAMERA_IMAGE_EVENT2");	
+	if (m_CameraImage.isServer()) m_CameraImage->ShmInfo.Clients = 0;
+	else m_CameraImage->ShmInfo.Clients++;
+
 	while(1)
 	{
 				// aquire the mutex

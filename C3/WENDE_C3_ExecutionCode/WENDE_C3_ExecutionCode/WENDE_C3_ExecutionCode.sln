@@ -14,10 +14,19 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra Files", "Extra Files", "{B6EBCFEB-AC8F-4E3C-94C9-B9CB9ABBCA94}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C3GUIStub", "C3GUIStub\C3GUIStub.vcproj", "{9E19B9BC-3C3C-4767-814E-54A92875428D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D75C8A7C-58F4-4CE1-BE58-9D3F6469CE7A} = {D75C8A7C-58F4-4CE1-BE58-9D3F6469CE7A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C3_App", "C3_Display\C3_App\C3_App.vcproj", "{D40D7D1B-0C15-44EA-B34C-1EAEE6D1C838}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D75C8A7C-58F4-4CE1-BE58-9D3F6469CE7A} = {D75C8A7C-58F4-4CE1-BE58-9D3F6469CE7A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C3ProcessingApp", "C3ProcessingApp\C3ProcessingApp.vcproj", "{212A5FD7-D51F-43D5-BB86-B060D8EABDA7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D75C8A7C-58F4-4CE1-BE58-9D3F6469CE7A} = {D75C8A7C-58F4-4CE1-BE58-9D3F6469CE7A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
