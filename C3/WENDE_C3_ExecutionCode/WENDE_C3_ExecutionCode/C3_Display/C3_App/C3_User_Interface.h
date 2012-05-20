@@ -69,8 +69,9 @@ namespace C3_App {
 	private: System::Windows::Forms::GroupBox^  groupBox1;
 	private: System::Windows::Forms::GroupBox^  groupBox2;
 	private: System::Windows::Forms::GroupBox^  groupBox3;
+	public: System::Windows::Forms::PictureBox^  pbLiveFeed;
 
-	private: System::Windows::Forms::PictureBox^  pictureBox2;
+
 	private: System::Windows::Forms::GroupBox^  groupBox4;
 	public: System::Windows::Forms::GroupBox^  groupBox5;
 	private: System::Windows::Forms::GroupBox^  groupBox6;
@@ -135,7 +136,7 @@ namespace C3_App {
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->pPPI = (gcnew System::Windows::Forms::Panel());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
-			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
+			this->pbLiveFeed = (gcnew System::Windows::Forms::PictureBox());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
 			this->cmdExport = (gcnew System::Windows::Forms::Button());
 			this->dgvDtiLog = (gcnew System::Windows::Forms::DataGridView());
@@ -164,7 +165,7 @@ namespace C3_App {
 			this->pPPIPanel->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLiveFeed))->BeginInit();
 			this->groupBox3->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvDtiLog))->BeginInit();
 			this->groupBox4->SuspendLayout();
@@ -214,7 +215,7 @@ namespace C3_App {
 			// 
 			// groupBox2
 			// 
-			this->groupBox2->Controls->Add(this->pictureBox2);
+			this->groupBox2->Controls->Add(this->pbLiveFeed);
 			this->groupBox2->Location = System::Drawing::Point(426, 3);
 			this->groupBox2->Name = L"groupBox2";
 			this->groupBox2->Size = System::Drawing::Size(438, 347);
@@ -222,14 +223,14 @@ namespace C3_App {
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Live Image";
 			// 
-			// pictureBox2
+			// pbLiveFeed
 			// 
-			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pictureBox2.Image")));
-			this->pictureBox2->Location = System::Drawing::Point(58, 59);
-			this->pictureBox2->Name = L"pictureBox2";
-			this->pictureBox2->Size = System::Drawing::Size(330, 224);
-			this->pictureBox2->TabIndex = 0;
-			this->pictureBox2->TabStop = false;
+			this->pbLiveFeed->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLiveFeed.Image")));
+			this->pbLiveFeed->Location = System::Drawing::Point(58, 59);
+			this->pbLiveFeed->Name = L"pbLiveFeed";
+			this->pbLiveFeed->Size = System::Drawing::Size(330, 224);
+			this->pbLiveFeed->TabIndex = 0;
+			this->pbLiveFeed->TabStop = false;
 			// 
 			// groupBox3
 			// 
@@ -487,7 +488,7 @@ namespace C3_App {
 			this->pPPIPanel->ResumeLayout(false);
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox2->ResumeLayout(false);
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLiveFeed))->EndInit();
 			this->groupBox3->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvDtiLog))->EndInit();
 			this->groupBox4->ResumeLayout(false);

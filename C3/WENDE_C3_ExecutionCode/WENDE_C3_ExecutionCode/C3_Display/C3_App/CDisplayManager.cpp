@@ -165,3 +165,10 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 			System::Drawing::Image::FromFile ("Online.png");
 	return 0;
 }
+
+int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath)
+{
+	C3_User_Interface::Instance->pbLiveFeed->Image = 
+		System::Drawing::Image::FromFile(sImagePath);
+	return 0;
+}
