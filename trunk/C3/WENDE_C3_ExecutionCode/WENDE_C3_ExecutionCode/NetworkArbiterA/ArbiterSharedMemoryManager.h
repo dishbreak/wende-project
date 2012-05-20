@@ -14,11 +14,13 @@
 #include "ShmStructs.h"
 #include "CSharedStruct.h"
 #include "cameraMsgs.pb.h"
+#include "laserMsgs.pb.h"
 #include <string>
 ///////////////////////////////////////////////////
 // google protobuf namespace
 ///////////////////////////////////////////////////
 using namespace cameraMsgs;
+using namespace laserMsgs;
 using std::string;
 ///////////////////////////////////////////////////
 // Class definition --- CArbiterSharedMemoryManager
@@ -42,6 +44,7 @@ public:
 /////////////////////////////////////////////////////////////
 public:
 	CSharedStruct<LASER_POINT_DIRECTION_SHM> m_LaserCommand;
+	CSharedStruct<LASER_STATUS_MSG_SHM>		 C3LaserStatus;
 	CSharedStruct<CAMERA_STATUS_MSG_SHM>	 C3CameraStatus;
 	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 C3CameraTracks;
 	CSharedStruct<CAMERA_IMAGE_MSG_SHM>		 C3CameraImage;
@@ -55,6 +58,8 @@ public:
 	void DecodeCameraTrackMessage (LPCTSTR strText, char* temp,DWORD size);
 	// decodes the network camera image message
 	string DecodeCameraImageMessage (LPCTSTR strText, char* temp,DWORD size);
+	// decodes the network laser status message
+	void DecodeLaserStatusMessage(LPCTSTR strText, char* temp,DWORD size);
 private:
 	// prepares the debug string
 	int DecodeCameraStatusMessage_DEBUG(cameraStatus *ss, char* temp);
@@ -64,6 +69,8 @@ private:
 	int DecodeCameraImageMessage_DEBUG(cameraImage *im, char* temp);
 	// recreates the image so that it can be consumed by GUI
 	string RecreateImage(cameraImage *im);
+	// prepares the debug string
+	int DecodeLaserStatusMessage_DEBUG(laserStatus *ss, char* temp);
 /////////////////////////////////////////////////////////////
 // Private Functions... singleton items
 /////////////////////////////////////////////////////////////

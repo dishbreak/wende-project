@@ -35,7 +35,7 @@ public:
 protected:
 	void DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom);
 	CEdit* m_pMsgCtrl;
-	C3PacketType m_cameraMsgType;
+	C3PacketType m_MsgType;
 };
 
 #endif // !defined(AFX_SOCKETMANAGER_H__7403BD71_338A_4531_BD91_3D7E5B505793__INCLUDED_)

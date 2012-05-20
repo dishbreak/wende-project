@@ -6,8 +6,11 @@
 #include "ServerSocket.h"
 #include "ServerSocketDlg.h"
 #include "cameraMsgs.pb.h"
+#include "laserMsgs.pb.h"
 #include <string>
+
 using namespace cameraMsgs;
+using namespace laserMsgs;
 using std::string;
 
 #ifdef _DEBUG
@@ -21,7 +24,10 @@ const int SOCK_UDP  = 1;
 
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
-
+void CALLBACK TimerProcCameraStatus(void* lpParametar, BOOLEAN TimerOrWaitFired);
+void CALLBACK TimerProcCameraTrack(void* lpParametar, BOOLEAN TimerOrWaitFired);
+void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired);
+void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired);
 class CAboutDlg : public CDialog
 {
 public:
@@ -70,6 +76,7 @@ END_MESSAGE_MAP()
 CServerSocketDlg::CServerSocketDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CServerSocketDlg::IDD, pParent)
 	, m_CameraStatus(cameraMsgs::systemStatus::UNKNOWN)
+	, m_LaserStatus(laserMsgs::systemStatus::UNKNOWN)
 	, m_imageName("")
 {
 	//{{AFX_DATA_INIT(CServerSocketDlg)
@@ -116,6 +123,7 @@ void CServerSocketDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LASER_X_0, m_laserXEditBox0);
 	DDX_Control(pDX, IDC_LASER_Y_0, m_laserYEditBox0);
 	DDX_Control(pDX, IDC_STATIC_PICTURE, m_picCtrl);
+	DDX_Control(pDX, IDC_LASER_STATUS_TEXT, m_LaserStatusText);
 }
 
 BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
@@ -146,6 +154,16 @@ BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
 	ON_BN_CLICKED(IDC_LASER_ENABLE_6, &CServerSocketDlg::OnBnClickedLaserEnable6)
 	ON_BN_CLICKED(IDC_BTN_SELECT_CAMERA_IMAGE, &CServerSocketDlg::OnBnClickedBtnSelectCameraImage)
 	ON_BN_CLICKED(IDC_BTN_SEND_LASSER_STATUS, &CServerSocketDlg::OnBnClickedBtnSendLasserStatus)
+	ON_BN_CLICKED(IDC_LASER_STATUS_DOWN, &CServerSocketDlg::OnBnClickedLaserStatusDown)
+	ON_BN_CLICKED(IDC_LASER_STATUS_FAILED, &CServerSocketDlg::OnBnClickedLaserStatusFailed)
+	ON_BN_CLICKED(IDC_LASER_STATUS_ERROR, &CServerSocketDlg::OnBnClickedLaserStatusError)
+	ON_BN_CLICKED(IDC_LASER_STATUS_READY, &CServerSocketDlg::OnBnClickedLaserStatusReady)
+	ON_BN_CLICKED(IDC_LASER_STATUS_UNKOWN, &CServerSocketDlg::OnBnClickedLaserStatusUnkown)
+	ON_BN_CLICKED(IDC_LASER_STATUS_OPERATIONAL, &CServerSocketDlg::OnBnClickedLaserStatusOperational)
+	ON_BN_CLICKED(IDC_BTN_SEND_STATUS_CONT, &CServerSocketDlg::OnBnClickedBtnSendStatusCont)
+	ON_BN_CLICKED(IDC_BTN_SEND_TRACK2, &CServerSocketDlg::OnBnClickedBtnSendTrack2)
+	ON_BN_CLICKED(IDC_BTN_SEND_IMAGE2, &CServerSocketDlg::OnBnClickedBtnSendImage2)
+	ON_BN_CLICKED(IDC_BTN_SEND_IMAGE4, &CServerSocketDlg::OnBnClickedBtnSendLaserStatus)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -160,7 +178,10 @@ BOOL CServerSocketDlg::PreTranslateMessage(MSG* pMsg)
 			return TRUE;
 		if (nVirtKey == VK_RETURN && (GetFocus()->m_hWnd  == m_ctlMessage.m_hWnd))
 		{
-			if (m_SocketManager[0].IsOpen() && m_SocketManager[1].IsOpen() && m_SocketManager[2].IsOpen())
+			if (m_SocketManager[0].IsOpen() && 
+				m_SocketManager[1].IsOpen() && 
+				m_SocketManager[2].IsOpen() &&
+				m_SocketManager[2].IsOpen())
 			{
 				string strTex = "TEST";
 				OnBtnSend(strTex,0,strTex.size(),0);
@@ -171,23 +192,6 @@ BOOL CServerSocketDlg::PreTranslateMessage(MSG* pMsg)
 	
 	return CDialog::PreTranslateMessage(pMsg);
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// PickNextAvailable : this is useful only for TCP socket
-//void CServerSocketDlg::PickNextAvailable()
-//{
-//	m_pCurServer = NULL;
-//	for(int i=0; i<MAX_CONNECTION; i++)
-//	{
-//		if (!m_SocketManager[i].IsOpen())
-//		{
-//			m_pCurServer = &m_SocketManager[i];
-//			break;
-//		}
-//	}
-//}
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // StartServer : Start the server
 bool CServerSocketDlg::StartServer()
@@ -220,7 +224,8 @@ bool CServerSocketDlg::StartServer()
 	if (bSuccess && 
 		m_SocketManager[0].WatchComm() && 
 		m_SocketManager[1].WatchComm() &&
-		m_SocketManager[2].WatchComm() )
+		m_SocketManager[2].WatchComm() &&
+		m_SocketManager[3].WatchComm() )
 	{
 		for(int ii=0; ii<MAX_CONNECTION; ii++)
 		{
@@ -392,13 +397,7 @@ LRESULT CServerSocketDlg::OnUpdateConnection(WPARAM wParam, LPARAM lParam)
 		else if (uEvent == EVT_CONFAILURE || uEvent == EVT_CONDROP)
 		{
 			pManager->StopComm();
-		/*	if (m_SocketManager[0] == NULL &&
-				m_SocketManager[1] == NULL &&
-				m_SocketManager[0] == NULL)
-			{*/
-				//PickNextAvailable();
-				StartServer();
-			//}
+			StartServer();	
 		}
 	}
 
@@ -458,25 +457,6 @@ void CServerSocketDlg::OnBtnSendStatus()
 	string strText = status.SerializeAsString();
 	OnBtnSend(strText,0,strText.size(),0);												// send the data
 }
-void CServerSocketDlg::OnBtnSendImage() 
-{
-	// Get the current system time...
-	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
-	time( &osBinaryTime ) ;		// Get the current time from the 
-								// operating system.
-	
-	//Setup the camera message....
-	cameraImage image;
-	image.set_time(osBinaryTime);									// set the operational time
-	image.set_channels(3);											// should always be a RGB image
-	image.set_sizex(tImageSize.cx);
-	image.set_sizey(tImageSize.cy);
-	image.set_imagedata(bytes, tImageSize.cx*tImageSize.cy*3);
-	
-	string strText = image.SerializeAsString();
-	int size = image.ByteSize();
-	OnBtnSend(strText,2,strText.size(),2);												// send the data
-}
 void CServerSocketDlg::OnBtnSendTrack() 
 {
 	// Get the current system time...
@@ -500,6 +480,43 @@ void CServerSocketDlg::OnBtnSendTrack()
 	int size = track.ByteSize();
 	OnBtnSend(strText,1,strText.size(),1);												// send the data
 }
+void CServerSocketDlg::OnBtnSendImage() 
+{
+	// Get the current system time...
+	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
+	time( &osBinaryTime ) ;		// Get the current time from the 
+								// operating system.
+	
+	//Setup the camera message....
+	cameraImage image;
+	image.set_time(osBinaryTime);									// set the operational time
+	image.set_channels(3);											// should always be a RGB image
+	image.set_sizex(tImageSize.cx);
+	image.set_sizey(tImageSize.cy);
+	image.set_imagedata(bytes, tImageSize.cx*tImageSize.cy*3);
+	
+	string strText = image.SerializeAsString();
+	int size = image.ByteSize();
+	OnBtnSend(strText,2,strText.size(),2);												// send the data
+}
+
+void CServerSocketDlg::OnBnClickedBtnSendLasserStatus()
+{
+	CString lstatus;									// serilize the message
+	m_LaserStatusText.GetWindowTextA(lstatus);
+	// Get the current system time...
+	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
+	time( &osBinaryTime ) ;		// Get the current time from the 
+								// operating system.
+	//Setup the camera message....
+	laserStatus status;
+	status.set_status((laserMsgs::systemStatus)m_LaserStatus);		// set camera status
+	status.set_text(lstatus);										// set the camera text
+	status.set_time(osBinaryTime);									// set the operational time
+	string strText = status.SerializeAsString();
+	OnBtnSend(strText,3,strText.size(),3);							// send the data
+}
+
 void CServerSocketDlg::AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track)
 {
 	static CString tempString;
@@ -572,7 +589,9 @@ void CServerSocketDlg::OnBtnSend(string strText, int portOffset, int size,  int 
 void CServerSocketDlg::OnDestroy() 
 {
 	for(int i=0; i<MAX_CONNECTION; i++)
-	m_SocketManager[i].StopComm();
+	{
+		m_SocketManager[i].StopComm();
+	}
 
 	CDialog::OnDestroy();
 }
@@ -771,23 +790,107 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 	}
 	this->UpdateData(FALSE);
 }
-
-void CServerSocketDlg::OnBnClickedBtnSendLasserStatus()
+void CServerSocketDlg::OnBnClickedLaserStatusDown()
 {
-	CString cstatus;									// serilize the message
-	m_CameraStatusTextCtrl.GetWindowTextA(cstatus);
-
-	// Get the current system time...
-	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
-	time( &osBinaryTime ) ;		// Get the current time from the 
-								// operating system.
-	
-	//Setup the camera message....
-	cameraStatus status;
-	status.set_laseron(m_statusLaserOnCtrl.GetCheck()==BST_CHECKED);	// set laser status
-	status.set_status((cameraMsgs::systemStatus)m_CameraStatus);	// set camera status
-	status.set_text(cstatus);				// set the camera text
-	status.set_time(osBinaryTime);									// set the operational time
-	string strText = status.SerializeAsString();
-	OnBtnSend(strText,0,strText.size(),0);												// send the data
+	m_LaserStatus = laserMsgs::systemStatus::LASER_DOWN;
 }
+
+void CServerSocketDlg::OnBnClickedLaserStatusFailed()
+{
+	m_LaserStatus = laserMsgs::systemStatus::LASER_FAILED;
+}
+
+void CServerSocketDlg::OnBnClickedLaserStatusError()
+{
+	m_LaserStatus = laserMsgs::systemStatus::LASER_ERROR;
+}
+
+void CServerSocketDlg::OnBnClickedLaserStatusReady()
+{
+	m_LaserStatus = laserMsgs::systemStatus::LASER_READY;
+}
+
+void CServerSocketDlg::OnBnClickedLaserStatusUnkown()
+{
+	m_LaserStatus = laserMsgs::systemStatus::UNKNOWN;
+}
+
+void CServerSocketDlg::OnBnClickedLaserStatusOperational()
+{
+	m_LaserStatus = laserMsgs::systemStatus::LASER_OPERATIONAL;
+}
+
+void CServerSocketDlg::OnBnClickedBtnSendStatusCont()
+{
+	BOOL success = ::CreateTimerQueueTimer(
+		&m_timerHandleCameraStatus,
+		NULL,
+		TimerProcCameraStatus,
+		this,
+		0,
+		125,
+		WT_EXECUTEINTIMERTHREAD);
+}
+void CALLBACK TimerProcCameraStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
+{
+// This is used only to call QueueTimerHandler
+// Typically, this function is static member of CTimersDlg
+CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
+obj->OnBtnSendStatus();
+} 
+
+void CServerSocketDlg::OnBnClickedBtnSendTrack2()
+{
+	BOOL success = ::CreateTimerQueueTimer(
+		&m_timerHandleCameraStatus,
+		NULL,
+		TimerProcCameraTrack,
+		this,
+		0,
+		125,
+		WT_EXECUTEINTIMERTHREAD);
+}
+void CALLBACK TimerProcCameraTrack(void* lpParametar, BOOLEAN TimerOrWaitFired)
+{
+// This is used only to call QueueTimerHandler
+// Typically, this function is static member of CTimersDlg
+CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
+obj->OnBtnSendTrack();
+} 
+
+void CServerSocketDlg::OnBnClickedBtnSendImage2()
+{
+	BOOL success = ::CreateTimerQueueTimer(
+		&m_timerHandleCameraImage,
+		NULL,
+		TimerProcCameraImage,
+		this,
+		0,
+		1000,
+		WT_EXECUTEINTIMERTHREAD);
+}
+void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired)
+{
+// This is used only to call QueueTimerHandler
+// Typically, this function is static member of CTimersDlg
+CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
+obj->OnBtnSendImage();
+} 
+void CServerSocketDlg::OnBnClickedBtnSendLaserStatus()
+{
+BOOL success = ::CreateTimerQueueTimer(
+		&m_timerHandleCameraImage,
+		NULL,
+		TimerProcLaserStatus,
+		this,
+		0,
+		125,
+		WT_EXECUTEINTIMERTHREAD);
+}
+void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
+{
+// This is used only to call QueueTimerHandler
+// Typically, this function is static member of CTimersDlg
+CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
+obj->OnBnClickedBtnSendLasserStatus();
+} 

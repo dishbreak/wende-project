@@ -16,10 +16,11 @@
 
 typedef enum {
 	C3_CAMERA_STATUS = 0,
-	C3_CAMERA_TRACK  = 1,
-	C3_CAMERA_IMAGE  = 2,
-	C3_LASER_STATUS  = 4,
-	C3_PACKET_TYPES  = 5 
+	C3_CAMERA_TRACK  ,
+	C3_CAMERA_IMAGE  ,
+	C3_LASER_STATUS  ,
+	C3_LASER_POINTING,
+	C3_PACKET_TYPES   
 } C3PacketType;
 
 class CSocketManager : public CSocketComm  
@@ -40,7 +41,7 @@ public:
 protected:
 	void DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom);
 	CEdit			 *m_pMsgCtrl;
-	C3PacketType m_cameraMsgType;
+	C3PacketType	  m_MsgType;
 	CPictureCtrl	 *m_picCtrl;
 	char			 *inData;
 };

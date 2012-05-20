@@ -16,6 +16,13 @@ CArbiterSharedMemoryManager::CArbiterSharedMemoryManager(void)
 	if (m_LaserCommand.isServer()) m_LaserCommand->ShmInfo.Clients = 0;
 	else m_LaserCommand->ShmInfo.Clients++;
 
+	C3LaserStatus.Acquire("SHM_C3_LASER_STATUS",
+						  "SHM_C3_LASER_STATUS_MUTEX",
+						  "SHM_C3_LASER_STATUS_EVENT1",
+						  "SHM_C3_LASER_STATUS_EVENT2");
+	if (C3LaserStatus.isServer()) C3LaserStatus->ShmInfo.Clients = 0;
+	else C3LaserStatus->ShmInfo.Clients++;
+
 	C3CameraStatus.Acquire("SHM_C3_CAMERA_STATUS",
 						   "SHM_C3_CAMERA_STATUS_MUTEX",
 						   "SHM_C3_CAMERA_STATUS_EVENT1",
@@ -200,6 +207,11 @@ int CArbiterSharedMemoryManager::DecodeCameraImageMessage_DEBUG(cameraImage *im,
 
 	return cameraImageMessageCount;
 }
+////////////////////////////////////////////////////////////////////////
+// Function: RecreateImage
+//  Purpose: This function recreates sent image and saves with unique 
+//           name
+////////////////////////////////////////////////////////////////////////
 string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 {
 	// Current time
@@ -287,4 +299,60 @@ string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, c
 	}
 	// return path
 	return saveName;
+}
+////////////////////////////////////////////////////////////////////////
+// Function: DecodeLaserStatusMessage_DEBUG
+//  Purpose: This function decodes network traffic from laser
+//           specifically decodes the status message.
+////////////////////////////////////////////////////////////////////////
+int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(laserStatus *ss, char* temp)
+{
+	// variables
+	static char timeStr[256];
+	static int  laserStatusMessageCount = 0;
+	// debug string for time
+	time_t messageTime = ss->time();
+	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
+	// debug string for display 
+	sprintf(temp, "+LASER STATUS MESSAGE(%d)\r\n", ++laserStatusMessageCount);
+	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
+	sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->status());
+	sprintf(temp, "%s\r\n\r\n", temp);
+
+	return laserStatusMessageCount;
+}
+////////////////////////////////////////////////////////////////////////
+// Function: DecodeLaserStatusMessage
+//  Purpose: This function decodes network traffic from laser
+//           specifically decodes the status message.
+////////////////////////////////////////////////////////////////////////
+void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char* temp,DWORD size)
+{
+	// protobuf message
+	laserStatus ss;
+	// decode the message
+	ss.ParseFromArray(strText,size);
+	//Prepare the debug print
+	int packetNumber = DecodeLaserStatusMessage_DEBUG(&ss,temp);
+	// aquire the mutex
+	if (C3LaserStatus.isCreated() &&  
+		C3LaserStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+	{
+		// write the data
+		C3LaserStatus->PacketNumber = packetNumber;
+		C3LaserStatus->ProcessID    = C3LaserStatus.GetProcessID();
+		C3LaserStatus->Status		= ss.status();
+		C3LaserStatus->SubsystemId  = 3;
+		C3LaserStatus->Time		    = ss.time();
+		C3LaserStatus->ValidChars	= 0; 
+		// loops through clients and sends events
+		int eventsToSend = C3LaserStatus->ShmInfo.Clients;
+		for (int pp = 0; pp < eventsToSend; pp++)
+		{
+			// Set the event (GUI,processing, etc...)
+			C3LaserStatus.SetEventServer();
+		}
+		// release the mutex
+		C3LaserStatus.ReleaseMutex();
+	}
 }

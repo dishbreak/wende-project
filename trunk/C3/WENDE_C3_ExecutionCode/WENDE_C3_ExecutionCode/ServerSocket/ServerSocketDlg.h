@@ -10,6 +10,7 @@
 
 #include "SocketManager.h"
 #include "cameraMsgs.pb.h"
+#include "laserMsgs.pb.h"
 #include "afxwin.h"
 #include "atlimage.h"
 #include "PictureCtrl.h"
@@ -17,7 +18,8 @@
 #include <string>
 using std::string;
 using namespace cameraMsgs;
-#define MAX_CONNECTION		3
+using namespace laserMsgs;
+#define MAX_CONNECTION		4
 
 /////////////////////////////////////////////////////////////////////////////
 // CServerSocketDlg dialog
@@ -65,21 +67,24 @@ protected:
 	afx_msg void OnBtnStart();
 	afx_msg void OnBtnStop();
 	afx_msg void OnDestroy();
-	afx_msg void OnBtnSendStatus();
-	afx_msg void OnBtnSendImage();
-	afx_msg void OnBtnSendTrack();
+	
 	//}}AFX_MSG
 	afx_msg LRESULT OnUpdateConnection(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 public:
 	CButton m_statusLaserOnCtrl;
 	cameraMsgs::systemStatus m_CameraStatus;
+	laserMsgs::systemStatus m_LaserStatus;
 	afx_msg void OnBnClickedCameraStatusDown();
 	afx_msg void OnBnClickedCameraStatusReady();
 	afx_msg void OnBnClickedCameraStatusOperational();
 	afx_msg void OnBnClickedCameraStatusError();
 	afx_msg void OnBnClickedCameraStatusFailed();
 	afx_msg void OnBnClickedCameraStatusUnkown();
+	afx_msg void OnBtnSendStatus();
+	afx_msg void OnBtnSendImage();
+	afx_msg void OnBtnSendTrack();
+
 	CButton m_CameraUnkownStatus;
 	CEdit m_CameraStatusTextCtrl;
 	CButton m_trackEnable0;
@@ -119,6 +124,25 @@ public:
 	void AddTrack(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
 	void AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
 	afx_msg void OnBnClickedBtnSendLasserStatus();
+	CEdit m_LaserStatusText;
+	afx_msg void OnBnClickedLaserStatusDown();
+	afx_msg void OnBnClickedLaserStatusFailed();
+	afx_msg void OnBnClickedLaserStatusError();
+	afx_msg void OnBnClickedLaserStatusReady();
+	afx_msg void OnBnClickedLaserStatusUnkown();
+	afx_msg void OnBnClickedLaserStatusOperational();
+	afx_msg void OnBnClickedBtnSendStatusCont();
+	HANDLE m_timerHandleCameraStatus;
+	HANDLE m_timerHandleCameraTrack;
+	HANDLE m_timerHandleCameraImage;
+	HANDLE m_timerHandleLaserStatus;
+	/*void CALLBACK TimerProcCameraStatus(void* lpParametar,BOOLEAN TimerOrWaitFired);
+	void CALLBACK TimerProcCameraTrack(void* lpParametar,BOOLEAN TimerOrWaitFired);
+	void CALLBACK TimerProcCameraImage(void* lpParametar,BOOLEAN TimerOrWaitFired);
+	void CALLBACK TimerProcLaserStatus(void* lpParametar,BOOLEAN TimerOrWaitFired);*/
+	afx_msg void OnBnClickedBtnSendTrack2();
+	afx_msg void OnBnClickedBtnSendImage2();
+	afx_msg void OnBnClickedBtnSendLaserStatus();
 };
 
 //{{AFX_INSERT_LOCATION}}
