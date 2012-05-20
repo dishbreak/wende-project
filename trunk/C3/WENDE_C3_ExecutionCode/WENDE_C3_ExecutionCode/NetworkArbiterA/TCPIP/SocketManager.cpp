@@ -90,7 +90,8 @@ void CSocketManager::AppendMessage(LPCTSTR strText,DWORD size )
 		}
 		case CameraPacketType::image:  
 		{ 
-			CArbiterSharedMemoryManager::Instance().DecodeCameraImageMessage(strText,temp,size); 
+			CString loadName(CArbiterSharedMemoryManager::Instance().DecodeCameraImageMessage(strText,temp,size).c_str()); 
+			m_picCtrl->Load(loadName);
 			break; 
 		}
 		default: 

@@ -7,6 +7,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <stdio.h>  /* defines FILENAME_MAX */
 /////////////////////////////////////////////////////////////////////////////////
 // TYPE DEFINES
 /////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +34,7 @@ typedef long				LONG;
 #define SHM_MAX_STATUS_TEXT		256			// Max stutus text size from the camera
 #define SHM_MAX_TRACKS			10			// Max number of internal tracks
 #define SHM_MAX_LASERS			10			// Max number of laser tracks
-#define SHM_MAX_IMAGE_NAME		512			// Max characters in the iamge name
+#define SHM_MAX_IMAGE_NAME		FILENAME_MAX// Max characters in the iamge name
 #define SHM_MAX_IMAGE_WIDTH		320  		// Max image size in width direction
 #define SHM_MAX_IMAGE_HEIGHT	240	    	// Max image size in the height direction
 #define SHM_MAX_IAMGE_CHANNELS	3			// Max image channels 
