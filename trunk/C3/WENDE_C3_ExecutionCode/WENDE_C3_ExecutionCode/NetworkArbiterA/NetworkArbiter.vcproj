@@ -327,6 +327,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\SharedSource\laserMsgs.pb.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\SharedSource\laserMsgs.pb.h"
+			>
+		</File>
+		<File
 			RelativePath=".\NetworkArbiterDlg.cpp"
 			>
 		</File>

@@ -79,9 +79,6 @@ BOOL CClientSocketDlg::PreTranslateMessage(MSG* pMsg)
 
 BOOL CClientSocketDlg::OnInitDialog() 
 {
-	ASSERT( GetDlgItem(IDC_BTN_SEND_STATUS) != NULL );
-	ASSERT( GetDlgItem(IDC_BTN_SEND_IMAGE) != NULL );
-	ASSERT( GetDlgItem(IDC_BTN_SEND_TRACK) != NULL );
 	ASSERT( GetDlgItem(IDC_BTN_START) != NULL );
 	ASSERT( GetDlgItem(IDC_BTN_STOP) != NULL );
 	ASSERT( GetDlgItem(IDC_TCP) != NULL );
@@ -151,10 +148,7 @@ void CClientSocketDlg::OnBtnConnect()
 
 	if (bSuccess && m_SocketManager.WatchComm())
 	{
-
-		GetDlgItem(IDC_BTN_SEND_STATUS)->EnableWindow( TRUE );
-		GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( TRUE );
-		GetDlgItem(IDC_BTN_SEND_TRACK)->EnableWindow( TRUE );
+		m_SocketManager.SetMessageWindow(&m_ctlMsgList);
 		GetDlgItem(IDC_BTN_STOP)->EnableWindow( TRUE );
 		NextDlgCtrl();
 		GetDlgItem(IDC_BTN_START)->EnableWindow( FALSE );
