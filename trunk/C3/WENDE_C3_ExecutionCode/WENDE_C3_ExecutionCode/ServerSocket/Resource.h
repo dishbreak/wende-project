@@ -21,7 +21,10 @@
 #define IDC_BTN_SEND_STATUS             1012
 #define IDC_BTN_SEND_IMAGE              1013
 #define IDC_BTN_SEND_TRACK              1014
+#define IDC_BTN_SEND_STATUS2            1015
+#define IDC_BTN_SEND_TRACK2             1016
 #define IDC_LASER_STATUS                1018
+#define IDC_BTN_SEND_IMAGE2             1019
 #define IDC_CAMERA_STATUS_DOWN          1020
 #define IDC_CAMERA_STATUS_READY         1021
 #define IDC_CAMERA_STATUS_OPERATIONAL   1022
@@ -29,11 +32,14 @@
 #define IDC_CAMERA_STATUS_Failed        1024
 #define IDC_CAMERA_STATUS_UNKOWN        1025
 #define IDC_EDIT1                       1026
+#define IDC_BTN_SEND_IMAGE3             1027
+#define IDC_BTN_SEND_LASSER_STATUS      1027
 #define IDC_TRACK_ENABLE_0              1028
 #define IDC_TRACK_X_0                   1029
 #define IDC_LASER_ENABLE_6              1030
 #define IDC_LASER_X_0                   1031
 #define IDC_BTN_SELECT_CAMERA_IMAGE     1032
+#define IDC_BTN_SEND_IMAGE4             1033
 #define IDC_TRACK_ENABLE_1              1034
 #define IDC_TRACK_X_1                   1035
 #define IDC_TRACK_Y_1                   1036
@@ -51,6 +57,12 @@
 #define IDC_TRACK_ENABLE_5              1048
 #define IDC_TRACK_X_5                   1049
 #define IDC_TRACK_Y_5                   1050
+#define IDC_CAMERA_STATUS_DOWN2         1051
+#define IDC_CAMERA_STATUS_READY2        1052
+#define IDC_CAMERA_STATUS_OPERATIONAL2  1053
+#define IDC_CAMERA_STATUS_ERROR2        1054
+#define IDC_CAMERA_STATUS_Failed2       1055
+#define IDC_CAMERA_STATUS_UNKOWN2       1056
 
 // Next default values for new objects
 // 
