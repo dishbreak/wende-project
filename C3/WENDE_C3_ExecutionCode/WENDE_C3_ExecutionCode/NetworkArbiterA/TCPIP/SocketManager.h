@@ -15,10 +15,12 @@
 #define WM_UPDATE_CONNECTION	WM_APP+0x1234
 
 typedef enum {
-	status = 0,
-	track = 1,
-	image = 2
-} CameraPacketType;
+	C3_CAMERA_STATUS = 0,
+	C3_CAMERA_TRACK  = 1,
+	C3_CAMERA_IMAGE  = 2,
+	C3_LASER_STATUS  = 4,
+	C3_PACKET_TYPES  = 5 
+} C3PacketType;
 
 class CSocketManager : public CSocketComm  
 {
@@ -28,7 +30,7 @@ public:
 
 	void SetMessageWindow(CEdit* pMsgCtrl);
 	void SetPictureWindow(CPictureCtrl* picCtrl);
-	void SetCameraMessageType(CameraPacketType type);
+	void SetCameraMessageType(C3PacketType type);
 	void AppendMessage(LPCTSTR strText, DWORD size);
 public:
 
@@ -38,7 +40,7 @@ public:
 protected:
 	void DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom);
 	CEdit			 *m_pMsgCtrl;
-	CameraPacketType m_cameraMsgType;
+	C3PacketType m_cameraMsgType;
 	CPictureCtrl	 *m_picCtrl;
 	char			 *inData;
 };

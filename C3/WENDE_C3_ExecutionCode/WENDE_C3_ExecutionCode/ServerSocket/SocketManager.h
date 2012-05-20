@@ -17,7 +17,7 @@ typedef enum {
 	status = 0,
 	track = 1,
 	image = 2
-} CameraPacketType;
+} C3PacketType;
 
 class CSocketManager : public CSocketComm  
 {
@@ -35,7 +35,7 @@ public:
 protected:
 	void DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom);
 	CEdit* m_pMsgCtrl;
-	CameraPacketType m_cameraMsgType;
+	C3PacketType m_cameraMsgType;
 };
 
 #endif // !defined(AFX_SOCKETMANAGER_H__7403BD71_338A_4531_BD91_3D7E5B505793__INCLUDED_)

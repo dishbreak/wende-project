@@ -7,10 +7,12 @@
 #include "NetworkArbiterDlg.h"
 #include "TinyXml\tinyxml.h"
 #include "process.h"
+#include "laserMsgs.pb.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+using namespace laserMsgs;
 
 // CAboutDlg dialog used for App About
 
@@ -65,6 +67,9 @@ void CNetworkArbiterDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MESSAGE_LIST, m_pMsgCtrl);
 	DDX_Control(pDX, IDC_EDIT1, m_PortCtrl);
 	DDX_Control(pDX, IDC_STATIC_PICTURE, m_picCtrl);
+	DDX_Control(pDX, IDC_LASER_ON_OFF, m_LaserOnOff);
+	DDX_Control(pDX, IDC_PWM_AZ, m_LaserPWMAz);
+	DDX_Control(pDX, IDC_PWM_EL, m_LaserPWMEl);
 }
 
 BEGIN_MESSAGE_MAP(CNetworkArbiterDlg, CDialog)
@@ -76,6 +81,8 @@ BEGIN_MESSAGE_MAP(CNetworkArbiterDlg, CDialog)
 	ON_BN_CLICKED(IDC_UPDATE_TCP, &CNetworkArbiterDlg::OnBnClickedUpdateTcp)
 	ON_NOTIFY(IPN_FIELDCHANGED, IDC_IPADDRESS1, &CNetworkArbiterDlg::OnIpnFieldchangedIpaddress1)
 	ON_EN_CHANGE(IDC_EDIT1, &CNetworkArbiterDlg::OnEnChangePort)
+	ON_BN_CLICKED(IDC_C3_LASER_STATUS, &CNetworkArbiterDlg::OnBnClickedC3LaserStatus)
+	ON_BN_CLICKED(IDC_LASER_ON_OFF, &CNetworkArbiterDlg::OnBnClickedLaserOnOff)
 END_MESSAGE_MAP()
 
 
@@ -185,20 +192,36 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CNetworkArbiterDlg::RunThread()
 {
-	HANDLE hThread;
-	UINT uiThreadId = 0;
-	hThread = (HANDLE)_beginthreadex(NULL,				       // Security attributes
-										0,					  // stack
-									 SocketStartThreadProc,   // Thread proc
+	HANDLE hThreadClient;
+	UINT uiThreadIdClient = 0;
+	hThreadClient = (HANDLE)_beginthreadex(NULL,                    // Security attributes
+								     0,  					  // stack
+									 SocketClientStartThreadProc,   // Thread proc
 									 this,					  // Thread param
 									 CREATE_SUSPENDED,		  // creation mode
-									 &uiThreadId);			  // Thread ID
+									 &uiThreadIdClient);			  // Thread ID
 
-	if ( NULL != hThread)
+	if ( NULL != hThreadClient)
 	{
 		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
-		ResumeThread( hThread );
-		m_hThread = hThread;
+		ResumeThread( hThreadClient );
+		m_hThreadClient = hThreadClient;
+	}
+
+	HANDLE hThreadServer;
+	UINT uiThreadIdServer = 0;
+	hThreadServer = (HANDLE)_beginthreadex(NULL,                    // Security attributes
+								     0,  					  // stack
+									 SocketServerStartThreadProc,   // Thread proc
+									 this,					  // Thread param
+									 CREATE_SUSPENDED,		  // creation mode
+									 &uiThreadIdServer);			  // Thread ID
+
+	if ( NULL != hThreadServer)
+	{
+		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
+		ResumeThread( hThreadServer );
+		m_hThreadServer = hThreadServer;
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -211,30 +234,30 @@ void CNetworkArbiterDlg::RunThread()
 //     LPVOID pParam : Thread parameter - a CSocketComm pointer
 // NOTES:
 ///////////////////////////////////////////////////////////////////////////////
-UINT WINAPI CNetworkArbiterDlg::SocketStartThreadProc(LPVOID pParam)
+UINT WINAPI CNetworkArbiterDlg::SocketClientStartThreadProc(LPVOID pParam)
 {
 	CNetworkArbiterDlg* pThis = reinterpret_cast<CNetworkArbiterDlg*>( pParam );
 	// set the dialog controls..
 	CString port;
 	port.Format(_T("%d"), pThis->m_configArbiter.Connection.port);
-	
-	for (int ii = 0; ii < SOCKET_COUNTS; ii++)
+	// setup the client sockets
+	for (int ii = 0; ii < SOCKET_COUNTS_CLIENTS; ii++)
 	{
 		switch(ii)
 		{
 			case 0: 
 			{
-				pThis->m_SocketObject[ii].SetCameraMessageType(CameraPacketType::status);
+				pThis->m_SocketObjectClients[ii].SetCameraMessageType(C3PacketType::C3_CAMERA_STATUS);
 				break;
 			}
 			case 1: 
 			{
-				pThis->m_SocketObject[ii].SetCameraMessageType(CameraPacketType::track);
+				pThis->m_SocketObjectClients[ii].SetCameraMessageType(C3PacketType::C3_CAMERA_TRACK);
 				break;
 			}
 			case 2: 
 			{
-				pThis->m_SocketObject[ii].SetCameraMessageType(CameraPacketType::image);
+				pThis->m_SocketObjectClients[ii].SetCameraMessageType(C3PacketType::C3_CAMERA_IMAGE);
 				break;
 			}
 			default:
@@ -243,21 +266,74 @@ UINT WINAPI CNetworkArbiterDlg::SocketStartThreadProc(LPVOID pParam)
 			}
 		}
 		// Set the display event
-		pThis->m_SocketObject[ii].SetMessageWindow( &pThis->m_pMsgCtrl );
-		pThis->m_SocketObject[ii].SetPictureWindow( &pThis->m_picCtrl );
+		pThis->m_SocketObjectClients[ii].SetMessageWindow( &pThis->m_pMsgCtrl );
+		pThis->m_SocketObjectClients[ii].SetPictureWindow( &pThis->m_picCtrl );
 
-		while (!pThis->m_SocketObject[ii].IsOpen())
+		while (!pThis->m_SocketObjectClients[ii].IsOpen())
 		{
 			// To use TCP socket
 			port.Format(_T("%d"), pThis->m_configArbiter.Connection.port+ii);
-			pThis->m_SocketObject[ii].ConnectTo( pThis->m_configArbiter.Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
+			pThis->m_SocketObjectClients[ii].ConnectTo( pThis->m_configArbiter.Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
 		}
 		
 		// Now you may start the server/client thread to do the work for you...
-		pThis->m_SocketObject[ii].WatchComm();
+		pThis->m_SocketObjectClients[ii].WatchComm();
 	}
+	pThis->m_hThreadClient = NULL;
 	
-	pThis->m_hThread = NULL;
+	_endthreadex( 0 );
+    
+	return 1L;
+} // end SocketThreadProc
+///////////////////////////////////////////////////////////////////////////////
+// DESCRIPTION:
+//     Socket Thread function.  This function is the main thread for socket
+//     communication - Asynchronous mode.
+// PARAMETERS:
+//     LPVOID pParam : Thread parameter - a CSocketComm pointer
+// NOTES:
+///////////////////////////////////////////////////////////////////////////////
+UINT WINAPI CNetworkArbiterDlg::SocketServerStartThreadProc(LPVOID pParam)
+{
+	CNetworkArbiterDlg* pThis = reinterpret_cast<CNetworkArbiterDlg*>( pParam );
+	// set the dialog controls..
+	CString port;
+	port.Format(_T("%d"), pThis->m_configArbiter.Connection.port);
+	// setup the server sockets
+	for (int ii = 0; ii < SOCKET_COUNTS_SERVERS; ii++)
+	{
+		switch(ii)
+		{
+			case 0: 
+			{
+				pThis->m_SocketObjectServer[ii].SetCameraMessageType(C3PacketType::C3_LASER_STATUS);
+				break;
+			}
+			//case #:
+			//...
+			//...
+			//...
+			default:
+			{
+				break;
+			}
+		}
+		// Set the display event
+		pThis->m_SocketObjectClients[ii].SetMessageWindow( &pThis->m_pMsgCtrl );
+		pThis->m_SocketObjectClients[ii].SetPictureWindow( &pThis->m_picCtrl );
+		while (!pThis->m_SocketObjectServer[ii].IsOpen())
+		{
+			// To use TCP socket
+			port.Format(_T("%d"), pThis->m_configArbiter.Connection.port+ii+SOCKET_COUNTS_CLIENTS);
+			pThis->m_SocketObjectServer[ii].SetSmartAddressing( false );
+			pThis->m_SocketObjectServer[ii].CreateSocket( port, AF_INET, SOCK_STREAM, 0); // TCP
+		}
+		// set to server!!!
+		pThis->m_SocketObjectServer[ii].SetServerState( true );	// run as server
+		// Now you may start the server/client thread to do the work for you...
+		pThis->m_SocketObjectServer[ii].WatchComm();
+	}
+	pThis->m_hThreadServer = NULL;
 	
 	_endthreadex( 0 );
     
@@ -268,17 +344,29 @@ void CNetworkArbiterDlg::OnBnClickedUpdateTcp()
 {
 	m_configArbiter.WriteXMLFile();
 	// Stop the thread that is running....
-	if ( NULL != m_hThread)
+	if ( NULL != m_hThreadClient)
 	{
-		if(TerminateThread(m_hThread, 0) == FALSE)
+		if(TerminateThread(m_hThreadClient, 0) == FALSE)
+		{
+			// Could not force thread to exit -> call 'GetLastError()'
+		}
+	}
+	if ( NULL != m_hThreadServer)
+	{
+		if(TerminateThread(m_hThreadServer, 0) == FALSE)
 		{
 			// Could not force thread to exit -> call 'GetLastError()'
 		}
 	}
 	// stop all COMS...
-	for (int ii = 0; ii < SOCKET_COUNTS; ii++)
+	for (int ii = 0; ii < SOCKET_COUNTS_CLIENTS; ii++)
 	{
-		m_SocketObject[ii].StopComm();
+		m_SocketObjectClients[ii].StopComm();
+	}
+	// stop all COMS...
+	for (int ii = 0; ii < SOCKET_COUNTS_SERVERS; ii++)
+	{
+		m_SocketObjectServer[ii].StopComm();
 	}
 	// start all COMS with new data...
 	RunThread();
@@ -310,4 +398,40 @@ void CNetworkArbiterDlg::OnEnChangePort()
 
 	m_PortCtrl.GetWindowTextA(m_AddressPort);
 	m_configArbiter.Connection.port = atoi(m_AddressPort);
+}
+
+void CNetworkArbiterDlg::OnBnClickedC3LaserStatus()
+{
+	if(m_SocketObjectServer[0].IsOpen() == true)
+	{
+		// time
+		time_t seconds;
+		seconds = time (NULL);
+		
+		stMessageProxy msgProxy;
+		laserPose pose;
+		pose.set_time((DWORD)seconds);
+		pose.set_laseron(m_LaserOnOff.GetCheck()==BST_CHECKED);
+		CString cTemp;									// serilize the message
+		m_LaserPWMAz.GetWindowTextA(cTemp);
+		pose.mutable_target()->set_pulseaz(atoi(cTemp));
+		m_LaserPWMEl.GetWindowTextA(cTemp);
+		pose.mutable_target()->set_pulseel(atoi(cTemp));
+		string strText = pose.SerializeAsString();
+		USES_CONVERSION;
+		int nLen = __min(sizeof(msgProxy.byData)-1, strText.size()+1);
+		memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
+	
+		unsigned char sizeArray[4] = {(strText.size() & 0xFF000000) >> 24,
+								      (strText.size() & 0x00FF0000) >> 16,
+								 	  (strText.size() & 0x0000FF00) >>  8,
+									  (strText.size() & 0x000000FF) >>  0};
+		m_SocketObjectServer[0].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
+		m_SocketObjectServer[0].WriteComm(msgProxy.byData, strText.size(), INFINITE);
+	}
+}
+
+void CNetworkArbiterDlg::OnBnClickedLaserOnOff()
+{
+	// TODO: Add your control notification handler code here
 }

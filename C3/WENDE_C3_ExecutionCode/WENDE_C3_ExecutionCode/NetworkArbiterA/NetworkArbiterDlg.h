@@ -36,8 +36,10 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
-	static UINT WINAPI SocketStartThreadProc(LPVOID pParam);
-	HANDLE      m_hThread;      // Thread handle
+	static UINT WINAPI SocketClientStartThreadProc(LPVOID pParam);
+	static UINT WINAPI SocketServerStartThreadProc(LPVOID pParam);
+	HANDLE      m_hThreadServer;      // Thread handle
+	HANDLE      m_hThreadClient;      // Thread handle
 
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
@@ -46,11 +48,13 @@ private:
 	void RunThread();
 	
 public:
-	static const int SOCKET_COUNTS = 3;
+	static const int SOCKET_COUNTS_CLIENTS = 3;
+	static const int SOCKET_COUNTS_SERVERS = 1;
 	CIPAddressCtrl	m_AddressControl;
 	DWORD			m_AddressControlValue;
 	CString			m_AddressPort;
-	CSocketManager  m_SocketObject[SOCKET_COUNTS];
+	CSocketManager  m_SocketObjectClients[SOCKET_COUNTS_CLIENTS];
+	CSocketManager  m_SocketObjectServer [SOCKET_COUNTS_SERVERS];
 	CEdit			m_pMsgCtrl;
 	afx_msg void OnBnClickedUpdateTcp();
 	afx_msg void OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult);
@@ -59,4 +63,9 @@ public:
 	CPictureCtrl m_picCtrl;
 
 	C3ArbiterConfiguration m_configArbiter;
+	afx_msg void OnBnClickedC3LaserStatus();
+	afx_msg void OnBnClickedLaserOnOff();
+	CButton m_LaserOnOff;
+	CEdit m_LaserPWMAz;
+	CEdit m_LaserPWMEl;
 };

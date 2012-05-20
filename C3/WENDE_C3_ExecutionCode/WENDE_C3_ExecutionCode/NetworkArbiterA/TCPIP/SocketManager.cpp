@@ -29,7 +29,7 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 CSocketManager::CSocketManager()
-: m_pMsgCtrl(NULL), m_cameraMsgType(CameraPacketType::status)
+: m_pMsgCtrl(NULL), m_cameraMsgType(C3PacketType::C3_CAMERA_STATUS)
 {
 }
 
@@ -78,17 +78,17 @@ void CSocketManager::AppendMessage(LPCTSTR strText,DWORD size )
 	// process the data according to the connection type
 	switch(m_cameraMsgType)
 	{
-		case CameraPacketType::status: 
+		case C3PacketType::C3_CAMERA_STATUS: 
 		{ 
 			CArbiterSharedMemoryManager::Instance().DecodeCameraStatusMessage(strText,temp,size); 
 			break; 
 		}
-		case CameraPacketType::track:  
+		case C3PacketType::C3_CAMERA_TRACK:  
 		{ 
 			CArbiterSharedMemoryManager::Instance().DecodeCameraTrackMessage(strText,temp,size); 
 			break; 
 		}
-		case CameraPacketType::image:  
+		case C3PacketType::C3_CAMERA_IMAGE:  
 		{ 
 			CString loadName(CArbiterSharedMemoryManager::Instance().DecodeCameraImageMessage(strText,temp,size).c_str()); 
 			m_picCtrl->Load(loadName);
@@ -122,7 +122,7 @@ void CSocketManager::AppendMessage(LPCTSTR strText,DWORD size )
 // Function: SetCameraMessageType
 //  purpose: Sets the message type for this socket manager
 //////////////////////////////////////////////////////////////////////
-void CSocketManager::SetCameraMessageType(CameraPacketType type)
+void CSocketManager::SetCameraMessageType(C3PacketType type)
 {
 	m_cameraMsgType = type;
 }
