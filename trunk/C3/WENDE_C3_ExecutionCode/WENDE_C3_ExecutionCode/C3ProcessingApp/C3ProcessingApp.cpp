@@ -77,13 +77,17 @@ UINT WINAPI TrackThread (LPVOID pParam)
 						   config->m_SHM_C3_CAMERA_TRACK_MUTEX,		// shared mem mutex name
 						   config->m_SHM_C3_CAMERA_TRACK_EVENT1,	// shared mem event name
 						   config->m_SHM_C3_CAMERA_TRACK_EVENT2);	// shared mem event name
-
+	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
+	else m_CameraTracks->ShmInfo.Clients++;
+	
 	CSharedStruct<LASER_POINT_DIRECTION_SHM> m_LaserCommand;
 	m_LaserCommand.Acquire(config->m_SHM_C3_LASER_POINTING,			// shared mem file name
 						   config->m_SHM_C3_LASER_POINTING_MUTEX,	// shared mem mutex name
 						   config->m_SHM_C3_LASER_POINTING_EVENT1,	// shared mem event name
 						   config->m_SHM_C3_LASER_POINTING_EVENT2);	// shared mem event name
-	
+	if (m_LaserCommand.isServer()) m_LaserCommand->ShmInfo.Clients = 0;
+	else m_LaserCommand->ShmInfo.Clients++;	
+
 	CAMERA_TRACK_MSG_SHM					 inData;		// temporary holder of the current data 
 	
 	/////////////////////////////////////////////////////////////////////////////////
@@ -120,12 +124,12 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				printf("|-->Time   = %s   \r\n",timeStr);
 				printf("|-->Status = %d   \r\n",inData.Status);
 				printf("|-->Tracks = %d   \r\n",inData.ValidTracks);
-				for (int ii = 0; ii < inData.ValidTracks; ii++)
+				for (unsigned int ii = 0; ii < inData.ValidTracks; ii++)
 				{
 					printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Tracks[ii].X,inData.Tracks[ii].Y);
 				}
 				printf("|-->Lasr = %d   \r\n",inData.ValidLasers);
-				for (int ii = 0; ii < inData.ValidLasers; ii++)
+				for (unsigned int ii = 0; ii < inData.ValidLasers; ii++)
 				{
 					printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Lasers[ii].X,inData.Lasers[ii].Y);
 				}

@@ -299,6 +299,14 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\ArbiterSharedMemoryManager.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\ArbiterSharedMemoryManager.h"
+			>
+		</File>
+		<File
 			RelativePath=".\C3ArbiterConfiguration.cpp"
 			>
 		</File>

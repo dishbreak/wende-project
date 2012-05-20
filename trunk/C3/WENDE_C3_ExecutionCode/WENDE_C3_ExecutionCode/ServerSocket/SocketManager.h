@@ -18,24 +18,7 @@ typedef enum {
 	track = 1,
 	image = 2
 } CameraPacketType;
-typedef union
-{
-	COLORREF c;
-	struct
-	{
-#ifdef LITTLEENDIAN
-		unsigned char cBlue;
-		unsigned char cGreen;
-		unsigned char cRed;
-		unsigned char crsvd;
-#else
-		unsigned char crsvd;
-		unsigned char cRed;
-		unsigned char cGreen;
-		unsigned char cBlue;
-#endif
-	} chars;
-} UPixel;
+
 class CSocketManager : public CSocketComm  
 {
 public:
