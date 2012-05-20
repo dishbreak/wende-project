@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "C3_User_Interface.h"
+#include <string>
 
+using namespace System;
 
 class CDisplayManager
 {
@@ -16,6 +18,7 @@ public:
 	int Update_Overall_Status(void);
     int Update_Rover_Acquired_Indicator(int nRoverAcqStatus);
     int Store_Latest_DTI(int nDTI);
+	int Update_Live_Video_Feed(String ^ sImagePath);
 
 	// Accessor methods to determine overall status
 	void Set_Camera_Status(int nCameraStatus);

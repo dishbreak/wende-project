@@ -6,6 +6,8 @@
 #include "CNetworkMonitor.h"
 #include "CDisplayManager.h"
 
+using namespace System;
+
 UINT WINAPI StatusThread(LPVOID pParam);
 UINT WINAPI TrackThread (LPVOID pParam);
 UINT WINAPI ImageThread (LPVOID pParam);
@@ -164,10 +166,13 @@ UINT WINAPI TrackThread (LPVOID pParam)
 UINT WINAPI ImageThread (LPVOID pParam)
 {
 	CSharedStruct<CAMERA_IMAGE_MSG_SHM>		 m_CameraImage;
+	char * sImagePath;
+	//System::String ^ sImagePath;
 	m_CameraImage.Acquire( "SHM_C3_CAMERA_IMAGE",
 						   "SHM_C3_CAMERA_IMAGE_MUTEX",
 						   "SHM_C3_CAMERA_IMAGE_EVENT1",
-						   "SHM_C3_CAMERA_IMAGE_EVENT2");	
+						   "SHM_C3_CAMERA_IMAGE_EVENT2");
+
 	if (m_CameraImage.isServer()) m_CameraImage->ShmInfo.Clients = 0;
 	else m_CameraImage->ShmInfo.Clients++;
 
@@ -178,33 +183,21 @@ UINT WINAPI ImageThread (LPVOID pParam)
 		{
 			if (m_CameraImage.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-				//// Read the data
-				//LPBITMAPINFOHEADER  pdib = (LPBITMAPINFOHEADER) m_CameraImage->ImageData;
-				//BITMAPFILEHEADER    hdr;
-				//DWORD               dwSize;
-				//// Initialize the bitmap header.
-				//dwSize				= DibSize(pdib);
-				//hdr.bfType          = BFT_BITMAP;
-				//hdr.bfSize          = dwSize + sizeof(BITMAPFILEHEADER);
-				//hdr.bfReserved1     = 0;
-				//hdr.bfReserved2     = 0;
-				//hdr.bfOffBits       = (DWORD)sizeof(BITMAPFILEHEADER) + pdib->biSize + DibPaletteSize(pdib);
+				// Display data...
+				sImagePath = m_CameraImage->imagePath;
+				String ^ ssImagePath = gcnew String(sImagePath);
 
-				//CFile file;
-				//if(!file.Open("test.bmp",CFile::modeWrite | CFile::modeCreate,NULL))
-				//	return;
+				CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
 
-				//// Write the bitmap header and bitmap bits to the file.
-				//file.Write((LPCVOID) &hdr, sizeof(BITMAPFILEHEADER));
-				//file.Write(m_CameraImage.ReadFromSharedMemoryDataInfo(), dwSize);
-
-				//file.Close();
+				dispman->Update_Live_Video_Feed(ssImagePath);
 
 				// Set the event
 				m_CameraImage.SetEventClient();
 				
 				// release the mutex
 				m_CameraImage.ReleaseMutex();
+
+				delete ssImagePath;
 			}
 			else
 			{
