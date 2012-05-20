@@ -48,7 +48,7 @@ private:
 	void RunThread();
 	
 public:
-	static const int SOCKET_COUNTS_CLIENTS = 3;
+	static const int SOCKET_COUNTS_CLIENTS = 4;
 	static const int SOCKET_COUNTS_SERVERS = 1;
 	CIPAddressCtrl	m_AddressControl;
 	DWORD			m_AddressControlValue;

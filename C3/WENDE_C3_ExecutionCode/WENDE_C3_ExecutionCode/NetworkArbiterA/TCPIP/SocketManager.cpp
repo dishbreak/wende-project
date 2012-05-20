@@ -29,7 +29,7 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 CSocketManager::CSocketManager()
-: m_pMsgCtrl(NULL), m_cameraMsgType(C3PacketType::C3_CAMERA_STATUS)
+: m_pMsgCtrl(NULL), m_MsgType(C3PacketType::C3_CAMERA_STATUS)
 {
 }
 
@@ -76,7 +76,7 @@ void CSocketManager::AppendMessage(LPCTSTR strText,DWORD size )
 	// temporary display string
 	static char temp [1024];
 	// process the data according to the connection type
-	switch(m_cameraMsgType)
+	switch(m_MsgType)
 	{
 		case C3PacketType::C3_CAMERA_STATUS: 
 		{ 
@@ -93,6 +93,11 @@ void CSocketManager::AppendMessage(LPCTSTR strText,DWORD size )
 			CString loadName(CArbiterSharedMemoryManager::Instance().DecodeCameraImageMessage(strText,temp,size).c_str()); 
 			m_picCtrl->Load(loadName);
 			break; 
+		}
+		case C3PacketType::C3_LASER_STATUS:
+		{
+			CArbiterSharedMemoryManager::Instance().DecodeLaserStatusMessage(strText,temp,size); 
+			break;
 		}
 		default: 
 		{ 
@@ -124,7 +129,7 @@ void CSocketManager::AppendMessage(LPCTSTR strText,DWORD size )
 //////////////////////////////////////////////////////////////////////
 void CSocketManager::SetCameraMessageType(C3PacketType type)
 {
-	m_cameraMsgType = type;
+	m_MsgType = type;
 }
 //////////////////////////////////////////////////////////////////////
 // Function: SetMessageWindow

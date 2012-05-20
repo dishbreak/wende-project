@@ -247,28 +247,8 @@ UINT WINAPI CNetworkArbiterDlg::SocketClientStartThreadProc(LPVOID pParam)
 	// setup the client sockets
 	for (int ii = 0; ii < SOCKET_COUNTS_CLIENTS; ii++)
 	{
-		switch(ii)
-		{
-			case 0: 
-			{
-				pThis->m_SocketObjectClients[ii].SetCameraMessageType(C3PacketType::C3_CAMERA_STATUS);
-				break;
-			}
-			case 1: 
-			{
-				pThis->m_SocketObjectClients[ii].SetCameraMessageType(C3PacketType::C3_CAMERA_TRACK);
-				break;
-			}
-			case 2: 
-			{
-				pThis->m_SocketObjectClients[ii].SetCameraMessageType(C3PacketType::C3_CAMERA_IMAGE);
-				break;
-			}
-			default:
-			{
-				break;
-			}
-		}
+		// Set the packet type
+		pThis->m_SocketObjectClients[ii].SetCameraMessageType((C3PacketType)ii);
 		// Set the display event
 		pThis->m_SocketObjectClients[ii].SetMessageWindow( &pThis->m_pMsgCtrl );
 		pThis->m_SocketObjectClients[ii].SetPictureWindow( &pThis->m_picCtrl );

@@ -176,3 +176,24 @@ typedef union
 #endif
 	} chars;
 } UPixel;
+/////////////////////////////////////////////////////////////////////////////////
+// Struct: LASER_STATUS_MSG_SHM
+//
+// purpose: defines the structure for internal message passing of laser status
+//          commands
+/////////////////////////////////////////////////////////////////////////////////
+typedef struct {
+	DWORD  ProcessID;
+	DWORD  Time;
+
+	UINT32 PacketNumber;
+	UINT32 Status;
+	
+	UINT32 ValidChars;
+	UINT32 SubsystemId;
+	
+	CHAR   textStr[SHM_MAX_STATUS_TEXT];
+	// TODO PERFORMANCE COUNTER - FIX
+
+	SHM_INFO_STRUCT		ShmInfo;			// Shared SHM information
+}LASER_STATUS_MSG_SHM;
