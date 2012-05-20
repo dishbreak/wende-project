@@ -123,11 +123,11 @@ BOOL CClientSocketDlg::OnInitDialog()
 
 	// Initialize socket manager
 	m_SocketManager.SetMessageWindow( &m_ctlMsgList );
-	m_SocketManager.SetServerState( false );	// run as client
+	m_SocketManager.SetServerState( false );	    // run as client
 	m_SocketManager.SetSmartAddressing( false );	// always send to server
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	              // EXCEPTION: OCX Property Pages should return FALSE.
 }
 
 void CClientSocketDlg::OnBtnConnect() 
