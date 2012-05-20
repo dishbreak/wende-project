@@ -229,9 +229,13 @@ bool CServerSocketDlg::StartServer()
 	{
 		for(int ii=0; ii<MAX_CONNECTION; ii++)
 		{
+			GetDlgItem(IDC_BTN_SELECT_CAMERA_IMAGE)->EnableWindow( TRUE );
 			GetDlgItem(IDC_BTN_SEND_STATUS)->EnableWindow( TRUE );
-			GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( TRUE );
 			GetDlgItem(IDC_BTN_SEND_TRACK)->EnableWindow( TRUE );
+			GetDlgItem(IDC_BTN_SEND_LASSER_STATUS)->EnableWindow( TRUE );
+			GetDlgItem(IDC_BTN_SEND_STATUS_CONT)->EnableWindow( TRUE );
+			GetDlgItem(IDC_BTN_SEND_TRACK2)->EnableWindow( TRUE );
+			GetDlgItem(IDC_BTN_SEND_IMAGE4)->EnableWindow( TRUE );
 			GetDlgItem(IDC_BTN_STOP)->EnableWindow( TRUE );
 			NextDlgCtrl();
 			GetDlgItem(IDC_BTN_START)->EnableWindow( FALSE );
@@ -288,9 +292,15 @@ BOOL CServerSocketDlg::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 	m_ctlPortInc.SetRange32( 2000, 4500);
+	GetDlgItem(IDC_BTN_SELECT_CAMERA_IMAGE)->EnableWindow( FALSE );
 	GetDlgItem(IDC_BTN_SEND_STATUS)->EnableWindow( FALSE );
-	GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( FALSE );
 	GetDlgItem(IDC_BTN_SEND_TRACK)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_LASSER_STATUS)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_STATUS_CONT)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_TRACK2)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_IMAGE4)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( FALSE );
+	GetDlgItem(IDC_BTN_SEND_IMAGE2)->EnableWindow( FALSE );
 	GetDlgItem(IDC_BTN_STOP)->EnableWindow( FALSE );
 
 	for(int i=0; i<MAX_CONNECTION; i++)
@@ -782,6 +792,8 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 			}
 		}
 		img.Save("temp.bmp");
+		GetDlgItem(IDC_BTN_SEND_IMAGE)->EnableWindow( TRUE );
+		GetDlgItem(IDC_BTN_SEND_IMAGE2)->EnableWindow( TRUE );
 		return;
 	}
 	else
