@@ -118,6 +118,7 @@ public:
 	SIZE    tImageSize;
 	void AddTrack(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
 	void AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
+	afx_msg void OnBnClickedBtnSendLasserStatus();
 };
 
 //{{AFX_INSERT_LOCATION}}

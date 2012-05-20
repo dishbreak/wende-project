@@ -183,6 +183,10 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	port.Format(_T("%d"), m_configArbiter.Connection.port);
 	m_AddressControlValue = htonl(inet_addr(m_configArbiter.Connection.ip.c_str()));
 	m_AddressPort         = port;
+	//CString text;
+	//text.Format(_T("%f"),100.0);
+	//m_LaserPWMAz.SetWindowTextA(text);
+	//m_LaserPWMEl.SetWindowTextA(text);
 
 	// start thread to bring up com scokets
 	RunThread();

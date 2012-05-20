@@ -145,6 +145,7 @@ BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
 	ON_BN_CLICKED(IDC_TRACK_ENABLE_5, &CServerSocketDlg::OnBnClickedTrackEnable5)
 	ON_BN_CLICKED(IDC_LASER_ENABLE_6, &CServerSocketDlg::OnBnClickedLaserEnable6)
 	ON_BN_CLICKED(IDC_BTN_SELECT_CAMERA_IMAGE, &CServerSocketDlg::OnBnClickedBtnSelectCameraImage)
+	ON_BN_CLICKED(IDC_BTN_SEND_LASSER_STATUS, &CServerSocketDlg::OnBnClickedBtnSendLasserStatus)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -769,4 +770,24 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 		return;
 	}
 	this->UpdateData(FALSE);
+}
+
+void CServerSocketDlg::OnBnClickedBtnSendLasserStatus()
+{
+	CString cstatus;									// serilize the message
+	m_CameraStatusTextCtrl.GetWindowTextA(cstatus);
+
+	// Get the current system time...
+	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
+	time( &osBinaryTime ) ;		// Get the current time from the 
+								// operating system.
+	
+	//Setup the camera message....
+	cameraStatus status;
+	status.set_laseron(m_statusLaserOnCtrl.GetCheck()==BST_CHECKED);	// set laser status
+	status.set_status((cameraMsgs::systemStatus)m_CameraStatus);	// set camera status
+	status.set_text(cstatus);				// set the camera text
+	status.set_time(osBinaryTime);									// set the operational time
+	string strText = status.SerializeAsString();
+	OnBtnSend(strText,0,strText.size(),0);												// send the data
 }

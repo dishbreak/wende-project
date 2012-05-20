@@ -8,7 +8,6 @@ CDisplayManager * CDisplayManager::displayMgr = 0;
 // Class variable for determining overall status
 int m_nCameraStatus;
 int m_nLaserStatus;
-
 ////////////////////////////////////////////////////////////////////////
 // Description: Returns a pointer to the CDisplayManager. If there is no
 //              CDisplayManager, one is new'd and returned.
@@ -22,7 +21,6 @@ CDisplayManager * CDisplayManager::getCDisplayManager()
     }
     return displayMgr;
 }
-
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the PPI display when the new rover position is
 //				sent through					
@@ -61,13 +59,11 @@ int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 
 	return 0;
 }
-
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the Laser subsystem indicator following a call 
 //				to the static instance of the C3_User_Interface object					
 // Author:		Mike Payne
 ////////////////////////////////////////////////////////////////////////
-
 int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 {
 	if(nLaserStatus >= 3) 	// TODO: Change after laser interface added
@@ -88,32 +84,32 @@ int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 
 	return 0;
 }
-
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the Laser Activity indicator following a call 
 //				to the static instance of the C3_User_Interface object					
 // Author:		Mike Payne
 ////////////////////////////////////////////////////////////////////////
-
 int CDisplayManager::Update_Laser_Activity_Indicator(int nLaserActivityStatus)
 {
 	if(nLaserActivityStatus == 1)
+	{
 		C3_User_Interface::Instance->pbLaserActivity->Image = 
 			System::Drawing::Image::FromFile ("Energized.png");
+	}
 
 	if(nLaserActivityStatus == 0)
+	{
 		C3_User_Interface::Instance->pbLaserActivity->Image = 
 			System::Drawing::Image::FromFile ("Inactive.png");
+	}
 
 	return 0;
 }
-
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the overall WENDE status as an aggregation of  
 //				subsystem status'				
 // Author:		Mike Payne
 ////////////////////////////////////////////////////////////////////////
-
 int CDisplayManager::Update_Overall_Status(void)
 {
 	int nLaserSubsystemStatus = Get_Laser_Status();
@@ -129,28 +125,22 @@ int CDisplayManager::Update_Overall_Status(void)
 
 	return 0;
 }
-
 void CDisplayManager::Set_Camera_Status(int nCameraStatus)
 {
 	m_nCameraStatus = nCameraStatus;
 }
-
 int CDisplayManager::Get_Camera_Status(void)
 {
 	return m_nCameraStatus;
 }
-
 void CDisplayManager::Set_Laser_Status(int nLaserStatus)
 {
 	m_nLaserStatus = nLaserStatus;
 }
-
 int CDisplayManager::Get_Laser_Status(void)
 {
 	return m_nLaserStatus;
 }
-
-
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the Camera communications indicator following a 
 //				call to the static instance of the C3_User_Interface 

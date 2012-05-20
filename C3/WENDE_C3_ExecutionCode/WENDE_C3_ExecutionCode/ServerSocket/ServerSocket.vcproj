@@ -368,6 +368,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\SharedSource\laserMsgs.pb.h"
+				>
+			</File>
+			<File
 				RelativePath="..\SharedSource\PictureCtrl.h"
 				>
 			</File>
@@ -409,6 +413,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\SharedSource\laserMsgs.pb.cc"
+			>
+		</File>
 		<File
 			RelativePath="ReadMe.txt"
 			>
