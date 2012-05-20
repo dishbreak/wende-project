@@ -194,7 +194,9 @@ UINT WINAPI ImageThread (LPVOID pParam)
 		{
 			if (m_CameraImage.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-				
+				// Display data...
+				m_CameraImage->imagePath;
+
 				// Set the event
 				m_CameraImage.SetEventClient();
 				
