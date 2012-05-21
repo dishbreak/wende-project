@@ -90,6 +90,7 @@ UINT WINAPI StatusThread (LPVOID pParam)
 				dispman->Update_Laser_Subsystem_Indicator(m_CameraStatus->Status);
 				dispman->Update_Laser_Activity_Indicator(m_CameraStatus->LaserOnOf);
 				dispman->Update_Overall_Status();
+				dispman->Update_Notification_Panel(0);
 
 				// Set the event
 				m_CameraStatus.SetEventClient();
