@@ -110,7 +110,8 @@ namespace C3_App {
 	private: System::Windows::Forms::Panel^  pPPI;
 	private: System::Windows::Forms::Button^  cmdExport;
 	private: System::Windows::Forms::GroupBox^  gbAlerts;
-	private: System::Windows::Forms::TextBox^  textBox1;
+	public: System::Windows::Forms::TextBox^  tbAlertsPanel;
+
 	//private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
 
 
@@ -161,7 +162,7 @@ namespace C3_App {
 			this->pbLaserStatus = (gcnew System::Windows::Forms::PictureBox());
 			this->pbLaserComms = (gcnew System::Windows::Forms::PictureBox());
 			this->gbAlerts = (gcnew System::Windows::Forms::GroupBox());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->tbAlertsPanel = (gcnew System::Windows::Forms::TextBox());
 			this->pPPIPanel->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -454,28 +455,28 @@ namespace C3_App {
 			// 
 			// gbAlerts
 			// 
-			this->gbAlerts->Controls->Add(this->textBox1);
+			this->gbAlerts->Controls->Add(this->tbAlertsPanel);
 			this->gbAlerts->Location = System::Drawing::Point(3, 623);
 			this->gbAlerts->Name = L"gbAlerts";
 			this->gbAlerts->Size = System::Drawing::Size(1316, 51);
 			this->gbAlerts->TabIndex = 4;
 			this->gbAlerts->TabStop = false;
 			// 
-			// textBox1
+			// tbAlertsPanel
 			// 
-			this->textBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox1->Enabled = false;
-			this->textBox1->Font = (gcnew System::Drawing::Font(L"Courier New", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->tbAlertsPanel->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->tbAlertsPanel->Enabled = false;
+			this->tbAlertsPanel->Font = (gcnew System::Drawing::Font(L"Courier New", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->textBox1->ForeColor = System::Drawing::Color::Red;
-			this->textBox1->Location = System::Drawing::Point(7, 11);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->ReadOnly = true;
-			this->textBox1->Size = System::Drawing::Size(1283, 34);
-			this->textBox1->TabIndex = 0;
-			this->textBox1->Text = L"ALERT: CONTACT HAS LEFT THE PLAYING FIELD - INVESTIGATE IMMEDIATELY!";
-			this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->tbAlertsPanel->ForeColor = System::Drawing::Color::Red;
+			this->tbAlertsPanel->Location = System::Drawing::Point(0, 11);
+			this->tbAlertsPanel->Multiline = true;
+			this->tbAlertsPanel->Name = L"tbAlertsPanel";
+			this->tbAlertsPanel->ReadOnly = true;
+			this->tbAlertsPanel->Size = System::Drawing::Size(1283, 34);
+			this->tbAlertsPanel->TabIndex = 0;
+			this->tbAlertsPanel->Text = L"ALERT: CONTACT HAS LEFT THE PLAYING FIELD - INVESTIGATE IMMEDIATELY!";
+			this->tbAlertsPanel->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// C3_User_Interface
 			// 

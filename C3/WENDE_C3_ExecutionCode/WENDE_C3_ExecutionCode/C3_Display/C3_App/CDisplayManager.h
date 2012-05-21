@@ -19,6 +19,7 @@ public:
     int Update_Rover_Acquired_Indicator(int nRoverAcqStatus);
     int Store_Latest_DTI(int nDTI);
 	int Update_Live_Video_Feed(String ^ sImagePath);
+	void Update_Notification_Panel(int nAlertID);
 
 	// Accessor methods to determine overall status
 	void Set_Camera_Status(int nCameraStatus);
