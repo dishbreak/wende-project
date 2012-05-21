@@ -222,7 +222,7 @@ public class netIO{
 	public void server(CameraMsgs.cameraStatus sMsg) throws IOException
 	{
 			System.out.println("Send Status"); 
-			//serverOutStream.writeInt(sMsg.getSerializedSize());
+			serverOutStream.writeInt(sMsg.getSerializedSize());
 			//serverOutStream.writeByte(msgType);		// write type of message to stream
 			sMsg.writeTo(serverOutStream);
 			count++;
@@ -232,7 +232,7 @@ public class netIO{
 	public void server(CameraMsgs.cameraTracks sMsg) throws IOException
 	{
 		System.out.println("Send Tracks");
-		//serverOutStream.writeInt(sMsg.getSerializedSize());
+		serverOutStream.writeInt(sMsg.getSerializedSize());
 		//serverOutStream.writeByte(msgType);		// write type of message to stream
 		sMsg.writeTo(serverOutStream);
 		count++;
@@ -242,7 +242,7 @@ public class netIO{
 	public void server(CameraMsgs.cameraImage sMsg) throws IOException
 	{
 		System.out.println("Image Serial Size = "+ sMsg.getSerializedSize());
-		//serverOutStream.writeInt(sMsg.getSerializedSize());
+		serverOutStream.writeInt(sMsg.getSerializedSize());
 		//serverOutStream.writeByte(msgType);		// write type of message to stream
 		sMsg.writeTo(serverOutStream);
 		count++;
