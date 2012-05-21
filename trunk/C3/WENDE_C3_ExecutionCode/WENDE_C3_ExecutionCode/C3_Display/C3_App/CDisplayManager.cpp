@@ -67,15 +67,16 @@ int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 ////////////////////////////////////////////////////////////////////////
 int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 {
-	if(nLaserStatus >= 3) 	// TODO: Change after laser interface added
+	// Status is OFFLINE
+	if((nLaserStatus == 0) || (nLaserStatus == 3) || (nLaserStatus == 4)) 		
 	{
 		C3_User_Interface::Instance->pbLaserStatus->Image = 
 			System::Drawing::Image::FromFile ("Offline.png");
 
 		Set_Laser_Status(0);
 	}
-
-	if(nLaserStatus <= 2) 	// TODO: Change after laser interface added
+	// Status is ONLINE
+	else 	
 	{
 		C3_User_Interface::Instance->pbLaserStatus->Image = 
 			System::Drawing::Image::FromFile ("Online.png");
