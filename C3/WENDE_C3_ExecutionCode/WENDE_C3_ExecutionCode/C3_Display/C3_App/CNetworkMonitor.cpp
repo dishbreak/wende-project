@@ -8,9 +8,10 @@
 
 using namespace System;
 
-UINT WINAPI StatusThread(LPVOID pParam);
 UINT WINAPI TrackThread (LPVOID pParam);
 UINT WINAPI ImageThread (LPVOID pParam);
+UINT WINAPI LaserStatusThread (LPVOID pParam);
+UINT WINAPI CameraStatusThread(LPVOID pParam);
 
 void CNetworkMonitor::InitializeThread()
 {
@@ -18,7 +19,7 @@ void CNetworkMonitor::InitializeThread()
 	UINT uiThreadId1 = 0;
 	hThread1 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
 										0,					  // stack
-									 StatusThread,			// Thread proc
+									 CameraStatusThread,		// Thread proc
 									 NULL,					  // Thread param
 									 CREATE_SUSPENDED,		  // creation mode
 									 &uiThreadId1);			  // Thread ID
@@ -33,7 +34,7 @@ void CNetworkMonitor::InitializeThread()
 	UINT uiThreadId2 = 0;
 	hThread2 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
 										0,					  // stack
-									 TrackThread,   // Thread proc
+									 LaserStatusThread,   // Thread proc
 									 NULL,					  // Thread param
 									 CREATE_SUSPENDED,		  // creation mode
 									 &uiThreadId2);			  // Thread ID
@@ -43,23 +44,39 @@ void CNetworkMonitor::InitializeThread()
 		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 		ResumeThread( hThread2 );
 	}
+
 	HANDLE hThread3;
 	UINT uiThreadId3 = 0;
 	hThread3 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
-										0,					   // stack
-									 ImageThread,			   // Thread proc
-									 NULL,					   // Thread param
-									 CREATE_SUSPENDED,		   // creation mode
-									 &uiThreadId3);			   // Thread ID
+										0,					  // stack
+									 TrackThread,   // Thread proc
+									 NULL,					  // Thread param
+									 CREATE_SUSPENDED,		  // creation mode
+									 &uiThreadId3);			  // Thread ID
 
 	if ( NULL != hThread3)
 	{
 		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 		ResumeThread( hThread3 );
 	}
+
+	HANDLE hThread4;
+	UINT uiThreadId4 = 0;
+	hThread4 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
+										0,					   // stack
+									 ImageThread,			   // Thread proc
+									 NULL,					   // Thread param
+									 CREATE_SUSPENDED,		   // creation mode
+									 &uiThreadId4);			   // Thread ID
+
+	if ( NULL != hThread4)
+	{
+		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
+		ResumeThread( hThread4 );
+	}
 }
 
-UINT WINAPI StatusThread (LPVOID pParam)
+UINT WINAPI CameraStatusThread (LPVOID pParam)
 {
 	CSharedStruct<CAMERA_STATUS_MSG_SHM>	 m_CameraStatus;
 	m_CameraStatus.Acquire("SHM_C3_CAMERA_STATUS",
@@ -87,16 +104,62 @@ UINT WINAPI StatusThread (LPVOID pParam)
                 dispman->Update_Camera_Subsystem_Indicator(m_CameraStatus->Status);
 
 				// TODO: Remove once laser interface added.
-				dispman->Update_Laser_Subsystem_Indicator(m_CameraStatus->Status);
 				dispman->Update_Laser_Activity_Indicator(m_CameraStatus->LaserOnOf);
 				dispman->Update_Overall_Status();
-				dispman->Update_Notification_Panel(0);
 
 				// Set the event
 				m_CameraStatus.SetEventClient();
 				
 				// release the mutex
 				m_CameraStatus.ReleaseMutex();
+			}
+			else
+			{
+				// unable to get mutex???
+			}
+		}
+		else
+		{
+			// loss of comm
+		}
+	}
+
+	_endthreadex( 0 );
+    
+	return 1L;
+}
+UINT WINAPI LaserStatusThread (LPVOID pParam)
+{
+	CSharedStruct<LASER_STATUS_MSG_SHM>	 m_LaserStatus;
+	m_LaserStatus.Acquire(	"SHM_C3_LASER_STATUS",
+							"SHM_C3_LASER_STATUS_MUTEX",
+							"SHM_C3_LASER_STATUS_EVENT1",
+							"SHM_C3_LASER_STATUS_EVENT2");
+	if (m_LaserStatus.isServer()) m_LaserStatus->ShmInfo.Clients = 0;
+	else m_LaserStatus->ShmInfo.Clients++;
+
+	static char timeStr[512];
+	static char temp[512];
+	static int laserStatusMessageCount = 0;
+
+	while(1)
+	{
+		// aquire the mutex
+		if (m_LaserStatus.isCreated() && m_LaserStatus.WaitForCommunicationEventServer() == WAIT_OBJECT_0)
+		{
+			if (m_LaserStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+			{
+                ////get a handle to the CDisplayManager
+                CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+
+				dispman->Update_Laser_Subsystem_Indicator(m_LaserStatus->Status);
+				dispman->Update_Overall_Status();
+
+				// Set the event
+				m_LaserStatus.SetEventClient();
+				
+				// release the mutex
+				m_LaserStatus.ReleaseMutex();
 			}
 			else
 			{
