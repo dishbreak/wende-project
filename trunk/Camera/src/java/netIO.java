@@ -8,6 +8,8 @@
 
 import java.net.*;
 import java.util.Properties;
+import java.util.Iterator;
+import java.util.List;
 import java.io.*;
 import com.camera.*;
 import com.google.protobuf.*;
@@ -327,7 +329,7 @@ public class netIO{
 		long msgTime = 0;
 		while ((inSize = clientInputStream.readInt())  != 0) {
 			error = true;
-//			System.out.println("inSize of " + inSize);
+			System.out.println("inSize of " + inSize);
 			if(inSize < 0)
 			{
 				if(inSize == -1)
@@ -366,6 +368,12 @@ public class netIO{
 				msgTime = cTracksIn.getTime();
 				p("Server("+msgType+"): Time->" + cTracksIn.getTime());
 				p("Server("+msgType+"): Status->" + cTracksIn.getStatus());
+				p("Server("+msgType+"): # Targets->" + cTracksIn.getTargetCount());
+				List<com.camera.CameraMsgs.track> trackList = cTracksIn.getTargetList();
+				Iterator<com.camera.CameraMsgs.track> iterator = trackList.iterator();
+				while (iterator.hasNext()) {
+					System.out.println(iterator.next());
+				}
 				tCount++;
 				error = false;
 			}
@@ -456,11 +464,11 @@ public class netIO{
 			minTime = eTime;
 		}
 		if (avgTime == 0) {
-			avgTime = netTime;
+			avgTime = eTime + localDelay;
 		}
-		avgTime = ( avgTime + netTime ) / 2;
+		avgTime = ( avgTime + eTime + localDelay ) / 2;
 		//p(String.format("\n%d\t%d\t",eTime,delayTime));
-		System.out.printf("\n(%d) Elapsed: %d\tNetDelay: %d\tLocalDelay: %d",msgType,eTime,netTime,localDelay);
+		System.out.printf("\n(%d) Elapsed: %d\tDelayTime: %d\tLocal: %d\tTotal: %d",msgType,eTime,delayTime,localDelay, eTime + localDelay-delayTime);
 			
 	}	// End of timeCalc Function
 		
