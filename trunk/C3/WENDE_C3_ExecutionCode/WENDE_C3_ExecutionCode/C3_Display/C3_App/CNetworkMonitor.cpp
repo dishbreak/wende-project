@@ -5,6 +5,7 @@
 #include <process.h>
 #include "CNetworkMonitor.h"
 #include "CDisplayManager.h"
+#include "GUIConfiguration.h"
 
 using namespace System;
 
@@ -79,10 +80,10 @@ void CNetworkMonitor::InitializeThread()
 UINT WINAPI CameraStatusThread (LPVOID pParam)
 {
 	CSharedStruct<CAMERA_STATUS_MSG_SHM>	 m_CameraStatus;
-	m_CameraStatus.Acquire("SHM_C3_CAMERA_STATUS",
-						   "SHM_C3_CAMERA_STATUS_MUTEX",
-						   "SHM_C3_CAMERA_STATUS_EVENT1",
-						   "SHM_C3_CAMERA_STATUS_EVENT2");
+	m_CameraStatus.Acquire(CGUIConfiguration::Instance().SHM_C3_CAMERA_STATUS,
+						   CGUIConfiguration::Instance().SHM_C3_CAMERA_STATUS_MUTEX,
+						   CGUIConfiguration::Instance().SHM_C3_CAMERA_STATUS_EVENT1,
+						   CGUIConfiguration::Instance().SHM_C3_CAMERA_STATUS_EVENT2);
 	if (m_CameraStatus.isServer()) m_CameraStatus->ShmInfo.Clients = 0;
 	else m_CameraStatus->ShmInfo.Clients++;
 
@@ -133,10 +134,10 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 UINT WINAPI LaserStatusThread (LPVOID pParam)
 {
 	CSharedStruct<LASER_STATUS_MSG_SHM>	 m_LaserStatus;
-	m_LaserStatus.Acquire(	"SHM_C3_LASER_STATUS",
-							"SHM_C3_LASER_STATUS_MUTEX",
-							"SHM_C3_LASER_STATUS_EVENT1",
-							"SHM_C3_LASER_STATUS_EVENT2");
+	m_LaserStatus.Acquire(CGUIConfiguration::Instance().SHM_C3_LASER_STATUS,
+						  CGUIConfiguration::Instance().SHM_C3_LASER_STATUS_MUTEX,
+						  CGUIConfiguration::Instance().SHM_C3_LASER_STATUS_EVENT1,
+						  CGUIConfiguration::Instance().SHM_C3_LASER_STATUS_EVENT2);
 	if (m_LaserStatus.isServer()) m_LaserStatus->ShmInfo.Clients = 0;
 	else m_LaserStatus->ShmInfo.Clients++;
 
@@ -184,10 +185,10 @@ UINT WINAPI TrackThread (LPVOID pParam)
 {
 	CAMERA_TRACK_MSG_SHM sTrackMessage; 
 	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;
-	m_CameraTracks.Acquire("SHM_C3_CAMERA_TRACK",
-						   "SHM_C3_CAMERA_TRACK_MUTEX",
-						   "SHM_C3_CAMERA_TRACK_EVENT1",
-						   "SHM_C3_CAMERA_TRACK_EVENT2");
+	m_CameraTracks.Acquire(CGUIConfiguration::Instance().SHM_C3_CAMERA_TRACK,
+						   CGUIConfiguration::Instance().SHM_C3_CAMERA_TRACK_MUTEX,
+						   CGUIConfiguration::Instance().SHM_C3_CAMERA_TRACK_EVENT1,
+						   CGUIConfiguration::Instance().SHM_C3_CAMERA_TRACK_EVENT2);
 	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
 	else m_CameraTracks->ShmInfo.Clients++;
 
@@ -236,10 +237,10 @@ UINT WINAPI ImageThread (LPVOID pParam)
 	CSharedStruct<CAMERA_IMAGE_MSG_SHM>		 m_CameraImage;
 	char * sImagePath;
 	//System::String ^ sImagePath;
-	m_CameraImage.Acquire( "SHM_C3_CAMERA_IMAGE",
-						   "SHM_C3_CAMERA_IMAGE_MUTEX",
-						   "SHM_C3_CAMERA_IMAGE_EVENT1",
-						   "SHM_C3_CAMERA_IMAGE_EVENT2");
+	m_CameraImage.Acquire(CGUIConfiguration::Instance().SHM_C3_CAMERA_IMAGE,
+						  CGUIConfiguration::Instance().SHM_C3_CAMERA_IMAGE_MUTEX,
+						  CGUIConfiguration::Instance().SHM_C3_CAMERA_IMAGE_EVENT1,
+						  CGUIConfiguration::Instance().SHM_C3_CAMERA_IMAGE_EVENT2);
 
 	if (m_CameraImage.isServer()) m_CameraImage->ShmInfo.Clients = 0;
 	else m_CameraImage->ShmInfo.Clients++;
