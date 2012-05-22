@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\SharedSource;..\..\SharedSource"
+				AdditionalIncludeDirectories="..\SharedSource;..\..\SharedSource;..\SharedSource\TinyXml;..\..\SharedSource\TinyXml"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -116,7 +116,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\SharedSource;..\..\SharedSource"
+				AdditionalIncludeDirectories="..\SharedSource;..\..\SharedSource;..\SharedSource\TinyXml;..\..\SharedSource\TinyXml"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GUIConfiguration.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
@@ -281,6 +285,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GUIConfiguration.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -299,6 +307,34 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="TinyXml"
+			>
+			<File
+				RelativePath="..\..\SharedSource\tinyxml\tinystr.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\SharedSource\tinyxml\tinystr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\SharedSource\tinyxml\tinyxml.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\SharedSource\tinyxml\tinyxml.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\SharedSource\tinyxml\tinyxmlerror.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\SharedSource\tinyxml\tinyxmlparser.cpp"
+				>
 			</File>
 		</Filter>
 		<File
