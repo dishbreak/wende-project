@@ -20,12 +20,17 @@ public:
     int Store_Latest_DTI(int nDTI);
 	int Update_Live_Video_Feed(String ^ sImagePath);
 	void Update_Notification_Panel(int nAlertID);
+	void Disable_All_Controls(void);
 
 	// Accessor methods to determine overall status
 	void Set_Camera_Status(int nCameraStatus);
 	void Set_Laser_Status(int nLaserStatus);
+	void Set_Laser_Com_Status(int nLaserComStatus);
+	void Set_Camera_Com_Status(int nCameraComStatus);
 	int Get_Camera_Status(void);
 	int Get_Laser_Status(void);
+	int Get_Laser_Com_Status(void);
+	int Get_Camera_Com_Status(void);
 
 //constructor made private to ensure this stays a singleton
 private:

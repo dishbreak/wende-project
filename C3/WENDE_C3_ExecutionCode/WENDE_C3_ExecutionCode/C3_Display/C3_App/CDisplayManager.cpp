@@ -8,6 +8,8 @@ CDisplayManager * CDisplayManager::displayMgr = 0;
 // Class variable for determining overall status
 int m_nCameraStatus;
 int m_nLaserStatus;
+int m_nLaserComStatus;
+int m_nCameraComStatus;
 ////////////////////////////////////////////////////////////////////////
 // Description: Returns a pointer to the CDisplayManager. If there is no
 //              CDisplayManager, one is new'd and returned.
@@ -116,9 +118,13 @@ int CDisplayManager::Update_Overall_Status(void)
 {
 	int nLaserSubsystemStatus = Get_Laser_Status();
 	int nCameraSubsystemStatus = Get_Camera_Status();
+	int nLaserComStatus = Get_Laser_Com_Status();
+	int nCameraComStatus = Get_Camera_Com_Status();
 
 	// Set status to ONLINE if camera and laser are OK
-	if((nLaserSubsystemStatus == 1) && (nCameraSubsystemStatus == 1))
+	if((nLaserSubsystemStatus == 1) && (nCameraSubsystemStatus == 1) && 
+		(nLaserComStatus == 1) && (nCameraComStatus == 1))
+
 		C3_User_Interface::Instance->pbOverallStatus->Image = 
 			System::Drawing::Image::FromFile ("Online.png");
 	else
@@ -143,6 +149,25 @@ int CDisplayManager::Get_Laser_Status(void)
 {
 	return m_nLaserStatus;
 }
+void CDisplayManager::Set_Camera_Com_Status(int nCameraComStatus)
+{
+	m_nCameraComStatus = nCameraComStatus;
+}
+int CDisplayManager::Get_Camera_Com_Status(void)
+{
+	return m_nCameraComStatus;
+}
+void CDisplayManager::Set_Laser_Com_Status(int nLaserComStatus)
+{
+	m_nLaserComStatus = nLaserComStatus;
+}
+int CDisplayManager::Get_Laser_Com_Status(void)
+{
+	return m_nLaserComStatus;
+}
+
+
+
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the Camera communications indicator following a 
 //				call to the static instance of the C3_User_Interface 
@@ -151,20 +176,45 @@ int CDisplayManager::Get_Laser_Status(void)
 ////////////////////////////////////////////////////////////////////////
 int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus)
 {
-	if (nCameraCommStatus == 0) //Status is OFFLINE
+	// Status is OFFLINE
+	if(nCameraCommStatus == 0) 		
 	{
-		//Set Indicator Offline
 		C3_User_Interface::Instance->pbCameraComms->Image = 
 			System::Drawing::Image::FromFile ("Offline.png");
-		//Set Subsystem Indicator Unknown
-		//uncomment this when ready.
-		C3_User_Interface::Instance->pbCameraStatus->Image =
-			System::Drawing::Image::FromFile ("Unknown.png");
+
+		Set_Camera_Com_Status(0);
 	}
-	if (nCameraCommStatus == 1)
-		//Set Indicator Online
+	// Status is ONLINE
+	else 	
+	{
 		C3_User_Interface::Instance->pbCameraComms->Image = 
 			System::Drawing::Image::FromFile ("Online.png");
+
+		Set_Camera_Com_Status(1);
+	}
+
+	return 0;
+}
+
+int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
+{
+	// Status is OFFLINE
+	if(nLaserCommStatus == 0) 		
+	{
+		C3_User_Interface::Instance->pbLaserComms->Image = 
+			System::Drawing::Image::FromFile ("Offline.png");
+
+		Set_Laser_Com_Status(0);
+	}
+	// Status is ONLINE
+	else 	
+	{
+		C3_User_Interface::Instance->pbLaserComms->Image = 
+			System::Drawing::Image::FromFile ("Online.png");
+
+		Set_Laser_Com_Status(1);
+	}
+
 	return 0;
 }
 
@@ -202,3 +252,12 @@ void CDisplayManager::Update_Notification_Panel(int nAlertID)
 				L"INFORMATION: WENDE SYSTEM OPERATIONAL";
 	}
 }
+////////////////////////////////////////////////////////////////////////
+// Description: Disables all controls during POC demo				
+// Author:		Mike Payne
+////////////////////////////////////////////////////////////////////////
+void CDisplayManager::Disable_All_Controls(void)
+{
+	C3_User_Interface::Instance->cmdExport->Enabled = false;
+}
+

@@ -90,6 +90,9 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 	static char temp[512];
 	static int cameraStatusMessageCount = 0;
 
+    ////get a handle to the CDisplayManager
+    CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+
 	while(1)
 	{
 		// aquire the mutex
@@ -97,11 +100,9 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 		{
 			if (m_CameraStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-                ////get a handle to the CDisplayManager
-                CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
-
                 ////set camera state
                 dispman->Update_Camera_Subsystem_Indicator(m_CameraStatus->Status);
+				dispman->Update_Camera_Communication_Indicator(1);
 
 				// TODO: Remove once laser interface added.
 				dispman->Update_Laser_Activity_Indicator(m_CameraStatus->LaserOnOf);
@@ -120,7 +121,8 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 		}
 		else
 		{
-			// loss of comm
+			dispman->Update_Camera_Communication_Indicator(0);
+			dispman->Update_Overall_Status();
 		}
 	}
 
@@ -142,6 +144,9 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 	static char temp[512];
 	static int laserStatusMessageCount = 0;
 
+    ////get a handle to the CDisplayManager
+    CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+
 	while(1)
 	{
 		// aquire the mutex
@@ -149,10 +154,8 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 		{
 			if (m_LaserStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-                ////get a handle to the CDisplayManager
-                CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
-
 				dispman->Update_Laser_Subsystem_Indicator(m_LaserStatus->Status);
+				dispman->Update_Laser_Communication_Indicator(1);
 				dispman->Update_Overall_Status();
 
 				// Set the event
@@ -168,7 +171,8 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 		}
 		else
 		{
-			// loss of comm
+			dispman->Update_Laser_Communication_Indicator(0);
+			dispman->Update_Overall_Status();
 		}
 	}
 
