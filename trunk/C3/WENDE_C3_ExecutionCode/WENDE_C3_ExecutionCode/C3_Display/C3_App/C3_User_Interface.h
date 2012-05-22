@@ -108,7 +108,7 @@ namespace C3_App {
 
 
 	private: System::Windows::Forms::Panel^  pPPI;
-	private: System::Windows::Forms::Button^  cmdExport;
+	public: System::Windows::Forms::Button^  cmdExport;
 	private: System::Windows::Forms::GroupBox^  gbAlerts;
 	public: System::Windows::Forms::TextBox^  tbAlertsPanel;
 
