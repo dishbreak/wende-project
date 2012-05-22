@@ -173,7 +173,7 @@ public class SendMsg implements Runnable{
 					Thread.sleep( TRACKS_DELAY );
 				}
 				else {
-					int[][] targets = {{1,1},{100,100},{100,10}};
+					int[][] targets = {{1,1},{0,0},{100,10}};
 					int[][] lasers = {{22,54}};
 					tracksMsgReady = setTracks(System.currentTimeMillis(),this.sysStatus.OPERATIONAL,targets,lasers,true);	// setup tracks message
 				}					
