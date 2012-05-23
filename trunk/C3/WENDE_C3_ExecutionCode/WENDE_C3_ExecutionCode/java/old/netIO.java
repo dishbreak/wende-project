@@ -23,10 +23,6 @@ public class netIO{
 	
 	int count = 0;	// message counter
 	
-	long minTime = 0;
-	long maxTime = 0;
-	long avgTime = 0;
-	
 	ServerSocket serverSocket = null;
 	Socket clientSocket = null;
 	
@@ -336,7 +332,6 @@ public class netIO{
 					break;
 			}
 			if (cStatusIn != null) {
-				timeCalc(cStatusIn.getTime());
 				p("Server("+msgType+"): Time->" + cStatusIn.getTime());
 				p("Server("+msgType+"): Status->" + cStatusIn.getStatus());
 				p("Server("+msgType+"): Laser->" + cStatusIn.getLaserOn());
@@ -344,14 +339,12 @@ public class netIO{
 				error = false;
 			}
 			if (cTracksIn != null) {
-				timeCalc(cTracksIn.getTime());
 				p("Server("+msgType+"): Time->" + cTracksIn.getTime());
 				p("Server("+msgType+"): Status->" + cTracksIn.getStatus());
 				tCount++;
 				error = false;
 			}
 			if (cImageIn != null) {
-				timeCalc(cImageIn.getTime());
 				p("Server("+msgType+"): Time->" + cImageIn.getTime());
 				int channels = cImageIn.getChannels();
 				int sizeX = cImageIn.getSizeX();
@@ -387,27 +380,9 @@ public class netIO{
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		System.out.printf("\n\nStatus: %d\nTracks: %d\nImages: %d\n\n",sCount,tCount,iCount);
-		System.out.printf("\n\nMinTime: %d\nMaxTime: %d\nAvgTime: %d\n\n",minTime,maxTime,avgTime);
 		System.out.printf(" End Time : %d\nStart Time: %d\n -----------\n  Duration: %d\n",endTime,startTime,duration);
 	} // End Client method
 	
-	public void timeCalc(long msgTime)
-	{
-		long cTime = System.currentTimeMillis();
-		long eTime = cTime - msgTime;
-		if (eTime > maxTime) {
-			maxTime = eTime;
-		}
-		else if(0 < eTime && eTime < minTime)
-		{
-			minTime = eTime;
-		}
-		if (avgTime == 0) {
-			avgTime = eTime;
-		}
-		avgTime = ( avgTime + eTime ) / 2;
-			
-	}
 	public void p(String printString)
 	{
 		if(VERBOSE)
