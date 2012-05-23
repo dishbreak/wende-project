@@ -22,10 +22,12 @@
 #define INPUT_MODE_BIT2       1
 
 //output pins
-#define MOTOR_R_PIN           1
-#define MOTOR_L_PIN           1
+#define MOTOR_R_DIR           1
+#define MOTOR_L_DIR           1
 #define MOTOR_R_EN            1
 #define MOTOR_L_EN            1
+#define FORWARD   LOW
+#define REVERSE   HIGH
 
 //rover binary modes...
 #define INPUT_IDLE_MODE            0
@@ -34,6 +36,9 @@
 #define INPUT_SPIRAL_MODE          3
 #define INPUT_PASS_THROUGH_MODE    4
 #define INPUT_CRAWL_AND_STOP_MODE  5
+
+//rover delay...
+#define INIT_DELAY_CYCLES    200
 
 //setup inputs/outputs for the rover
 //link interrupt routines for encoders
@@ -47,5 +52,9 @@ int readLightSensor();
 
 //read the current rover mode from the binary switch
 int readRoverMode();
+
+//contorl left/right motors
+void setRightMotor(int val);
+void setLeftMotor(int val);
 
 #endif

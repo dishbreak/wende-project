@@ -1,12 +1,13 @@
 #include "RoverDefaults.h"
+#include "RoverInterfaces.h"
 #include "RoverProcessing.h"
 
 #include "Arduino.h"
 
 void setup()
 {
-  Serial.begin(9600);
-  analogReference(DEFAULT);
+  //setup rover inputs/outputs/interrupts/defaults
+  setupInterfaces();
 }
 
 void loop()

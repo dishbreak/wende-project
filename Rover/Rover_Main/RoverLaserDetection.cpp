@@ -14,7 +14,7 @@ static int Sensor_Offset = 0;
 static int ReInitCount = 0;
 static int offsetDirection = 0;
 
-void DetectionProcessing()
+boolean DetectionProcessing()
 {
     //0 - INIT
   //1 - SAMPLING/SATURATION ADJUSTMENTS, then detection
@@ -28,6 +28,8 @@ void DetectionProcessing()
   static int history_index = 0;
   
   static int hit_cycles = 0;
+  
+  boolean bDetected = false;
   
   switch (curr_state)
   {
@@ -125,10 +127,8 @@ void DetectionProcessing()
             {
               Serial.println("---DETECTION---");
               digitalWrite(12,HIGH);
-              while(1)
-              {
-                delay(100);
-              }
+              
+              bDetected = true;
             }
             else
             {
@@ -154,6 +154,7 @@ void DetectionProcessing()
       break;
   }
   //delay(100);
+  return bDetected;
 }
 
 int adjust_to_light_change(int photodetectorVal)

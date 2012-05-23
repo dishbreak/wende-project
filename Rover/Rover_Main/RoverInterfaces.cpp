@@ -26,14 +26,22 @@ void setupInterfaces()
   pinMode(INPUT_MODE_BIT2, INPUT);
   
   //setup outputs
-  pinMode(MOTOR_R_PIN, OUTPUT);
-  pinMode(MOTOR_L_PIN, OUTPUT);
+  pinMode(MOTOR_R_DIR, OUTPUT);
+  pinMode(MOTOR_L_DIR, OUTPUT);
   pinMode(MOTOR_R_EN, OUTPUT);
   pinMode(MOTOR_L_EN, OUTPUT);
   
   //set interrupt pull up resistors for consistancy
   digitalWrite(MOTOR_R_EN, HIGH);
   digitalWrite(MOTOR_L_EN, HIGH);
+  
+  //motor directions...
+  digitalWrite(MOTOR_R_DIR, REVERSE);
+  digitalWrite(MOTOR_L_DIR, FORWARD);
+  
+  //init motor speeds...
+  setRightMotor(0);
+  setRightMotor(0);
   
   //initialize interrupts
   attachInterrupt(0,              //timer0
@@ -78,3 +86,24 @@ int readRoverMode()
   
   return (int) (bit0 + (bit1 << 1) + (bit2 << 2));
 }
+
+/**
+* setRightMotor: 
+* Description: set right motor speed
+* @param val, new motor speed
+*/
+void setRightMotor(int val)
+{
+  analogWrite(MOTOR_R_EN, val);
+}
+
+/**
+* setLeftMotor: 
+* Description: set left motor speed
+* @param val, new motor speed
+*/
+void setLeftMotor(int val)
+{
+  analogWrite(MOTOR_L_EN, val);
+}
+  
