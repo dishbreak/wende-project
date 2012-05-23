@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='cameraMsgs.proto',
   package='cameraMsgs',
-  serialized_pb='\n\x10\x63\x61meraMsgs.proto\x12\ncameraMsgs\"n\n\x0c\x63\x61meraStatus\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x31\n\x06status\x18\x02 \x01(\x0e\x32\x18.cameraMsgs.systemStatus:\x07UNKNOWN\x12\x0f\n\x07laserOn\x18\x03 \x01(\x08\x12\x0c\n\x04text\x18\x04 \x01(\t\"\x1d\n\x05track\x12\t\n\x01x\x18\x01 \x01(\x11\x12\t\n\x01y\x18\x02 \x01(\x11\"\xa5\x01\n\x0c\x63\x61meraTracks\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x31\n\x06status\x18\x02 \x01(\x0e\x32\x18.cameraMsgs.systemStatus:\x07UNKNOWN\x12!\n\x06target\x18\x03 \x03(\x0b\x32\x11.cameraMsgs.track\x12 \n\x05laser\x18\x04 \x03(\x0b\x32\x11.cameraMsgs.track\x12\x0f\n\x07laserOn\x18\x05 \x01(\x08\"^\n\x0b\x63\x61meraImage\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x10\n\x08\x63hannels\x18\x02 \x01(\x11\x12\r\n\x05sizeX\x18\x03 \x01(\x11\x12\r\n\x05sizeY\x18\x04 \x01(\x11\x12\x11\n\timageData\x18\x05 \x01(\x0c*{\n\x0csystemStatus\x12\x0f\n\x0b\x43\x41MERA_DOWN\x10\x00\x12\x10\n\x0c\x43\x41MERA_READY\x10\x01\x12\x16\n\x12\x43\x41MERA_OPERATIONAL\x10\x02\x12\x10\n\x0c\x43\x41MERA_ERROR\x10\x03\x12\x11\n\rCAMERA_FAILED\x10\x04\x12\x0b\n\x07UNKNOWN\x10\x05')
+  serialized_pb='\n\x10\x63\x61meraMsgs.proto\x12\ncameraMsgs\"n\n\x0c\x63\x61meraStatus\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x31\n\x06status\x18\x02 \x01(\x0e\x32\x18.cameraMsgs.systemStatus:\x07UNKNOWN\x12\x0f\n\x07laserOn\x18\x03 \x01(\x08\x12\x0c\n\x04text\x18\x04 \x01(\t\"\x1d\n\x05track\x12\t\n\x01x\x18\x01 \x01(\x11\x12\t\n\x01y\x18\x02 \x01(\x11\"\xbc\x01\n\x0c\x63\x61meraTracks\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x31\n\x06status\x18\x02 \x01(\x0e\x32\x18.cameraMsgs.systemStatus:\x07UNKNOWN\x12!\n\x06target\x18\x03 \x03(\x0b\x32\x11.cameraMsgs.track\x12 \n\x05laser\x18\x04 \x03(\x0b\x32\x11.cameraMsgs.track\x12\x0f\n\x07laserOn\x18\x05 \x01(\x08\x12\x15\n\rroverDetected\x18\x06 \x01(\x08\"^\n\x0b\x63\x61meraImage\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x10\n\x08\x63hannels\x18\x02 \x01(\x11\x12\r\n\x05sizeX\x18\x03 \x01(\x11\x12\r\n\x05sizeY\x18\x04 \x01(\x11\x12\x11\n\timageData\x18\x05 \x01(\x0c*{\n\x0csystemStatus\x12\x0f\n\x0b\x43\x41MERA_DOWN\x10\x00\x12\x10\n\x0c\x43\x41MERA_READY\x10\x01\x12\x16\n\x12\x43\x41MERA_OPERATIONAL\x10\x02\x12\x10\n\x0c\x43\x41MERA_ERROR\x10\x03\x12\x11\n\rCAMERA_FAILED\x10\x04\x12\x0b\n\x07UNKNOWN\x10\x05')
 
 _SYSTEMSTATUS = descriptor.EnumDescriptor(
   name='systemStatus',
@@ -46,8 +46,8 @@ _SYSTEMSTATUS = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=439,
-  serialized_end=562,
+  serialized_start=462,
+  serialized_end=585,
 )
 
 
@@ -186,6 +186,13 @@ _CAMERATRACKS = descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    descriptor.FieldDescriptor(
+      name='roverDetected', full_name='cameraMsgs.cameraTracks.roverDetected', index=5,
+      number=6, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -196,7 +203,7 @@ _CAMERATRACKS = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=176,
-  serialized_end=341,
+  serialized_end=364,
 )
 
 
@@ -251,8 +258,8 @@ _CAMERAIMAGE = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=343,
-  serialized_end=437,
+  serialized_start=366,
+  serialized_end=460,
 )
 
 _CAMERASTATUS.fields_by_name['status'].enum_type = _SYSTEMSTATUS

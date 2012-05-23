@@ -1073,6 +1073,10 @@ public final class CameraMsgs {
     // optional bool laserOn = 5;
     boolean hasLaserOn();
     boolean getLaserOn();
+    
+    // optional bool roverDetected = 6;
+    boolean hasRoverDetected();
+    boolean getRoverDetected();
   }
   public static final class cameraTracks extends
       com.google.protobuf.GeneratedMessage
@@ -1175,12 +1179,23 @@ public final class CameraMsgs {
       return laserOn_;
     }
     
+    // optional bool roverDetected = 6;
+    public static final int ROVERDETECTED_FIELD_NUMBER = 6;
+    private boolean roverDetected_;
+    public boolean hasRoverDetected() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    public boolean getRoverDetected() {
+      return roverDetected_;
+    }
+    
     private void initFields() {
       time_ = 0L;
       status_ = cameraMsgs.CameraMsgs.systemStatus.UNKNOWN;
       target_ = java.util.Collections.emptyList();
       laser_ = java.util.Collections.emptyList();
       laserOn_ = false;
+      roverDetected_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1208,6 +1223,9 @@ public final class CameraMsgs {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBool(5, laserOn_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBool(6, roverDetected_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1237,6 +1255,10 @@ public final class CameraMsgs {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(5, laserOn_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(6, roverDetected_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1382,6 +1404,8 @@ public final class CameraMsgs {
         }
         laserOn_ = false;
         bitField0_ = (bitField0_ & ~0x00000010);
+        roverDetected_ = false;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
       
@@ -1450,6 +1474,10 @@ public final class CameraMsgs {
           to_bitField0_ |= 0x00000004;
         }
         result.laserOn_ = laserOn_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.roverDetected_ = roverDetected_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1527,6 +1555,9 @@ public final class CameraMsgs {
         if (other.hasLaserOn()) {
           setLaserOn(other.getLaserOn());
         }
+        if (other.hasRoverDetected()) {
+          setRoverDetected(other.getRoverDetected());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -1589,6 +1620,11 @@ public final class CameraMsgs {
             case 40: {
               bitField0_ |= 0x00000010;
               laserOn_ = input.readBool();
+              break;
+            }
+            case 48: {
+              bitField0_ |= 0x00000020;
+              roverDetected_ = input.readBool();
               break;
             }
           }
@@ -2031,6 +2067,27 @@ public final class CameraMsgs {
       public Builder clearLaserOn() {
         bitField0_ = (bitField0_ & ~0x00000010);
         laserOn_ = false;
+        onChanged();
+        return this;
+      }
+      
+      // optional bool roverDetected = 6;
+      private boolean roverDetected_ ;
+      public boolean hasRoverDetected() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      public boolean getRoverDetected() {
+        return roverDetected_;
+      }
+      public Builder setRoverDetected(boolean value) {
+        bitField0_ |= 0x00000020;
+        roverDetected_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearRoverDetected() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        roverDetected_ = false;
         onChanged();
         return this;
       }
@@ -2648,17 +2705,17 @@ public final class CameraMsgs {
       "Status\022\014\n\004time\030\001 \001(\003\0221\n\006status\030\002 \001(\0162\030.c" +
       "ameraMsgs.systemStatus:\007UNKNOWN\022\017\n\007laser" +
       "On\030\003 \001(\010\022\014\n\004text\030\004 \001(\t\"\035\n\005track\022\t\n\001x\030\001 \001" +
-      "(\021\022\t\n\001y\030\002 \001(\021\"\245\001\n\014cameraTracks\022\014\n\004time\030\001" +
+      "(\021\022\t\n\001y\030\002 \001(\021\"\274\001\n\014cameraTracks\022\014\n\004time\030\001" +
       " \001(\003\0221\n\006status\030\002 \001(\0162\030.cameraMsgs.system" +
       "Status:\007UNKNOWN\022!\n\006target\030\003 \003(\0132\021.camera" +
       "Msgs.track\022 \n\005laser\030\004 \003(\0132\021.cameraMsgs.t" +
-      "rack\022\017\n\007laserOn\030\005 \001(\010\"^\n\013cameraImage\022\014\n\004" +
-      "time\030\001 \001(\003\022\020\n\010channels\030\002 \001(\021\022\r\n\005sizeX\030\003 ",
-      "\001(\021\022\r\n\005sizeY\030\004 \001(\021\022\021\n\timageData\030\005 \001(\014*{\n" +
-      "\014systemStatus\022\017\n\013CAMERA_DOWN\020\000\022\020\n\014CAMERA" +
-      "_READY\020\001\022\026\n\022CAMERA_OPERATIONAL\020\002\022\020\n\014CAME" +
-      "RA_ERROR\020\003\022\021\n\rCAMERA_FAILED\020\004\022\013\n\007UNKNOWN" +
-      "\020\005"
+      "rack\022\017\n\007laserOn\030\005 \001(\010\022\025\n\rroverDetected\030\006" +
+      " \001(\010\"^\n\013cameraImage\022\014\n\004time\030\001 \001(\003\022\020\n\010cha",
+      "nnels\030\002 \001(\021\022\r\n\005sizeX\030\003 \001(\021\022\r\n\005sizeY\030\004 \001(" +
+      "\021\022\021\n\timageData\030\005 \001(\014*{\n\014systemStatus\022\017\n\013" +
+      "CAMERA_DOWN\020\000\022\020\n\014CAMERA_READY\020\001\022\026\n\022CAMER" +
+      "A_OPERATIONAL\020\002\022\020\n\014CAMERA_ERROR\020\003\022\021\n\rCAM" +
+      "ERA_FAILED\020\004\022\013\n\007UNKNOWN\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2686,7 +2743,7 @@ public final class CameraMsgs {
           internal_static_cameraMsgs_cameraTracks_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_cameraMsgs_cameraTracks_descriptor,
-              new java.lang.String[] { "Time", "Status", "Target", "Laser", "LaserOn", },
+              new java.lang.String[] { "Time", "Status", "Target", "Laser", "LaserOn", "RoverDetected", },
               cameraMsgs.CameraMsgs.cameraTracks.class,
               cameraMsgs.CameraMsgs.cameraTracks.Builder.class);
           internal_static_cameraMsgs_cameraImage_descriptor =

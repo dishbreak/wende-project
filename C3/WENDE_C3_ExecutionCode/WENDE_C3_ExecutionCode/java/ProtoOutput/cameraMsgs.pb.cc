@@ -75,12 +75,13 @@ void protobuf_AssignDesc_cameraMsgs_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(track));
   cameraTracks_descriptor_ = file->message_type(2);
-  static const int cameraTracks_offsets_[5] = {
+  static const int cameraTracks_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cameraTracks, time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cameraTracks, status_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cameraTracks, target_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cameraTracks, laser_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cameraTracks, laseron_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cameraTracks, roverdetected_),
   };
   cameraTracks_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -159,17 +160,17 @@ void protobuf_AddDesc_cameraMsgs_2eproto() {
     "Status\022\014\n\004time\030\001 \001(\003\0221\n\006status\030\002 \001(\0162\030.c"
     "ameraMsgs.systemStatus:\007UNKNOWN\022\017\n\007laser"
     "On\030\003 \001(\010\022\014\n\004text\030\004 \001(\t\"\035\n\005track\022\t\n\001x\030\001 \001"
-    "(\021\022\t\n\001y\030\002 \001(\021\"\245\001\n\014cameraTracks\022\014\n\004time\030\001"
+    "(\021\022\t\n\001y\030\002 \001(\021\"\274\001\n\014cameraTracks\022\014\n\004time\030\001"
     " \001(\003\0221\n\006status\030\002 \001(\0162\030.cameraMsgs.system"
     "Status:\007UNKNOWN\022!\n\006target\030\003 \003(\0132\021.camera"
     "Msgs.track\022 \n\005laser\030\004 \003(\0132\021.cameraMsgs.t"
-    "rack\022\017\n\007laserOn\030\005 \001(\010\"^\n\013cameraImage\022\014\n\004"
-    "time\030\001 \001(\003\022\020\n\010channels\030\002 \001(\021\022\r\n\005sizeX\030\003 "
-    "\001(\021\022\r\n\005sizeY\030\004 \001(\021\022\021\n\timageData\030\005 \001(\014*{\n"
-    "\014systemStatus\022\017\n\013CAMERA_DOWN\020\000\022\020\n\014CAMERA"
-    "_READY\020\001\022\026\n\022CAMERA_OPERATIONAL\020\002\022\020\n\014CAME"
-    "RA_ERROR\020\003\022\021\n\rCAMERA_FAILED\020\004\022\013\n\007UNKNOWN"
-    "\020\005", 562);
+    "rack\022\017\n\007laserOn\030\005 \001(\010\022\025\n\rroverDetected\030\006"
+    " \001(\010\"^\n\013cameraImage\022\014\n\004time\030\001 \001(\003\022\020\n\010cha"
+    "nnels\030\002 \001(\021\022\r\n\005sizeX\030\003 \001(\021\022\r\n\005sizeY\030\004 \001("
+    "\021\022\021\n\timageData\030\005 \001(\014*{\n\014systemStatus\022\017\n\013"
+    "CAMERA_DOWN\020\000\022\020\n\014CAMERA_READY\020\001\022\026\n\022CAMER"
+    "A_OPERATIONAL\020\002\022\020\n\014CAMERA_ERROR\020\003\022\021\n\rCAM"
+    "ERA_FAILED\020\004\022\013\n\007UNKNOWN\020\005", 585);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "cameraMsgs.proto", &protobuf_RegisterTypes);
   cameraStatus::default_instance_ = new cameraStatus();
@@ -812,6 +813,7 @@ const int cameraTracks::kStatusFieldNumber;
 const int cameraTracks::kTargetFieldNumber;
 const int cameraTracks::kLaserFieldNumber;
 const int cameraTracks::kLaserOnFieldNumber;
+const int cameraTracks::kRoverDetectedFieldNumber;
 #endif  // !_MSC_VER
 
 cameraTracks::cameraTracks()
@@ -833,6 +835,7 @@ void cameraTracks::SharedCtor() {
   time_ = GOOGLE_LONGLONG(0);
   status_ = 5;
   laseron_ = false;
+  roverdetected_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -870,6 +873,7 @@ void cameraTracks::Clear() {
     time_ = GOOGLE_LONGLONG(0);
     status_ = 5;
     laseron_ = false;
+    roverdetected_ = false;
   }
   target_.Clear();
   laser_.Clear();
@@ -961,6 +965,22 @@ bool cameraTracks::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(48)) goto parse_roverDetected;
+        break;
+      }
+      
+      // optional bool roverDetected = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_roverDetected:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &roverdetected_)));
+          set_has_roverdetected();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1011,6 +1031,11 @@ void cameraTracks::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->laseron(), output);
   }
   
+  // optional bool roverDetected = 6;
+  if (has_roverdetected()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->roverdetected(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1049,6 +1074,11 @@ void cameraTracks::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->laseron(), target);
   }
   
+  // optional bool roverDetected = 6;
+  if (has_roverdetected()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->roverdetected(), target);
+  }
+  
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1075,6 +1105,11 @@ int cameraTracks::ByteSize() const {
     
     // optional bool laserOn = 5;
     if (has_laseron()) {
+      total_size += 1 + 1;
+    }
+    
+    // optional bool roverDetected = 6;
+    if (has_roverdetected()) {
       total_size += 1 + 1;
     }
     
@@ -1132,6 +1167,9 @@ void cameraTracks::MergeFrom(const cameraTracks& from) {
     if (from.has_laseron()) {
       set_laseron(from.laseron());
     }
+    if (from.has_roverdetected()) {
+      set_roverdetected(from.roverdetected());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1160,6 +1198,7 @@ void cameraTracks::Swap(cameraTracks* other) {
     target_.Swap(&other->target_);
     laser_.Swap(&other->laser_);
     std::swap(laseron_, other->laseron_);
+    std::swap(roverdetected_, other->roverdetected_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -369,6 +369,13 @@ class cameraTracks : public ::google::protobuf::Message {
   inline bool laseron() const;
   inline void set_laseron(bool value);
   
+  // optional bool roverDetected = 6;
+  inline bool has_roverdetected() const;
+  inline void clear_roverdetected();
+  static const int kRoverDetectedFieldNumber = 6;
+  inline bool roverdetected() const;
+  inline void set_roverdetected(bool value);
+  
   // @@protoc_insertion_point(class_scope:cameraMsgs.cameraTracks)
  private:
   inline void set_has_time();
@@ -377,17 +384,20 @@ class cameraTracks : public ::google::protobuf::Message {
   inline void clear_has_status();
   inline void set_has_laseron();
   inline void clear_has_laseron();
+  inline void set_has_roverdetected();
+  inline void clear_has_roverdetected();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
   ::google::protobuf::int64 time_;
   ::google::protobuf::RepeatedPtrField< ::cameraMsgs::track > target_;
+  ::google::protobuf::RepeatedPtrField< ::cameraMsgs::track > laser_;
   int status_;
   bool laseron_;
-  ::google::protobuf::RepeatedPtrField< ::cameraMsgs::track > laser_;
+  bool roverdetected_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
   
   friend void  protobuf_AddDesc_cameraMsgs_2eproto();
   friend void protobuf_AssignDesc_cameraMsgs_2eproto();
@@ -821,6 +831,28 @@ inline bool cameraTracks::laseron() const {
 inline void cameraTracks::set_laseron(bool value) {
   set_has_laseron();
   laseron_ = value;
+}
+
+// optional bool roverDetected = 6;
+inline bool cameraTracks::has_roverdetected() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void cameraTracks::set_has_roverdetected() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void cameraTracks::clear_has_roverdetected() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void cameraTracks::clear_roverdetected() {
+  roverdetected_ = false;
+  clear_has_roverdetected();
+}
+inline bool cameraTracks::roverdetected() const {
+  return roverdetected_;
+}
+inline void cameraTracks::set_roverdetected(bool value) {
+  set_has_roverdetected();
+  roverdetected_ = value;
 }
 
 // -------------------------------------------------------------------
