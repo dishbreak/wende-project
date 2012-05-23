@@ -29,6 +29,7 @@ message cameraTracks {
 
 	repeated track laser = 4;
 	optional bool laserOn = 5;
+	optional bool roverDetected = 6;
 }
 
 message cameraImage {
