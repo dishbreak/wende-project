@@ -1,5 +1,7 @@
 package laserMsgs;
 
+option java_package = "com.laser";
+
 enum systemStatus {
 	LASER_DOWN = 0;
 	LASER_READY = 1;

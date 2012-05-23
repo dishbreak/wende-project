@@ -1,5 +1,7 @@
 package cameraMsgs;
 
+option java_package = "com.camera";
+
 message cameraStatus {
 	optional int64 time = 1;
 	optional systemStatus status = 2 [default = UNKNOWN];

@@ -170,7 +170,7 @@ void protobuf_AddDesc_cameraMsgs_2eproto() {
     "\021\022\021\n\timageData\030\005 \001(\014*{\n\014systemStatus\022\017\n\013"
     "CAMERA_DOWN\020\000\022\020\n\014CAMERA_READY\020\001\022\026\n\022CAMER"
     "A_OPERATIONAL\020\002\022\020\n\014CAMERA_ERROR\020\003\022\021\n\rCAM"
-    "ERA_FAILED\020\004\022\013\n\007UNKNOWN\020\005", 585);
+    "ERA_FAILED\020\004\022\013\n\007UNKNOWN\020\005B\014\n\ncom.camera", 599);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "cameraMsgs.proto", &protobuf_RegisterTypes);
   cameraStatus::default_instance_ = new cameraStatus();

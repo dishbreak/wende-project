@@ -134,7 +134,8 @@ void protobuf_AddDesc_laserMsgs_2eproto() {
     "\030\002 \001(\0132\017.laserMsgs.pose\022\017\n\007laserOn\030\003 \001(\010"
     "*v\n\014systemStatus\022\016\n\nLASER_DOWN\020\000\022\017\n\013LASE"
     "R_READY\020\001\022\025\n\021LASER_OPERATIONAL\020\002\022\017\n\013LASE"
-    "R_ERROR\020\003\022\020\n\014LASER_FAILED\020\004\022\013\n\007UNKNOWN\020\005", 360);
+    "R_ERROR\020\003\022\020\n\014LASER_FAILED\020\004\022\013\n\007UNKNOWN\020\005"
+    "B\013\n\tcom.laser", 373);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "laserMsgs.proto", &protobuf_RegisterTypes);
   laserStatus::default_instance_ = new laserStatus();
