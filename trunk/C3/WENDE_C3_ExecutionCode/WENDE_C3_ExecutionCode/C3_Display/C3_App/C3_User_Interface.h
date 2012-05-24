@@ -112,6 +112,8 @@ namespace C3_App {
 	private: System::Windows::Forms::GroupBox^  gbAlerts;
 	public: System::Windows::Forms::TextBox^  tbAlertsPanel;
 
+	public: 
+
 	//private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
 
 
@@ -543,7 +545,11 @@ namespace C3_App {
 
 				 // Draw Contact (rover)
 
-				 int nTriangleCenterX = pPPI->Width / 2;
+				 System::Drawing::Image^ roverContact = System::Drawing::Image::FromFile( "delta.png" );
+				 int roverContactX = pPPI->Width / 2 - (roverContact->Width / 2);
+				 int roverContactY = pPPI->Height / 2 - (roverContact->Height / 2);
+				 g->DrawImage(roverContact, roverContactX, roverContactY);
+				 /*int nTriangleCenterX = pPPI->Width / 2;
 				 int nTriangleCenterY = pPPI->Height / 2;
 
 				 Point point1 = Point(nTriangleCenterX - 10, nTriangleCenterY + 10);
@@ -555,6 +561,8 @@ namespace C3_App {
 
 				 array<Point>^ Triangle = {point1, point2, point3};
 				 g->DrawPolygon(greenPen, Triangle);
+
+				 g->*/
 				 
 			 }	  
 
