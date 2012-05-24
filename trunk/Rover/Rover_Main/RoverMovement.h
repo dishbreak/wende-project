@@ -14,6 +14,22 @@
 #include "Arduino.h"
 #include "RoverMotorController.h"
 
+// Definitions for how each movement mode is represented with an int
+#define fast_mode		1
+#define slow_mode		2
+#define crawl_stop_mode 3
+#define pass_thru_mode  4
+#define spiral_mode		5
+
+#define fast_Kp			0.2
+#define fast_Ki			0.001
+#define fast_Kd			0
+#define slow_Kp			0.15
+#define slow_Ki			0.0009
+#define slow_Kd			0
+#define fast_speed		200 // mm/s
+#define slow_speed		50  // mm/s
+
 //main rover movement routine
 void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMotor);
 
