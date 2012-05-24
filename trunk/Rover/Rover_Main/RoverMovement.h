@@ -12,8 +12,9 @@
 #define RoverMovement_h
 
 #include "Arduino.h"
+#include "RoverMotorController.h"
 
 //main rover movement routine
-void RoverMovementRoutines(int mode);
+void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMotor);
 
 #endif
