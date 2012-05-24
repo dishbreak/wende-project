@@ -61,3 +61,17 @@ void RoverProcessingRoutines()
       break;
   }
 }
+
+/********************************************************************
+name: 	mode_over
+inputs: int move_time - time in ms the rover has spent moving
+						not including in place spin
+		int mode - the current movement mode the rovers is in
+output: bool - if the trial is past its max time
+description: checks if the Rover had exceeded the maximum movement 
+			  time for it's current mode.
+********************************************************************/
+bool mode_over(int move_time, int mode){
+
+
+}
