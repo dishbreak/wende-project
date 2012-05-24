@@ -1,16 +1,6 @@
 #include "RoverMovement.h"
 #include "RoverMotorController.h"
 
-
-// Move these to .h file
-// Definitions for how each movement mode is represented with an int
-#define fast_mode		1
-#define slow_mode		2
-#define crawl_stop_mode 3
-#define pass_thru_mode  4
-#define spiral_mode		5
-
-
 /**
 * RoverMovementRoutines: 
 * inputs: int mode - The current movement mode
@@ -21,31 +11,72 @@
 */
 void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMotor) {
 
+	//todo: make spin time random
+	//todo: determine the max distance/time for each mode then add code to shutdown rover if exceeded
+	
 	static int init = 1; // if 1 we intitalize function
-	//todo: make this random
-	static int spin_time = 5; // time to spin in place (in ms)
+	static int spin_time = 5000; // time to spin in place (in ms)
 	
 	if (init == 1) {
 		move_start = milli(); // get the current time and save it to track movement time (in ms)
 		init = 0; // only init once
+		
+		// initialize motor struct parameters (rob - is this necessary here??)
+		leftMotor->cumError = 0;
+		leftMotor->lastError = 0;
+		rightMotor->cumError = 0;
+		rightMotor->lastError = 0;
 	}
 	
 	move time = milli() - move_start; // compute the current time spent moving
 	
+	
+	
+	
 	//if we are in a mode that needs to spin and we have not spun long enough
 	if ((mode == fast_mode || mode == slow_mode || mode == crawl_stop_mode) && (move_time < spin_time)) {
-		//set motor paramaters so the rover will spin
+		// Left Motor
+		leftMotor->Kp = fast_Kp; // proportional gain value
+		leftMotor->Ki = fast_Ki; // integrative gain value
+		leftMotor->Kd = fast_Kd; // derivative gain value
+		leftMotor->targetSpeed = fast_speed;
+		//Right Motor
+		rightMotor->Kp = fast_Kp; // proportional gain value
+		rightMotor->Ki = fast_Ki; // integrative gain value
+		rightMotor->Kd = fast_Kd; // derivative gain value
+		rightMotor->targetSpeed = -fast_speed;
 	}
+	
 	else if (mode == spiral_mode) {
 		// set motor parameters to spiral 
 		// need to know current time
 	}
+	//move straight at a fast speed
 	else if (mode == fast_mode) {
-		//move straight at a fast speed
+		// Left Motor
+		leftMotor->Kp = fast_Kp; // proportional gain value
+		leftMotor->Ki = fast_Ki; // integrative gain value
+		leftMotor->Kd = fast_Kd; // derivative gain value
+		leftMotor->targetSpeed = fast_speed;
+		//Right Motor
+		rightMotor->Kp = fast_Kp; // proportional gain value
+		rightMotor->Ki = fast_Ki; // integrative gain value
+		rightMotor->Kd = fast_Kd; // derivative gain value
+		rightMotor->targetSpeed = fast_speed;
 	}
-	// else, we are in a mode that requires straight, slow movement
+	
+	// else, we are in a mode that requires straight, slow movement (slow mode, crawl&stop, pass through)
 	else {
-		// move staight at a slow speed
+		// Left Motor
+		leftMotor->Kp = slow_Kp; // proportional gain value
+		leftMotor->Ki = slow_Ki; // integrative gain value
+		leftMotor->Kd = slow_Kd; // derivative gain value
+		leftMotor->targetSpeed = slow_speed;
+		//Right Motor
+		rightMotor->Kp = slow_Kp; // proportional gain value
+		rightMotor->Ki = slow_Ki; // integrative gain value
+		rightMotor->Kd = slow_Kd; // derivative gain value
+		rightMotor->targetSpeed = slow_speed;
 	}
 	
 }
