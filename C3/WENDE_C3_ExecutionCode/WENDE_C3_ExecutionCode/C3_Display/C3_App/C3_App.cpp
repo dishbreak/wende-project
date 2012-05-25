@@ -8,10 +8,14 @@
 #include <process.h>
 
 using namespace C3_App;
+//globals--for now
+int roverContactX = 0;
+int roverContactY = 0;
 
 [STAThreadAttribute]
 int main(array<System::String ^> ^args)
 {
+
 	//Fist call to configuration singleton
 	CGUIConfiguration::Instance();
 

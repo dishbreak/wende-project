@@ -107,7 +107,7 @@ namespace C3_App {
 	public: 
 
 
-	private: System::Windows::Forms::Panel^  pPPI;
+	public: System::Windows::Forms::Panel^  pPPI;
 	public: System::Windows::Forms::Button^  cmdExport;
 	private: System::Windows::Forms::GroupBox^  gbAlerts;
 	public: System::Windows::Forms::TextBox^  tbAlertsPanel;
@@ -514,6 +514,9 @@ namespace C3_App {
 		}
 #pragma endregion
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+				 extern int roverContactX;
+				 extern int roverContactY;
+
 				 System::Drawing::Graphics^ g = e->Graphics;
 				 g->Clear(Color::White);
 
@@ -546,9 +549,9 @@ namespace C3_App {
 				 // Draw Contact (rover)
 
 				 System::Drawing::Image^ roverContact = System::Drawing::Image::FromFile( "delta.png" );
-				 int roverContactX = pPPI->Width / 2 - (roverContact->Width / 2);
-				 int roverContactY = pPPI->Height / 2 - (roverContact->Height / 2);
-				 g->DrawImage(roverContact, roverContactX, roverContactY);
+				 int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
+				 int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
+				 g->DrawImage(roverContact, x, y);
 				 /*int nTriangleCenterX = pPPI->Width / 2;
 				 int nTriangleCenterY = pPPI->Height / 2;
 
