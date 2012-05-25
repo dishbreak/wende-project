@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='laserMsgs.proto',
   package='laserMsgs',
-  serialized_pb='\n\x0flaserMsgs.proto\x12\tlaserMsgs\"[\n\x0blaserStatus\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x30\n\x06status\x18\x02 \x01(\x0e\x32\x17.laserMsgs.systemStatus:\x07UNKNOWN\x12\x0c\n\x04text\x18\x03 \x01(\t\"(\n\x04pose\x12\x0f\n\x07pulseAZ\x18\x01 \x01(\r\x12\x0f\n\x07pulseEL\x18\x02 \x01(\r\"K\n\tlaserPose\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x1f\n\x06target\x18\x02 \x01(\x0b\x32\x0f.laserMsgs.pose\x12\x0f\n\x07laserOn\x18\x03 \x01(\x08*v\n\x0csystemStatus\x12\x0e\n\nLASER_DOWN\x10\x00\x12\x0f\n\x0bLASER_READY\x10\x01\x12\x15\n\x11LASER_OPERATIONAL\x10\x02\x12\x0f\n\x0bLASER_ERROR\x10\x03\x12\x10\n\x0cLASER_FAILED\x10\x04\x12\x0b\n\x07UNKNOWN\x10\x05\x42\x0b\n\tcom.laser')
+  serialized_pb='\n\x0flaserMsgs.proto\x12\tlaserMsgs\"{\n\x0blaserStatus\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x0e\n\x06PMW_AZ\x18\x02 \x01(\x03\x12\x0e\n\x06PMW_EL\x18\x03 \x01(\x03\x12\x30\n\x06status\x18\x04 \x01(\x0e\x32\x17.laserMsgs.systemStatus:\x07UNKNOWN\x12\x0c\n\x04text\x18\x05 \x01(\t\"(\n\x04pose\x12\x0f\n\x07pulseAZ\x18\x01 \x01(\r\x12\x0f\n\x07pulseEL\x18\x02 \x01(\r\"K\n\tlaserPose\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x1f\n\x06target\x18\x02 \x01(\x0b\x32\x0f.laserMsgs.pose\x12\x0f\n\x07laserOn\x18\x03 \x01(\x08*v\n\x0csystemStatus\x12\x0e\n\nLASER_DOWN\x10\x00\x12\x0f\n\x0bLASER_READY\x10\x01\x12\x15\n\x11LASER_OPERATIONAL\x10\x02\x12\x0f\n\x0bLASER_ERROR\x10\x03\x12\x10\n\x0cLASER_FAILED\x10\x04\x12\x0b\n\x07UNKNOWN\x10\x05\x42\x0b\n\tcom.laser')
 
 _SYSTEMSTATUS = descriptor.EnumDescriptor(
   name='systemStatus',
@@ -46,8 +46,8 @@ _SYSTEMSTATUS = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=242,
-  serialized_end=360,
+  serialized_start=274,
+  serialized_end=392,
 )
 
 
@@ -75,15 +75,29 @@ _LASERSTATUS = descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='status', full_name='laserMsgs.laserStatus.status', index=1,
-      number=2, type=14, cpp_type=8, label=1,
+      name='PMW_AZ', full_name='laserMsgs.laserStatus.PMW_AZ', index=1,
+      number=2, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='PMW_EL', full_name='laserMsgs.laserStatus.PMW_EL', index=2,
+      number=3, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='status', full_name='laserMsgs.laserStatus.status', index=3,
+      number=4, type=14, cpp_type=8, label=1,
       has_default_value=True, default_value=5,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='text', full_name='laserMsgs.laserStatus.text', index=2,
-      number=3, type=9, cpp_type=9, label=1,
+      name='text', full_name='laserMsgs.laserStatus.text', index=4,
+      number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -98,7 +112,7 @@ _LASERSTATUS = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=30,
-  serialized_end=121,
+  serialized_end=153,
 )
 
 
@@ -132,8 +146,8 @@ _POSE = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=123,
-  serialized_end=163,
+  serialized_start=155,
+  serialized_end=195,
 )
 
 
@@ -174,8 +188,8 @@ _LASERPOSE = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=165,
-  serialized_end=240,
+  serialized_start=197,
+  serialized_end=272,
 )
 
 _LASERSTATUS.fields_by_name['status'].enum_type = _SYSTEMSTATUS
