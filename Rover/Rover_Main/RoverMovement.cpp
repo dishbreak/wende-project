@@ -1,5 +1,6 @@
 #include "RoverMovement.h"
 #include "RoverMotorController.h"
+#include "RoverInterfaces.h"
 
 /**
 * RoverMovementRoutines: 
@@ -10,11 +11,12 @@
 * Description: Main execution of rover movement modes
 */
 void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMotor) {
-
-	//todo: initialize random generator
 	
 	static int init = 1; // if 1 we initialize function
-	static int spin_time = 0; // time to spin in place (in ms)
+	static unsigned long spin_time = 0; // time to spin in place (in ms)
+	unsigned long move_time; // time since movement start (ms)
+	unsigned long move_start; // initial movement time (ms)
+	unsigned long seed; // seed for the PRNG
 	
 	if (init == 1) {
 		init = 0; // only init once
@@ -24,7 +26,9 @@ void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMot
 			spin_time = 0;
 		}
 		else{
-			randomSeed(  TBD  ); // make this read an unconnected pin???
+			seed = (unsigned long)readLightSensor() + (unsigned long)readLaserDetector() + 
+					(unsigned long)mode + millis() + micros(); // attempt to get some randomness...
+			randomSeed(  seed  ); 
 			spin_time = random(1, 20); // random number between 1 and 20 seconds 
 			spin_time *= 1000; // convert to ms
 		}
@@ -35,10 +39,10 @@ void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMot
 		rightMotor->cumError = 0;
 		rightMotor->lastError = 0;
 		
-		move_start = milli(); //get the current time and save it to track movement time (in ms)
+		move_start = millis(); //get the current time and save it to track movement time (in ms)
 	}
 	
-	move_time = milli() - move_start; // compute the current time spent moving
+	move_time = millis() - move_start; // compute the current time spent moving
 	
 	
 	
@@ -107,7 +111,7 @@ void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMot
 
 /********************************************************************
 name: 	mode_over
-inputs: int move_time - time in ms the rover has spent moving
+inputs: unsigned long move_time - time in ms the rover has spent moving
 						not including in place spin
 		int mode - the current movement mode the rovers is in
 
@@ -117,7 +121,7 @@ output: int - 0 if the trial is not past its max time, 1 if it is,
 description: checks if the Rover had exceeded the maximum movement 
 			 time for it's current mode.
 ********************************************************************/
-int mode_over(int move_time, int mode){
+int mode_over(unsigned long move_time, int mode){
 
 	int ret_val = 0;  // value to return
 	int max_time = 0; // maximum time allocated for a given mode

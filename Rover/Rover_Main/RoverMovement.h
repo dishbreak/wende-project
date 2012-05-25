@@ -39,6 +39,7 @@
 //main rover movement routine
 void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMotor);
 // determines if current mode has ran too long
-int mode_over(int move_time, int mode);
+int mode_over(unsigned long move_time, int mode);
+
 
 #endif
