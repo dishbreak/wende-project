@@ -31,7 +31,14 @@ CDisplayManager * CDisplayManager::getCDisplayManager()
 
 int CDisplayManager::Update_Rover_PPI_Position(int x, int y)
 {
+	//for now, just dump everything to the globals.
+	extern int roverContactX;
+	extern int roverContactY;
 
+	roverContactX = x;
+	roverContactY = y;
+
+	C3_User_Interface::Instance->pPPI->Invalidate();
 	return 0;
 }
 
