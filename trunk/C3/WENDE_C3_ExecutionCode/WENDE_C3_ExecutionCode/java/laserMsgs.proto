@@ -13,8 +13,10 @@ enum systemStatus {
 
 message laserStatus {
 	optional int64 time = 1;
-	optional systemStatus status = 2 [default = UNKNOWN];
-	optional string text = 3;
+	optional int64 PMW_AZ = 2;
+	optional int64 PMW_EL = 3;
+	optional systemStatus status = 4 [default = UNKNOWN];
+	optional string text = 5;
 }
 
 message pose {
