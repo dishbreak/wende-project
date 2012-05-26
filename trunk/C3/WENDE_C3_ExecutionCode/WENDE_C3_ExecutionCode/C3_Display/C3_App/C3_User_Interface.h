@@ -210,6 +210,7 @@ namespace C3_App {
 			// 
 			// pPPI
 			// 
+			this->pPPI->CausesValidation = false;
 			this->pPPI->Location = System::Drawing::Point(6, 19);
 			this->pPPI->Name = L"pPPI";
 			this->pPPI->Size = System::Drawing::Size(405, 320);
@@ -552,20 +553,6 @@ namespace C3_App {
 				 int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
 				 int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
 				 g->DrawImage(roverContact, x, y);
-				 /*int nTriangleCenterX = pPPI->Width / 2;
-				 int nTriangleCenterY = pPPI->Height / 2;
-
-				 Point point1 = Point(nTriangleCenterX - 10, nTriangleCenterY + 10);
-				 Point point2 = Point(nTriangleCenterX + 10, nTriangleCenterY + 10);
-				 Point point3 = Point(nTriangleCenterX, nTriangleCenterY - 10);
-
-				 Pen^ greenPen = gcnew Pen(Color::Green);
-				 greenPen->Width = 4;
-
-				 array<Point>^ Triangle = {point1, point2, point3};
-				 g->DrawPolygon(greenPen, Triangle);
-
-				 g->*/
 				 
 			 }	  
 
