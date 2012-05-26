@@ -192,8 +192,8 @@ UINT WINAPI TrackThread (LPVOID pParam)
 	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
 	else m_CameraTracks->ShmInfo.Clients++;
 
-	int x = 0;
-	int y = 0;
+	int x = 1;
+	int y = 1;
 
 	while(1)
 	{
@@ -210,8 +210,8 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				m_CameraTracks.ReleaseMutex();
 
 				// Will need to build this up to handle multiple tracks
-				x = sTrackMessage.Tracks->X;
-				y = sTrackMessage.Tracks->Y;
+				x += 1; //sTrackMessage.Tracks->X;
+				y += 1; //1sTrackMessage.Tracks->Y;
 
 				////get a handle to the CDisplayManager
                 CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
