@@ -1,5 +1,6 @@
 #pragma once
 #using <system.drawing.dll>
+#include "CPPIConfig.h"
 
 
 namespace C3_App {
@@ -20,6 +21,9 @@ namespace C3_App {
 	///          the designers will not be able to interact properly with localized
 	///          resources associated with this form.
 	/// </summary>
+
+	
+
 	public ref class C3_User_Interface : public System::Windows::Forms::Form
 	{
 	private:
@@ -104,10 +108,9 @@ namespace C3_App {
 	private: System::Windows::Forms::Label^  label4;
 	public: System::Windows::Forms::PictureBox^  pbLaserStatus;
 	public: System::Windows::Forms::PictureBox^  pbLaserComms;
-	public: 
 
-
-	public: System::Windows::Forms::Panel^  pPPI;
+	public: CPPIConfig^ pPPI;
+	//public: System::Windows::Forms::Panel^  pPPI;
 	public: System::Windows::Forms::Button^  cmdExport;
 	private: System::Windows::Forms::GroupBox^  gbAlerts;
 	public: System::Windows::Forms::TextBox^  tbAlertsPanel;
@@ -137,7 +140,8 @@ namespace C3_App {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
 			this->pPPIPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->pPPI = (gcnew System::Windows::Forms::Panel());
+			//this->pPPI = (gcnew System::Windows::Forms::Panel());
+			this->pPPI = (gcnew CPPIConfig());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->pbLiveFeed = (gcnew System::Windows::Forms::PictureBox());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
@@ -607,4 +611,5 @@ private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs
 		 }
 };
 }
+
 
