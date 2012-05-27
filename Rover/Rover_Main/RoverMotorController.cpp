@@ -2,6 +2,8 @@
 #include "RoverInterfaces.h"
 
 //used for encoders
+volatile boolean bLeftFwd = true;
+volatile boolean bRightFwd = true;
 volatile long LM_count = 0; // Interrupt variables should be volatile (stored in RAM)
 volatile long RM_count = 0;
 long oldLMcount = 0;
@@ -19,14 +21,60 @@ void RoverMotorRoutines(motor_data* leftMotor, motor_data* rightMotor)
   static unsigned long lastMilli = 0;
   
   if (millis()-lastMilli >= LOOP_TIME) {
+    
+    if(leftMotor->targetSpeed < 0)
+    {
+      leftMotor->targetSpeed = abs(leftMotor->targetSpeed);
+      
+      if(bLeftFwd)
+      {
+        bLeftFwd = false;
+        LM_count = 0;
+        oldLMcount = 0;
+        leftMotor->cumError = 0;
+        leftMotor->lastError = 0;
+      }
+    }
+    else if(leftMotor->targetSpeed > 0 && !bLeftFwd)
+    {
+      bLeftFwd = true;
+      LM_count = 0;
+      oldLMcount = 0;
+      leftMotor->cumError = 0;
+      leftMotor->lastError = 0;
+    }
+    
+    if(rightMotor->targetSpeed < 0)
+    {
+      rightMotor->targetSpeed = abs(rightMotor->targetSpeed);
+      
+      if(bRightFwd)
+      {
+        bRightFwd = false;
+        
+        RM_count = 0;
+        oldRMcount = 0;
+        rightMotor->cumError = 0;
+        rightMotor->lastError = 0;
+      }
+    }
+    else if(rightMotor->targetSpeed > 0 && !bRightFwd)
+    {
+      bRightFwd = true;
+      RM_count = 0;
+      oldRMcount = 0;
+      rightMotor->cumError = 0;
+      rightMotor->lastError = 0;
+    }
+    
     lastMilli = millis();
     leftMotor->measuredSpeed = calcLeftMotorSpeed();
     rightMotor->measuredSpeed = calcRightMotorSpeed();
 
     leftMotor->PWM_val = calcPWM(leftMotor);
     rightMotor->PWM_val = calcPWM(leftMotor);
-    setRightMotor(rightMotor->PWM_val);
-    setLeftMotor(leftMotor->PWM_val);
+    setRightMotor(bRightFwd,rightMotor->PWM_val);
+    setLeftMotor(bLeftFwd,leftMotor->PWM_val);
   }
 }
 
