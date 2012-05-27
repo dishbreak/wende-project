@@ -29,10 +29,10 @@
 #define INPUT_MODE_BIT2       1
 
 //output pins
-#define MOTOR_R_DIR           1
-#define MOTOR_L_DIR           1
-#define MOTOR_R_EN            1
-#define MOTOR_L_EN            1
+#define MOTOR_R_DIR           7
+#define MOTOR_L_DIR           4
+#define MOTOR_R_EN            6
+#define MOTOR_L_EN            5
 #define FORWARD   LOW
 #define REVERSE   HIGH
 

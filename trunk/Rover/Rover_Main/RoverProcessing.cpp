@@ -15,6 +15,7 @@ void RoverProcessingRoutines()
 {
   static int roverState = 0;
   static boolean bSuccess = false;
+  static boolean bMovementComplete = false;
   switch(roverState)
   {
     case ROVER_INIT_STATE:
@@ -30,12 +31,12 @@ void RoverProcessingRoutines()
       //perform rover movement mode here
       //also check for failure here
       //if deemed a failure stop here and move to done state
-      RoverMovementRoutines(roverMode, &leftMotor, &rightMotor);
+      bMovementComplete = RoverMovementRoutines(roverMode, &leftMotor, &rightMotor);
       
       //perform laser detection check
       bSuccess = DetectionProcessing();
       
-      if(bSuccess)
+      if(bSuccess || bMovementComplete)
       {
         roverState = ROVER_DONE_STATE;
         

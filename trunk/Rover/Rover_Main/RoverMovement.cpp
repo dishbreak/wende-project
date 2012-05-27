@@ -9,8 +9,9 @@
 *         motor_data* rightMotor - current paramaters for the right motor (struct)
 * outputs: leftMotor and rightMotor structs updated
 * Description: Main execution of rover movement modes
+* @return whether movement is complete or not...complete means possible failure.
 */
-void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMotor) {
+boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMotor) {
 	
 	static int init = 1; // if 1 we initialize function
 	static unsigned long spin_time = 0; // time to spin in place (in ms)
@@ -33,7 +34,7 @@ void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMot
 			spin_time *= 1000; // convert to ms
 		}
 		
-		// initialize motor struct parameters (rob - is this necessary here??)
+		// initialize motor struct parameters
 		leftMotor->cumError = 0;
 		leftMotor->lastError = 0;
 		rightMotor->cumError = 0;
@@ -102,10 +103,13 @@ void RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMot
 		}
 		// time over, shutdown motors
 		else{
-			rightMotor->targetSpeed = 0;
-			leftMotor->targetSpeed = 0;
+			//rightMotor->targetSpeed = 0;
+			//leftMotor->targetSpeed = 0;
+                        return 1;
 		}
 	}
+
+    return 0;
 	
 }
 
