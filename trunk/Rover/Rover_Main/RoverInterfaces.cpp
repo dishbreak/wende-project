@@ -40,8 +40,8 @@ void setupInterfaces()
   digitalWrite(MOTOR_L_DIR, FORWARD);
   
   //init motor speeds...
-  setRightMotor(0);
-  setRightMotor(0);
+  setRightMotor(FORWARD,0);
+  setRightMotor(FORWARD,0);
   
   //initialize interrupts
   attachInterrupt(0,              //timer0
@@ -92,8 +92,9 @@ int readRoverMode()
 * Description: set right motor speed
 * @param val, new motor speed
 */
-void setRightMotor(int val)
+void setRightMotor(int dir, int val)
 {
+  digitalWrite(MOTOR_R_DIR, !dir);
   analogWrite(MOTOR_R_EN, val);
 }
 
@@ -102,8 +103,9 @@ void setRightMotor(int val)
 * Description: set left motor speed
 * @param val, new motor speed
 */
-void setLeftMotor(int val)
+void setLeftMotor(int dir, int val)
 {
+  digitalWrite(MOTOR_L_DIR, dir);
   analogWrite(MOTOR_L_EN, val);
 }
   

@@ -142,7 +142,7 @@ int mode_over(unsigned long move_time, int mode){
 		max_time = spiral_stoptime;
 	}
 	else{ // invalid mode, exit function in error
-		return = -1;
+		return -1;
 	}
 	
 	if(move_time > max_time){

@@ -11,6 +11,13 @@
 
 #include "Arduino.h"
 
+//Rover DEMO flag - set to 1 if running a demo
+//Will bypass normal rover code functionality
+#define ROVER_DEMO_MODE	1
+
+//Rover debug flag...
+#define DEBUG  0
+
 //input pins
 #define PHOTO_DETECTOR_PIN    A0
 #define AMBIENT_LIGHTING_PIN  A1
@@ -54,7 +61,7 @@ int readLightSensor();
 int readRoverMode();
 
 //contorl left/right motors
-void setRightMotor(int val);
-void setLeftMotor(int val);
+void setRightMotor(int dir, int val);
+void setLeftMotor(int dir, int val);
 
 #endif

@@ -30,6 +30,7 @@ void RoverProcessingRoutines()
       //perform rover movement mode here
       //also check for failure here
       //if deemed a failure stop here and move to done state
+      RoverMovementRoutines(roverMode, &leftMotor, &rightMotor);
       
       //perform laser detection check
       bSuccess = DetectionProcessing();
