@@ -1,6 +1,5 @@
 #include "RoverInterfaces.h"
 #include "RoverMotorController.h"
-#include "RoverDefaults.h"
 
 /**
 * setupInterfaces: 

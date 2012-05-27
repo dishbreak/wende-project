@@ -1,4 +1,3 @@
-#include "RoverDefaults.h"
 #include "RoverInterfaces.h"
 #include "RoverProcessing.h"
 
