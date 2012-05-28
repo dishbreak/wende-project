@@ -16,9 +16,8 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 	static int init = 1; // if 1 we initialize function
 	static unsigned long spin_time = 0; // time to spin in place (in ms)
 	unsigned long move_time; // time since movement start (ms)
-	unsigned long move_start; // initial movement time (ms)
+	static unsigned long move_start; // initial movement time (ms)
 	unsigned long seed; // seed for the PRNG
-	
 	if (init == 1) {
 		init = 0; // only init once
 		
@@ -42,12 +41,9 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 		
 		move_start = millis(); //get the current time and save it to track movement time (in ms)
 	}
-	
+	//***MAY OVERFLOW, Consider updating***
 	move_time = millis() - move_start; // compute the current time spent moving
-	
-	
-	
-	
+		
 	//if we are in a mode that needs to spin and we have not spun long enough
 	if ((mode == fast_mode || mode == slow_mode || mode == crawl_mode) && (move_time < spin_time)) {
 		// Left Motor

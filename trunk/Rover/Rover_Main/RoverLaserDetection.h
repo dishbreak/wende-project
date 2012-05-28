@@ -23,7 +23,8 @@
 
 #define MAX_SAMPLES  1000
 
-
+#define SENSOR_OFFSET_BITS      8
+#define MAX_SENSOR_OFFSET       (2^SENSOR_OFFSET_BITS)-1
 #define SETTLING_CYCLES  100  //capacitors removed
 #define SETTLING_TIME  2      //2ms to settle...sigh
 

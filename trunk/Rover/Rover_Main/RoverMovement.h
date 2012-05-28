@@ -15,11 +15,11 @@
 #include "RoverMotorController.h"
 
 // Definitions for how each movement mode is represented with an int
-#define fast_mode		1
-#define slow_mode		2
-#define crawl_mode 		3
-#define pass_thru_mode  4
-#define spiral_mode		5
+#define fast_mode		INPUT_FAST_MODE
+#define slow_mode		INPUT_SLOW_MODE
+#define crawl_mode 		INPUT_CRAWL_AND_STOP_MODE
+#define pass_thru_mode          INPUT_PASS_THROUGH_MODE
+#define spiral_mode		INPUT_SPIRAL_MODE
 
 #define fast_Kp			0.2
 #define fast_Ki			0.001
