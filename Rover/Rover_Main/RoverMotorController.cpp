@@ -19,9 +19,9 @@ long oldRMcount = 0;
 void RoverMotorRoutines(motor_data* leftMotor, motor_data* rightMotor)
 {
   static unsigned long lastMilli = 0;
-  
+  //***OVERFLOW Condition not handled, Consider updating***  
   if (millis()-lastMilli >= LOOP_TIME) {
-    
+       
     if(leftMotor->targetSpeed < 0)
     {
       leftMotor->targetSpeed = abs(leftMotor->targetSpeed);
@@ -103,7 +103,10 @@ void incRightMotor()
 */
 int calcRightMotorSpeed()
 {
-  return (RM_count-oldRMcount)*SPEED_MULTIPLIER;
+  int SpeedValue;
+  SpeedValue = (RM_count-oldRMcount)*SPEED_MULTIPLIER;
+  oldLMcount = LM_count;
+  return SpeedValue;
 }
 
 /**
@@ -113,7 +116,10 @@ int calcRightMotorSpeed()
 */
 int calcLeftMotorSpeed()
 {
-  return (LM_count-oldLMcount)*SPEED_MULTIPLIER;
+  int SpeedValue;
+  SpeedValue = (LM_count-oldLMcount)*SPEED_MULTIPLIER;
+  oldLMcount = LM_count;
+  return SpeedValue;
 }
 
 //PWM speed

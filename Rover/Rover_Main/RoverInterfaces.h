@@ -16,19 +16,21 @@
 #define ROVER_DEMO_MODE	1
 
 //Rover debug flag...
-#define DEBUG  0
+#define DEBUG  1
 
 //input pins
 #define PHOTO_DETECTOR_PIN    A0
 #define AMBIENT_LIGHTING_PIN  A1
 #define ROVER_LED_PIN         1
-#define ENCODER_R_PIN         2
-#define ENCODER_L_PIN         3
-#define INPUT_MODE_BIT0       1
-#define INPUT_MODE_BIT1       1
-#define INPUT_MODE_BIT2       1
+#define ENCODER_L_PIN         2
+#define ENCODER_R_PIN         3
+#define INPUT_MODE_BIT0       10
+#define INPUT_MODE_BIT1       11
+#define INPUT_MODE_BIT2       12
 
 //output pins
+#define SENSOR_OFFSET_CLOCK   9
+#define SENSOR_OFFSET_DATA    8
 #define MOTOR_R_DIR           7
 #define MOTOR_L_DIR           4
 #define MOTOR_R_EN            6

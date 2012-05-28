@@ -83,7 +83,7 @@ boolean DetectionProcessing()
       }
     
       //check for saturation
-      if((curr_detector_value/10 < (200+offsetDirection) && Sensor_Offset != 31) || (curr_detector_value/10 > (900+offsetDirection) && Sensor_Offset !=0 )) 
+      if((curr_detector_value/10 < (200+offsetDirection) && Sensor_Offset != MAX_SENSOR_OFFSET) || (curr_detector_value/10 > (900+offsetDirection) && Sensor_Offset !=0 )) 
       {
         if(adjust_to_light_change(curr_detector_value/10) == 1)
         {
@@ -180,7 +180,7 @@ int adjust_to_light_change(int photodetectorVal)
     return 1;
   }
   //if we are near the bottom of the scale with this voltage step
-  else if (photodetectorVal < (200+offsetDirection) && Sensor_Offset != 31)
+  else if (photodetectorVal < (200+offsetDirection) && Sensor_Offset != MAX_SENSOR_OFFSET) //&& Sensor_Offset != 31) //now have 8 bit resolution
   {
     //move the step up one
     Sensor_Offset=Sensor_Offset+1;
@@ -194,8 +194,27 @@ int adjust_to_light_change(int photodetectorVal)
   return 0;
 }
 
+
 void Adjust_Current_Sync(int value)
 {
+  digitalWrite( SENSOR_OFFSET_CLOCK, LOW );
+  for(int i = 0; i < SENSOR_OFFSET_BITS; i++)
+  {
+    //Note this is reversed since the buffers inver the signal
+    if ( value & 1)
+    {
+      digitalWrite( SENSOR_OFFSET_DATA, LOW );
+    }
+    else
+    {
+      digitalWrite( SENSOR_OFFSET_DATA, HIGH );
+    }
+    //clock pulse, this is mighty fast
+    digitalWrite( SENSOR_OFFSET_CLOCK, HIGH );
+    value = value >> 1;
+    digitalWrite( SENSOR_OFFSET_CLOCK, LOW );
+  }
+/* Legacy Shifter
   if ( value & 1)
     Toggle_Res_On(3);
   else
@@ -220,9 +239,9 @@ void Adjust_Current_Sync(int value)
     Toggle_Res_On(7);
   else
     Toggle_Res_Off(7);
-
+*/
 }
-
+/*Needed for legacy Shifter
 void Toggle_Res_On(int pin)
 {
   pinMode( pin, OUTPUT );
@@ -234,4 +253,4 @@ void Toggle_Res_Off(int pin)
   digitalWrite( pin, LOW );
   pinMode( pin, INPUT );
 }
-
+*/

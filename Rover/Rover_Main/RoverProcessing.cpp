@@ -20,9 +20,12 @@ void RoverProcessingRoutines()
   {
     case ROVER_INIT_STATE:
       //init rover here
-      if(RoverUIRoutines())
+      //Testing****
+      //if(RoverUIRoutines())
       {
         roverState = ROVER_READY_STATE;
+        //Testing****
+        roverMode = INPUT_FAST_MODE;
       }
       break;
       
@@ -39,7 +42,6 @@ void RoverProcessingRoutines()
       if(bSuccess || bMovementComplete)
       {
         roverState = ROVER_DONE_STATE;
-        
         //kill the motors
         leftMotor.targetSpeed = 0;
         rightMotor.targetSpeed = 0;
@@ -51,7 +53,7 @@ void RoverProcessingRoutines()
       break;
       
     case ROVER_DONE_STATE:
-      
+//      Serial.println("Processing Done");
       //we are done with this trial
       //light LED according to success/failure
       digitalWrite(ROVER_LED_PIN,bSuccess);

@@ -93,7 +93,7 @@ int readRoverMode()
 */
 void setRightMotor(int dir, int val)
 {
-  digitalWrite(MOTOR_R_DIR, !dir);
+  digitalWrite(MOTOR_R_DIR, dir);
   analogWrite(MOTOR_R_EN, val);
 }
 
@@ -104,7 +104,7 @@ void setRightMotor(int dir, int val)
 */
 void setLeftMotor(int dir, int val)
 {
-  digitalWrite(MOTOR_L_DIR, dir);
+  digitalWrite(MOTOR_L_DIR, !dir);
   analogWrite(MOTOR_L_EN, val);
 }
   
