@@ -131,8 +131,9 @@ C3_TRACK_POINT C3FilterClass::FilterInput(C3_TRACK_POINT cameraRoverPositions, d
 	m_kalman.vk(0,1) = m_kalman.X(3,0);
 
 	// Calculate Predicted Intercept Point PIP
-	cameraPoint.X = m_kalman.xk(0,0)+ m_kalman.vk(0,0) * updateTime;
-	cameraPoint.Y = m_kalman.xk(0,1)+ m_kalman.vk(0,1) * updateTime;
+	// TODO --- DOES THIS CAST CAUSE A ISSUE????
+	cameraPoint.X = static_cast<INT32>(m_kalman.xk(0,0)+ m_kalman.vk(0,0) * updateTime);
+	cameraPoint.Y = static_cast<INT32>(m_kalman.xk(0,1)+ m_kalman.vk(0,1) * updateTime);
 	
 	// return the camera point
 	return cameraPoint;
