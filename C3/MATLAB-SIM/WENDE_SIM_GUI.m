@@ -2,7 +2,7 @@ function varargout = WENDE_SIM_GUI(varargin)
 % WENDE_SIM_GUI MATLAB code for WENDE_SIM_GUI.fig
 %      WENDE_SIM_GUI, by itself, creates a new WENDE_SIM_GUI or raises the existing
 %      singleton*.
-%
+
 %      H = WENDE_SIM_GUI returns the handle to a new WENDE_SIM_GUI or the handle to
 %      the existing singleton*.
 %
@@ -123,8 +123,13 @@ rover_val = get(handles.puRoverMode, 'Value');
 tracker_val = get(handles.puTrackerMode, 'Value');
 %tracker_list = get(handles.puTrackerMode, 'String');
 %tracker_mode = tracker_list{tracker_val};
+savefile = 'WENDE_SIM_CONSTANTS.mat'; 
+load(savefile, 'constants');
+savefile = 'WENDE_SIM_BUDGET_ERRORS.mat'; 
+load(savefile, 'budgetErrors');
+savefile = 'WENDE_SIM_FILTER.mat'; 
+load(savefile, 'c3Filters');
 
-clc;
 if (demo_val == 1)
     postion = [0.053110773899848,0.085365853658537,0.864946889226100,0.879790940766551];
     outerPosition = [-0.159770339197866,-0.024433533933677,1.233394969587529,1.064453547171638];
@@ -133,14 +138,15 @@ if (demo_val == 1)
     
     axes(handles.axes3) 
     
-    [TTI, DTI, time, TravelRange, pf] = wendesim(rover_val, ...
+    [outC3Tracks, time, pf] = wendesim(rover_val, ...
                                                  tracker_val, ...
                                                  constants, ...
                                                  budgetErrors, ...
                                                  c3Filters, ...
                                                  1);
-    
-    plotDTI(handles,DTI,TTI,pf,time,TravelRange);
+    for oo = 1:1:length(outC3Tracks)
+        plotDTI(handles,outC3Tracks(oo).DTI,outC3Tracks(oo).TTI,pf,time,outC3Tracks(oo).TravelRange,oo);
+    end
 else
     %Monte Carlo Params
     cameraOriginRadius = 3.6; %m
@@ -174,15 +180,22 @@ else
                     constants.localLaserVelocity = [0,0];
     
                     axes(handles.axes3) 
-                    [TTI, DTI, time, TravelRange, pf, res] = wendesim(rover_val,tracker_val, constants, budgetErrors, c3Filters, 0);
-                    
+                    [outC3Tracks, time, pf, res] = wendesim(rover_val,      ...
+                                                            tracker_val,    ...
+                                                            constants,      ...
+                                                            budgetErrors,   ...
+                                                            c3Filters,      ...
+                                                            0);
+                      
                     Results.cameraBearing(i) = cameraBearing;
                     Results.laserBearing(i)  = laserBearing;
                     Results.roverBearing(i)  = roverBearing;
                     Results.tgtAcquired(i)   = res.tgtAcquired;
                     Results.tAcquisition(i)  = res.tAcquisition;
                     
-                    plotDTI(handles,DTI,TTI,pf,time,TravelRange);
+                    for oo = 1:1:length(outC3Tracks)
+                        plotDTI(handles,outC3Tracks(oo).DTI,outC3Tracks(oo).TTI,pf,time,outC3Tracks(oo).TravelRange,oo);
+                    end
                     
                     %Results Analysis
                     axes(handles.axes3) 
@@ -215,18 +228,19 @@ else
     end
     saveas(gcf,['Failures_vs_RoverDirection_(',num2str(length(Results.tgtAcquired)),'_Trials).fig'])
     constants = constantsBackup;
+    
 end
 set(handles.cmdStartStop,'enable','on')
 
-function plotDTI(handles,DTI,TTI,pf,time,TravelRange)
+function plotDTI(handles,DTI,TTI,pf,time,TravelRange,trackNumber)
 axes(handles.axesDTI)
 data = get(handles.tbDTI, 'Data');
 
 if (isempty(data) ~= 1)
-    temp = {time, DTI, TTI, TravelRange, pf};
+    temp = {time, DTI, TTI, TravelRange, pf, trackNumber};
     data = [temp ; data];
 else
-    data = {time, DTI, TTI, TravelRange, pf};
+    data = {time, DTI, TTI, TravelRange, pf, trackNumber};
 end
 
 set(handles.tbDTI, 'Data', data);
@@ -466,21 +480,21 @@ elseif (eventdata.Indices(1) == 3)
     else
         constants.cameraOrigin(2) = eventdata.NewData;
     end
-    plotArea(handles);        
+    plotArea(handles.axes3);        
 elseif (eventdata.Indices(1) == 4)
     if (eventdata.Indices(2) == 1)
         constants.laserOrigin(1) = eventdata.NewData;
     else
         constants.laserOrigin(2) = eventdata.NewData;
     end
-    plotArea(handles);        
+    plotArea(handles.axes3);        
 elseif (eventdata.Indices(1) == 5)
     if (eventdata.Indices(2) == 1)
         constants.laserPosition(1) = eventdata.NewData;
     else
         constants.laserPosition(2) = eventdata.NewData;
     end
-    plotArea(handles);    
+    plotArea(handles.axes3);        
 elseif (eventdata.Indices(1) == 6)
     constants.localLaserVelocity = eventdata.NewData;
 elseif (eventdata.Indices(1) == 7)
@@ -493,7 +507,7 @@ elseif (eventdata.Indices(1) == 9)
     else
         constants.roverPosition(2) = eventdata.NewData;
     end
-    plotArea(handles);        
+    plotArea(handles.axes3);        
 elseif (eventdata.Indices(1) == 10)
     constants.roverBearing = eventdata.NewData;
 elseif (eventdata.Indices(1) == 11)
@@ -502,7 +516,7 @@ elseif (eventdata.Indices(1) == 11)
     else
         constants.playingFieldOrigin(2) = eventdata.NewData;
     end
-    plotArea(handles);    
+    plotArea(handles.axes3);        
 elseif (eventdata.Indices(1) == 12)
     constants.systemLatency  = eventdata.NewData;
 elseif (eventdata.Indices(1) == 13)
@@ -515,8 +529,10 @@ elseif (eventdata.Indices(1) == 16)
     constants.laserMinSpeed = eventdata.NewData;
 elseif (eventdata.Indices(1) == 17)
     constants.laserMinStep = eventdata.NewData;
+elseif (eventdata.Indices(1) == 18)
+    constants.targetRadius = eventdata.NewData;
 end
-
+      
 save(savefile, 'constants');
 
 
@@ -629,7 +645,7 @@ playingFieldX = constants.playingFieldRadius*cos([0:2*pi/36:2*pi]);
 playingFieldY = constants.playingFieldRadius*sin([0:2*pi/36:2*pi]);
 failureLineX  = constants.failureLineRadius *cos([0:2*pi/36:2*pi]);
 failureLineY  = constants.failureLineRadius *sin([0:2*pi/36:2*pi]);
-
+axes(hObject) 
 plot(playingFieldX,playingFieldY,'b',failureLineX,failureLineY,'r');
 hold on
 text(playingFieldX(3),playingFieldY(3),' \leftarrow Playing Field','FontSize',10)

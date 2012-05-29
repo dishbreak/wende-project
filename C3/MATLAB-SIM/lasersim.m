@@ -48,8 +48,8 @@ laserVelocityElLimits(2) = max(localLaserVelocity(2) - laserMaxAcceleration*dTim
 
 %Calculate Average Laser Velocity (for this dTime)
 initialLaserVelocity = localLaserVelocity;
-finalLaserVelocity(1) = max(min(commandedAzEl(1),laserVelocityAzLimits(1)),laserVelocityAzLimits(2));
-finalLaserVelocity(2) = max(min(commandedAzEl(2),laserVelocityElLimits(1)),laserVelocityElLimits(2));
+finalLaserVelocity(1) = max(min(commandedAzEl(1,1),laserVelocityAzLimits(1)),laserVelocityAzLimits(2));
+finalLaserVelocity(2) = max(min(commandedAzEl(1,2),laserVelocityElLimits(1)),laserVelocityElLimits(2));
 averageLaserVelocity = (initialLaserVelocity + finalLaserVelocity)/2;
 localLaserVelocity = finalLaserVelocity;
 

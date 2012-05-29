@@ -5,19 +5,7 @@
 %    Inputs: Camera Rover Position --- 1x2 matrix [x,y]
 %            Update Period         --- Time since last camera update
 %%
-function [cameraPipX, cameraPipY] = C3_KalmanFilter(cameraRoverPosition, updatePeriod, processNoise, intilizeFilter, c3Filters)
-
-% Local Static Variables 
-persistent c3RoverFilter
-
-% if the static variables is not initilized
-if isempty(c3RoverFilter) || intilizeFilter
-    %FILTERING
-    c3RoverFilter.X             = zeros(6, 1);
-    c3RoverFilter.P             = 9*ones(6,6);
-    c3RoverFilter.X(1,1)        = cameraRoverPosition(1);
-    c3RoverFilter.X(2,1)        = cameraRoverPosition(2);
-end
+function [cameraPipX, cameraPipY, c3RoverFilter] = C3_KalmanFilter(cameraRoverPosition, updatePeriod, processNoise, c3Filters, c3RoverFilter)
 
 % Constant Matrices
 I   = eye(6);                   % Identity Matrix
