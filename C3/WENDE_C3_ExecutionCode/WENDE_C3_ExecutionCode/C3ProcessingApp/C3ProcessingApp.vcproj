@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../SharedSource/;.;..\SharedSource\tinyxml;..\SharedSource\eigen\Eigen"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -116,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="../SharedSource/;.;..\SharedSource\tinyxml;..\SharedSource\eigen\Eigen"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
@@ -285,11 +285,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\C3Tracker.cpp"
+				RelativePath=".\C3TrackerManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\C3Tracker.h"
+				RelativePath=".\C3TrackerManager.h"
 				>
 			</File>
 			<File

@@ -23,68 +23,30 @@ int _tmain(int argc, _TCHAR* argv[])
 	C3ProcessingConfiguration config;
 
 	/////////////////////////////////////////////////////////////////////////////////
-	// Start the thread to process the inputs
-	/////////////////////////////////////////////////////////////////////////////////
-	HANDLE hThread;
-	UINT uiThreadId = 0;
-	hThread = (HANDLE)_beginthreadex(NULL,					// Security attributes
-								     0,						// stack
-								     TrackThread,			// Thread proc
-								     &config,				// Thread param
-								     CREATE_SUSPENDED,		// creation mode
-								     &uiThreadId);			// Thread ID
-
-	// make sure that the thread was setup correctly
-	if ( NULL != hThread)
-	{
-		// set the C3 processing to a higher pri than other exe's
-		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
-		// actual start of the thread
-		ResumeThread( hThread );
-	}
-
-	/////////////////////////////////////////////////////////////////////////////////
-	// Spin and do nothing....
-	/////////////////////////////////////////////////////////////////////////////////
-	while (1)
-	{
-		// sleep for 10 seconds
-		Sleep (10000);
-	}
-
-	return 0;
-}
-
-/////////////////////////////////////////////////////////////////////////////////
-// Process incomming messages
-/////////////////////////////////////////////////////////////////////////////////
-UINT WINAPI TrackThread (LPVOID pParam)
-{
-	/////////////////////////////////////////////////////////////////////////////////
 	// Setup local variables
 	/////////////////////////////////////////////////////////////////////////////////
-	C3ProcessingConfiguration *config = static_cast<C3ProcessingConfiguration*>(pParam);
 	static char timeStr[256];								// Temporary time string
 	static int cameraTrackMessageCount = 0;					// static packet count...
 	bool readMessageSuccess = false;						// determines that the 
 															// message was recived 
 															// correctly
+
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup the shared memory
 	/////////////////////////////////////////////////////////////////////////////////
 	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;// shared memory data struct wrapper
-	m_CameraTracks.Acquire(config->m_SHM_C3_CAMERA_TRACK,			// shared mem file name
-						   config->m_SHM_C3_CAMERA_TRACK_MUTEX,		// shared mem mutex name
-						   config->m_SHM_C3_CAMERA_TRACK_EVENT1,	// shared mem event name
-						   config->m_SHM_C3_CAMERA_TRACK_EVENT2);	// shared mem event name
+	m_CameraTracks.Acquire(config.SHM_C3_CAMERA_TRACK,			// shared mem file name
+						   config.SHM_C3_CAMERA_TRACK_MUTEX,		// shared mem mutex name
+						   config.SHM_C3_CAMERA_TRACK_EVENT1,	// shared mem event name
+						   config.SHM_C3_CAMERA_TRACK_EVENT2);	// shared mem event name
 	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
 	else m_CameraTracks->ShmInfo.Clients++;
 	
 	CSharedStruct<LASER_POINT_DIRECTION_SHM> m_LaserCommand;
-	m_LaserCommand.Acquire(config->m_SHM_C3_LASER_POINTING,			// shared mem file name
-						   config->m_SHM_C3_LASER_POINTING_MUTEX,	// shared mem mutex name
-						   config->m_SHM_C3_LASER_POINTING_EVENT1,	// shared mem event name
-						   config->m_SHM_C3_LASER_POINTING_EVENT2);	// shared mem event name
+	m_LaserCommand.Acquire(config.SHM_C3_LASER_POINTING,			// shared mem file name
+						   config.SHM_C3_LASER_POINTING_MUTEX,	// shared mem mutex name
+						   config.SHM_C3_LASER_POINTING_EVENT1,	// shared mem event name
+						   config.SHM_C3_LASER_POINTING_EVENT2);	// shared mem event name
 	if (m_LaserCommand.isServer()) m_LaserCommand->ShmInfo.Clients = 0;
 	else m_LaserCommand->ShmInfo.Clients++;	
 
@@ -180,7 +142,6 @@ UINT WINAPI TrackThread (LPVOID pParam)
 			// unable to get mutex???
 		}
 	}
-	_endthreadex( 0 );
-    
+
 	return 1L;
 }

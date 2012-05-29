@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "C3Tracker.h"
+#include "C3TrackerManager.h"
 #include "C3Utilities.h"
 
 C3Tracker::C3Tracker(void)
