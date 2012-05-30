@@ -22,8 +22,7 @@ typedef struct {
 	Matrix<double, 1, 2> rk;
 	Matrix<double, 1, 2> vk;
 	Matrix<double, 1, 2> xk;
-	double p00;
-	double p11;
+	Matrix<double, 1, 2> p;
 	double processNoise;
 } KalmanVariables;
 
@@ -31,20 +30,19 @@ class C3FilterClass
 {
 	// Filter Internal variables
 	private:
-		bool		m_isInit;
+		bool			m_isInit;
 		KalmanVariables m_kalman;
 
 	// Filter Cononical Functions
 	public:
 		C3FilterClass(void);
-		C3FilterClass(double processNoise);
 		C3FilterClass(const C3FilterClass &rhs);
 		C3FilterClass & operator= (const C3FilterClass &rhs);
 		~C3FilterClass(void);
 
 	// Public Functions
 	public:
-		C3_TRACK_POINT FilterInput(C3_TRACK_POINT cameraRoverPositions, double updateTime);	
+		C3_TRACK_POINT_DOUBLE FilterInput(C3_TRACK_POINT_DOUBLE cameraRoverPositions, double updateTime);	
 
 	// Private Functions
 	private:

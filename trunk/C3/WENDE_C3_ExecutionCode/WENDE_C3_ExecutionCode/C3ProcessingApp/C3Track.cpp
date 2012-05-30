@@ -57,9 +57,9 @@ C3_TRACK_POINT C3Track::UpdateTrack(const C3_TRACK_POINT cameraRoverPosition, co
 
 
 	//}
-
+	return C3_TRACK_POINT();
 	// Update the tracker filter
-	return m_filter.FilterInput(cameraRoverPosition,time);
+//	return m_filter.FilterInput(cameraRoverPosition,time);
 }
 // Return the track current DTI
 double C3Track::getDTI() const

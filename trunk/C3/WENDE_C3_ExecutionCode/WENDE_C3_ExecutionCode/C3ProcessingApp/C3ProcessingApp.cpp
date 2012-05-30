@@ -7,20 +7,30 @@
 #include "CSharedStruct.h"
 #include "ShmStructs.h"
 #include <time.h>
+#include <iostream>
+#include <fstream>
+#include <string>
 #include <process.h>
 #include "C3ProcessingConfiguration.h"
+#include "C3FilterClass.h"
+#include <vector>
 
+using std::vector;
+using std::cout;
+using std::endl;
+using std::ifstream;
+using std::string;
+
+/////////////////////////////////////////////////////////////////////////////////
+// TEST functions
+/////////////////////////////////////////////////////////////////////////////////
+void TestKalmanFilter();
 /////////////////////////////////////////////////////////////////////////////////
 // Declare main functions
 /////////////////////////////////////////////////////////////////////////////////
-UINT WINAPI TrackThread (LPVOID pParam);		// main processing thread
-
 int _tmain(int argc, _TCHAR* argv[])
 {
-	/////////////////////////////////////////////////////////////////////////////////
-	// Read in the user configuration
-	/////////////////////////////////////////////////////////////////////////////////
-	C3ProcessingConfiguration config;
+	TestKalmanFilter();
 
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup local variables
@@ -35,18 +45,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Setup the shared memory
 	/////////////////////////////////////////////////////////////////////////////////
 	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;// shared memory data struct wrapper
-	m_CameraTracks.Acquire(config.SHM_C3_CAMERA_TRACK,			// shared mem file name
-						   config.SHM_C3_CAMERA_TRACK_MUTEX,		// shared mem mutex name
-						   config.SHM_C3_CAMERA_TRACK_EVENT1,	// shared mem event name
-						   config.SHM_C3_CAMERA_TRACK_EVENT2);	// shared mem event name
+	m_CameraTracks.Acquire(C3ProcessingConfiguration::Instance().SHM_C3_CAMERA_TRACK,			// shared mem file name
+						   C3ProcessingConfiguration::Instance().SHM_C3_CAMERA_TRACK_MUTEX,		// shared mem mutex name
+						   C3ProcessingConfiguration::Instance().SHM_C3_CAMERA_TRACK_EVENT1,	// shared mem event name
+						   C3ProcessingConfiguration::Instance().SHM_C3_CAMERA_TRACK_EVENT2);	// shared mem event name
 	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
 	else m_CameraTracks->ShmInfo.Clients++;
 	
 	CSharedStruct<LASER_POINT_DIRECTION_SHM> m_LaserCommand;
-	m_LaserCommand.Acquire(config.SHM_C3_LASER_POINTING,			// shared mem file name
-						   config.SHM_C3_LASER_POINTING_MUTEX,	// shared mem mutex name
-						   config.SHM_C3_LASER_POINTING_EVENT1,	// shared mem event name
-						   config.SHM_C3_LASER_POINTING_EVENT2);	// shared mem event name
+	m_LaserCommand.Acquire(C3ProcessingConfiguration::Instance().SHM_C3_LASER_POINTING,			// shared mem file name
+						   C3ProcessingConfiguration::Instance().SHM_C3_LASER_POINTING_MUTEX,	// shared mem mutex name
+						   C3ProcessingConfiguration::Instance().SHM_C3_LASER_POINTING_EVENT1,	// shared mem event name
+						   C3ProcessingConfiguration::Instance().SHM_C3_LASER_POINTING_EVENT2);	// shared mem event name
 	if (m_LaserCommand.isServer()) m_LaserCommand->ShmInfo.Clients = 0;
 	else m_LaserCommand->ShmInfo.Clients++;	
 
@@ -137,11 +147,44 @@ int _tmain(int argc, _TCHAR* argv[])
 			// release the mutex
 			m_LaserCommand.ReleaseMutex();
 		}
-		else
-		{
-			// unable to get mutex???
-		}
+		else{ /* unable to get mutex??? */}
 	}
 
 	return 1L;
+}
+/////////////////////////////////////////////////////////////////////////////////
+// TEST functions
+/////////////////////////////////////////////////////////////////////////////////
+void TestKalmanFilter()
+{
+	vector<string> files;
+	files.insert(files.begin(),"TEST_5.txt");
+	files.insert(files.begin(),"TEST_4.txt");
+	files.insert(files.begin(),"TEST_3.txt");
+	files.insert(files.begin(),"TEST_2.txt");
+	files.insert(files.begin(),"TEST_1.txt");
+	for (unsigned int jj = 0; jj < files.size(); jj++)
+	{
+		printf("TEST FILE --- %d ---\n",jj);
+		C3FilterClass  kalman;
+		
+		C3_TRACK_POINT_DOUBLE testPoint;
+		C3_TRACK_POINT_DOUBLE procResult;
+		C3_TRACK_POINT_DOUBLE fileResult;
+
+		double         testUpdateRate = 0.250;
+		double         MAX_ERROR      = 0.0000005;
+
+		// verify test output 1 (matlab move in x only)
+		ifstream myfile (files[jj].c_str());
+		for (int ii = 0; myfile.is_open() && ii < 100; ii ++)
+		{
+			myfile >> testPoint.X >> testPoint.Y >> fileResult.X >> fileResult.Y;
+			procResult = kalman.FilterInput(testPoint,testUpdateRate);
+			assert(abs(fileResult.X-procResult.X) < MAX_ERROR && 
+				   abs(fileResult.Y-procResult.Y) < MAX_ERROR);
+			printf("Iteration (%d)::Difference [X,Y]= [%f,%f]\n", ii,abs(fileResult.X-procResult.X),abs(fileResult.Y-procResult.Y));
+		}
+		myfile.close();
+	}
 }
