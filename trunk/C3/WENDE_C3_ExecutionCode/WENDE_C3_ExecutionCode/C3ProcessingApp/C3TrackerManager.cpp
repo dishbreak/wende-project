@@ -52,7 +52,7 @@ void C3Tracker::UpdateTracks(const vector<C3_TRACK_POINT> cameraRoverPositions, 
     for (iter = position2track.begin(); iter != position2track.end(); iter++) 
 	{
 		// Filter the points
-		m_tracks[iter->second.assignTrackIndex]->UpdateTrack(cameraRoverPositions[iter->first],time);
+		//m_tracks[iter->second.assignTrackIndex]->UpdateTrack(cameraRoverPositions[iter->first],time);
 
 		// Compute the azimuth and elevation information
 		// TODO ... add in the code
@@ -75,13 +75,13 @@ void C3Tracker::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struc
 			// if there is not enough history then only use the last position...
 			if ( m_tracks[jj]->getNumHistoryPoints() <= 3 )
 			{
-				correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getLastHistoryPoint());
+				//correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getLastHistoryPoint());
 			}
 			// ok... we have the history points needed so lets coorelate using the 
 			// prediction point (assumes velocity)
 			else
 			{
-				correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getPredicationPoint());
+				//correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getPredicationPoint());
 			}
 
 			// assign to the closest tracker if within max distance and not in mapping list
@@ -121,11 +121,11 @@ unsigned int C3Tracker::AddTrack(const C3_TRACK_POINT cameraRoverPosition, const
 	// Check to see if the track is in the playing field
 	if (dist > m_playingFieldRadius)	// outside the playing field
 	{									// so do not track
-		track = new C3Track(cameraRoverPosition,time,false,2.0);
+		//track = new C3Track(cameraRoverPosition,time,false,2.0);
 	}
 	else								// inside the playing field
 	{									// so track 
-		track = new C3Track(cameraRoverPosition,time,true,2.0);
+		//track = new C3Track(cameraRoverPosition,time,true,2.0);
 	}
 
 	// add the track to the array of tracks
