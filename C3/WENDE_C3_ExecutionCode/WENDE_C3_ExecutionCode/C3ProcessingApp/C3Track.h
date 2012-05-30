@@ -24,44 +24,47 @@ class C3Track
 {
 	private:
 		// Filter for tracking purposes
-		C3FilterClass		m_filter;
+		C3FilterClass			m_filter;
 		// Last predicted point
-		C3_TRACK_POINT				m_predictionPoint;
+		C3_TRACK_POINT_DOUBLE	m_predictionPoint;
 		// History of points for prosecution
-		C3CircularHistory	m_historyPoints;
+		C3CircularHistory		m_historyPoints;
 		// Flag to determine if laser commands are used
-		bool				m_isProsecuteTrack;
-		// flag to show if in playing field
-
+		bool					m_isProsecuteTrack;
 		// The starting time of the track
-		double				m_startTime;
+		double					m_startTime;
+		// The starting time of the track
+		double					m_currTime;
 		// the time at which the track leaves the playing field
-		double				m_passTime;
+		double					m_passTime;
 		// The Distance to Illumination (DTI)
-		double				m_DTI;
+		double					m_DTI;
 		// The Time To Illumination
-		double				m_TTI;
+		double					m_TTI;
 		// the radius of the playing field
-		double				m_playingFieldRadius;
-
+		double					m_playingFieldRadius;
+		// store the total travel range
+		double					m_travelRange;
 	public:
 		// Cononical Functions
-		C3Track(const C3_TRACK_POINT cameraRoverPosition, const double time, const bool isProsecuteTrack, const double playingFieldRadius );
+		C3Track(const C3_TRACK_POINT cameraRoverPosition, const double time);
 		~C3Track(void);
 
 	public:
 		// Filter and predict next location....
-		C3_TRACK_POINT UpdateTrack(const C3_TRACK_POINT cameraRoverPosition, const double time);
-		// Commanded Laser Azimuth and Elevation
-		C3_TRACK_POINT CommandLaser();
+		C3_TRACK_POINT_DOUBLE UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
+										  const C3_TRACK_POINT_DOUBLE cameraLaserPosition,
+										  const double time);
 
 	public:
 		// returns the number of points contained in the history array
 		unsigned int getNumHistoryPoints() const;
 		// returns the last saved point containd in the history array
-		C3_TRACK_POINT getLastHistoryPoint() const;
+		C3_TRACK_POINT_DOUBLE getLastHistoryPoint() const;
 		// returns the last prediction from the kalman filter
-		C3_TRACK_POINT getPredicationPoint() const;
+		C3_TRACK_POINT_DOUBLE getPredicationPoint() const;
 		// Return the track current DTI
 		double getDTI() const;
+		// Return the track current TTI
+		double getTTI() const;
 };
