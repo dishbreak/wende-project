@@ -210,8 +210,8 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				m_CameraTracks.ReleaseMutex();
 
 				// Will need to build this up to handle multiple tracks
-				x += 1; //sTrackMessage.Tracks->X;
-				y += 1; //1sTrackMessage.Tracks->Y;
+				x = sTrackMessage.Tracks->X; //x += 1;
+				y = sTrackMessage.Tracks->Y; //y += 1;
 
 				////get a handle to the CDisplayManager
                 CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
