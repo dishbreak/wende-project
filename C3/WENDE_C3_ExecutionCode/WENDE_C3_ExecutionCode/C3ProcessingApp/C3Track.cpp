@@ -71,9 +71,9 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 	if (m_DTI <= m_playingFieldRadius)
 	{
 		// set do  nothing states
-		m_passTime    = time;			
-		result.AZ = dAz/updateRate;
-		result.EL = dEl/updateRate;
+		m_passTime	= time;			
+		result.AZ	= 0;
+		result.EL	= 0;
 	}
 	else
 	{
