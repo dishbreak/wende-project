@@ -17,6 +17,7 @@ typedef int                 BOOL;
 typedef unsigned char       BYTE;
 typedef unsigned short      WORD;
 typedef float               FLOAT;
+typedef double              DOUBLE;
 typedef signed char         INT8;
 typedef signed short        INT16;
 typedef signed int          INT32;
@@ -100,6 +101,24 @@ typedef union
 		INT32		 EL;		// EL Location
 	};
 } C3_TRACK_POINT;
+/////////////////////////////////////////////////////////////////////////////////
+// Struct: C3_TRACK_POINT_DOUBLE
+//
+// purpose: defines the structure for representing C3 Tracks
+/////////////////////////////////////////////////////////////////////////////////
+typedef union
+{
+	struct
+	{
+		DOUBLE		 X;			// X location (offset) 
+		DOUBLE		 Y;			// Y location (offset)
+	};
+	struct
+	{
+		DOUBLE		 AZ;		// AZ Location
+		DOUBLE		 EL;		// EL Location
+	};
+} C3_TRACK_POINT_DOUBLE;
 /////////////////////////////////////////////////////////////////////////////////
 // Struct: LASER_POINTING_MSG_SHM
 //
