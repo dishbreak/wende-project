@@ -16,12 +16,15 @@ using std::string;
 class C3ProcessingConfiguration
 {
 public:
-	C3ProcessingConfiguration(void);				// Default Constructor
+	//Singleton Manager for the shatred memory
+	static C3ProcessingConfiguration& Instance()
+	{
+		// create singleton
+		static C3ProcessingConfiguration singleton;
+		// return reference to singleton
+		return singleton;
+	}
 	~C3ProcessingConfiguration(void);				// Defualt Destructor
-
-public:
-	void WriteXMLFile();							// Creates the initial configuration file
-	void ReadXml();									// reads the configuration file
 
 public:
 	//Configuration file
@@ -41,4 +44,23 @@ public:
 	double WENDE_FAILURE_LINE_RADIUS;				// The Failure line for the WENDE POCs
 	//Kalman Filter Values
 	int	   PROCESS_NOISE;							// ...
+
+/////////////////////////////////////////////////////////////
+// Private Functions... class
+/////////////////////////////////////////////////////////////
+private:
+	void WriteXMLFile();							// Creates the initial configuration file
+	void ReadXml();									// reads the configuration file
+
+/////////////////////////////////////////////////////////////
+// Private Functions... singleton items
+/////////////////////////////////////////////////////////////
+private:
+	// Private constructor
+	C3ProcessingConfiguration();								
+	// Prevent copy-construction
+	C3ProcessingConfiguration(const C3ProcessingConfiguration&);           
+	// Prevent assignment
+	C3ProcessingConfiguration& operator=(const C3ProcessingConfiguration&);
+
 };
