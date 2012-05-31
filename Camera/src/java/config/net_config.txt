@@ -1,4 +1,15 @@
 #host=192.168.1.4
+#host=192.168.1.4
 host=localhost
 port=4444
 testText=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890
+verbose = TRUE
+sizeX = 1280
+sizeY = 720
+channels = 3
+statusDelay = 223
+tracksDelay = 100
+imageDelay = 100
+mainRunTime = 30000
+
+
