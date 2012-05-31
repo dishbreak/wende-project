@@ -4,10 +4,7 @@
 #include "C3ProcessingConfiguration.h"
 #include <cmath>
 
-// Filter and predict next location....
-C3_TRACK_POINT UpdateTrack(const C3_TRACK_POINT cameraRoverPosition, const unsigned int time);
-
-C3Track::C3Track(const C3_TRACK_POINT cameraRoverPosition, 
+C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
 				 const double time)
 				 : m_startTime(time),
 				   m_currTime(0),

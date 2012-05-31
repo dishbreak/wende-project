@@ -47,7 +47,7 @@ class C3Track
 		double					m_travelRange;
 	public:
 		// Cononical Functions
-		C3Track(const C3_TRACK_POINT cameraRoverPosition, const double time);
+		C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, const double time);
 		~C3Track(void);
 
 	public:

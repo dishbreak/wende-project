@@ -13,6 +13,7 @@
 #include <process.h>
 #include "C3ProcessingConfiguration.h"
 #include "C3FilterClass.h"
+#include "C3Track.h"
 #include <vector>
 
 using std::vector;
@@ -25,12 +26,14 @@ using std::string;
 // TEST functions
 /////////////////////////////////////////////////////////////////////////////////
 void TestKalmanFilter();
+void TestTrackFilter();
 /////////////////////////////////////////////////////////////////////////////////
 // Declare main functions
 /////////////////////////////////////////////////////////////////////////////////
 int _tmain(int argc, _TCHAR* argv[])
 {
 	TestKalmanFilter();
+	TestTrackFilter();
 
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup local variables
@@ -183,6 +186,44 @@ void TestKalmanFilter()
 			procResult = kalman.FilterInput(testPoint,testUpdateRate);
 			assert(abs(fileResult.X-procResult.X) < MAX_ERROR && 
 				   abs(fileResult.Y-procResult.Y) < MAX_ERROR);
+			printf("Iteration (%d)::Difference [X,Y]= [%f,%f]\n", ii,abs(fileResult.X-procResult.X),abs(fileResult.Y-procResult.Y));
+		}
+		myfile.close();
+	}
+}
+void TestTrackFilter()
+{
+	vector<string> files;
+	files.insert(files.begin(),"TEST_5.txt");
+	files.insert(files.begin(),"TEST_4.txt");
+	files.insert(files.begin(),"TEST_3.txt");
+	files.insert(files.begin(),"TEST_2.txt");
+	files.insert(files.begin(),"TEST_1.txt");
+	for (unsigned int jj = 0; jj < files.size(); jj++)
+	{
+		printf("TEST FILE --- %d ---\n",jj);
+		C3_TRACK_POINT_DOUBLE roverPoint;
+		roverPoint.X = 0.0;
+		roverPoint.Y = 0.0;
+
+		C3Track  track(roverPoint,0.0);
+		
+		C3_TRACK_POINT_DOUBLE laserPoint;
+		C3_TRACK_POINT_DOUBLE procResult;
+		C3_TRACK_POINT_DOUBLE fileResult;
+
+		double         time			= 0.0;
+		double         MAX_ERROR    = 0.0000005;
+
+		// verify test output 1 (matlab move in x only)
+		ifstream myfile (files[jj].c_str());
+		for (int ii = 0; myfile.is_open() && ii < 100; ii ++)
+		{
+			myfile >> roverPoint.X >> roverPoint.Y >> laserPoint.X >> laserPoint.Y >> time;
+			procResult = track.UpdateTrack(roverPoint,laserPoint,time);
+			myfile >> fileResult.AZ >> fileResult.EL;
+			assert(abs(fileResult.AZ-procResult.AZ) < MAX_ERROR && 
+				   abs(fileResult.EL-procResult.EL) < MAX_ERROR);
 			printf("Iteration (%d)::Difference [X,Y]= [%f,%f]\n", ii,abs(fileResult.X-procResult.X),abs(fileResult.Y-procResult.Y));
 		}
 		myfile.close();
