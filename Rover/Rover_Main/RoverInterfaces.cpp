@@ -17,7 +17,6 @@ void setupInterfaces()
   //setup inputs
   pinMode(PHOTO_DETECTOR_PIN, INPUT);
   pinMode(AMBIENT_LIGHTING_PIN, INPUT);
-  pinMode(ROVER_LED_PIN, INPUT);
   pinMode(ENCODER_R_PIN, INPUT);
   pinMode(ENCODER_L_PIN, INPUT);
   pinMode(INPUT_MODE_BIT0, INPUT);
@@ -29,6 +28,9 @@ void setupInterfaces()
   pinMode(MOTOR_L_DIR, OUTPUT);
   pinMode(MOTOR_R_EN, OUTPUT);
   pinMode(MOTOR_L_EN, OUTPUT);
+  pinMode(ROVER_LED_PIN, OUTPUT);  
+  pinMode(SENSOR_OFFSET_CLOCK, OUTPUT);
+  pinMode(SENSOR_OFFSET_DATA, OUTPUT);  
   
   //set interrupt pull up resistors for consistancy
   digitalWrite(MOTOR_R_EN, HIGH);
@@ -39,7 +41,7 @@ void setupInterfaces()
   digitalWrite(MOTOR_L_DIR, FORWARD);
   
   //init motor speeds...
-  setRightMotor(FORWARD,0);
+  setLeftMotor(FORWARD,0);
   setRightMotor(FORWARD,0);
   
   //initialize interrupts

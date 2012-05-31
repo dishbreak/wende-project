@@ -19,6 +19,7 @@ void RoverProcessingRoutines()
   switch(roverState)
   {
     case ROVER_INIT_STATE:
+      digitalWrite(ROVER_LED_PIN,bSuccess);
       //init rover here
       //Testing****
       //if(RoverUIRoutines())
