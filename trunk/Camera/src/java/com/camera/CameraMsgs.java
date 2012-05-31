@@ -8,6 +8,81 @@ public final class CameraMsgs {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
+  public enum systemStatus
+      implements com.google.protobuf.ProtocolMessageEnum {
+    DOWN(0, 0),
+    READY(1, 1),
+    OPERATIONAL(2, 2),
+    ERROR(3, 3),
+    FAILED(4, 4),
+    UNKNOWN(5, 5),
+    ;
+    
+    
+    public final int getNumber() { return value; }
+    
+    public static systemStatus valueOf(int value) {
+      switch (value) {
+        case 0: return DOWN;
+        case 1: return READY;
+        case 2: return OPERATIONAL;
+        case 3: return ERROR;
+        case 4: return FAILED;
+        case 5: return UNKNOWN;
+        default: return null;
+      }
+    }
+    
+    public static com.google.protobuf.Internal.EnumLiteMap<systemStatus>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static com.google.protobuf.Internal.EnumLiteMap<systemStatus>
+        internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<systemStatus>() {
+            public systemStatus findValueByNumber(int number) {
+              return systemStatus.valueOf(number)
+    ;        }
+          };
+    
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(index);
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return com.camera.CameraMsgs.getDescriptor().getEnumTypes().get(0);
+    }
+    
+    private static final systemStatus[] VALUES = {
+      DOWN, READY, OPERATIONAL, ERROR, FAILED, UNKNOWN, 
+    };
+    public static systemStatus valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      return VALUES[desc.getIndex()];
+    }
+    private final int index;
+    private final int value;
+    private systemStatus(int index, int value) {
+      this.index = index;
+      this.value = value;
+    }
+    
+    static {
+      com.camera.CameraMsgs.getDescriptor();
+    }
+    
+    // @@protoc_insertion_point(enum_scope:cameraMsgs.systemStatus)
+  }
+  
   public static final class cameraStatus extends
       com.google.protobuf.GeneratedMessage {
     // Use cameraStatus.newBuilder() to construct.
@@ -35,1263 +110,36 @@ public final class CameraMsgs {
       return com.camera.CameraMsgs.internal_static_cameraMsgs_cameraStatus_fieldAccessorTable;
     }
     
-    public enum systemStatus
-        implements com.google.protobuf.ProtocolMessageEnum {
-      DOWN(0, 0),
-      READY(1, 1),
-      OPERATIONAL(2, 2),
-      ERROR(3, 3),
-      FAILED(4, 4),
-      ;
-      
-      
-      public final int getNumber() { return value; }
-      
-      public static systemStatus valueOf(int value) {
-        switch (value) {
-          case 0: return DOWN;
-          case 1: return READY;
-          case 2: return OPERATIONAL;
-          case 3: return ERROR;
-          case 4: return FAILED;
-          default: return null;
-        }
-      }
-      
-      public static com.google.protobuf.Internal.EnumLiteMap<systemStatus>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static com.google.protobuf.Internal.EnumLiteMap<systemStatus>
-          internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<systemStatus>() {
-              public systemStatus findValueByNumber(int number) {
-                return systemStatus.valueOf(number)
-      ;        }
-            };
-      
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(index);
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return com.camera.CameraMsgs.cameraStatus.getDescriptor().getEnumTypes().get(0);
-      }
-      
-      private static final systemStatus[] VALUES = {
-        DOWN, READY, OPERATIONAL, ERROR, FAILED, 
-      };
-      public static systemStatus valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-      private final int index;
-      private final int value;
-      private systemStatus(int index, int value) {
-        this.index = index;
-        this.value = value;
-      }
-      
-      static {
-        com.camera.CameraMsgs.getDescriptor();
-      }
-      
-      // @@protoc_insertion_point(enum_scope:cameraMsgs.cameraStatus.systemStatus)
-    }
+    // optional int64 time = 1;
+    public static final int TIME_FIELD_NUMBER = 1;
+    private boolean hasTime;
+    private long time_ = 0L;
+    public boolean hasTime() { return hasTime; }
+    public long getTime() { return time_; }
     
-    public static final class cameraTracks extends
-        com.google.protobuf.GeneratedMessage {
-      // Use cameraTracks.newBuilder() to construct.
-      private cameraTracks() {
-        initFields();
-      }
-      private cameraTracks(boolean noInit) {}
-      
-      private static final cameraTracks defaultInstance;
-      public static cameraTracks getDefaultInstance() {
-        return defaultInstance;
-      }
-      
-      public cameraTracks getDefaultInstanceForType() {
-        return defaultInstance;
-      }
-      
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.camera.CameraMsgs.internal_static_cameraMsgs_cameraStatus_cameraTracks_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.camera.CameraMsgs.internal_static_cameraMsgs_cameraStatus_cameraTracks_fieldAccessorTable;
-      }
-      
-      // optional string time = 1;
-      public static final int TIME_FIELD_NUMBER = 1;
-      private boolean hasTime;
-      private java.lang.String time_ = "";
-      public boolean hasTime() { return hasTime; }
-      public java.lang.String getTime() { return time_; }
-      
-      // optional sint32 numTargets = 2;
-      public static final int NUMTARGETS_FIELD_NUMBER = 2;
-      private boolean hasNumTargets;
-      private int numTargets_ = 0;
-      public boolean hasNumTargets() { return hasNumTargets; }
-      public int getNumTargets() { return numTargets_; }
-      
-      // optional sint32 targetNumber = 3;
-      public static final int TARGETNUMBER_FIELD_NUMBER = 3;
-      private boolean hasTargetNumber;
-      private int targetNumber_ = 0;
-      public boolean hasTargetNumber() { return hasTargetNumber; }
-      public int getTargetNumber() { return targetNumber_; }
-      
-      // optional sint32 targetX = 4;
-      public static final int TARGETX_FIELD_NUMBER = 4;
-      private boolean hasTargetX;
-      private int targetX_ = 0;
-      public boolean hasTargetX() { return hasTargetX; }
-      public int getTargetX() { return targetX_; }
-      
-      // optional sint32 targetY = 5;
-      public static final int TARGETY_FIELD_NUMBER = 5;
-      private boolean hasTargetY;
-      private int targetY_ = 0;
-      public boolean hasTargetY() { return hasTargetY; }
-      public int getTargetY() { return targetY_; }
-      
-      // optional sint32 laserX = 6;
-      public static final int LASERX_FIELD_NUMBER = 6;
-      private boolean hasLaserX;
-      private int laserX_ = 0;
-      public boolean hasLaserX() { return hasLaserX; }
-      public int getLaserX() { return laserX_; }
-      
-      // optional sint32 laserY = 7;
-      public static final int LASERY_FIELD_NUMBER = 7;
-      private boolean hasLaserY;
-      private int laserY_ = 0;
-      public boolean hasLaserY() { return hasLaserY; }
-      public int getLaserY() { return laserY_; }
-      
-      // optional bool laserOn = 8;
-      public static final int LASERON_FIELD_NUMBER = 8;
-      private boolean hasLaserOn;
-      private boolean laserOn_ = false;
-      public boolean hasLaserOn() { return hasLaserOn; }
-      public boolean getLaserOn() { return laserOn_; }
-      
-      // optional sint32 targetConfidenceX = 9;
-      public static final int TARGETCONFIDENCEX_FIELD_NUMBER = 9;
-      private boolean hasTargetConfidenceX;
-      private int targetConfidenceX_ = 0;
-      public boolean hasTargetConfidenceX() { return hasTargetConfidenceX; }
-      public int getTargetConfidenceX() { return targetConfidenceX_; }
-      
-      // optional sint32 targetConfidenceY = 10;
-      public static final int TARGETCONFIDENCEY_FIELD_NUMBER = 10;
-      private boolean hasTargetConfidenceY;
-      private int targetConfidenceY_ = 0;
-      public boolean hasTargetConfidenceY() { return hasTargetConfidenceY; }
-      public int getTargetConfidenceY() { return targetConfidenceY_; }
-      
-      // optional sint32 laserConfidenceX = 11;
-      public static final int LASERCONFIDENCEX_FIELD_NUMBER = 11;
-      private boolean hasLaserConfidenceX;
-      private int laserConfidenceX_ = 0;
-      public boolean hasLaserConfidenceX() { return hasLaserConfidenceX; }
-      public int getLaserConfidenceX() { return laserConfidenceX_; }
-      
-      // optional sint32 laserConfidenceY = 12;
-      public static final int LASERCONFIDENCEY_FIELD_NUMBER = 12;
-      private boolean hasLaserConfidenceY;
-      private int laserConfidenceY_ = 0;
-      public boolean hasLaserConfidenceY() { return hasLaserConfidenceY; }
-      public int getLaserConfidenceY() { return laserConfidenceY_; }
-      
-      private void initFields() {
-      }
-      public final boolean isInitialized() {
-        return true;
-      }
-      
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        getSerializedSize();
-        if (hasTime()) {
-          output.writeString(1, getTime());
-        }
-        if (hasNumTargets()) {
-          output.writeSInt32(2, getNumTargets());
-        }
-        if (hasTargetNumber()) {
-          output.writeSInt32(3, getTargetNumber());
-        }
-        if (hasTargetX()) {
-          output.writeSInt32(4, getTargetX());
-        }
-        if (hasTargetY()) {
-          output.writeSInt32(5, getTargetY());
-        }
-        if (hasLaserX()) {
-          output.writeSInt32(6, getLaserX());
-        }
-        if (hasLaserY()) {
-          output.writeSInt32(7, getLaserY());
-        }
-        if (hasLaserOn()) {
-          output.writeBool(8, getLaserOn());
-        }
-        if (hasTargetConfidenceX()) {
-          output.writeSInt32(9, getTargetConfidenceX());
-        }
-        if (hasTargetConfidenceY()) {
-          output.writeSInt32(10, getTargetConfidenceY());
-        }
-        if (hasLaserConfidenceX()) {
-          output.writeSInt32(11, getLaserConfidenceX());
-        }
-        if (hasLaserConfidenceY()) {
-          output.writeSInt32(12, getLaserConfidenceY());
-        }
-        getUnknownFields().writeTo(output);
-      }
-      
-      private int memoizedSerializedSize = -1;
-      public int getSerializedSize() {
-        int size = memoizedSerializedSize;
-        if (size != -1) return size;
-      
-        size = 0;
-        if (hasTime()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeStringSize(1, getTime());
-        }
-        if (hasNumTargets()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(2, getNumTargets());
-        }
-        if (hasTargetNumber()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(3, getTargetNumber());
-        }
-        if (hasTargetX()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(4, getTargetX());
-        }
-        if (hasTargetY()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(5, getTargetY());
-        }
-        if (hasLaserX()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(6, getLaserX());
-        }
-        if (hasLaserY()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(7, getLaserY());
-        }
-        if (hasLaserOn()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBoolSize(8, getLaserOn());
-        }
-        if (hasTargetConfidenceX()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(9, getTargetConfidenceX());
-        }
-        if (hasTargetConfidenceY()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(10, getTargetConfidenceY());
-        }
-        if (hasLaserConfidenceX()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(11, getLaserConfidenceX());
-        }
-        if (hasLaserConfidenceY()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(12, getLaserConfidenceY());
-        }
-        size += getUnknownFields().getSerializedSize();
-        memoizedSerializedSize = size;
-        return size;
-      }
-      
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraTracks parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      
-      public static Builder newBuilder() { return Builder.create(); }
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder(com.camera.CameraMsgs.cameraStatus.cameraTracks prototype) {
-        return newBuilder().mergeFrom(prototype);
-      }
-      public Builder toBuilder() { return newBuilder(this); }
-      
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessage.Builder<Builder> {
-        private com.camera.CameraMsgs.cameraStatus.cameraTracks result;
-        
-        // Construct using com.camera.CameraMsgs.cameraStatus.cameraTracks.newBuilder()
-        private Builder() {}
-        
-        private static Builder create() {
-          Builder builder = new Builder();
-          builder.result = new com.camera.CameraMsgs.cameraStatus.cameraTracks();
-          return builder;
-        }
-        
-        protected com.camera.CameraMsgs.cameraStatus.cameraTracks internalGetResult() {
-          return result;
-        }
-        
-        public Builder clear() {
-          if (result == null) {
-            throw new IllegalStateException(
-              "Cannot call clear() after build().");
-          }
-          result = new com.camera.CameraMsgs.cameraStatus.cameraTracks();
-          return this;
-        }
-        
-        public Builder clone() {
-          return create().mergeFrom(result);
-        }
-        
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return com.camera.CameraMsgs.cameraStatus.cameraTracks.getDescriptor();
-        }
-        
-        public com.camera.CameraMsgs.cameraStatus.cameraTracks getDefaultInstanceForType() {
-          return com.camera.CameraMsgs.cameraStatus.cameraTracks.getDefaultInstance();
-        }
-        
-        public boolean isInitialized() {
-          return result.isInitialized();
-        }
-        public com.camera.CameraMsgs.cameraStatus.cameraTracks build() {
-          if (result != null && !isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return buildPartial();
-        }
-        
-        private com.camera.CameraMsgs.cameraStatus.cameraTracks buildParsed()
-            throws com.google.protobuf.InvalidProtocolBufferException {
-          if (!isInitialized()) {
-            throw newUninitializedMessageException(
-              result).asInvalidProtocolBufferException();
-          }
-          return buildPartial();
-        }
-        
-        public com.camera.CameraMsgs.cameraStatus.cameraTracks buildPartial() {
-          if (result == null) {
-            throw new IllegalStateException(
-              "build() has already been called on this Builder.");
-          }
-          com.camera.CameraMsgs.cameraStatus.cameraTracks returnMe = result;
-          result = null;
-          return returnMe;
-        }
-        
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof com.camera.CameraMsgs.cameraStatus.cameraTracks) {
-            return mergeFrom((com.camera.CameraMsgs.cameraStatus.cameraTracks)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-        
-        public Builder mergeFrom(com.camera.CameraMsgs.cameraStatus.cameraTracks other) {
-          if (other == com.camera.CameraMsgs.cameraStatus.cameraTracks.getDefaultInstance()) return this;
-          if (other.hasTime()) {
-            setTime(other.getTime());
-          }
-          if (other.hasNumTargets()) {
-            setNumTargets(other.getNumTargets());
-          }
-          if (other.hasTargetNumber()) {
-            setTargetNumber(other.getTargetNumber());
-          }
-          if (other.hasTargetX()) {
-            setTargetX(other.getTargetX());
-          }
-          if (other.hasTargetY()) {
-            setTargetY(other.getTargetY());
-          }
-          if (other.hasLaserX()) {
-            setLaserX(other.getLaserX());
-          }
-          if (other.hasLaserY()) {
-            setLaserY(other.getLaserY());
-          }
-          if (other.hasLaserOn()) {
-            setLaserOn(other.getLaserOn());
-          }
-          if (other.hasTargetConfidenceX()) {
-            setTargetConfidenceX(other.getTargetConfidenceX());
-          }
-          if (other.hasTargetConfidenceY()) {
-            setTargetConfidenceY(other.getTargetConfidenceY());
-          }
-          if (other.hasLaserConfidenceX()) {
-            setLaserConfidenceX(other.getLaserConfidenceX());
-          }
-          if (other.hasLaserConfidenceY()) {
-            setLaserConfidenceY(other.getLaserConfidenceY());
-          }
-          this.mergeUnknownFields(other.getUnknownFields());
-          return this;
-        }
-        
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder(
-              this.getUnknownFields());
-          while (true) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                this.setUnknownFields(unknownFields.build());
-                return this;
-              default: {
-                if (!parseUnknownField(input, unknownFields,
-                                       extensionRegistry, tag)) {
-                  this.setUnknownFields(unknownFields.build());
-                  return this;
-                }
-                break;
-              }
-              case 10: {
-                setTime(input.readString());
-                break;
-              }
-              case 16: {
-                setNumTargets(input.readSInt32());
-                break;
-              }
-              case 24: {
-                setTargetNumber(input.readSInt32());
-                break;
-              }
-              case 32: {
-                setTargetX(input.readSInt32());
-                break;
-              }
-              case 40: {
-                setTargetY(input.readSInt32());
-                break;
-              }
-              case 48: {
-                setLaserX(input.readSInt32());
-                break;
-              }
-              case 56: {
-                setLaserY(input.readSInt32());
-                break;
-              }
-              case 64: {
-                setLaserOn(input.readBool());
-                break;
-              }
-              case 72: {
-                setTargetConfidenceX(input.readSInt32());
-                break;
-              }
-              case 80: {
-                setTargetConfidenceY(input.readSInt32());
-                break;
-              }
-              case 88: {
-                setLaserConfidenceX(input.readSInt32());
-                break;
-              }
-              case 96: {
-                setLaserConfidenceY(input.readSInt32());
-                break;
-              }
-            }
-          }
-        }
-        
-        
-        // optional string time = 1;
-        public boolean hasTime() {
-          return result.hasTime();
-        }
-        public java.lang.String getTime() {
-          return result.getTime();
-        }
-        public Builder setTime(java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  result.hasTime = true;
-          result.time_ = value;
-          return this;
-        }
-        public Builder clearTime() {
-          result.hasTime = false;
-          result.time_ = getDefaultInstance().getTime();
-          return this;
-        }
-        
-        // optional sint32 numTargets = 2;
-        public boolean hasNumTargets() {
-          return result.hasNumTargets();
-        }
-        public int getNumTargets() {
-          return result.getNumTargets();
-        }
-        public Builder setNumTargets(int value) {
-          result.hasNumTargets = true;
-          result.numTargets_ = value;
-          return this;
-        }
-        public Builder clearNumTargets() {
-          result.hasNumTargets = false;
-          result.numTargets_ = 0;
-          return this;
-        }
-        
-        // optional sint32 targetNumber = 3;
-        public boolean hasTargetNumber() {
-          return result.hasTargetNumber();
-        }
-        public int getTargetNumber() {
-          return result.getTargetNumber();
-        }
-        public Builder setTargetNumber(int value) {
-          result.hasTargetNumber = true;
-          result.targetNumber_ = value;
-          return this;
-        }
-        public Builder clearTargetNumber() {
-          result.hasTargetNumber = false;
-          result.targetNumber_ = 0;
-          return this;
-        }
-        
-        // optional sint32 targetX = 4;
-        public boolean hasTargetX() {
-          return result.hasTargetX();
-        }
-        public int getTargetX() {
-          return result.getTargetX();
-        }
-        public Builder setTargetX(int value) {
-          result.hasTargetX = true;
-          result.targetX_ = value;
-          return this;
-        }
-        public Builder clearTargetX() {
-          result.hasTargetX = false;
-          result.targetX_ = 0;
-          return this;
-        }
-        
-        // optional sint32 targetY = 5;
-        public boolean hasTargetY() {
-          return result.hasTargetY();
-        }
-        public int getTargetY() {
-          return result.getTargetY();
-        }
-        public Builder setTargetY(int value) {
-          result.hasTargetY = true;
-          result.targetY_ = value;
-          return this;
-        }
-        public Builder clearTargetY() {
-          result.hasTargetY = false;
-          result.targetY_ = 0;
-          return this;
-        }
-        
-        // optional sint32 laserX = 6;
-        public boolean hasLaserX() {
-          return result.hasLaserX();
-        }
-        public int getLaserX() {
-          return result.getLaserX();
-        }
-        public Builder setLaserX(int value) {
-          result.hasLaserX = true;
-          result.laserX_ = value;
-          return this;
-        }
-        public Builder clearLaserX() {
-          result.hasLaserX = false;
-          result.laserX_ = 0;
-          return this;
-        }
-        
-        // optional sint32 laserY = 7;
-        public boolean hasLaserY() {
-          return result.hasLaserY();
-        }
-        public int getLaserY() {
-          return result.getLaserY();
-        }
-        public Builder setLaserY(int value) {
-          result.hasLaserY = true;
-          result.laserY_ = value;
-          return this;
-        }
-        public Builder clearLaserY() {
-          result.hasLaserY = false;
-          result.laserY_ = 0;
-          return this;
-        }
-        
-        // optional bool laserOn = 8;
-        public boolean hasLaserOn() {
-          return result.hasLaserOn();
-        }
-        public boolean getLaserOn() {
-          return result.getLaserOn();
-        }
-        public Builder setLaserOn(boolean value) {
-          result.hasLaserOn = true;
-          result.laserOn_ = value;
-          return this;
-        }
-        public Builder clearLaserOn() {
-          result.hasLaserOn = false;
-          result.laserOn_ = false;
-          return this;
-        }
-        
-        // optional sint32 targetConfidenceX = 9;
-        public boolean hasTargetConfidenceX() {
-          return result.hasTargetConfidenceX();
-        }
-        public int getTargetConfidenceX() {
-          return result.getTargetConfidenceX();
-        }
-        public Builder setTargetConfidenceX(int value) {
-          result.hasTargetConfidenceX = true;
-          result.targetConfidenceX_ = value;
-          return this;
-        }
-        public Builder clearTargetConfidenceX() {
-          result.hasTargetConfidenceX = false;
-          result.targetConfidenceX_ = 0;
-          return this;
-        }
-        
-        // optional sint32 targetConfidenceY = 10;
-        public boolean hasTargetConfidenceY() {
-          return result.hasTargetConfidenceY();
-        }
-        public int getTargetConfidenceY() {
-          return result.getTargetConfidenceY();
-        }
-        public Builder setTargetConfidenceY(int value) {
-          result.hasTargetConfidenceY = true;
-          result.targetConfidenceY_ = value;
-          return this;
-        }
-        public Builder clearTargetConfidenceY() {
-          result.hasTargetConfidenceY = false;
-          result.targetConfidenceY_ = 0;
-          return this;
-        }
-        
-        // optional sint32 laserConfidenceX = 11;
-        public boolean hasLaserConfidenceX() {
-          return result.hasLaserConfidenceX();
-        }
-        public int getLaserConfidenceX() {
-          return result.getLaserConfidenceX();
-        }
-        public Builder setLaserConfidenceX(int value) {
-          result.hasLaserConfidenceX = true;
-          result.laserConfidenceX_ = value;
-          return this;
-        }
-        public Builder clearLaserConfidenceX() {
-          result.hasLaserConfidenceX = false;
-          result.laserConfidenceX_ = 0;
-          return this;
-        }
-        
-        // optional sint32 laserConfidenceY = 12;
-        public boolean hasLaserConfidenceY() {
-          return result.hasLaserConfidenceY();
-        }
-        public int getLaserConfidenceY() {
-          return result.getLaserConfidenceY();
-        }
-        public Builder setLaserConfidenceY(int value) {
-          result.hasLaserConfidenceY = true;
-          result.laserConfidenceY_ = value;
-          return this;
-        }
-        public Builder clearLaserConfidenceY() {
-          result.hasLaserConfidenceY = false;
-          result.laserConfidenceY_ = 0;
-          return this;
-        }
-        
-        // @@protoc_insertion_point(builder_scope:cameraMsgs.cameraStatus.cameraTracks)
-      }
-      
-      static {
-        defaultInstance = new cameraTracks(true);
-        com.camera.CameraMsgs.internalForceInit();
-        defaultInstance.initFields();
-      }
-      
-      // @@protoc_insertion_point(class_scope:cameraMsgs.cameraStatus.cameraTracks)
-    }
+    // optional .cameraMsgs.systemStatus status = 2 [default = UNKNOWN];
+    public static final int STATUS_FIELD_NUMBER = 2;
+    private boolean hasStatus;
+    private com.camera.CameraMsgs.systemStatus status_;
+    public boolean hasStatus() { return hasStatus; }
+    public com.camera.CameraMsgs.systemStatus getStatus() { return status_; }
     
-    public static final class cameraImage extends
-        com.google.protobuf.GeneratedMessage {
-      // Use cameraImage.newBuilder() to construct.
-      private cameraImage() {
-        initFields();
-      }
-      private cameraImage(boolean noInit) {}
-      
-      private static final cameraImage defaultInstance;
-      public static cameraImage getDefaultInstance() {
-        return defaultInstance;
-      }
-      
-      public cameraImage getDefaultInstanceForType() {
-        return defaultInstance;
-      }
-      
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.camera.CameraMsgs.internal_static_cameraMsgs_cameraStatus_cameraImage_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.camera.CameraMsgs.internal_static_cameraMsgs_cameraStatus_cameraImage_fieldAccessorTable;
-      }
-      
-      // optional string time = 1;
-      public static final int TIME_FIELD_NUMBER = 1;
-      private boolean hasTime;
-      private java.lang.String time_ = "";
-      public boolean hasTime() { return hasTime; }
-      public java.lang.String getTime() { return time_; }
-      
-      // optional sint32 channels = 2;
-      public static final int CHANNELS_FIELD_NUMBER = 2;
-      private boolean hasChannels;
-      private int channels_ = 0;
-      public boolean hasChannels() { return hasChannels; }
-      public int getChannels() { return channels_; }
-      
-      // optional sint32 sizeX = 3;
-      public static final int SIZEX_FIELD_NUMBER = 3;
-      private boolean hasSizeX;
-      private int sizeX_ = 0;
-      public boolean hasSizeX() { return hasSizeX; }
-      public int getSizeX() { return sizeX_; }
-      
-      // optional sint32 sizeY = 4;
-      public static final int SIZEY_FIELD_NUMBER = 4;
-      private boolean hasSizeY;
-      private int sizeY_ = 0;
-      public boolean hasSizeY() { return hasSizeY; }
-      public int getSizeY() { return sizeY_; }
-      
-      // optional bytes imageData = 5;
-      public static final int IMAGEDATA_FIELD_NUMBER = 5;
-      private boolean hasImageData;
-      private com.google.protobuf.ByteString imageData_ = com.google.protobuf.ByteString.EMPTY;
-      public boolean hasImageData() { return hasImageData; }
-      public com.google.protobuf.ByteString getImageData() { return imageData_; }
-      
-      private void initFields() {
-      }
-      public final boolean isInitialized() {
-        return true;
-      }
-      
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        getSerializedSize();
-        if (hasTime()) {
-          output.writeString(1, getTime());
-        }
-        if (hasChannels()) {
-          output.writeSInt32(2, getChannels());
-        }
-        if (hasSizeX()) {
-          output.writeSInt32(3, getSizeX());
-        }
-        if (hasSizeY()) {
-          output.writeSInt32(4, getSizeY());
-        }
-        if (hasImageData()) {
-          output.writeBytes(5, getImageData());
-        }
-        getUnknownFields().writeTo(output);
-      }
-      
-      private int memoizedSerializedSize = -1;
-      public int getSerializedSize() {
-        int size = memoizedSerializedSize;
-        if (size != -1) return size;
-      
-        size = 0;
-        if (hasTime()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeStringSize(1, getTime());
-        }
-        if (hasChannels()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(2, getChannels());
-        }
-        if (hasSizeX()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(3, getSizeX());
-        }
-        if (hasSizeY()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeSInt32Size(4, getSizeY());
-        }
-        if (hasImageData()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(5, getImageData());
-        }
-        size += getUnknownFields().getSerializedSize();
-        memoizedSerializedSize = size;
-        return size;
-      }
-      
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static com.camera.CameraMsgs.cameraStatus.cameraImage parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      
-      public static Builder newBuilder() { return Builder.create(); }
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder(com.camera.CameraMsgs.cameraStatus.cameraImage prototype) {
-        return newBuilder().mergeFrom(prototype);
-      }
-      public Builder toBuilder() { return newBuilder(this); }
-      
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessage.Builder<Builder> {
-        private com.camera.CameraMsgs.cameraStatus.cameraImage result;
-        
-        // Construct using com.camera.CameraMsgs.cameraStatus.cameraImage.newBuilder()
-        private Builder() {}
-        
-        private static Builder create() {
-          Builder builder = new Builder();
-          builder.result = new com.camera.CameraMsgs.cameraStatus.cameraImage();
-          return builder;
-        }
-        
-        protected com.camera.CameraMsgs.cameraStatus.cameraImage internalGetResult() {
-          return result;
-        }
-        
-        public Builder clear() {
-          if (result == null) {
-            throw new IllegalStateException(
-              "Cannot call clear() after build().");
-          }
-          result = new com.camera.CameraMsgs.cameraStatus.cameraImage();
-          return this;
-        }
-        
-        public Builder clone() {
-          return create().mergeFrom(result);
-        }
-        
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return com.camera.CameraMsgs.cameraStatus.cameraImage.getDescriptor();
-        }
-        
-        public com.camera.CameraMsgs.cameraStatus.cameraImage getDefaultInstanceForType() {
-          return com.camera.CameraMsgs.cameraStatus.cameraImage.getDefaultInstance();
-        }
-        
-        public boolean isInitialized() {
-          return result.isInitialized();
-        }
-        public com.camera.CameraMsgs.cameraStatus.cameraImage build() {
-          if (result != null && !isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return buildPartial();
-        }
-        
-        private com.camera.CameraMsgs.cameraStatus.cameraImage buildParsed()
-            throws com.google.protobuf.InvalidProtocolBufferException {
-          if (!isInitialized()) {
-            throw newUninitializedMessageException(
-              result).asInvalidProtocolBufferException();
-          }
-          return buildPartial();
-        }
-        
-        public com.camera.CameraMsgs.cameraStatus.cameraImage buildPartial() {
-          if (result == null) {
-            throw new IllegalStateException(
-              "build() has already been called on this Builder.");
-          }
-          com.camera.CameraMsgs.cameraStatus.cameraImage returnMe = result;
-          result = null;
-          return returnMe;
-        }
-        
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof com.camera.CameraMsgs.cameraStatus.cameraImage) {
-            return mergeFrom((com.camera.CameraMsgs.cameraStatus.cameraImage)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-        
-        public Builder mergeFrom(com.camera.CameraMsgs.cameraStatus.cameraImage other) {
-          if (other == com.camera.CameraMsgs.cameraStatus.cameraImage.getDefaultInstance()) return this;
-          if (other.hasTime()) {
-            setTime(other.getTime());
-          }
-          if (other.hasChannels()) {
-            setChannels(other.getChannels());
-          }
-          if (other.hasSizeX()) {
-            setSizeX(other.getSizeX());
-          }
-          if (other.hasSizeY()) {
-            setSizeY(other.getSizeY());
-          }
-          if (other.hasImageData()) {
-            setImageData(other.getImageData());
-          }
-          this.mergeUnknownFields(other.getUnknownFields());
-          return this;
-        }
-        
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder(
-              this.getUnknownFields());
-          while (true) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                this.setUnknownFields(unknownFields.build());
-                return this;
-              default: {
-                if (!parseUnknownField(input, unknownFields,
-                                       extensionRegistry, tag)) {
-                  this.setUnknownFields(unknownFields.build());
-                  return this;
-                }
-                break;
-              }
-              case 10: {
-                setTime(input.readString());
-                break;
-              }
-              case 16: {
-                setChannels(input.readSInt32());
-                break;
-              }
-              case 24: {
-                setSizeX(input.readSInt32());
-                break;
-              }
-              case 32: {
-                setSizeY(input.readSInt32());
-                break;
-              }
-              case 42: {
-                setImageData(input.readBytes());
-                break;
-              }
-            }
-          }
-        }
-        
-        
-        // optional string time = 1;
-        public boolean hasTime() {
-          return result.hasTime();
-        }
-        public java.lang.String getTime() {
-          return result.getTime();
-        }
-        public Builder setTime(java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  result.hasTime = true;
-          result.time_ = value;
-          return this;
-        }
-        public Builder clearTime() {
-          result.hasTime = false;
-          result.time_ = getDefaultInstance().getTime();
-          return this;
-        }
-        
-        // optional sint32 channels = 2;
-        public boolean hasChannels() {
-          return result.hasChannels();
-        }
-        public int getChannels() {
-          return result.getChannels();
-        }
-        public Builder setChannels(int value) {
-          result.hasChannels = true;
-          result.channels_ = value;
-          return this;
-        }
-        public Builder clearChannels() {
-          result.hasChannels = false;
-          result.channels_ = 0;
-          return this;
-        }
-        
-        // optional sint32 sizeX = 3;
-        public boolean hasSizeX() {
-          return result.hasSizeX();
-        }
-        public int getSizeX() {
-          return result.getSizeX();
-        }
-        public Builder setSizeX(int value) {
-          result.hasSizeX = true;
-          result.sizeX_ = value;
-          return this;
-        }
-        public Builder clearSizeX() {
-          result.hasSizeX = false;
-          result.sizeX_ = 0;
-          return this;
-        }
-        
-        // optional sint32 sizeY = 4;
-        public boolean hasSizeY() {
-          return result.hasSizeY();
-        }
-        public int getSizeY() {
-          return result.getSizeY();
-        }
-        public Builder setSizeY(int value) {
-          result.hasSizeY = true;
-          result.sizeY_ = value;
-          return this;
-        }
-        public Builder clearSizeY() {
-          result.hasSizeY = false;
-          result.sizeY_ = 0;
-          return this;
-        }
-        
-        // optional bytes imageData = 5;
-        public boolean hasImageData() {
-          return result.hasImageData();
-        }
-        public com.google.protobuf.ByteString getImageData() {
-          return result.getImageData();
-        }
-        public Builder setImageData(com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  result.hasImageData = true;
-          result.imageData_ = value;
-          return this;
-        }
-        public Builder clearImageData() {
-          result.hasImageData = false;
-          result.imageData_ = getDefaultInstance().getImageData();
-          return this;
-        }
-        
-        // @@protoc_insertion_point(builder_scope:cameraMsgs.cameraStatus.cameraImage)
-      }
-      
-      static {
-        defaultInstance = new cameraImage(true);
-        com.camera.CameraMsgs.internalForceInit();
-        defaultInstance.initFields();
-      }
-      
-      // @@protoc_insertion_point(class_scope:cameraMsgs.cameraStatus.cameraImage)
-    }
-    
-    // optional bool sensorStatus = 1;
-    public static final int SENSORSTATUS_FIELD_NUMBER = 1;
-    private boolean hasSensorStatus;
-    private boolean sensorStatus_ = false;
-    public boolean hasSensorStatus() { return hasSensorStatus; }
-    public boolean getSensorStatus() { return sensorStatus_; }
-    
-    // optional bool laserOn = 2;
-    public static final int LASERON_FIELD_NUMBER = 2;
+    // optional bool laserOn = 3;
+    public static final int LASERON_FIELD_NUMBER = 3;
     private boolean hasLaserOn;
     private boolean laserOn_ = false;
     public boolean hasLaserOn() { return hasLaserOn; }
     public boolean getLaserOn() { return laserOn_; }
     
-    // optional string text = 3;
-    public static final int TEXT_FIELD_NUMBER = 3;
+    // optional string text = 4;
+    public static final int TEXT_FIELD_NUMBER = 4;
     private boolean hasText;
     private java.lang.String text_ = "";
     public boolean hasText() { return hasText; }
     public java.lang.String getText() { return text_; }
     
     private void initFields() {
+      status_ = com.camera.CameraMsgs.systemStatus.UNKNOWN;
     }
     public final boolean isInitialized() {
       return true;
@@ -1300,14 +148,17 @@ public final class CameraMsgs {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (hasSensorStatus()) {
-        output.writeBool(1, getSensorStatus());
+      if (hasTime()) {
+        output.writeInt64(1, getTime());
+      }
+      if (hasStatus()) {
+        output.writeEnum(2, getStatus().getNumber());
       }
       if (hasLaserOn()) {
-        output.writeBool(2, getLaserOn());
+        output.writeBool(3, getLaserOn());
       }
       if (hasText()) {
-        output.writeString(3, getText());
+        output.writeString(4, getText());
       }
       getUnknownFields().writeTo(output);
     }
@@ -1318,17 +169,21 @@ public final class CameraMsgs {
       if (size != -1) return size;
     
       size = 0;
-      if (hasSensorStatus()) {
+      if (hasTime()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(1, getSensorStatus());
+          .computeInt64Size(1, getTime());
+      }
+      if (hasStatus()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, getStatus().getNumber());
       }
       if (hasLaserOn()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(2, getLaserOn());
+          .computeBoolSize(3, getLaserOn());
       }
       if (hasText()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(3, getText());
+          .computeStringSize(4, getText());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1488,8 +343,11 @@ public final class CameraMsgs {
       
       public Builder mergeFrom(com.camera.CameraMsgs.cameraStatus other) {
         if (other == com.camera.CameraMsgs.cameraStatus.getDefaultInstance()) return this;
-        if (other.hasSensorStatus()) {
-          setSensorStatus(other.getSensorStatus());
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        if (other.hasStatus()) {
+          setStatus(other.getStatus());
         }
         if (other.hasLaserOn()) {
           setLaserOn(other.getLaserOn());
@@ -1523,14 +381,24 @@ public final class CameraMsgs {
               break;
             }
             case 8: {
-              setSensorStatus(input.readBool());
+              setTime(input.readInt64());
               break;
             }
             case 16: {
+              int rawValue = input.readEnum();
+              com.camera.CameraMsgs.systemStatus value = com.camera.CameraMsgs.systemStatus.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(2, rawValue);
+              } else {
+                setStatus(value);
+              }
+              break;
+            }
+            case 24: {
               setLaserOn(input.readBool());
               break;
             }
-            case 26: {
+            case 34: {
               setText(input.readString());
               break;
             }
@@ -1539,25 +407,46 @@ public final class CameraMsgs {
       }
       
       
-      // optional bool sensorStatus = 1;
-      public boolean hasSensorStatus() {
-        return result.hasSensorStatus();
+      // optional int64 time = 1;
+      public boolean hasTime() {
+        return result.hasTime();
       }
-      public boolean getSensorStatus() {
-        return result.getSensorStatus();
+      public long getTime() {
+        return result.getTime();
       }
-      public Builder setSensorStatus(boolean value) {
-        result.hasSensorStatus = true;
-        result.sensorStatus_ = value;
+      public Builder setTime(long value) {
+        result.hasTime = true;
+        result.time_ = value;
         return this;
       }
-      public Builder clearSensorStatus() {
-        result.hasSensorStatus = false;
-        result.sensorStatus_ = false;
+      public Builder clearTime() {
+        result.hasTime = false;
+        result.time_ = 0L;
         return this;
       }
       
-      // optional bool laserOn = 2;
+      // optional .cameraMsgs.systemStatus status = 2 [default = UNKNOWN];
+      public boolean hasStatus() {
+        return result.hasStatus();
+      }
+      public com.camera.CameraMsgs.systemStatus getStatus() {
+        return result.getStatus();
+      }
+      public Builder setStatus(com.camera.CameraMsgs.systemStatus value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasStatus = true;
+        result.status_ = value;
+        return this;
+      }
+      public Builder clearStatus() {
+        result.hasStatus = false;
+        result.status_ = com.camera.CameraMsgs.systemStatus.UNKNOWN;
+        return this;
+      }
+      
+      // optional bool laserOn = 3;
       public boolean hasLaserOn() {
         return result.hasLaserOn();
       }
@@ -1575,7 +464,7 @@ public final class CameraMsgs {
         return this;
       }
       
-      // optional string text = 3;
+      // optional string text = 4;
       public boolean hasText() {
         return result.hasText();
       }
@@ -1608,21 +497,1336 @@ public final class CameraMsgs {
     // @@protoc_insertion_point(class_scope:cameraMsgs.cameraStatus)
   }
   
+  public static final class track extends
+      com.google.protobuf.GeneratedMessage {
+    // Use track.newBuilder() to construct.
+    private track() {
+      initFields();
+    }
+    private track(boolean noInit) {}
+    
+    private static final track defaultInstance;
+    public static track getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public track getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.camera.CameraMsgs.internal_static_cameraMsgs_track_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.camera.CameraMsgs.internal_static_cameraMsgs_track_fieldAccessorTable;
+    }
+    
+    // optional sint32 x = 1;
+    public static final int X_FIELD_NUMBER = 1;
+    private boolean hasX;
+    private int x_ = 0;
+    public boolean hasX() { return hasX; }
+    public int getX() { return x_; }
+    
+    // optional sint32 y = 2;
+    public static final int Y_FIELD_NUMBER = 2;
+    private boolean hasY;
+    private int y_ = 0;
+    public boolean hasY() { return hasY; }
+    public int getY() { return y_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasX()) {
+        output.writeSInt32(1, getX());
+      }
+      if (hasY()) {
+        output.writeSInt32(2, getY());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasX()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeSInt32Size(1, getX());
+      }
+      if (hasY()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeSInt32Size(2, getY());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static com.camera.CameraMsgs.track parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static com.camera.CameraMsgs.track parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.camera.CameraMsgs.track parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static com.camera.CameraMsgs.track parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.camera.CameraMsgs.track parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static com.camera.CameraMsgs.track parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.camera.CameraMsgs.track parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static com.camera.CameraMsgs.track parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static com.camera.CameraMsgs.track parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static com.camera.CameraMsgs.track parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.camera.CameraMsgs.track prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private com.camera.CameraMsgs.track result;
+      
+      // Construct using com.camera.CameraMsgs.track.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new com.camera.CameraMsgs.track();
+        return builder;
+      }
+      
+      protected com.camera.CameraMsgs.track internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new com.camera.CameraMsgs.track();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.camera.CameraMsgs.track.getDescriptor();
+      }
+      
+      public com.camera.CameraMsgs.track getDefaultInstanceForType() {
+        return com.camera.CameraMsgs.track.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public com.camera.CameraMsgs.track build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private com.camera.CameraMsgs.track buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public com.camera.CameraMsgs.track buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        com.camera.CameraMsgs.track returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.camera.CameraMsgs.track) {
+          return mergeFrom((com.camera.CameraMsgs.track)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(com.camera.CameraMsgs.track other) {
+        if (other == com.camera.CameraMsgs.track.getDefaultInstance()) return this;
+        if (other.hasX()) {
+          setX(other.getX());
+        }
+        if (other.hasY()) {
+          setY(other.getY());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setX(input.readSInt32());
+              break;
+            }
+            case 16: {
+              setY(input.readSInt32());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional sint32 x = 1;
+      public boolean hasX() {
+        return result.hasX();
+      }
+      public int getX() {
+        return result.getX();
+      }
+      public Builder setX(int value) {
+        result.hasX = true;
+        result.x_ = value;
+        return this;
+      }
+      public Builder clearX() {
+        result.hasX = false;
+        result.x_ = 0;
+        return this;
+      }
+      
+      // optional sint32 y = 2;
+      public boolean hasY() {
+        return result.hasY();
+      }
+      public int getY() {
+        return result.getY();
+      }
+      public Builder setY(int value) {
+        result.hasY = true;
+        result.y_ = value;
+        return this;
+      }
+      public Builder clearY() {
+        result.hasY = false;
+        result.y_ = 0;
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:cameraMsgs.track)
+    }
+    
+    static {
+      defaultInstance = new track(true);
+      com.camera.CameraMsgs.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:cameraMsgs.track)
+  }
+  
+  public static final class cameraTracks extends
+      com.google.protobuf.GeneratedMessage {
+    // Use cameraTracks.newBuilder() to construct.
+    private cameraTracks() {
+      initFields();
+    }
+    private cameraTracks(boolean noInit) {}
+    
+    private static final cameraTracks defaultInstance;
+    public static cameraTracks getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public cameraTracks getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.camera.CameraMsgs.internal_static_cameraMsgs_cameraTracks_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.camera.CameraMsgs.internal_static_cameraMsgs_cameraTracks_fieldAccessorTable;
+    }
+    
+    // optional int64 time = 1;
+    public static final int TIME_FIELD_NUMBER = 1;
+    private boolean hasTime;
+    private long time_ = 0L;
+    public boolean hasTime() { return hasTime; }
+    public long getTime() { return time_; }
+    
+    // optional .cameraMsgs.systemStatus status = 2 [default = UNKNOWN];
+    public static final int STATUS_FIELD_NUMBER = 2;
+    private boolean hasStatus;
+    private com.camera.CameraMsgs.systemStatus status_;
+    public boolean hasStatus() { return hasStatus; }
+    public com.camera.CameraMsgs.systemStatus getStatus() { return status_; }
+    
+    // repeated .cameraMsgs.track target = 3;
+    public static final int TARGET_FIELD_NUMBER = 3;
+    private java.util.List<com.camera.CameraMsgs.track> target_ =
+      java.util.Collections.emptyList();
+    public java.util.List<com.camera.CameraMsgs.track> getTargetList() {
+      return target_;
+    }
+    public int getTargetCount() { return target_.size(); }
+    public com.camera.CameraMsgs.track getTarget(int index) {
+      return target_.get(index);
+    }
+    
+    // repeated .cameraMsgs.track laser = 4;
+    public static final int LASER_FIELD_NUMBER = 4;
+    private java.util.List<com.camera.CameraMsgs.track> laser_ =
+      java.util.Collections.emptyList();
+    public java.util.List<com.camera.CameraMsgs.track> getLaserList() {
+      return laser_;
+    }
+    public int getLaserCount() { return laser_.size(); }
+    public com.camera.CameraMsgs.track getLaser(int index) {
+      return laser_.get(index);
+    }
+    
+    // optional bool laserOn = 5;
+    public static final int LASERON_FIELD_NUMBER = 5;
+    private boolean hasLaserOn;
+    private boolean laserOn_ = false;
+    public boolean hasLaserOn() { return hasLaserOn; }
+    public boolean getLaserOn() { return laserOn_; }
+    
+    private void initFields() {
+      status_ = com.camera.CameraMsgs.systemStatus.UNKNOWN;
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasTime()) {
+        output.writeInt64(1, getTime());
+      }
+      if (hasStatus()) {
+        output.writeEnum(2, getStatus().getNumber());
+      }
+      for (com.camera.CameraMsgs.track element : getTargetList()) {
+        output.writeMessage(3, element);
+      }
+      for (com.camera.CameraMsgs.track element : getLaserList()) {
+        output.writeMessage(4, element);
+      }
+      if (hasLaserOn()) {
+        output.writeBool(5, getLaserOn());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasTime()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, getTime());
+      }
+      if (hasStatus()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, getStatus().getNumber());
+      }
+      for (com.camera.CameraMsgs.track element : getTargetList()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, element);
+      }
+      for (com.camera.CameraMsgs.track element : getLaserList()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, element);
+      }
+      if (hasLaserOn()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(5, getLaserOn());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static com.camera.CameraMsgs.cameraTracks parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraTracks parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraTracks parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraTracks parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraTracks parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraTracks parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraTracks parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static com.camera.CameraMsgs.cameraTracks parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static com.camera.CameraMsgs.cameraTracks parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraTracks parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.camera.CameraMsgs.cameraTracks prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private com.camera.CameraMsgs.cameraTracks result;
+      
+      // Construct using com.camera.CameraMsgs.cameraTracks.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new com.camera.CameraMsgs.cameraTracks();
+        return builder;
+      }
+      
+      protected com.camera.CameraMsgs.cameraTracks internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new com.camera.CameraMsgs.cameraTracks();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.camera.CameraMsgs.cameraTracks.getDescriptor();
+      }
+      
+      public com.camera.CameraMsgs.cameraTracks getDefaultInstanceForType() {
+        return com.camera.CameraMsgs.cameraTracks.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public com.camera.CameraMsgs.cameraTracks build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private com.camera.CameraMsgs.cameraTracks buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public com.camera.CameraMsgs.cameraTracks buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        if (result.target_ != java.util.Collections.EMPTY_LIST) {
+          result.target_ =
+            java.util.Collections.unmodifiableList(result.target_);
+        }
+        if (result.laser_ != java.util.Collections.EMPTY_LIST) {
+          result.laser_ =
+            java.util.Collections.unmodifiableList(result.laser_);
+        }
+        com.camera.CameraMsgs.cameraTracks returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.camera.CameraMsgs.cameraTracks) {
+          return mergeFrom((com.camera.CameraMsgs.cameraTracks)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(com.camera.CameraMsgs.cameraTracks other) {
+        if (other == com.camera.CameraMsgs.cameraTracks.getDefaultInstance()) return this;
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        if (other.hasStatus()) {
+          setStatus(other.getStatus());
+        }
+        if (!other.target_.isEmpty()) {
+          if (result.target_.isEmpty()) {
+            result.target_ = new java.util.ArrayList<com.camera.CameraMsgs.track>();
+          }
+          result.target_.addAll(other.target_);
+        }
+        if (!other.laser_.isEmpty()) {
+          if (result.laser_.isEmpty()) {
+            result.laser_ = new java.util.ArrayList<com.camera.CameraMsgs.track>();
+          }
+          result.laser_.addAll(other.laser_);
+        }
+        if (other.hasLaserOn()) {
+          setLaserOn(other.getLaserOn());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setTime(input.readInt64());
+              break;
+            }
+            case 16: {
+              int rawValue = input.readEnum();
+              com.camera.CameraMsgs.systemStatus value = com.camera.CameraMsgs.systemStatus.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(2, rawValue);
+              } else {
+                setStatus(value);
+              }
+              break;
+            }
+            case 26: {
+              com.camera.CameraMsgs.track.Builder subBuilder = com.camera.CameraMsgs.track.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addTarget(subBuilder.buildPartial());
+              break;
+            }
+            case 34: {
+              com.camera.CameraMsgs.track.Builder subBuilder = com.camera.CameraMsgs.track.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addLaser(subBuilder.buildPartial());
+              break;
+            }
+            case 40: {
+              setLaserOn(input.readBool());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional int64 time = 1;
+      public boolean hasTime() {
+        return result.hasTime();
+      }
+      public long getTime() {
+        return result.getTime();
+      }
+      public Builder setTime(long value) {
+        result.hasTime = true;
+        result.time_ = value;
+        return this;
+      }
+      public Builder clearTime() {
+        result.hasTime = false;
+        result.time_ = 0L;
+        return this;
+      }
+      
+      // optional .cameraMsgs.systemStatus status = 2 [default = UNKNOWN];
+      public boolean hasStatus() {
+        return result.hasStatus();
+      }
+      public com.camera.CameraMsgs.systemStatus getStatus() {
+        return result.getStatus();
+      }
+      public Builder setStatus(com.camera.CameraMsgs.systemStatus value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasStatus = true;
+        result.status_ = value;
+        return this;
+      }
+      public Builder clearStatus() {
+        result.hasStatus = false;
+        result.status_ = com.camera.CameraMsgs.systemStatus.UNKNOWN;
+        return this;
+      }
+      
+      // repeated .cameraMsgs.track target = 3;
+      public java.util.List<com.camera.CameraMsgs.track> getTargetList() {
+        return java.util.Collections.unmodifiableList(result.target_);
+      }
+      public int getTargetCount() {
+        return result.getTargetCount();
+      }
+      public com.camera.CameraMsgs.track getTarget(int index) {
+        return result.getTarget(index);
+      }
+      public Builder setTarget(int index, com.camera.CameraMsgs.track value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.target_.set(index, value);
+        return this;
+      }
+      public Builder setTarget(int index, com.camera.CameraMsgs.track.Builder builderForValue) {
+        result.target_.set(index, builderForValue.build());
+        return this;
+      }
+      public Builder addTarget(com.camera.CameraMsgs.track value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        if (result.target_.isEmpty()) {
+          result.target_ = new java.util.ArrayList<com.camera.CameraMsgs.track>();
+        }
+        result.target_.add(value);
+        return this;
+      }
+      public Builder addTarget(com.camera.CameraMsgs.track.Builder builderForValue) {
+        if (result.target_.isEmpty()) {
+          result.target_ = new java.util.ArrayList<com.camera.CameraMsgs.track>();
+        }
+        result.target_.add(builderForValue.build());
+        return this;
+      }
+      public Builder addAllTarget(
+          java.lang.Iterable<? extends com.camera.CameraMsgs.track> values) {
+        if (result.target_.isEmpty()) {
+          result.target_ = new java.util.ArrayList<com.camera.CameraMsgs.track>();
+        }
+        super.addAll(values, result.target_);
+        return this;
+      }
+      public Builder clearTarget() {
+        result.target_ = java.util.Collections.emptyList();
+        return this;
+      }
+      
+      // repeated .cameraMsgs.track laser = 4;
+      public java.util.List<com.camera.CameraMsgs.track> getLaserList() {
+        return java.util.Collections.unmodifiableList(result.laser_);
+      }
+      public int getLaserCount() {
+        return result.getLaserCount();
+      }
+      public com.camera.CameraMsgs.track getLaser(int index) {
+        return result.getLaser(index);
+      }
+      public Builder setLaser(int index, com.camera.CameraMsgs.track value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.laser_.set(index, value);
+        return this;
+      }
+      public Builder setLaser(int index, com.camera.CameraMsgs.track.Builder builderForValue) {
+        result.laser_.set(index, builderForValue.build());
+        return this;
+      }
+      public Builder addLaser(com.camera.CameraMsgs.track value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        if (result.laser_.isEmpty()) {
+          result.laser_ = new java.util.ArrayList<com.camera.CameraMsgs.track>();
+        }
+        result.laser_.add(value);
+        return this;
+      }
+      public Builder addLaser(com.camera.CameraMsgs.track.Builder builderForValue) {
+        if (result.laser_.isEmpty()) {
+          result.laser_ = new java.util.ArrayList<com.camera.CameraMsgs.track>();
+        }
+        result.laser_.add(builderForValue.build());
+        return this;
+      }
+      public Builder addAllLaser(
+          java.lang.Iterable<? extends com.camera.CameraMsgs.track> values) {
+        if (result.laser_.isEmpty()) {
+          result.laser_ = new java.util.ArrayList<com.camera.CameraMsgs.track>();
+        }
+        super.addAll(values, result.laser_);
+        return this;
+      }
+      public Builder clearLaser() {
+        result.laser_ = java.util.Collections.emptyList();
+        return this;
+      }
+      
+      // optional bool laserOn = 5;
+      public boolean hasLaserOn() {
+        return result.hasLaserOn();
+      }
+      public boolean getLaserOn() {
+        return result.getLaserOn();
+      }
+      public Builder setLaserOn(boolean value) {
+        result.hasLaserOn = true;
+        result.laserOn_ = value;
+        return this;
+      }
+      public Builder clearLaserOn() {
+        result.hasLaserOn = false;
+        result.laserOn_ = false;
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:cameraMsgs.cameraTracks)
+    }
+    
+    static {
+      defaultInstance = new cameraTracks(true);
+      com.camera.CameraMsgs.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:cameraMsgs.cameraTracks)
+  }
+  
+  public static final class cameraImage extends
+      com.google.protobuf.GeneratedMessage {
+    // Use cameraImage.newBuilder() to construct.
+    private cameraImage() {
+      initFields();
+    }
+    private cameraImage(boolean noInit) {}
+    
+    private static final cameraImage defaultInstance;
+    public static cameraImage getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public cameraImage getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.camera.CameraMsgs.internal_static_cameraMsgs_cameraImage_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.camera.CameraMsgs.internal_static_cameraMsgs_cameraImage_fieldAccessorTable;
+    }
+    
+    // optional int64 time = 1;
+    public static final int TIME_FIELD_NUMBER = 1;
+    private boolean hasTime;
+    private long time_ = 0L;
+    public boolean hasTime() { return hasTime; }
+    public long getTime() { return time_; }
+    
+    // optional sint32 channels = 2;
+    public static final int CHANNELS_FIELD_NUMBER = 2;
+    private boolean hasChannels;
+    private int channels_ = 0;
+    public boolean hasChannels() { return hasChannels; }
+    public int getChannels() { return channels_; }
+    
+    // optional sint32 sizeX = 3;
+    public static final int SIZEX_FIELD_NUMBER = 3;
+    private boolean hasSizeX;
+    private int sizeX_ = 0;
+    public boolean hasSizeX() { return hasSizeX; }
+    public int getSizeX() { return sizeX_; }
+    
+    // optional sint32 sizeY = 4;
+    public static final int SIZEY_FIELD_NUMBER = 4;
+    private boolean hasSizeY;
+    private int sizeY_ = 0;
+    public boolean hasSizeY() { return hasSizeY; }
+    public int getSizeY() { return sizeY_; }
+    
+    // optional bytes imageData = 5;
+    public static final int IMAGEDATA_FIELD_NUMBER = 5;
+    private boolean hasImageData;
+    private com.google.protobuf.ByteString imageData_ = com.google.protobuf.ByteString.EMPTY;
+    public boolean hasImageData() { return hasImageData; }
+    public com.google.protobuf.ByteString getImageData() { return imageData_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasTime()) {
+        output.writeInt64(1, getTime());
+      }
+      if (hasChannels()) {
+        output.writeSInt32(2, getChannels());
+      }
+      if (hasSizeX()) {
+        output.writeSInt32(3, getSizeX());
+      }
+      if (hasSizeY()) {
+        output.writeSInt32(4, getSizeY());
+      }
+      if (hasImageData()) {
+        output.writeBytes(5, getImageData());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasTime()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, getTime());
+      }
+      if (hasChannels()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeSInt32Size(2, getChannels());
+      }
+      if (hasSizeX()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeSInt32Size(3, getSizeX());
+      }
+      if (hasSizeY()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeSInt32Size(4, getSizeY());
+      }
+      if (hasImageData()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, getImageData());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static com.camera.CameraMsgs.cameraImage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraImage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraImage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraImage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraImage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraImage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraImage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static com.camera.CameraMsgs.cameraImage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static com.camera.CameraMsgs.cameraImage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static com.camera.CameraMsgs.cameraImage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.camera.CameraMsgs.cameraImage prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private com.camera.CameraMsgs.cameraImage result;
+      
+      // Construct using com.camera.CameraMsgs.cameraImage.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new com.camera.CameraMsgs.cameraImage();
+        return builder;
+      }
+      
+      protected com.camera.CameraMsgs.cameraImage internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new com.camera.CameraMsgs.cameraImage();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.camera.CameraMsgs.cameraImage.getDescriptor();
+      }
+      
+      public com.camera.CameraMsgs.cameraImage getDefaultInstanceForType() {
+        return com.camera.CameraMsgs.cameraImage.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public com.camera.CameraMsgs.cameraImage build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private com.camera.CameraMsgs.cameraImage buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public com.camera.CameraMsgs.cameraImage buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        com.camera.CameraMsgs.cameraImage returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.camera.CameraMsgs.cameraImage) {
+          return mergeFrom((com.camera.CameraMsgs.cameraImage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(com.camera.CameraMsgs.cameraImage other) {
+        if (other == com.camera.CameraMsgs.cameraImage.getDefaultInstance()) return this;
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        if (other.hasChannels()) {
+          setChannels(other.getChannels());
+        }
+        if (other.hasSizeX()) {
+          setSizeX(other.getSizeX());
+        }
+        if (other.hasSizeY()) {
+          setSizeY(other.getSizeY());
+        }
+        if (other.hasImageData()) {
+          setImageData(other.getImageData());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setTime(input.readInt64());
+              break;
+            }
+            case 16: {
+              setChannels(input.readSInt32());
+              break;
+            }
+            case 24: {
+              setSizeX(input.readSInt32());
+              break;
+            }
+            case 32: {
+              setSizeY(input.readSInt32());
+              break;
+            }
+            case 42: {
+              setImageData(input.readBytes());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional int64 time = 1;
+      public boolean hasTime() {
+        return result.hasTime();
+      }
+      public long getTime() {
+        return result.getTime();
+      }
+      public Builder setTime(long value) {
+        result.hasTime = true;
+        result.time_ = value;
+        return this;
+      }
+      public Builder clearTime() {
+        result.hasTime = false;
+        result.time_ = 0L;
+        return this;
+      }
+      
+      // optional sint32 channels = 2;
+      public boolean hasChannels() {
+        return result.hasChannels();
+      }
+      public int getChannels() {
+        return result.getChannels();
+      }
+      public Builder setChannels(int value) {
+        result.hasChannels = true;
+        result.channels_ = value;
+        return this;
+      }
+      public Builder clearChannels() {
+        result.hasChannels = false;
+        result.channels_ = 0;
+        return this;
+      }
+      
+      // optional sint32 sizeX = 3;
+      public boolean hasSizeX() {
+        return result.hasSizeX();
+      }
+      public int getSizeX() {
+        return result.getSizeX();
+      }
+      public Builder setSizeX(int value) {
+        result.hasSizeX = true;
+        result.sizeX_ = value;
+        return this;
+      }
+      public Builder clearSizeX() {
+        result.hasSizeX = false;
+        result.sizeX_ = 0;
+        return this;
+      }
+      
+      // optional sint32 sizeY = 4;
+      public boolean hasSizeY() {
+        return result.hasSizeY();
+      }
+      public int getSizeY() {
+        return result.getSizeY();
+      }
+      public Builder setSizeY(int value) {
+        result.hasSizeY = true;
+        result.sizeY_ = value;
+        return this;
+      }
+      public Builder clearSizeY() {
+        result.hasSizeY = false;
+        result.sizeY_ = 0;
+        return this;
+      }
+      
+      // optional bytes imageData = 5;
+      public boolean hasImageData() {
+        return result.hasImageData();
+      }
+      public com.google.protobuf.ByteString getImageData() {
+        return result.getImageData();
+      }
+      public Builder setImageData(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasImageData = true;
+        result.imageData_ = value;
+        return this;
+      }
+      public Builder clearImageData() {
+        result.hasImageData = false;
+        result.imageData_ = getDefaultInstance().getImageData();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:cameraMsgs.cameraImage)
+    }
+    
+    static {
+      defaultInstance = new cameraImage(true);
+      com.camera.CameraMsgs.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:cameraMsgs.cameraImage)
+  }
+  
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_cameraMsgs_cameraStatus_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_cameraMsgs_cameraStatus_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_cameraMsgs_cameraStatus_cameraTracks_descriptor;
+    internal_static_cameraMsgs_track_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_cameraMsgs_cameraStatus_cameraTracks_fieldAccessorTable;
+      internal_static_cameraMsgs_track_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_cameraMsgs_cameraStatus_cameraImage_descriptor;
+    internal_static_cameraMsgs_cameraTracks_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_cameraMsgs_cameraStatus_cameraImage_fieldAccessorTable;
+      internal_static_cameraMsgs_cameraTracks_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_cameraMsgs_cameraImage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_cameraMsgs_cameraImage_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1632,20 +1836,20 @@ public final class CameraMsgs {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020cameraMsgs.proto\022\ncameraMsgs\"\366\003\n\014camer" +
-      "aStatus\022\024\n\014sensorStatus\030\001 \001(\010\022\017\n\007laserOn" +
-      "\030\002 \001(\010\022\014\n\004text\030\003 \001(\t\032\203\002\n\014cameraTracks\022\014\n" +
-      "\004time\030\001 \001(\t\022\022\n\nnumTargets\030\002 \001(\021\022\024\n\014targe" +
-      "tNumber\030\003 \001(\021\022\017\n\007targetX\030\004 \001(\021\022\017\n\007target" +
-      "Y\030\005 \001(\021\022\016\n\006laserX\030\006 \001(\021\022\016\n\006laserY\030\007 \001(\021\022" +
-      "\017\n\007laserOn\030\010 \001(\010\022\031\n\021targetConfidenceX\030\t " +
-      "\001(\021\022\031\n\021targetConfidenceY\030\n \001(\021\022\030\n\020laserC" +
-      "onfidenceX\030\013 \001(\021\022\030\n\020laserConfidenceY\030\014 \001" +
-      "(\021\032^\n\013cameraImage\022\014\n\004time\030\001 \001(\t\022\020\n\010chann",
-      "els\030\002 \001(\021\022\r\n\005sizeX\030\003 \001(\021\022\r\n\005sizeY\030\004 \001(\021\022" +
-      "\021\n\timageData\030\005 \001(\014\"K\n\014systemStatus\022\010\n\004DO" +
-      "WN\020\000\022\t\n\005READY\020\001\022\017\n\013OPERATIONAL\020\002\022\t\n\005ERRO" +
-      "R\020\003\022\n\n\006FAILED\020\004B\014\n\ncom.camera"
+      "\n\020cameraMsgs.proto\022\ncameraMsgs\"n\n\014camera" +
+      "Status\022\014\n\004time\030\001 \001(\003\0221\n\006status\030\002 \001(\0162\030.c" +
+      "ameraMsgs.systemStatus:\007UNKNOWN\022\017\n\007laser" +
+      "On\030\003 \001(\010\022\014\n\004text\030\004 \001(\t\"\035\n\005track\022\t\n\001x\030\001 \001" +
+      "(\021\022\t\n\001y\030\002 \001(\021\"\245\001\n\014cameraTracks\022\014\n\004time\030\001" +
+      " \001(\003\0221\n\006status\030\002 \001(\0162\030.cameraMsgs.system" +
+      "Status:\007UNKNOWN\022!\n\006target\030\003 \003(\0132\021.camera" +
+      "Msgs.track\022 \n\005laser\030\004 \003(\0132\021.cameraMsgs.t" +
+      "rack\022\017\n\007laserOn\030\005 \001(\010\"^\n\013cameraImage\022\014\n\004" +
+      "time\030\001 \001(\003\022\020\n\010channels\030\002 \001(\021\022\r\n\005sizeX\030\003 ",
+      "\001(\021\022\r\n\005sizeY\030\004 \001(\021\022\021\n\timageData\030\005 \001(\014*X\n" +
+      "\014systemStatus\022\010\n\004DOWN\020\000\022\t\n\005READY\020\001\022\017\n\013OP" +
+      "ERATIONAL\020\002\022\t\n\005ERROR\020\003\022\n\n\006FAILED\020\004\022\013\n\007UN" +
+      "KNOWN\020\005B\014\n\ncom.camera"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1657,25 +1861,33 @@ public final class CameraMsgs {
           internal_static_cameraMsgs_cameraStatus_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_cameraMsgs_cameraStatus_descriptor,
-              new java.lang.String[] { "SensorStatus", "LaserOn", "Text", },
+              new java.lang.String[] { "Time", "Status", "LaserOn", "Text", },
               com.camera.CameraMsgs.cameraStatus.class,
               com.camera.CameraMsgs.cameraStatus.Builder.class);
-          internal_static_cameraMsgs_cameraStatus_cameraTracks_descriptor =
-            internal_static_cameraMsgs_cameraStatus_descriptor.getNestedTypes().get(0);
-          internal_static_cameraMsgs_cameraStatus_cameraTracks_fieldAccessorTable = new
+          internal_static_cameraMsgs_track_descriptor =
+            getDescriptor().getMessageTypes().get(1);
+          internal_static_cameraMsgs_track_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_cameraMsgs_cameraStatus_cameraTracks_descriptor,
-              new java.lang.String[] { "Time", "NumTargets", "TargetNumber", "TargetX", "TargetY", "LaserX", "LaserY", "LaserOn", "TargetConfidenceX", "TargetConfidenceY", "LaserConfidenceX", "LaserConfidenceY", },
-              com.camera.CameraMsgs.cameraStatus.cameraTracks.class,
-              com.camera.CameraMsgs.cameraStatus.cameraTracks.Builder.class);
-          internal_static_cameraMsgs_cameraStatus_cameraImage_descriptor =
-            internal_static_cameraMsgs_cameraStatus_descriptor.getNestedTypes().get(1);
-          internal_static_cameraMsgs_cameraStatus_cameraImage_fieldAccessorTable = new
+              internal_static_cameraMsgs_track_descriptor,
+              new java.lang.String[] { "X", "Y", },
+              com.camera.CameraMsgs.track.class,
+              com.camera.CameraMsgs.track.Builder.class);
+          internal_static_cameraMsgs_cameraTracks_descriptor =
+            getDescriptor().getMessageTypes().get(2);
+          internal_static_cameraMsgs_cameraTracks_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_cameraMsgs_cameraStatus_cameraImage_descriptor,
+              internal_static_cameraMsgs_cameraTracks_descriptor,
+              new java.lang.String[] { "Time", "Status", "Target", "Laser", "LaserOn", },
+              com.camera.CameraMsgs.cameraTracks.class,
+              com.camera.CameraMsgs.cameraTracks.Builder.class);
+          internal_static_cameraMsgs_cameraImage_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_cameraMsgs_cameraImage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_cameraMsgs_cameraImage_descriptor,
               new java.lang.String[] { "Time", "Channels", "SizeX", "SizeY", "ImageData", },
-              com.camera.CameraMsgs.cameraStatus.cameraImage.class,
-              com.camera.CameraMsgs.cameraStatus.cameraImage.Builder.class);
+              com.camera.CameraMsgs.cameraImage.class,
+              com.camera.CameraMsgs.cameraImage.Builder.class);
           return null;
         }
       };
