@@ -211,7 +211,6 @@ void CSocketComm::SetSmartAddressing(bool bSmartAddressing)
 ///////////////////////////////////////////////////////////////////////////////
 void CSocketComm::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount)
 {
-	int a;
 }
 ///////////////////////////////////////////////////////////////////////////////
 // OnEvent
@@ -982,7 +981,7 @@ void CSocketComm::Run()
             // Get new connection socket
             if (sock != INVALID_SOCKET)
             {
-                ShutdownConnection( (SOCKET) m_hComm);
+                //ShutdownConnection( (SOCKET) m_hComm);
                 m_hComm = (HANDLE) sock;
                 OnEvent( EVT_CONSUCCESS, NULL ); // connect
             }
