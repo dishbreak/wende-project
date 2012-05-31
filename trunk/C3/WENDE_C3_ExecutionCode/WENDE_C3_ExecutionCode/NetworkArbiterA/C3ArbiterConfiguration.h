@@ -5,7 +5,6 @@ using std::string;
 
 class C3ArbiterConfiguration
 {
-
 public:
 	C3ArbiterConfiguration(void);
 	~C3ArbiterConfiguration(void);

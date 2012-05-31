@@ -62,13 +62,14 @@ int CArbiterSharedMemoryManager::DecodeCameraStatusMessage_DEBUG(cameraStatus *s
 	static int  cameraStatusMessageCount = 0;
 	// debug string for time
 	time_t messageTime = ss->time();
-	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
+	//	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA STATUS MESSAGE(%d)\r\n", ++cameraStatusMessageCount);
-	sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,ss->laseron());
-	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
-	sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->status());
-	sprintf(temp, "%s\r\n\r\n", temp);
+		sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,ss->laseron());
+	  //sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
+		sprintf(temp, "%s|-->str = %s   \r\n", temp,ss->text().c_str());
+		sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->status());
+		sprintf(temp, "%s\r\n\r\n", temp);
 
 	return cameraStatusMessageCount;
 }
@@ -95,7 +96,7 @@ void CArbiterSharedMemoryManager::DecodeCameraStatusMessage(LPCTSTR strText, cha
 		C3CameraStatus->ProcessID    = C3CameraStatus.GetProcessID();
 		C3CameraStatus->Status		 = ss.status();
 		C3CameraStatus->SubsystemId  = 3;
-		C3CameraStatus->Time		 = ss.time();
+		C3CameraStatus->Time		 = static_cast<DWORD>(ss.time());
 		C3CameraStatus->ValidChars	 = 0; 
 		// loops through clients and sends events
 		int eventsToSend = C3CameraStatus->ShmInfo.Clients;
@@ -119,12 +120,12 @@ int CArbiterSharedMemoryManager::DecodeCameraTrackMessage_DEBUG(cameraTracks *tr
 	static char timeStr[256];
 	static int cameraTrackMessageCount = 0;
 	// debug string for time
-	time_t messageTime = tr->time();
-	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
+	//time_t messageTime = tr->time();
+	//strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
 	sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,tr->laseron());
-	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
+	//sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 	sprintf(temp, "%s|-->Status = %d   \r\n", temp,tr->status());
 	sprintf(temp, "%s|-->Tracks = %d   \r\n", temp,tr->target_size());
 	for (int ii = 0; ii < tr->target_size(); ii++)
@@ -163,7 +164,7 @@ void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char
 		C3CameraTracks->ProcessID    = C3CameraTracks.GetProcessID();
 		C3CameraTracks->Status		 = tr.status();
 		C3CameraTracks->SubsystemId  = 3;
-		C3CameraTracks->Time		 = tr.time();
+		C3CameraTracks->Time		 = static_cast<DWORD>(tr.time());
 		C3CameraTracks->ValidTracks  = tr.target_size();
 		for (int ii = 0; ii < tr.target_size(); ii++)
 		{
@@ -198,11 +199,11 @@ int CArbiterSharedMemoryManager::DecodeCameraImageMessage_DEBUG(cameraImage *im,
 	static char timeStr[256];
 	static int cameraImageMessageCount = 0;
 	// debug string for time
-	time_t messageTime = im->time();
-	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
+	//time_t messageTime = im->time();
+	//strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA IMAGE MESSAGE(%d)\r\n", ++cameraImageMessageCount);
-	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
+	//sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 	sprintf(temp, "%s\r\n\r\n", temp);
 
 	return cameraImageMessageCount;
@@ -218,15 +219,15 @@ string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 	static char timeStr[FILENAME_MAX];
 	time_t messageTime = im->time();
 	// uniquie file name
-	char cCurrentPath[FILENAME_MAX];
-	if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath) / sizeof(TCHAR)))
-	{
-		strcpy(cCurrentPath,"");
-	}
-	cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
-	strftime(timeStr, FILENAME_MAX, "CameraImage-%Y-%m-%d-%H-%M-%S.jpg", localtime(&messageTime));
-	strcat(cCurrentPath,timeStr);
-	CString saveName(cCurrentPath);
+	//char cCurrentPath[FILENAME_MAX];
+	//if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath) / sizeof(TCHAR)))
+	//{
+	//	strcpy(cCurrentPath,"");
+	//}
+	//cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
+	//strftime(timeStr, FILENAME_MAX, "CameraImage-%Y-%m-%d-%H-%M-%S.jpg", localtime(&messageTime));
+	//strcat(cCurrentPath,timeStr);
+	CString saveName("test.jpg");
 	// create the image
 	// THIS IS SLOW AND SHOULD BE DONE BETTER....
 	CImage img;
@@ -285,7 +286,7 @@ string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, c
 		// write the data
 		C3CameraImage->PacketNumber = packetNumebr;
 		C3CameraImage->ProcessID    = C3CameraImage.GetProcessID();
-		C3CameraImage->Time			= im.time();
+		C3CameraImage->Time			= static_cast<DWORD>(im.time());
 		memcpy(C3CameraImage->imagePath,saveName.c_str(),saveName.size());
 		// loops through clients and sends events
 		int eventsToSend = C3CameraImage->ShmInfo.Clients;
@@ -343,7 +344,7 @@ void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char
 		C3LaserStatus->ProcessID    = C3LaserStatus.GetProcessID();
 		C3LaserStatus->Status		= ss.status();
 		C3LaserStatus->SubsystemId  = 3;
-		C3LaserStatus->Time		    = ss.time();
+		C3LaserStatus->Time		    = static_cast<DWORD>(ss.time());
 		C3LaserStatus->ValidChars	= 0; 
 		// loops through clients and sends events
 		int eventsToSend = C3LaserStatus->ShmInfo.Clients;
