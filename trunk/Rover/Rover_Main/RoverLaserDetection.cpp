@@ -13,15 +13,16 @@ static int Sensor_Offset = 0;
 static int ReInitCount = 0;
 static int offsetDirection = 0;
 
+
 boolean DetectionProcessing()
 {
     //0 - INIT
   //1 - SAMPLING/SATURATION ADJUSTMENTS, then detection
+  static int adjusting = 0;
   static unsigned int curr_state = 0;
   //Serial.println("testing...");
   //delay(100);
   //Serial.println("testing...start");
-  static int HIT_TIME = 5;
   static unsigned int detector_history[100];
   static unsigned int lighting_history[100];
   static int history_index = 0;
@@ -33,7 +34,11 @@ boolean DetectionProcessing()
   switch (curr_state)
   {
     case 0:
+      Serial.println("--init--");
+      Adjust_Current_Sync(Sensor_Offset);
       //fill the moving buffer...
+      curr_detector_value=0;
+      curr_light_value=0;
       for(int i = 0; i < 10; i++)
       {
         //delayMicroseconds(1000);
@@ -46,6 +51,7 @@ boolean DetectionProcessing()
       historic_light_value = curr_light_value;
       hit_cycles = 0;
       curr_state = 1;
+      adjusting = HIT_TIME^2;
       break;
       
     case 1:
@@ -96,6 +102,8 @@ boolean DetectionProcessing()
         //detection.
         //check which lighting change is bigger
         int lighting_difference = 0;
+        lighting_difference = curr_light_value - historic_light_value;
+        /* We want to know if it is less, we should respond differently if it is lower shouldn't we
         if(curr_light_value > historic_light_value)
         {
           lighting_difference = curr_light_value - historic_light_value;
@@ -104,28 +112,80 @@ boolean DetectionProcessing()
         {
           lighting_difference = historic_light_value - curr_light_value;
         }
-        
-        if(lighting_difference > 100)
+        */
+        if(lighting_difference > AMBIENT_LIGHT_LIMIT_POS || (lighting_difference < 0 && abs(lighting_difference) > AMBIENT_LIGHT_LIMIT_NEG))
         {
-          //Serial.println("--READJUST--");
+          
+          /*Serial.println("--READJUST--");
+          Serial.print("Values (Lighting Diff - Detection Diff): ");
+          Serial.print(lighting_difference);
+          Serial.print(" - ");
+          Serial.print(historic_detector_value - curr_detector_value);
+          Serial.print(" - ");
+          Serial.print(curr_light_value);
+          Serial.print(" - ");
+          Serial.print(curr_detector_value);
+          Serial.print(" - ");
+          Serial.println(Sensor_Offset);*/
           //reset historical values
           historic_light_value = curr_light_value;
           historic_detector_value = curr_detector_value;
+          //Not just reset, but re-initialize (lightign conditions have changed adjust)
+          //curr_state = 0;
+          adjusting = HIT_TIME*100;
         }
-        
+        else if (adjusting > 1)
+        {
+          adjusting -= 1;
+        }
+        else if (adjusting == 1)
+        {
+          hit_cycles = 0;
+          adjusting = 0;
+          historic_light_value = curr_light_value;
+          historic_detector_value = curr_detector_value;
+        }
+        else if ( historic_detector_value < curr_detector_value && (curr_detector_value - historic_detector_value) > AMBIENT_DETECTION_LIMIT_NEG )
+        {
+          
+          //Serial.println("--READJUST HIGH--");
+          /*Serial.print("Values (Lighting Diff - Detection Diff): ");
+          Serial.print(lighting_difference);
+          Serial.print(" - ");
+          Serial.print(curr_detector_value - historic_detector_value);
+          Serial.print(" - ");
+          Serial.print(curr_light_value);
+          Serial.print(" - ");
+          Serial.println(curr_detector_value);
+          */
+          historic_light_value = curr_light_value;
+          historic_detector_value = curr_detector_value;
+        }
         //check for detection
-        if(historic_detector_value > curr_detector_value)
+        else if(historic_detector_value >= curr_detector_value)
         {
           int detector_difference = historic_detector_value - curr_detector_value;
           //Serial.println(detector_difference);
-          if(detector_difference > 250 && detector_difference < 500)
+          if(detector_difference > DETECTION_LOW && detector_difference < DETECTION_HIGH)
           {
             hit_cycles++;
             
             if(hit_cycles > HIT_TIME)
             {
               Serial.println("---DETECTION---");
-              digitalWrite(12,HIGH);
+              Serial.print("Values (Lighting Diff - Detection Diff): ");
+              Serial.print(lighting_difference);
+              Serial.print(" - ");
+              Serial.print(detector_difference);
+              Serial.print(" - ");
+              Serial.print(curr_light_value);
+              Serial.print(" - ");
+              Serial.print(curr_detector_value);
+              Serial.print(" - ");
+              Serial.println(Sensor_Offset);
+
+
+              digitalWrite(ROVER_LED_PIN,HIGH);
               
               bDetected = true;
             }
@@ -135,19 +195,19 @@ boolean DetectionProcessing()
               //Serial.print("Detection in ");
               //Serial.print(diff);
               //Serial.println("cycles");
-              digitalWrite(12,LOW);
+              digitalWrite(ROVER_LED_PIN,LOW);
             }
           }
           else
           {
             hit_cycles = 0;
-            digitalWrite(12,LOW);
+            digitalWrite(ROVER_LED_PIN,LOW);
           }
         }
         else
         {
           hit_cycles = 0;
-          digitalWrite(12,LOW);
+          digitalWrite(ROVER_LED_PIN,LOW);
         }  
       }
       break;
@@ -180,11 +240,11 @@ int adjust_to_light_change(int photodetectorVal)
     return 1;
   }
   //if we are near the bottom of the scale with this voltage step
-  else if (photodetectorVal < (200+offsetDirection) && Sensor_Offset != MAX_SENSOR_OFFSET) //&& Sensor_Offset != 31) //now have 8 bit resolution
+  else if (photodetectorVal < (200+offsetDirection) && Sensor_Offset != MAX_SENSOR_OFFSET)
   {
     //move the step up one
     Sensor_Offset=Sensor_Offset+1;
-    //tunr on/off resistors
+    //tunr on/off resistors   
     Adjust_Current_Sync(Sensor_Offset);
     offsetDirection=100;
     //still adjusting...
@@ -201,7 +261,7 @@ void Adjust_Current_Sync(int value)
   for(int i = 0; i < SENSOR_OFFSET_BITS; i++)
   {
     //Note this is reversed since the buffers inver the signal
-    if ( value & 1)
+    if ( value & 128)
     {
       digitalWrite( SENSOR_OFFSET_DATA, LOW );
     }
@@ -211,7 +271,7 @@ void Adjust_Current_Sync(int value)
     }
     //clock pulse, this is mighty fast
     digitalWrite( SENSOR_OFFSET_CLOCK, HIGH );
-    value = value >> 1;
+    value = value << 1;
     digitalWrite( SENSOR_OFFSET_CLOCK, LOW );
   }
 /* Legacy Shifter

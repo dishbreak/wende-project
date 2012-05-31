@@ -21,7 +21,7 @@
 //input pins
 #define PHOTO_DETECTOR_PIN    A0
 #define AMBIENT_LIGHTING_PIN  A1
-#define ROVER_LED_PIN         1
+#define ROVER_LED_PIN         13
 #define ENCODER_L_PIN         2
 #define ENCODER_R_PIN         3
 #define INPUT_MODE_BIT0       10
