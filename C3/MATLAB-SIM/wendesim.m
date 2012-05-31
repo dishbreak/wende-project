@@ -59,7 +59,7 @@ globalCommands          = [0,0];
     
 intilizeFilter = 1;
 commandedLaser = 0;
-isFound = 0;
+isFound = 0
 %Define Playing Field
 playingFieldX = playingFieldRadius*cos([0:2*pi/36:2*pi]);
 playingFieldY = playingFieldRadius*sin([0:2*pi/36:2*pi]);
@@ -85,6 +85,8 @@ else
     roverPosition(1,2) = 0;
 end
 outC3Tracks = [];
+
+fileID = fopen('TEST_TRACK_1_Ver.txt','w');
 
 %WENDE Simulation
 for time = 0:dTime:maxTime
@@ -112,7 +114,10 @@ for time = 0:dTime:maxTime
 %         end
 %         disp('******')
 %        cameraRoverPosition = tempC;
-        
+        fprintf(fileID,'%12.12f %12.12f %12.12f %12.12f %12.12f\n', ...
+                cameraRoverPosition(1,1),cameraRoverPosition(1,2), ...
+                cameraLaserPosition(1,1),cameraLaserPosition(1,2), ...
+                time);
         [outC3Tracks] = c3sim(cameraRoverPosition,               ...
                               cameraLaserPosition, ...
                               tracker_mode,        ...
@@ -120,6 +125,9 @@ for time = 0:dTime:maxTime
                               time,                ... 
                               intilizeFilter,      ...
                               c3Filters);
+                          
+        fprintf(fileID,'%12.12f %12.12f\n', ...
+                        outC3Tracks(1).commandedAzEl(1,1),outC3Tracks(1).commandedAzEl(1,2));
 %        disp(['Output' num2str(index)] );
         %for zz = 1:1:length(outC3Tracks)
         %    disp(['track ' num2str(zz) ' ' num2str([outC3Tracks(zz).cameraPipX outC3Tracks(zz).cameraPipY]) ]);
@@ -297,3 +305,4 @@ for time = 0:dTime:maxTime
     end
 end %End Simulation
 
+fclose(fileID);
