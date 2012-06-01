@@ -35,6 +35,7 @@ int CDisplayManager::Update_Rover_PPI_Position(int x, int y)
 	extern int roverContactX;
 	extern int roverContactY;
 
+	//only act on the information if it's new
 	if ((x != roverContactX) || (y != roverContactY))
 	{
 		roverContactX = x;
@@ -190,15 +191,16 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 	{
 		C3_User_Interface::Instance->pbCameraComms->Image = 
 			System::Drawing::Image::FromFile ("Offline.png");
-
+		C3_User_Interface::Instance->pbCameraStatus->Image =
+			System::Drawing::Image::FromFile ("Unknown.png");
 		Set_Camera_Com_Status(0);
+		Set_Camera_Status(-1);
 	}
 	// Status is ONLINE
 	else 	
 	{
 		C3_User_Interface::Instance->pbCameraComms->Image = 
 			System::Drawing::Image::FromFile ("Online.png");
-
 		Set_Camera_Com_Status(1);
 	}
 
@@ -212,8 +214,10 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 	{
 		C3_User_Interface::Instance->pbLaserComms->Image = 
 			System::Drawing::Image::FromFile ("Offline.png");
-
+		C3_User_Interface::Instance->pbLaserStatus->Image =
+			System::Drawing::Image::FromFile ("Unknown.png");
 		Set_Laser_Com_Status(0);
+		Set_Laser_Status(-1);
 	}
 	// Status is ONLINE
 	else 	
