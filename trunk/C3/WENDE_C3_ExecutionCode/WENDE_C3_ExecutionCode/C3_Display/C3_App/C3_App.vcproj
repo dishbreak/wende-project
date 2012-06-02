@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Coordinates.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CPPIConfig.h"
 				>
 			</File>
@@ -286,6 +290,10 @@
 			</File>
 			<File
 				RelativePath=".\CNetworkMonitor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Coordinates.cpp"
 				>
 			</File>
 			<File
