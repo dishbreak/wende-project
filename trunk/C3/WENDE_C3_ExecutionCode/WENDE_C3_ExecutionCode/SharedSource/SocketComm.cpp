@@ -200,7 +200,17 @@ void CSocketComm::SetSmartAddressing(bool bSmartAddressing)
     if (!IsStart())
         m_bSmartAddressing = bSmartAddressing;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+// AppendMessage
+///////////////////////////////////////////////////////////////////////////////
+// DESCRIPTION:
+//              This function is PURE Virtual, you MUST overwrite it.  This is
+//              called every time new data is available.
+// PARAMETERS:
+///////////////////////////////////////////////////////////////////////////////
+void CSocketComm::AppendMessage(LPCTSTR strText)
+{
+}
 ///////////////////////////////////////////////////////////////////////////////
 // OnDataReceived
 ///////////////////////////////////////////////////////////////////////////////
@@ -833,7 +843,8 @@ DWORD CSocketComm::ReadComm(LPBYTE lpBuffer, DWORD dwSize, DWORD dwTimeout)
     if ( res > 0)
     {
  		//std::read(s,lpBuffer,4);
-        res = recv( s, (LPSTR)lpBuffer, dwSize, MSG_WAITALL);
+        //res = recv( s, (LPSTR)lpBuffer, dwSize, MSG_WAITALL);
+		res = recv( s, (LPSTR)lpBuffer, dwSize, 0);
 	}
     dwBytesRead = (DWORD)((res > 0)?(res) : (-1L));
 
@@ -956,7 +967,7 @@ DWORD CSocketComm::WriteComm(const LPBYTE lpBuffer, DWORD dwCount, DWORD dwTimeo
 ///////////////////////////////////////////////////////////////////////////////
 void CSocketComm::Run()
 {
-    stMessageProxy stMsgProxy;
+	stMessageProxy stMsgProxy;
     DWORD   dwBytes1  = 0L;
 	DWORD   dwBytes2  = 0L;
     DWORD   dwTimeout = INFINITE;
@@ -1003,13 +1014,17 @@ void CSocketComm::Run()
     {
         // Blocking mode: Wait for event
 		//length
+		AppendMessage("Waiting To Read Length\n");
         dwBytes1 = ReadComm(lpData, sizeof(unsigned char)*4, dwTimeout);
 		DWORD readSize = (lpData[0] << 24) + 
 			             (lpData[1] << 16) + 
 						 (lpData[2] <<  8) + 
 						 (lpData[3] <<  0);
+		AppendMessage("Read Length\n");
 		//packet
+		AppendMessage("Waiting To Read packet\n");
 		dwBytes2 = ReadComm(lpData, min(dwSize,readSize), dwTimeout);
+		AppendMessage("Read Packet\n");
         // Error? - need to signal error
         if (dwBytes2 == (DWORD)-1L)
         {

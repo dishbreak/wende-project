@@ -40,9 +40,9 @@ void protobuf_AssignDesc_laserMsgs_2eproto() {
   GOOGLE_CHECK(file != NULL);
   laserStatus_descriptor_ = file->message_type(0);
   static const int laserStatus_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(laserStatus, time_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(laserStatus, pmw_az_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(laserStatus, pmw_el_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(laserStatus, status_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(laserStatus, text_),
   };
   laserStatus_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -127,15 +127,16 @@ void protobuf_AddDesc_laserMsgs_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\017laserMsgs.proto\022\tlaserMsgs\"[\n\013laserSta"
-    "tus\022\014\n\004time\030\001 \001(\003\0220\n\006status\030\002 \001(\0162\027.lase"
-    "rMsgs.systemStatus:\007UNKNOWN\022\014\n\004text\030\003 \001("
-    "\t\"(\n\004pose\022\017\n\007pulseAZ\030\001 \001(\r\022\017\n\007pulseEL\030\002 "
-    "\001(\r\"K\n\tlaserPose\022\014\n\004time\030\001 \001(\003\022\037\n\006target"
-    "\030\002 \001(\0132\017.laserMsgs.pose\022\017\n\007laserOn\030\003 \001(\010"
-    "*v\n\014systemStatus\022\016\n\nLASER_DOWN\020\000\022\017\n\013LASE"
-    "R_READY\020\001\022\025\n\021LASER_OPERATIONAL\020\002\022\017\n\013LASE"
-    "R_ERROR\020\003\022\020\n\014LASER_FAILED\020\004\022\013\n\007UNKNOWN\020\005", 360);
+    "\n\017laserMsgs.proto\022\tlaserMsgs\"_\n\013laserSta"
+    "tus\022\016\n\006PMW_AZ\030\001 \001(\003\022\016\n\006PMW_EL\030\002 \001(\003\0220\n\006s"
+    "tatus\030\003 \001(\0162\027.laserMsgs.systemStatus:\007UN"
+    "KNOWN\"(\n\004pose\022\017\n\007pulseAZ\030\001 \001(\r\022\017\n\007pulseE"
+    "L\030\002 \001(\r\"K\n\tlaserPose\022\014\n\004time\030\001 \001(\003\022\037\n\006ta"
+    "rget\030\002 \001(\0132\017.laserMsgs.pose\022\017\n\007laserOn\030\003"
+    " \001(\010*v\n\014systemStatus\022\016\n\nLASER_DOWN\020\000\022\017\n\013"
+    "LASER_READY\020\001\022\025\n\021LASER_OPERATIONAL\020\002\022\017\n\013"
+    "LASER_ERROR\020\003\022\020\n\014LASER_FAILED\020\004\022\013\n\007UNKNO"
+    "WN\020\005B\013\n\tcom.laser", 377);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "laserMsgs.proto", &protobuf_RegisterTypes);
   laserStatus::default_instance_ = new laserStatus();
@@ -176,9 +177,9 @@ bool systemStatus_IsValid(int value) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int laserStatus::kTimeFieldNumber;
+const int laserStatus::kPMWAZFieldNumber;
+const int laserStatus::kPMWELFieldNumber;
 const int laserStatus::kStatusFieldNumber;
-const int laserStatus::kTextFieldNumber;
 #endif  // !_MSC_VER
 
 laserStatus::laserStatus()
@@ -197,9 +198,9 @@ laserStatus::laserStatus(const laserStatus& from)
 
 void laserStatus::SharedCtor() {
   _cached_size_ = 0;
-  time_ = GOOGLE_LONGLONG(0);
+  pmw_az_ = GOOGLE_LONGLONG(0);
+  pmw_el_ = GOOGLE_LONGLONG(0);
   status_ = 5;
-  text_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -208,9 +209,6 @@ laserStatus::~laserStatus() {
 }
 
 void laserStatus::SharedDtor() {
-  if (text_ != &::google::protobuf::internal::kEmptyString) {
-    delete text_;
-  }
   if (this != default_instance_) {
   }
 }
@@ -237,13 +235,9 @@ laserStatus* laserStatus::New() const {
 
 void laserStatus::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    time_ = GOOGLE_LONGLONG(0);
+    pmw_az_ = GOOGLE_LONGLONG(0);
+    pmw_el_ = GOOGLE_LONGLONG(0);
     status_ = 5;
-    if (has_text()) {
-      if (text_ != &::google::protobuf::internal::kEmptyString) {
-        text_->clear();
-      }
-    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -255,23 +249,39 @@ bool laserStatus::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int64 time = 1;
+      // optional int64 PMW_AZ = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
-                 input, &time_)));
-          set_has_time();
+                 input, &pmw_az_)));
+          set_has_pmw_az();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(16)) goto parse_status;
+        if (input->ExpectTag(16)) goto parse_PMW_EL;
         break;
       }
       
-      // optional .laserMsgs.systemStatus status = 2 [default = UNKNOWN];
+      // optional int64 PMW_EL = 2;
       case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_PMW_EL:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &pmw_el_)));
+          set_has_pmw_el();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_status;
+        break;
+      }
+      
+      // optional .laserMsgs.systemStatus status = 3 [default = UNKNOWN];
+      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_status:
@@ -282,25 +292,8 @@ bool laserStatus::MergePartialFromCodedStream(
           if (laserMsgs::systemStatus_IsValid(value)) {
             set_status(static_cast< laserMsgs::systemStatus >(value));
           } else {
-            mutable_unknown_fields()->AddVarint(2, value);
+            mutable_unknown_fields()->AddVarint(3, value);
           }
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_text;
-        break;
-      }
-      
-      // optional string text = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_text:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_text()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->text().data(), this->text().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -326,24 +319,20 @@ bool laserStatus::MergePartialFromCodedStream(
 
 void laserStatus::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional int64 time = 1;
-  if (has_time()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->time(), output);
+  // optional int64 PMW_AZ = 1;
+  if (has_pmw_az()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->pmw_az(), output);
   }
   
-  // optional .laserMsgs.systemStatus status = 2 [default = UNKNOWN];
+  // optional int64 PMW_EL = 2;
+  if (has_pmw_el()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->pmw_el(), output);
+  }
+  
+  // optional .laserMsgs.systemStatus status = 3 [default = UNKNOWN];
   if (has_status()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      2, this->status(), output);
-  }
-  
-  // optional string text = 3;
-  if (has_text()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->text().data(), this->text().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->text(), output);
+      3, this->status(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -354,25 +343,20 @@ void laserStatus::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* laserStatus::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional int64 time = 1;
-  if (has_time()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->time(), target);
+  // optional int64 PMW_AZ = 1;
+  if (has_pmw_az()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->pmw_az(), target);
   }
   
-  // optional .laserMsgs.systemStatus status = 2 [default = UNKNOWN];
+  // optional int64 PMW_EL = 2;
+  if (has_pmw_el()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(2, this->pmw_el(), target);
+  }
+  
+  // optional .laserMsgs.systemStatus status = 3 [default = UNKNOWN];
   if (has_status()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      2, this->status(), target);
-  }
-  
-  // optional string text = 3;
-  if (has_text()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->text().data(), this->text().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->text(), target);
+      3, this->status(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -386,24 +370,24 @@ int laserStatus::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional int64 time = 1;
-    if (has_time()) {
+    // optional int64 PMW_AZ = 1;
+    if (has_pmw_az()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int64Size(
-          this->time());
+          this->pmw_az());
     }
     
-    // optional .laserMsgs.systemStatus status = 2 [default = UNKNOWN];
+    // optional int64 PMW_EL = 2;
+    if (has_pmw_el()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int64Size(
+          this->pmw_el());
+    }
+    
+    // optional .laserMsgs.systemStatus status = 3 [default = UNKNOWN];
     if (has_status()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->status());
-    }
-    
-    // optional string text = 3;
-    if (has_text()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->text());
     }
     
   }
@@ -433,14 +417,14 @@ void laserStatus::MergeFrom(const ::google::protobuf::Message& from) {
 void laserStatus::MergeFrom(const laserStatus& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_time()) {
-      set_time(from.time());
+    if (from.has_pmw_az()) {
+      set_pmw_az(from.pmw_az());
+    }
+    if (from.has_pmw_el()) {
+      set_pmw_el(from.pmw_el());
     }
     if (from.has_status()) {
       set_status(from.status());
-    }
-    if (from.has_text()) {
-      set_text(from.text());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -465,9 +449,9 @@ bool laserStatus::IsInitialized() const {
 
 void laserStatus::Swap(laserStatus* other) {
   if (other != this) {
-    std::swap(time_, other->time_);
+    std::swap(pmw_az_, other->pmw_az_);
+    std::swap(pmw_el_, other->pmw_el_);
     std::swap(status_, other->status_);
-    std::swap(text_, other->text_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
