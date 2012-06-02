@@ -21,8 +21,10 @@ int main(array<System::String ^> ^args)
 	{
 		string sRoverInX = cv.Get_Test_Data_Item(i, "RoverInX");
 		string sRoverInY = cv.Get_Test_Data_Item(i, "RoverInY");
-		string sRoverOutX = cv.Get_Test_Data_Item(i, "RoverOutX");
-		string sRoverOutY = cv.Get_Test_Data_Item(i, "RoverOutY");
+		string sLaserInX = cv.Get_Test_Data_Item(i, "LaserInX");
+		string sLaserInY = cv.Get_Test_Data_Item(i, "LaserInY");
+		string sLaserOutAz = cv.Get_Test_Data_Item(i, "LaserOutAz");
+		string sLaserOutEl = cv.Get_Test_Data_Item(i, "LaserOutEl");
 	}
 	
 
