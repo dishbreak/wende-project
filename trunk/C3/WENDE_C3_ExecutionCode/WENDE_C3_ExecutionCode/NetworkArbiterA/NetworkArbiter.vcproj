@@ -46,7 +46,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../SharedSource/google;../SharedSource;.;..\SharedSource\tinyxml"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -104,7 +104,7 @@
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -126,13 +126,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="3"
-				InlineFunctionExpansion="2"
+				Optimization="2"
+				InlineFunctionExpansion="0"
 				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				EnableFiberSafeOptimizations="true"
+				FavorSizeOrSpeed="0"
+				EnableFiberSafeOptimizations="false"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../SharedSource/google;../SharedSource;.;..\SharedSource\tinyxml"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="false"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -338,6 +339,18 @@
 			>
 		</File>
 		<File
+			RelativePath="..\SharedSource\LaserStatus.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\SharedSource\LaserStatus.h"
+			>
+		</File>
+		<File
+			RelativePath=".\NetworkArbiter.cd"
+			>
+		</File>
+		<File
 			RelativePath=".\NetworkArbiterDlg.cpp"
 			>
 		</File>
@@ -359,6 +372,14 @@
 		</File>
 		<File
 			RelativePath="..\SharedSource\ShmStructs.h"
+			>
+		</File>
+		<File
+			RelativePath="..\SharedSource\Utilties.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\SharedSource\Utilties.h"
 			>
 		</File>
 	</Files>

@@ -7,12 +7,16 @@
 #include "NetworkArbiterDlg.h"
 #include "TinyXml\tinyxml.h"
 #include "process.h"
+#ifndef LASER_USE_PROTOBUF
+#else
 #include "laserMsgs.pb.h"
+using namespace laserMsgs;
+#endif
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-using namespace laserMsgs;
+
 
 // CAboutDlg dialog used for App About
 
@@ -248,7 +252,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketClientStartThreadProc(LPVOID pParam)
 	for (int ii = 0; ii < SOCKET_COUNTS_CLIENTS; ii++)
 	{
 		// Set the packet type
-		pThis->m_SocketObjectClients[ii].SetCameraMessageType((C3PacketType)ii);
+		pThis->m_SocketObjectClients[ii].SetMessageType((C3PacketType)ii);
 		// Set the display event
 		pThis->m_SocketObjectClients[ii].SetMessageWindow( &pThis->m_pMsgCtrl );
 		pThis->m_SocketObjectClients[ii].SetPictureWindow( &pThis->m_picCtrl );
@@ -258,6 +262,10 @@ UINT WINAPI CNetworkArbiterDlg::SocketClientStartThreadProc(LPVOID pParam)
 			// To use TCP socket
 			port.Format(_T("%d"), pThis->m_configArbiter.Connection.port+ii);
 			pThis->m_SocketObjectClients[ii].ConnectTo( pThis->m_configArbiter.Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
+			if (!pThis->m_SocketObjectClients[ii].IsOpen())
+			{
+				Sleep(5);
+			}
 		}
 		
 		// Now you may start the server/client thread to do the work for you...
@@ -290,7 +298,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketServerStartThreadProc(LPVOID pParam)
 		{
 			case 0: 
 			{
-				pThis->m_SocketObjectServer[ii].SetCameraMessageType(C3PacketType::C3_LASER_STATUS);
+				pThis->m_SocketObjectServer[ii].SetMessageType(C3PacketType::C3_LASER_STATUS);
 				break;
 			}
 			//case #:
@@ -303,8 +311,8 @@ UINT WINAPI CNetworkArbiterDlg::SocketServerStartThreadProc(LPVOID pParam)
 			}
 		}
 		// Set the display event
-		pThis->m_SocketObjectClients[ii].SetMessageWindow( &pThis->m_pMsgCtrl );
-		pThis->m_SocketObjectClients[ii].SetPictureWindow( &pThis->m_picCtrl );
+		pThis->m_SocketObjectServer[ii].SetMessageWindow( &pThis->m_pMsgCtrl );
+		pThis->m_SocketObjectServer[ii].SetPictureWindow( &pThis->m_picCtrl );
 		while (!pThis->m_SocketObjectServer[ii].IsOpen())
 		{
 			// To use TCP socket
@@ -386,33 +394,33 @@ void CNetworkArbiterDlg::OnEnChangePort()
 
 void CNetworkArbiterDlg::OnBnClickedC3LaserStatus()
 {
-	if(m_SocketObjectServer[0].IsOpen() == true)
-	{
-		// time
-		time_t seconds;
-		seconds = time (NULL);
-		
-		stMessageProxy msgProxy;
-		laserPose pose;
-		pose.set_time((DWORD)seconds);
-		pose.set_laseron(m_LaserOnOff.GetCheck()==BST_CHECKED);
-		CString cTemp;									// serilize the message
-		m_LaserPWMAz.GetWindowTextA(cTemp);
-		pose.mutable_target()->set_pulseaz(atoi(cTemp));
-		m_LaserPWMEl.GetWindowTextA(cTemp);
-		pose.mutable_target()->set_pulseel(atoi(cTemp));
-		string strText = pose.SerializeAsString();
-		USES_CONVERSION;
-		int nLen = __min(sizeof(msgProxy.byData)-1, strText.size()+1);
-		memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
-	
-		unsigned char sizeArray[4] = {(strText.size() & 0xFF000000) >> 24,
-								      (strText.size() & 0x00FF0000) >> 16,
-								 	  (strText.size() & 0x0000FF00) >>  8,
-									  (strText.size() & 0x000000FF) >>  0};
-		m_SocketObjectServer[0].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
-		m_SocketObjectServer[0].WriteComm(msgProxy.byData, strText.size(), INFINITE);
-	}
+	//if(m_SocketObjectServer[0].IsOpen() == true)
+	//{
+	//	// time
+	//	time_t seconds;
+	//	seconds = time (NULL);
+	//	
+	//	stMessageProxy msgProxy;
+	//	laserPose pose;
+	//	pose.set_time((DWORD)seconds);
+	//	pose.set_laseron(m_LaserOnOff.GetCheck()==BST_CHECKED);
+	//	CString cTemp;									// serilize the message
+	//	m_LaserPWMAz.GetWindowTextA(cTemp);
+	//	pose.mutable_target()->set_pulseaz(atoi(cTemp));
+	//	m_LaserPWMEl.GetWindowTextA(cTemp);
+	//	pose.mutable_target()->set_pulseel(atoi(cTemp));
+	//	string strText = pose.SerializeAsString();
+	//	USES_CONVERSION;
+	//	int nLen = __min(sizeof(msgProxy.byData)-1, strText.size()+1);
+	//	memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
+	//
+	//	unsigned char sizeArray[4] = {(strText.size() & 0xFF000000) >> 24,
+	//							      (strText.size() & 0x00FF0000) >> 16,
+	//							 	  (strText.size() & 0x0000FF00) >>  8,
+	//								  (strText.size() & 0x000000FF) >>  0};
+	//	m_SocketObjectServer[0].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
+	//	m_SocketObjectServer[0].WriteComm(msgProxy.byData, strText.size(), INFINITE);
+	//}
 }
 
 void CNetworkArbiterDlg::OnBnClickedLaserOnOff()

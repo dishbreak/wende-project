@@ -342,6 +342,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\ClassDiagram21.cd"
+			>
+		</File>
+		<File
 			RelativePath=".\ReadMe.txt"
 			>
 		</File>

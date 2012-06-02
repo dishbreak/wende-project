@@ -4,6 +4,7 @@
 #define GetCurrentDir _getcwd
 #include "ArbiterSharedMemoryManager.h"
 #include <atlimage.h>
+
 ////////////////////////////////////////////////////////////////////////
 // Defuatl contructor --- private as this is a singleton
 ////////////////////////////////////////////////////////////////////////
@@ -62,11 +63,11 @@ int CArbiterSharedMemoryManager::DecodeCameraStatusMessage_DEBUG(cameraStatus *s
 	static int  cameraStatusMessageCount = 0;
 	// debug string for time
 	time_t messageTime = ss->time();
-	//	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
+	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA STATUS MESSAGE(%d)\r\n", ++cameraStatusMessageCount);
 		sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,ss->laseron());
-	  //sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
+	    sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 		sprintf(temp, "%s|-->str = %s   \r\n", temp,ss->text().c_str());
 		sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->status());
 		sprintf(temp, "%s\r\n\r\n", temp);
@@ -120,12 +121,12 @@ int CArbiterSharedMemoryManager::DecodeCameraTrackMessage_DEBUG(cameraTracks *tr
 	static char timeStr[256];
 	static int cameraTrackMessageCount = 0;
 	// debug string for time
-	//time_t messageTime = tr->time();
-	//strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
+	time_t messageTime = tr->time();
+	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
 	sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,tr->laseron());
-	//sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
+	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 	sprintf(temp, "%s|-->Status = %d   \r\n", temp,tr->status());
 	sprintf(temp, "%s|-->Tracks = %d   \r\n", temp,tr->target_size());
 	for (int ii = 0; ii < tr->target_size(); ii++)
@@ -199,11 +200,11 @@ int CArbiterSharedMemoryManager::DecodeCameraImageMessage_DEBUG(cameraImage *im,
 	static char timeStr[256];
 	static int cameraImageMessageCount = 0;
 	// debug string for time
-	//time_t messageTime = im->time();
-	//strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
+	time_t messageTime = im->time();
+	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA IMAGE MESSAGE(%d)\r\n", ++cameraImageMessageCount);
-	//sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
+	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 	sprintf(temp, "%s\r\n\r\n", temp);
 
 	return cameraImageMessageCount;
@@ -219,15 +220,15 @@ string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 	static char timeStr[FILENAME_MAX];
 	time_t messageTime = im->time();
 	// uniquie file name
-	//char cCurrentPath[FILENAME_MAX];
-	//if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath) / sizeof(TCHAR)))
-	//{
-	//	strcpy(cCurrentPath,"");
-	//}
-	//cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
-	//strftime(timeStr, FILENAME_MAX, "CameraImage-%Y-%m-%d-%H-%M-%S.jpg", localtime(&messageTime));
-	//strcat(cCurrentPath,timeStr);
-	CString saveName("test.jpg");
+	char cCurrentPath[FILENAME_MAX];
+	if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath) / sizeof(TCHAR)))
+	{
+		strcpy(cCurrentPath,"");
+	}
+	cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
+	strftime(timeStr, FILENAME_MAX, "CameraImage-%Y-%m-%d-%H-%M-%S.jpg", localtime(&messageTime));
+	strcat(cCurrentPath,timeStr);
+	CString saveName(cCurrentPath);
 	// create the image
 	// THIS IS SLOW AND SHOULD BE DONE BETTER....
 	CImage img;
@@ -306,22 +307,32 @@ string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, c
 //  Purpose: This function decodes network traffic from laser
 //           specifically decodes the status message.
 ////////////////////////////////////////////////////////////////////////
-int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(laserStatus *ss, char* temp)
+#ifndef LASER_USE_PROTOBUF
+int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(CLaserStatus *ss, char* temp)
 {
 	// variables
-	static char timeStr[256];
 	static int  laserStatusMessageCount = 0;
-	// debug string for time
-	time_t messageTime = ss->time();
-	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+LASER STATUS MESSAGE(%d)\r\n", ++laserStatusMessageCount);
-	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
-	sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->status());
+	sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->LaserStatus.status);
 	sprintf(temp, "%s\r\n\r\n", temp);
 
 	return laserStatusMessageCount;
 }
+#else
+int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(laserStatus *ss, char* temp)
+{
+	// variables
+	static int  laserStatusMessageCount = 0;
+	// debug string for display 
+	sprintf(temp, "+LASER STATUS MESSAGE(%d)\r\n", ++laserStatusMessageCount);
+	sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->status());
+	sprintf(temp, "%s\r\n\r\n", temp);
+
+	return laserStatusMessageCount;
+
+}
+#endif
 ////////////////////////////////////////////////////////////////////////
 // Function: DecodeLaserStatusMessage
 //  Purpose: This function decodes network traffic from laser
@@ -329,12 +340,22 @@ int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(laserStatus *ss,
 ////////////////////////////////////////////////////////////////////////
 void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char* temp,DWORD size)
 {
+	
+	#ifndef LASER_USE_PROTOBUF
+	//  message
+	CLaserStatus ss((BYTE*)strText);
+
+	// Prepare the debug print
+	int packetNumber = DecodeLaserStatusMessage_DEBUG(&ss,temp);
+	#else
 	// protobuf message
 	laserStatus ss;
 	// decode the message
 	ss.ParseFromArray(strText,size);
 	//Prepare the debug print
 	int packetNumber = DecodeLaserStatusMessage_DEBUG(&ss,temp);
+	#endif
+	
 	// aquire the mutex
 	if (C3LaserStatus.isCreated() &&  
 		C3LaserStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
@@ -342,10 +363,12 @@ void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char
 		// write the data
 		C3LaserStatus->PacketNumber = packetNumber;
 		C3LaserStatus->ProcessID    = C3LaserStatus.GetProcessID();
-		C3LaserStatus->Status		= ss.status();
 		C3LaserStatus->SubsystemId  = 3;
-		C3LaserStatus->Time		    = static_cast<DWORD>(ss.time());
-		C3LaserStatus->ValidChars	= 0; 
+		#ifndef LASER_USE_PROTOBUF
+		C3LaserStatus->Status		= ss.LaserStatus.status;
+		#else
+		C3LaserStatus->Status		= ss.status();
+		#endif
 		// loops through clients and sends events
 		int eventsToSend = C3LaserStatus->ShmInfo.Clients;
 		for (int pp = 0; pp < eventsToSend; pp++)

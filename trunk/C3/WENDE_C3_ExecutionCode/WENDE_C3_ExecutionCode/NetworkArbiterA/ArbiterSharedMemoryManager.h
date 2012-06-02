@@ -14,13 +14,20 @@
 #include "ShmStructs.h"
 #include "CSharedStruct.h"
 #include "cameraMsgs.pb.h"
-#include "laserMsgs.pb.h"
+
 #include <string>
+
+#ifndef LASER_USE_PROTOBUF
+#include "LaserStatus.h"
+#else
+#include "laserMsgs.pb.h"
+using namespace laserMsgs;
+#endif
 ///////////////////////////////////////////////////
 // google protobuf namespace
 ///////////////////////////////////////////////////
 using namespace cameraMsgs;
-using namespace laserMsgs;
+
 using std::string;
 ///////////////////////////////////////////////////
 // Class definition --- CArbiterSharedMemoryManager
@@ -70,7 +77,11 @@ private:
 	// recreates the image so that it can be consumed by GUI
 	string RecreateImage(cameraImage *im);
 	// prepares the debug string
+	#ifndef LASER_USE_PROTOBUF
+	int DecodeLaserStatusMessage_DEBUG(CLaserStatus *ss, char* temp);
+	#else
 	int DecodeLaserStatusMessage_DEBUG(laserStatus *ss, char* temp);
+	#endif
 /////////////////////////////////////////////////////////////
 // Private Functions... singleton items
 /////////////////////////////////////////////////////////////

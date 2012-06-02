@@ -249,6 +249,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\SharedSource\laserMsgs.pb.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\LaserStatus.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\SharedSource\PictureCtrl.cpp"
 				>
 			</File>
@@ -358,6 +366,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="..\SharedSource\Utilties.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -373,6 +385,10 @@
 			</File>
 			<File
 				RelativePath="..\SharedSource\laserMsgs.pb.h"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\LaserStatus.h"
 				>
 			</File>
 			<File
@@ -403,6 +419,10 @@
 				RelativePath="StdAfx.h"
 				>
 			</File>
+			<File
+				RelativePath="..\SharedSource\Utilties.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -417,10 +437,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\SharedSource\laserMsgs.pb.cc"
-			>
-		</File>
 		<File
 			RelativePath="ReadMe.txt"
 			>
