@@ -1,15 +1,17 @@
 #pragma once
 
 #if 0
-	#define SIZE_OF_INT sizeof(int)
-	#define SIZE_OF_INT sizeof(short)
-	#define SIZE_OF_INT sizeof(double)
-	#define SIZE_OF_INT sizeof(float)
+	#define SIZE_OF_INT    sizeof(int)
+	#define SIZE_OF_SHORT  sizeof(short)
+	#define SIZE_OF_DOUBLE sizeof(double)
+	#define SIZE_OF_FLOAT  sizeof(float)
+	#define SIZE_OF_BYTE   sizeof(BYTE)	
 #else
 	#define SIZE_OF_INT    4
 	#define SIZE_OF_SHORT  2
 	#define SIZE_OF_DOUBLE 8
 	#define SIZE_OF_FLOAT  4
+	#define SIZE_OF_BYTE   1
 #endif
 
 union _int_or_bytes   { int    vInt     ; unsigned int vUInt;   char bytes[SIZE_OF_INT]    ; };
