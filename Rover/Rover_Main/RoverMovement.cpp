@@ -8,8 +8,11 @@
 *         motor_data* leftMotor - current paramaters for the left motor (struct)
 *         motor_data* rightMotor - current paramaters for the right motor (struct)
 * outputs: leftMotor and rightMotor structs updated
-* Description: Main execution of rover movement modes
+* Description: Main execution of rove r movement modes
 * @return whether movement is complete or not...complete means possible failure.
+* Limitations: After running for 49.7 days the millis() function will overflow and 
+* cause failure.
+* Assumptions: Only one movement mode will be run between re-setting the processor.
 */
 boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* rightMotor) {
 	
@@ -18,11 +21,18 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 	unsigned long move_time; // time since movement start (ms)
 	static unsigned long move_start; // initial movement time (ms)
 	unsigned long seed; // seed for the PRNG
+	//Create spiral parameter variables
+	static int Xspiral = 0;
+	const int SpiralTightness = 200;
+	
+	
 	if (init == 1) {
 		init = 0; // only init once
 		
-		// if we are in a mode that needs to spin, generate random number
-		if(mode == spiral_mode || mode == pass_thru_mode){
+		Xspiral = 0; //initalize for spiral mode
+		
+		// if we are in a mode that needs to spin, generate random number, else set to 0
+		if(mode == INPUT_SPIRAL_MODE || mode == INPUT_PASS_THROUGH_MODE){
 			spin_time = 0;
 		}
 		else{
@@ -41,11 +51,16 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 		
 		move_start = millis(); //get the current time and save it to track movement time (in ms)
 	}
-	//***MAY OVERFLOW, Consider updating***
+	
+	
+	//*** OVERFLOWs after 49 days, Consider updating***
 	move_time = millis() - move_start; // compute the current time spent moving
-		
+	
+	
+	
+	
 	//if we are in a mode that needs to spin and we have not spun long enough
-	if ((mode == fast_mode || mode == slow_mode || mode == crawl_mode) && (move_time < spin_time)) {
+	if ((mode == INPUT_FAST_MODE || mode == INPUT_SLOW_MODE || mode == INPUT_CRAWL_AND_STOP_MODE) && (move_time < spin_time)) {
 		// Left Motor
 		leftMotor->Kp = fast_Kp; // proportional gain value
 		leftMotor->Ki = fast_Ki; // integrative gain value
@@ -57,13 +72,36 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 		rightMotor->Kd = fast_Kd; // derivative gain value
 		rightMotor->targetSpeed = -fast_speed;
 	}
+	
 	// Spiral Mode
-	else if (mode == spiral_mode) {
-		// set motor parameters to spiral 
-		// need to know current time
+	else if (mode == INPUT_SPIRAL_MODE) {
+		if (mode_over(move_time - spin_time, mode) == 0 ){
+			// set motor parameters for spiral
+			// Left Motor
+			leftMotor->Kp = fast_Kp; // proportional gain value
+			leftMotor->Ki = fast_Ki; // integrative gain value
+			leftMotor->Kd = fast_Kd; // derivative gain value
+			leftMotor->targetSpeed = fast_speed;
+			//Right Motor
+			rightMotor->Kp = fast_Kp; // proportional gain value
+			rightMotor->Ki = fast_Ki; // integrative gain value
+			rightMotor->Kd = fast_Kd; // derivative gain value
+			// compute the new speed for the  right wheel
+			rightMotor->targetSpeed = (int)(127*atan((double)Xspiral/(double)SpiralTightness));
+			
+			Xspiral++; //increment spiral parameter for next run though
+		
+		}
+		// time over, shutdown motors
+		else{
+			rightMotor->targetSpeed = 0;
+			leftMotor->targetSpeed = 0;
+			return 1;
+		}
 	}
-	//move straight at a fast speed
-	else if (mode == fast_mode) {
+	
+	//move straight at a fast speed for fast mode
+	else if (mode == INPUT_FAST_MODE) {
 		if (mode_over(move_time - spin_time, mode) == 0 ){
 			// Left Motor
 			leftMotor->Kp = fast_Kp; // proportional gain value
@@ -74,12 +112,12 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 			rightMotor->Kp = fast_Kp; // proportional gain value
 			rightMotor->Ki = fast_Ki; // integrative gain value
 			rightMotor->Kd = fast_Kd; // derivative gain value
-			rightMotor->targetSpeed = fast_speed;
-		}
+`		}
 		// time over, shutdown motors
 		else{
 			rightMotor->targetSpeed = 0;
 			leftMotor->targetSpeed = 0;
+			return 1;
 		}
 	}
 	
@@ -99,14 +137,13 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 		}
 		// time over, shutdown motors
 		else{
-			//rightMotor->targetSpeed = 0;
-			//leftMotor->targetSpeed = 0;
-                        return 1;
+			rightMotor->targetSpeed = 0;
+			leftMotor->targetSpeed = 0;
+			return 1;
 		}
 	}
 
     return 0;
-	
 }
 
 /********************************************************************
@@ -126,19 +163,19 @@ int mode_over(unsigned long move_time, int mode){
 	int ret_val = 0;  // value to return
 	int max_time = 0; // maximum time allocated for a given mode
 	
-	if(mode == fast_mode){
+	if(mode == INPUT_FAST_MODE){
 		max_time = fast_stoptime;
 	}
-	else if (mode == slow_mode){
+	else if (mode == INPUT_SLOW_MODE){
 		max_time = slow_stoptime;
 	}
-	else if (mode == crawl_mode){
+	else if (mode == INPUT_CRAWL_AND_STOP_MODE){
 		max_time = crawl_stoptime;
 	}
-	else if (mode == pass_thru_mode){
+	else if (mode == INPUT_PASS_THROUGH_MODE){
 		max_time = pass_stoptime;
 	}
-	else if (mode == spiral_mode){
+	else if (mode == INPUT_SPIRAL_MODE){
 		max_time = spiral_stoptime;
 	}
 	else{ // invalid mode, exit function in error
