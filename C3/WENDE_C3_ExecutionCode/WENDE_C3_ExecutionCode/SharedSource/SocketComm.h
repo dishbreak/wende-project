@@ -96,6 +96,7 @@ public:
 // Event function - override to get data
     virtual void OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount);
     virtual void OnEvent(UINT uEvent, LPVOID lpvData);
+	virtual void AppendMessage(LPCTSTR strText);
 // Run function - override to implement a new behaviour
     virtual void Run();
 

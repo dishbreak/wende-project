@@ -203,15 +203,11 @@ typedef union
 /////////////////////////////////////////////////////////////////////////////////
 typedef struct {
 	DWORD  ProcessID;
-	DWORD  Time;
-
+	
 	UINT32 PacketNumber;
 	UINT32 Status;
-	
-	UINT32 ValidChars;
 	UINT32 SubsystemId;
 	
-	CHAR   textStr[SHM_MAX_STATUS_TEXT];
 	// TODO PERFORMANCE COUNTER - FIX
 
 	SHM_INFO_STRUCT		ShmInfo;			// Shared SHM information
