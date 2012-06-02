@@ -6,7 +6,7 @@
 #include <atlconv.h>
 #include "ServerSocket.h"
 #include "SocketManager.h"
-
+#include "LaserCommand.h"
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -47,21 +47,21 @@ void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockA
 	MultiByteToWideChar(CP_ACP, 0, reinterpret_cast<LPCSTR>(lpData), dwCount, strData.GetBuffer(dwCount+1), dwCount+1 );
 	strData.ReleaseBuffer(dwCount);
 #endif
-	if (!sfrom.IsNull())
-	{
-		LONG  uAddr = sfrom.GetIPAddr();
-		BYTE* sAddr = (BYTE*) &uAddr;
-		int nPort = ntohs( sfrom.GetPort() ); // show port in host format...
-		CString strAddr;
-		// Address is stored in network format...
-		strAddr.Format(_T("%u.%u.%u.%u (%d)>"),
-					(UINT)(sAddr[0]), (UINT)(sAddr[1]),
-					(UINT)(sAddr[2]), (UINT)(sAddr[3]), nPort);
+	// variables
+	char temp[512];
+	static int  laserCommandMessageCount = 0;
 
-		strData = strAddr + strData;
-	}
+	CLaserCommand command((BYTE*)A2CT((LPSTR)lpData));
 
-	AppendMessage( strData );
+	// debug string for display 
+	sprintf(temp, "+LASER COMMAND MESSAGE(%d)\r\n", ++laserCommandMessageCount);
+	sprintf(temp, "%s|->isLaserOn = %d\r\n", temp,command.LaserStatus.isLaserOn);
+	sprintf(temp, "%s|->AZ        = %d\r\n", temp,command.LaserStatus.PWM_AZ);
+	sprintf(temp, "%s|->EL        = %d\r\n", temp,command.LaserStatus.PWM_EL);
+	sprintf(temp, "%s\r\n\r\n", temp);
+
+
+	AppendMessage( temp );
 }
 
 

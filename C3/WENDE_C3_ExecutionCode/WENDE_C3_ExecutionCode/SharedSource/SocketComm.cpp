@@ -32,7 +32,7 @@
 #include <process.h>
 #include <crtdbg.h>
 #include "SocketComm.h"
-
+#include "Utilties.h"
 const DWORD DEFAULT_TIMEOUT = 100L;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1016,10 +1016,7 @@ void CSocketComm::Run()
 		//length
 		AppendMessage("Waiting To Read Length\n");
         dwBytes1 = ReadComm(lpData, sizeof(unsigned char)*4, dwTimeout);
-		DWORD readSize = (lpData[0] << 24) + 
-			             (lpData[1] << 16) + 
-						 (lpData[2] <<  8) + 
-						 (lpData[3] <<  0);
+		DWORD readSize = CUtilities::BytesToInt(lpData);
 		AppendMessage("Read Length\n");
 		//packet
 		AppendMessage("Waiting To Read packet\n");

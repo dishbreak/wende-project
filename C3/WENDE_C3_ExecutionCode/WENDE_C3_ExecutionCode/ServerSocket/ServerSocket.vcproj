@@ -249,6 +249,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\SharedSource\LaserCommand.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\SharedSource\laserMsgs.pb.cc"
 				>
 			</File>
@@ -381,6 +385,10 @@
 			</File>
 			<File
 				RelativePath="ClientSocketDlg.h"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\LaserCommand.h"
 				>
 			</File>
 			<File

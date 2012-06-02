@@ -1,14 +1,14 @@
 #include "StdAfx.h"
 #include "Utilties.h"
 
-CUtilties::CUtilties(void)
+CUtilities::CUtilities(void)
 {
 }
 
-CUtilties::~CUtilties(void)
+CUtilities::~CUtilities(void)
 {
 }
- int CUtilties::BytesToInt   ( BYTE * bytes)
+ int CUtilities::BytesToInt   ( BYTE * bytes)
 {
 #if 1
     int_or_bytes converter;
@@ -19,7 +19,7 @@ CUtilties::~CUtilties(void)
 	return value;
 #endif
 }
- short  CUtilties::BytesToShort ( BYTE * bytes) 
+ short  CUtilities::BytesToShort ( BYTE * bytes) 
 {
 #if 1
 	short_or_bytes converter;
@@ -30,19 +30,19 @@ CUtilties::~CUtilties(void)
 	return value;
 #endif
 }
- double CUtilties::BytesToDouble( BYTE * bytes)
+ double CUtilities::BytesToDouble( BYTE * bytes)
 {
 	double_or_bytes converter;
 	memcpy(converter.bytes,bytes,SIZE_OF_DOUBLE);
 	return converter.vDoubloe;
 }
- float  CUtilties::BytesToFloat ( BYTE * bytes)
+ float  CUtilities::BytesToFloat ( BYTE * bytes)
 {
 	float_or_bytes converter;
 	memcpy(converter.bytes,bytes,SIZE_OF_FLOAT);
 	return converter.vFloat;
 }
- void   CUtilties::IntToBytes   (BYTE * bytes,  int    value)
+ void   CUtilities::IntToBytes   (BYTE * bytes,  int    value)
 {
 #if 1
 	int_or_bytes converter;
@@ -55,7 +55,7 @@ CUtilties::~CUtilties(void)
 	bytes[3] = (value & 0xFF000000) >>  0; 
 #endif
 }
- void   CUtilties::ShortToBytes (BYTE * bytes,  short  value)
+ void   CUtilities::ShortToBytes (BYTE * bytes,  short  value)
 {
 #if 1
 	short_or_bytes converter;
@@ -66,13 +66,13 @@ CUtilties::~CUtilties(void)
 	bytes[1] = (value & 0xFF000000) >>  0; 
 #endif
 }
- void   CUtilties::DoubleToBytes(BYTE * bytes,  double value)
+ void   CUtilities::DoubleToBytes(BYTE * bytes,  double value)
 {
 	double_or_bytes converter;
 	converter.vDoubloe = value;
 	memcpy(bytes,converter.bytes,SIZE_OF_DOUBLE);
 }
- void   CUtilties::FloatToBytes (BYTE * bytes,  float  value)
+ void   CUtilities::FloatToBytes (BYTE * bytes,  float  value)
 {
 	float_or_bytes converter;
 	converter.vFloat = value;

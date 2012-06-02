@@ -24,11 +24,11 @@ typedef _int_or_bytes    uint_or_bytes;
 typedef _short_or_bytes  short_or_bytes;
 typedef _short_or_bytes  ushort_or_bytes;
 
-static class CUtilties
+static class CUtilities
 {
 public:
-	CUtilties(void);
-	~CUtilties(void);
+	CUtilities(void);
+	~CUtilities(void);
 
 public:
 	
