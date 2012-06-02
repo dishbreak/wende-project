@@ -5,12 +5,17 @@
 #include <atlconv.h>
 #include "ServerSocket.h"
 #include "ServerSocketDlg.h"
-#include "cameraMsgs.pb.h"
-#include "laserMsgs.pb.h"
 #include <string>
+#include "cameraMsgs.pb.h"
+
+#ifndef LASER_USE_PROTOBUF
+#include "LaserStatus.h"
+#else
+#include "laserMsgs.pb.h"
+using namespace laserMsgs;
+#endif
 
 using namespace cameraMsgs;
-using namespace laserMsgs;
 using std::string;
 
 #ifdef _DEBUG
@@ -76,7 +81,11 @@ END_MESSAGE_MAP()
 CServerSocketDlg::CServerSocketDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CServerSocketDlg::IDD, pParent)
 	, m_CameraStatus(cameraMsgs::systemStatus::UNKNOWN)
+#ifndef LASER_USE_PROTOBUF
+	, m_LaserStatus(LASER_SYSTEM_STATUS::UNKNOWN)
+#else
 	, m_LaserStatus(laserMsgs::systemStatus::UNKNOWN)
+#endif
 	, m_imageName("")
 {
 	//{{AFX_DATA_INIT(CServerSocketDlg)
@@ -184,7 +193,7 @@ BOOL CServerSocketDlg::PreTranslateMessage(MSG* pMsg)
 				m_SocketManager[2].IsOpen())
 			{
 				string strTex = "TEST";
-				OnBtnSend(strTex,0,strTex.size(),0);
+				OnBtnSend(strTex.c_str(),0,strTex.size(),0);
 			}
 			return TRUE;
 		}
@@ -203,11 +212,20 @@ bool CServerSocketDlg::StartServer()
 	if (m_nSockType == SOCK_TCP)
 	{
 		// no smart addressing - we use connection oriented
-		for(int ii=0; ii<MAX_CONNECTION; ii++)
+		for(int ii=0; ii<MAX_CONNECTION-1; ii++)
 		{
 			port.Format(_T("%d"), ipPort+ii);
 			m_SocketManager[ii].SetSmartAddressing( false );
 			bSuccess = m_SocketManager[ii].CreateSocket( port, AF_INET, SOCK_STREAM, 0); // TCP
+		}
+		while (!m_SocketManager[MAX_CONNECTION-1].IsOpen())
+		{
+			port.Format(_T("%d"), ipPort+MAX_CONNECTION-1);
+			CString strLocal;
+			m_SocketManager[MAX_CONNECTION-1].GetLocalAddress( strLocal.GetBuffer(256), 256);
+			strLocal.ReleaseBuffer();
+			m_SocketManager[MAX_CONNECTION-1].ConnectTo( strLocal, port, AF_INET, SOCK_STREAM); // TCP
+			Sleep(5);
 		}
 	}
 	else
@@ -303,11 +321,12 @@ BOOL CServerSocketDlg::OnInitDialog()
 	GetDlgItem(IDC_BTN_SEND_IMAGE2)->EnableWindow( FALSE );
 	GetDlgItem(IDC_BTN_STOP)->EnableWindow( FALSE );
 
-	for(int i=0; i<MAX_CONNECTION; i++)
+	for(int i=0; i<MAX_CONNECTION-1; i++)
 	{
 		m_SocketManager[i].SetMessageWindow( &m_ctlMsgList );
 		m_SocketManager[i].SetServerState( true );	// run as server
 	}
+	m_SocketManager[MAX_CONNECTION-1].SetServerState( false );	// run as server
 
 	m_CameraUnkownStatus.SetCheck(true);
 	//PickNextAvailable();
@@ -452,7 +471,7 @@ void CServerSocketDlg::OnBtnSendStatus()
 {
 	CString cstatus;									// serilize the message
 	m_CameraStatusTextCtrl.GetWindowTextA(cstatus);
-
+				
 	// Get the current system time...
 	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
 	time( &osBinaryTime ) ;		// Get the current time from the 
@@ -465,7 +484,8 @@ void CServerSocketDlg::OnBtnSendStatus()
 	status.set_text(cstatus);				// set the camera text
 	status.set_time(osBinaryTime);									// set the operational time
 	string strText = status.SerializeAsString();
-	OnBtnSend(strText,0,strText.size(),0);												// send the data
+	OnBtnSend(strText.c_str(),0,strText.size(),0);												// send the data
+	m_SocketManager[0].AppendMessage("OnBtnSendStatus(CAMERA)\n");
 }
 void CServerSocketDlg::OnBtnSendTrack() 
 {
@@ -488,7 +508,8 @@ void CServerSocketDlg::OnBtnSendTrack()
 
 	string strText = track.SerializeAsString();
 	int size = track.ByteSize();
-	OnBtnSend(strText,1,strText.size(),1);												// send the data
+	OnBtnSend(strText.c_str(),1,strText.size(),1);												// send the data
+	m_SocketManager[1].AppendMessage("OnBtnSendTrack(CAMERA)\n");
 }
 void CServerSocketDlg::OnBtnSendImage() 
 {
@@ -496,7 +517,6 @@ void CServerSocketDlg::OnBtnSendImage()
 	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
 	time( &osBinaryTime ) ;		// Get the current time from the 
 								// operating system.
-	
 	//Setup the camera message....
 	cameraImage image;
 	image.set_time(osBinaryTime);									// set the operational time
@@ -507,11 +527,19 @@ void CServerSocketDlg::OnBtnSendImage()
 	
 	string strText = image.SerializeAsString();
 	int size = image.ByteSize();
-	OnBtnSend(strText,2,strText.size(),2);												// send the data
+	OnBtnSend(strText.c_str(),2,strText.size(),2);												// send the data
+	m_SocketManager[2].AppendMessage("OnBtnSendImage(CAMERA)\n");
 }
 
 void CServerSocketDlg::OnBnClickedBtnSendLasserStatus()
 {
+	#ifndef LASER_USE_PROTOBUF
+	CLaserStatus status;
+	status.LaserStatus.status = (LASER_SYSTEM_STATUS)m_LaserStatus;
+	status.LaserStatus.PWM_AZ = 1;
+	status.LaserStatus.PWM_EL = 2;
+	OnBtnSend((const char*)status.StatusToBytes(), 3, sizeof(LASER_STATUS_STRUCT),3);							// send the data
+	#else
 	CString lstatus;									// serilize the message
 	m_LaserStatusText.GetWindowTextA(lstatus);
 	// Get the current system time...
@@ -521,10 +549,10 @@ void CServerSocketDlg::OnBnClickedBtnSendLasserStatus()
 	//Setup the camera message....
 	laserStatus status;
 	status.set_status((laserMsgs::systemStatus)m_LaserStatus);		// set camera status
-	status.set_text(lstatus);										// set the camera text
-	status.set_time(osBinaryTime);									// set the operational time
 	string strText = status.SerializeAsString();
 	OnBtnSend(strText,3,strText.size(),3);							// send the data
+	#endif
+	m_SocketManager[3].AppendMessage("OnBtnSendStatus(Laser)\n");
 }
 
 void CServerSocketDlg::AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track)
@@ -559,7 +587,7 @@ void CServerSocketDlg::AddTrack(CButton *buttom, CEdit *x, CEdit *y, cameraTrack
 	}
 }
 
-void CServerSocketDlg::OnBtnSend(string strText, int portOffset, int size,  int type) 
+void CServerSocketDlg::OnBtnSend(const char* strText, int portOffset, int size,  int type) 
 {
 	int nLen = size;
 	stMessageProxy msgProxy;
@@ -572,13 +600,13 @@ void CServerSocketDlg::OnBtnSend(string strText, int portOffset, int size,  int 
 		{
 			// send broadcast...
 			msgProxy.address.CreateFrom(_T("255.255.255.255"), m_strPort);
-			memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
+			memcpy(msgProxy.byData, T2CA(strText), nLen);
 			nLen += msgProxy.address.Size();
 		}
 		else
 		{
 			nLen = __min(sizeof(msgProxy.byData)-1, nLen+1);
-			memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
+			memcpy(msgProxy.byData, T2CA(strText), nLen);
 		}
 
 		// Send data to peer...
@@ -804,32 +832,56 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 }
 void CServerSocketDlg::OnBnClickedLaserStatusDown()
 {
+#ifndef LASER_USE_PROTOBUF
+	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_DOWN;
+#else
 	m_LaserStatus = laserMsgs::systemStatus::LASER_DOWN;
+#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusFailed()
 {
+#ifndef LASER_USE_PROTOBUF
+	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_FAILED;
+#else
 	m_LaserStatus = laserMsgs::systemStatus::LASER_FAILED;
+#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusError()
 {
+#ifndef LASER_USE_PROTOBUF
+	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_ERROR;
+#else
 	m_LaserStatus = laserMsgs::systemStatus::LASER_ERROR;
+#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusReady()
 {
+	#ifndef LASER_USE_PROTOBUF
+	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_READY;
+	#else
 	m_LaserStatus = laserMsgs::systemStatus::LASER_READY;
+	#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusUnkown()
 {
+	#ifndef LASER_USE_PROTOBUF
+	m_LaserStatus = LASER_SYSTEM_STATUS::UNKNOWN;
+	#else
 	m_LaserStatus = laserMsgs::systemStatus::UNKNOWN;
+	#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusOperational()
 {
+	#ifndef LASER_USE_PROTOBUF
+	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_OPERATIONAL;
+	#else
 	m_LaserStatus = laserMsgs::systemStatus::LASER_OPERATIONAL;
+	#endif
 }
 
 void CServerSocketDlg::OnBnClickedBtnSendStatusCont()

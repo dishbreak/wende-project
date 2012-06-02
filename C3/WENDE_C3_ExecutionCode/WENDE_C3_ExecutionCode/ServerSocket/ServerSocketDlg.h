@@ -10,15 +10,21 @@
 
 #include "SocketManager.h"
 #include "cameraMsgs.pb.h"
-#include "laserMsgs.pb.h"
 #include "afxwin.h"
 #include "atlimage.h"
 #include "PictureCtrl.h"
 #include "ShmStructs.h"
 #include <string>
+#ifndef LASER_USE_PROTOBUF
+#include "LaserStatus.h"
+#else
+#include "laserMsgs.pb.h"
+using namespace laserMsgs;
+#endif
+
 using std::string;
 using namespace cameraMsgs;
-using namespace laserMsgs;
+
 #define MAX_CONNECTION		4
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,7 +62,7 @@ protected:
 
 	//void PickNextAvailable();
 	bool StartServer();
-	void OnBtnSend(string strText, int portOffset, int size,  int type);
+	void OnBtnSend(const char* strText, int portOffset, int size,  int type);
 
 	// Generated message map functions
 	//{{AFX_MSG(CServerSocketDlg)
@@ -74,7 +80,11 @@ protected:
 public:
 	CButton m_statusLaserOnCtrl;
 	cameraMsgs::systemStatus m_CameraStatus;
+#ifndef LASER_USE_PROTOBUF
+	LASER_SYSTEM_STATUS m_LaserStatus;
+#else
 	laserMsgs::systemStatus m_LaserStatus;
+#endif
 	afx_msg void OnBnClickedCameraStatusDown();
 	afx_msg void OnBnClickedCameraStatusReady();
 	afx_msg void OnBnClickedCameraStatusOperational();

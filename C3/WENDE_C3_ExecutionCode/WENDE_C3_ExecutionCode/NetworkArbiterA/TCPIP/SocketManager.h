@@ -31,8 +31,8 @@ public:
 
 	void SetMessageWindow(CEdit* pMsgCtrl);
 	void SetPictureWindow(CPictureCtrl* picCtrl);
-	void SetCameraMessageType(C3PacketType type);
-	void AppendMessage(LPCTSTR strText, DWORD size);
+	void SetMessageType(C3PacketType type);
+	virtual void AppendMessage(LPCTSTR strText);
 public:
 
 	virtual void OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount);

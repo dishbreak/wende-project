@@ -115,68 +115,44 @@ class laserStatus : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // optional int64 time = 1;
-  inline bool has_time() const;
-  inline void clear_time();
-  static const int kTimeFieldNumber = 1;
-  inline ::google::protobuf::int64 time() const;
-  inline void set_time(::google::protobuf::int64 value);
-  
-  // optional int64 PMW_AZ = 2;
+  // optional int64 PMW_AZ = 1;
   inline bool has_pmw_az() const;
   inline void clear_pmw_az();
-  static const int kPMWAZFieldNumber = 2;
+  static const int kPMWAZFieldNumber = 1;
   inline ::google::protobuf::int64 pmw_az() const;
   inline void set_pmw_az(::google::protobuf::int64 value);
   
-  // optional int64 PMW_EL = 3;
+  // optional int64 PMW_EL = 2;
   inline bool has_pmw_el() const;
   inline void clear_pmw_el();
-  static const int kPMWELFieldNumber = 3;
+  static const int kPMWELFieldNumber = 2;
   inline ::google::protobuf::int64 pmw_el() const;
   inline void set_pmw_el(::google::protobuf::int64 value);
   
-  // optional .laserMsgs.systemStatus status = 4 [default = UNKNOWN];
+  // optional .laserMsgs.systemStatus status = 3 [default = UNKNOWN];
   inline bool has_status() const;
   inline void clear_status();
-  static const int kStatusFieldNumber = 4;
+  static const int kStatusFieldNumber = 3;
   inline laserMsgs::systemStatus status() const;
   inline void set_status(laserMsgs::systemStatus value);
   
-  // optional string text = 5;
-  inline bool has_text() const;
-  inline void clear_text();
-  static const int kTextFieldNumber = 5;
-  inline const ::std::string& text() const;
-  inline void set_text(const ::std::string& value);
-  inline void set_text(const char* value);
-  inline void set_text(const char* value, size_t size);
-  inline ::std::string* mutable_text();
-  inline ::std::string* release_text();
-  
   // @@protoc_insertion_point(class_scope:laserMsgs.laserStatus)
  private:
-  inline void set_has_time();
-  inline void clear_has_time();
   inline void set_has_pmw_az();
   inline void clear_has_pmw_az();
   inline void set_has_pmw_el();
   inline void clear_has_pmw_el();
   inline void set_has_status();
   inline void clear_has_status();
-  inline void set_has_text();
-  inline void clear_has_text();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::google::protobuf::int64 time_;
   ::google::protobuf::int64 pmw_az_;
   ::google::protobuf::int64 pmw_el_;
-  ::std::string* text_;
   int status_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
   
   friend void  protobuf_AddDesc_laserMsgs_2eproto();
   friend void protobuf_AssignDesc_laserMsgs_2eproto();
@@ -387,37 +363,15 @@ class laserPose : public ::google::protobuf::Message {
 
 // laserStatus
 
-// optional int64 time = 1;
-inline bool laserStatus::has_time() const {
+// optional int64 PMW_AZ = 1;
+inline bool laserStatus::has_pmw_az() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void laserStatus::set_has_time() {
+inline void laserStatus::set_has_pmw_az() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void laserStatus::clear_has_time() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void laserStatus::clear_time() {
-  time_ = GOOGLE_LONGLONG(0);
-  clear_has_time();
-}
-inline ::google::protobuf::int64 laserStatus::time() const {
-  return time_;
-}
-inline void laserStatus::set_time(::google::protobuf::int64 value) {
-  set_has_time();
-  time_ = value;
-}
-
-// optional int64 PMW_AZ = 2;
-inline bool laserStatus::has_pmw_az() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void laserStatus::set_has_pmw_az() {
-  _has_bits_[0] |= 0x00000002u;
-}
 inline void laserStatus::clear_has_pmw_az() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void laserStatus::clear_pmw_az() {
   pmw_az_ = GOOGLE_LONGLONG(0);
@@ -431,15 +385,15 @@ inline void laserStatus::set_pmw_az(::google::protobuf::int64 value) {
   pmw_az_ = value;
 }
 
-// optional int64 PMW_EL = 3;
+// optional int64 PMW_EL = 2;
 inline bool laserStatus::has_pmw_el() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void laserStatus::set_has_pmw_el() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void laserStatus::clear_has_pmw_el() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void laserStatus::clear_pmw_el() {
   pmw_el_ = GOOGLE_LONGLONG(0);
@@ -453,15 +407,15 @@ inline void laserStatus::set_pmw_el(::google::protobuf::int64 value) {
   pmw_el_ = value;
 }
 
-// optional .laserMsgs.systemStatus status = 4 [default = UNKNOWN];
+// optional .laserMsgs.systemStatus status = 3 [default = UNKNOWN];
 inline bool laserStatus::has_status() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void laserStatus::set_has_status() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void laserStatus::clear_has_status() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void laserStatus::clear_status() {
   status_ = 5;
@@ -474,64 +428,6 @@ inline void laserStatus::set_status(laserMsgs::systemStatus value) {
   GOOGLE_DCHECK(laserMsgs::systemStatus_IsValid(value));
   set_has_status();
   status_ = value;
-}
-
-// optional string text = 5;
-inline bool laserStatus::has_text() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void laserStatus::set_has_text() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void laserStatus::clear_has_text() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void laserStatus::clear_text() {
-  if (text_ != &::google::protobuf::internal::kEmptyString) {
-    text_->clear();
-  }
-  clear_has_text();
-}
-inline const ::std::string& laserStatus::text() const {
-  return *text_;
-}
-inline void laserStatus::set_text(const ::std::string& value) {
-  set_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
-    text_ = new ::std::string;
-  }
-  text_->assign(value);
-}
-inline void laserStatus::set_text(const char* value) {
-  set_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
-    text_ = new ::std::string;
-  }
-  text_->assign(value);
-}
-inline void laserStatus::set_text(const char* value, size_t size) {
-  set_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
-    text_ = new ::std::string;
-  }
-  text_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* laserStatus::mutable_text() {
-  set_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
-    text_ = new ::std::string;
-  }
-  return text_;
-}
-inline ::std::string* laserStatus::release_text() {
-  clear_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = text_;
-    text_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
 }
 
 // -------------------------------------------------------------------

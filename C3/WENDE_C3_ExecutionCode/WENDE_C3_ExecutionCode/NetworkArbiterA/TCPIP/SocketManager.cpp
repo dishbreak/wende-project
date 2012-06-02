@@ -52,6 +52,7 @@ CSocketManager::~CSocketManager()
 void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom)
 {
 	// TODO FIX THIS
+	static char temp [1024];
 	char *inData = new char[dwCount];
 	// correct the string to proper format
 	#ifndef UNICODE
@@ -60,8 +61,37 @@ void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockA
 	#else
 	MultiByteToWideChar(CP_ACP, 0, reinterpret_cast<LPCSTR>(lpData), dwCount, inData, dwCount+1 );
 	#endif
+	// process the data according to the connection type
+	switch(m_MsgType)
+	{
+		case C3_CAMERA_STATUS: 
+		{ 
+			CArbiterSharedMemoryManager::Instance().DecodeCameraStatusMessage(inData,temp,dwCount); 
+			break; 
+		}
+		case C3_CAMERA_TRACK:  
+		{ 
+			CArbiterSharedMemoryManager::Instance().DecodeCameraTrackMessage(inData,temp,dwCount); 
+			break; 
+		}
+		case C3_CAMERA_IMAGE:  
+		{ 
+			CString loadName(CArbiterSharedMemoryManager::Instance().DecodeCameraImageMessage(inData,temp,dwCount).c_str()); 
+			m_picCtrl->Load(loadName);
+			break; 
+		}
+		case C3_LASER_STATUS:
+		{
+			CArbiterSharedMemoryManager::Instance().DecodeLaserStatusMessage(inData,temp,dwCount); 
+			break;
+		}
+		default: 
+		{ 
+			break; 
+		}
+	}
 	// process the message
-	AppendMessage( inData, dwCount );
+	AppendMessage( temp );
 	// clean up memory
 	delete inData;
 }
@@ -72,39 +102,8 @@ void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockA
 //           shm and if valid attempts to display the message to the 
 //           screen (only in debug mode).
 //////////////////////////////////////////////////////////////////////
-void CSocketManager::AppendMessage(LPCTSTR strText,DWORD size )
+void CSocketManager::AppendMessage(LPCTSTR temp)
 {
-	// temporary display string
-	static char temp [1024];
-	// process the data according to the connection type
-	switch(m_MsgType)
-	{
-		case C3_CAMERA_STATUS: 
-		{ 
-			CArbiterSharedMemoryManager::Instance().DecodeCameraStatusMessage(strText,temp,size); 
-			break; 
-		}
-		case C3_CAMERA_TRACK:  
-		{ 
-			CArbiterSharedMemoryManager::Instance().DecodeCameraTrackMessage(strText,temp,size); 
-			break; 
-		}
-		case C3_CAMERA_IMAGE:  
-		{ 
-			CString loadName(CArbiterSharedMemoryManager::Instance().DecodeCameraImageMessage(strText,temp,size).c_str()); 
-			m_picCtrl->Load(loadName);
-			break; 
-		}
-		case C3_LASER_STATUS:
-		{
-			CArbiterSharedMemoryManager::Instance().DecodeLaserStatusMessage(strText,temp,size); 
-			break;
-		}
-		default: 
-		{ 
-			break; 
-		}
-	}
 	// make sure that the control handle is valid before we attempt to display
 	if (NULL == m_pMsgCtrl)
 	{
@@ -128,7 +127,7 @@ void CSocketManager::AppendMessage(LPCTSTR strText,DWORD size )
 // Function: SetCameraMessageType
 //  purpose: Sets the message type for this socket manager
 //////////////////////////////////////////////////////////////////////
-void CSocketManager::SetCameraMessageType(C3PacketType type)
+void CSocketManager::SetMessageType(C3PacketType type)
 {
 	m_MsgType = type;
 }
@@ -193,19 +192,19 @@ void CSocketManager::OnEvent(UINT uEvent, LPVOID lpvData)
 	{
 		case EVT_CONSUCCESS:
 			tempString = "Connection Established\r\n";
-			AppendMessage( _T(tempString.c_str()), tempString.size());
+			AppendMessage( _T(tempString.c_str()));
 			break;
 		case EVT_CONFAILURE:
 			tempString = "Connection Failed\r\n";
-			AppendMessage( _T(tempString.c_str()), tempString.size());
+			AppendMessage( _T(tempString.c_str()));
 			break;
 		case EVT_CONDROP:
 			tempString = "Connection Abandonned\r\n";
-			AppendMessage( _T(tempString.c_str()), tempString.size());
+			AppendMessage( _T(tempString.c_str()));
 			break;
 		case EVT_ZEROLENGTH:
 			tempString = "Zero Length Message\r\n";
-			AppendMessage( _T(tempString.c_str()), tempString.size());
+			AppendMessage( _T(tempString.c_str()));
 			break;
 		default:
 			tempString = "Unknown Socket event\n";
