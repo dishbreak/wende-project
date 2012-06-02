@@ -8,6 +8,8 @@
 #include "TinyXml\tinyxml.h"
 #include "process.h"
 #ifndef LASER_USE_PROTOBUF
+#include "LaserCommand.h"
+#include "Utilties.h"
 #else
 #include "laserMsgs.pb.h"
 using namespace laserMsgs;
@@ -394,33 +396,42 @@ void CNetworkArbiterDlg::OnEnChangePort()
 
 void CNetworkArbiterDlg::OnBnClickedC3LaserStatus()
 {
-	//if(m_SocketObjectServer[0].IsOpen() == true)
-	//{
-	//	// time
-	//	time_t seconds;
-	//	seconds = time (NULL);
-	//	
-	//	stMessageProxy msgProxy;
-	//	laserPose pose;
-	//	pose.set_time((DWORD)seconds);
-	//	pose.set_laseron(m_LaserOnOff.GetCheck()==BST_CHECKED);
-	//	CString cTemp;									// serilize the message
-	//	m_LaserPWMAz.GetWindowTextA(cTemp);
-	//	pose.mutable_target()->set_pulseaz(atoi(cTemp));
-	//	m_LaserPWMEl.GetWindowTextA(cTemp);
-	//	pose.mutable_target()->set_pulseel(atoi(cTemp));
-	//	string strText = pose.SerializeAsString();
-	//	USES_CONVERSION;
-	//	int nLen = __min(sizeof(msgProxy.byData)-1, strText.size()+1);
-	//	memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
-	//
-	//	unsigned char sizeArray[4] = {(strText.size() & 0xFF000000) >> 24,
-	//							      (strText.size() & 0x00FF0000) >> 16,
-	//							 	  (strText.size() & 0x0000FF00) >>  8,
-	//								  (strText.size() & 0x000000FF) >>  0};
-	//	m_SocketObjectServer[0].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
-	//	m_SocketObjectServer[0].WriteComm(msgProxy.byData, strText.size(), INFINITE);
-	//}
+	if(m_SocketObjectServer[0].IsOpen() == true)
+	{
+		stMessageProxy msgProxy;
+		#ifndef LASER_USE_PROTOBUF
+		CLaserCommand pose;
+		CString cTemp;									// serilize the message
+		m_LaserPWMAz.GetWindowTextA(cTemp);
+		pose.LaserStatus.PWM_AZ = atoi(cTemp);
+		m_LaserPWMEl.GetWindowTextA(cTemp);
+		pose.LaserStatus.PWM_EL = atoi(cTemp);
+		pose.LaserStatus.isLaserOn = (m_LaserOnOff.GetCheck()==BST_CHECKED);
+		int nLen = sizeof(LASER_COMMAND_STRUCT);
+		memcpy(msgProxy.byData, T2CA((char*)pose.StatusToBytes()), nLen);
+		#else
+		// time
+		time_t seconds;
+		seconds = time (NULL);
+		laserPose pose;
+		pose.set_time((DWORD)seconds);
+		pose.set_laseron(m_LaserOnOff.GetCheck()==BST_CHECKED);
+		CString cTemp;									// serilize the message
+		m_LaserPWMAz.GetWindowTextA(cTemp);
+		pose.mutable_target()->set_pulseaz(atoi(cTemp));
+		m_LaserPWMEl.GetWindowTextA(cTemp);
+		pose.mutable_target()->set_pulseel(atoi(cTemp));
+		string strText = pose.SerializeAsString();
+		USES_CONVERSION;
+		int nLen = __min(sizeof(msgProxy.byData)-1, strText.size()+1);
+		memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
+		#endif
+	
+		unsigned char sizeArray[4];
+		CUtilities::IntToBytes(sizeArray,nLen);
+		m_SocketObjectServer[0].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
+		m_SocketObjectServer[0].WriteComm(msgProxy.byData, nLen, INFINITE);
+	}
 }
 
 void CNetworkArbiterDlg::OnBnClickedLaserOnOff()
