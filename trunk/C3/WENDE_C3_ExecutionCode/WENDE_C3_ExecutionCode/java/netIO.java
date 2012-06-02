@@ -5,7 +5,7 @@
 // 02-2012 thru 04-2012
 //
 
-
+import java.nio.ByteBuffer;
 import java.net.*;
 import java.util.Properties;
 import java.io.*;
@@ -212,8 +212,6 @@ public class netIO{
 			}
 
 		// define server Streams
-		serverOutStream = new ObjectOutputStream(clientSocket.getOutputStream());
-		serverInputStream = new ObjectInputStream(clientSocket.getInputStream());
 		System.out.println("SERVER INIT COMPLETE");
 		return;
 	}	// End Server init Method
@@ -221,30 +219,34 @@ public class netIO{
 	// overloaded server function - one for each message type
 	public void server(CameraMsgs.cameraStatus sMsg) throws IOException
 	{
-			System.out.println("Send Status"); 
-			serverOutStream.writeInt(sMsg.getSerializedSize());
-			//serverOutStream.writeByte(msgType);		// write type of message to stream
-			sMsg.writeTo(serverOutStream);
-			count++;
+		System.out.println("Send Status");
+		//byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
+		//byte[] bytesMsg = sMsg.toByteArray(); 						  
+		//clientSocket.getOutputStream().write(bytesLength, 0, 4);
+		//clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
+		count++;
 	} // End Server Method
 
 	// overloaded server function - one for each message type
 	public void server(CameraMsgs.cameraTracks sMsg) throws IOException
 	{
-		System.out.println("Send Tracks");
-		serverOutStream.writeInt(sMsg.getSerializedSize());
-		//serverOutStream.writeByte(msgType);		// write type of message to stream
-		sMsg.writeTo(serverOutStream);
+		System.out.println("Send Track");
+		//byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
+		//byte[] bytesMsg = sMsg.toByteArray(); 						  
+		//clientSocket.getOutputStream().write(bytesLength, 0, 4);
+		//clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
 		count++;
 	} // End Server Method
 
 	// overloaded server function - one for each message type
 	public void server(CameraMsgs.cameraImage sMsg) throws IOException
 	{
-		System.out.println("Image Serial Size = "+ sMsg.getSerializedSize());
-		serverOutStream.writeInt(sMsg.getSerializedSize());
-		//serverOutStream.writeByte(msgType);		// write type of message to stream
-		sMsg.writeTo(serverOutStream);
+		System.out.println("Send Image");
+		int msgSize = sMsg.getSerializedSize();
+		byte[] bytesLength = ByteBuffer.allocate(4).putInt(msgSize).array();
+		byte[] bytesMsg = sMsg.toByteArray(); 						  
+		clientSocket.getOutputStream().write(bytesLength, 0, 4);
+		clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
 		count++;
 	} // End Server Method
 	
