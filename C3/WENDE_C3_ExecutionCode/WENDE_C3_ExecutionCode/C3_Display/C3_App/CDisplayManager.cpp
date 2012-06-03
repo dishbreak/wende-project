@@ -67,7 +67,7 @@ int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 	if((nCameraStatus == 0) || (nCameraStatus == 3) || (nCameraStatus == 4)) 	
 	{
 		C3_User_Interface::Instance->pbCameraStatus->Image = 
-			System::Drawing::Image::FromFile ("Offline.png");
+			C3_User_Interface::Instance->OfflineInd;
 
 		Set_Camera_Status(0);
 	}
@@ -92,7 +92,7 @@ int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 	if((nLaserStatus == 0) || (nLaserStatus == 3) || (nLaserStatus == 4)) 		
 	{
 		C3_User_Interface::Instance->pbLaserStatus->Image = 
-			System::Drawing::Image::FromFile ("Offline.png");
+			C3_User_Interface::Instance->OfflineInd;
 
 		Set_Laser_Status(0);
 	}
@@ -100,7 +100,7 @@ int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 	else 	
 	{
 		C3_User_Interface::Instance->pbLaserStatus->Image = 
-			System::Drawing::Image::FromFile ("Online.png");
+			C3_User_Interface::Instance->OnlineInd;
 
 		Set_Laser_Status(1);
 	}
@@ -117,13 +117,13 @@ int CDisplayManager::Update_Laser_Activity_Indicator(int nLaserActivityStatus)
 	if(nLaserActivityStatus == 1)
 	{
 		C3_User_Interface::Instance->pbLaserActivity->Image = 
-			System::Drawing::Image::FromFile ("Energized.png");
+			C3_User_Interface::Instance->EnergizedInd;
 	}
 
 	if(nLaserActivityStatus == 0)
 	{
 		C3_User_Interface::Instance->pbLaserActivity->Image = 
-			System::Drawing::Image::FromFile ("Inactive.png");
+			C3_User_Interface::Instance->InactiveInd;
 	}
 
 	return 0;
@@ -145,10 +145,10 @@ int CDisplayManager::Update_Overall_Status(void)
 		(nLaserComStatus == 1) && (nCameraComStatus == 1))
 
 		C3_User_Interface::Instance->pbOverallStatus->Image = 
-			System::Drawing::Image::FromFile ("Online.png");
+			C3_User_Interface::Instance->OnlineInd;
 	else
 		C3_User_Interface::Instance->pbOverallStatus->Image = 
-			System::Drawing::Image::FromFile ("Offline.png");
+			C3_User_Interface::Instance->OfflineInd;
 
 	return 0;
 }
@@ -199,9 +199,9 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 	if(nCameraCommStatus == 0) 		
 	{
 		C3_User_Interface::Instance->pbCameraComms->Image = 
-			System::Drawing::Image::FromFile ("Offline.png");
+			C3_User_Interface::Instance->OfflineInd;
 		C3_User_Interface::Instance->pbCameraStatus->Image =
-			System::Drawing::Image::FromFile ("Unknown.png");
+			C3_User_Interface::Instance->UnknownInd;
 		Set_Camera_Com_Status(0);
 		Set_Camera_Status(-1);
 	}
@@ -209,7 +209,7 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 	else 	
 	{
 		C3_User_Interface::Instance->pbCameraComms->Image = 
-			System::Drawing::Image::FromFile ("Online.png");
+			C3_User_Interface::Instance->OnlineInd;
 		Set_Camera_Com_Status(1);
 	}
 
@@ -222,9 +222,9 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 	if(nLaserCommStatus == 0) 		
 	{
 		C3_User_Interface::Instance->pbLaserComms->Image = 
-			System::Drawing::Image::FromFile ("Offline.png");
+			C3_User_Interface::Instance->OfflineInd;
 		C3_User_Interface::Instance->pbLaserStatus->Image =
-			System::Drawing::Image::FromFile ("Unknown.png");
+			C3_User_Interface::Instance->UnknownInd;
 		Set_Laser_Com_Status(0);
 		Set_Laser_Status(-1);
 	}
@@ -232,7 +232,7 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 	else 	
 	{
 		C3_User_Interface::Instance->pbLaserComms->Image = 
-			System::Drawing::Image::FromFile ("Online.png");
+			C3_User_Interface::Instance->OnlineInd;
 
 		Set_Laser_Com_Status(1);
 	}
