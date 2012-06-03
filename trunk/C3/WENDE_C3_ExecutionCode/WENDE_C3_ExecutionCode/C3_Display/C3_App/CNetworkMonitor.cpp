@@ -6,8 +6,11 @@
 #include "CNetworkMonitor.h"
 #include "CDisplayManager.h"
 #include "GUIConfiguration.h"
+#include <fstream>
+#include <iostream>
 
 using namespace System;
+using namespace std;
 
 UINT WINAPI TrackThread (LPVOID pParam);
 UINT WINAPI ImageThread (LPVOID pParam);
@@ -64,7 +67,7 @@ void CNetworkMonitor::InitializeThread()
 	HANDLE hThread4;
 	UINT uiThreadId4 = 0;
 	hThread4 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
-										0,					   // stack
+										10000,					   // stack
 									 ImageThread,			   // Thread proc
 									 NULL,					   // Thread param
 									 CREATE_SUSPENDED,		   // creation mode
@@ -255,9 +258,8 @@ UINT WINAPI ImageThread (LPVOID pParam)
 				// Display data...
 				sImagePath = m_CameraImage->imagePath;
 				String ^ ssImagePath = gcnew String(sImagePath);
-
+				
 				CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
-
 				dispman->Update_Live_Video_Feed(ssImagePath);
 
 				// Set the event
@@ -266,7 +268,7 @@ UINT WINAPI ImageThread (LPVOID pParam)
 				// release the mutex
 				m_CameraImage.ReleaseMutex();
 
-				delete ssImagePath;
+
 			}
 			else
 			{
