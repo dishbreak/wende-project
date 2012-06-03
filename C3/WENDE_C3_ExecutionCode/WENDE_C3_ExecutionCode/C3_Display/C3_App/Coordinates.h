@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
-class Coordinates
-{
+class Coordinates {
 public:
 	static Coordinates * GetCoordinatesHandle();
 	void SetNewCoordinatePair(int,int);
