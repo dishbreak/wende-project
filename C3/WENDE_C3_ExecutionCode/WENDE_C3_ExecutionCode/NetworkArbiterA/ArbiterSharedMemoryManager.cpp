@@ -62,7 +62,9 @@ int CArbiterSharedMemoryManager::DecodeCameraStatusMessage_DEBUG(cameraStatus *s
 	static char timeStr[256];
 	static int  cameraStatusMessageCount = 0;
 	// debug string for time
-	time_t messageTime = ss->time();
+	time_t messageTime;// = ss->time();
+	time( &messageTime ) ;	
+	ss->set_time(messageTime);
 	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA STATUS MESSAGE(%d)\r\n", ++cameraStatusMessageCount);
@@ -87,6 +89,9 @@ void CArbiterSharedMemoryManager::DecodeCameraStatusMessage(LPCTSTR strText, cha
 	ss.ParseFromArray(strText,size);
 	//Prepare the debug print
 	int packetNumber = DecodeCameraStatusMessage_DEBUG(&ss,temp);
+	time_t messageTime;// = ss->time();
+	time( &messageTime ) ;	
+	ss.set_time(messageTime);
 	// aquire the mutex
 	if (C3CameraStatus.isCreated() &&  
 		C3CameraStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
@@ -121,7 +126,9 @@ int CArbiterSharedMemoryManager::DecodeCameraTrackMessage_DEBUG(cameraTracks *tr
 	static char timeStr[256];
 	static int cameraTrackMessageCount = 0;
 	// debug string for time
-	time_t messageTime = tr->time();
+	time_t messageTime;// = ss->time();
+	time( &messageTime ) ;	
+	tr->set_time(messageTime);
 	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
@@ -155,6 +162,9 @@ void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char
 	tr.ParseFromArray(strText,size);
 	//Prepare the debug print
 	int packetNumebr = DecodeCameraTrackMessage_DEBUG(&tr,temp);
+	time_t messageTime;// = ss->time();
+	time( &messageTime ) ;	
+	tr.set_time(messageTime);
 	// aquire the mutex
 	if (C3CameraTracks.isCreated() &&  
 		C3CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
@@ -200,7 +210,9 @@ int CArbiterSharedMemoryManager::DecodeCameraImageMessage_DEBUG(cameraImage *im,
 	static char timeStr[256];
 	static int cameraImageMessageCount = 0;
 	// debug string for time
-	time_t messageTime = im->time();
+	time_t messageTime;// = ss->time();
+	time( &messageTime ) ;	
+	im->set_time(messageTime);
 	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA IMAGE MESSAGE(%d)\r\n", ++cameraImageMessageCount);
@@ -218,7 +230,9 @@ string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 {
 	// Current time
 	static char timeStr[FILENAME_MAX];
-	time_t messageTime = im->time();
+	time_t messageTime;// = ss->time();
+	time( &messageTime ) ;	
+	im->set_time(messageTime);
 	// uniquie file name
 	char cCurrentPath[FILENAME_MAX];
 	if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath) / sizeof(TCHAR)))
@@ -280,6 +294,9 @@ string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, c
 	int packetNumebr = DecodeCameraImageMessage_DEBUG(&im,temp);
 	// recreate the image
 	string saveName  = RecreateImage(&im);
+	time_t messageTime;// = ss->time();
+	time( &messageTime ) ;	
+	im.set_time(messageTime);
 	// write data to shm
 	if (C3CameraImage.isCreated() &&  
 	    C3CameraImage.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)

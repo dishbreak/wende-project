@@ -1014,16 +1014,33 @@ void CSocketComm::Run()
     {
         // Blocking mode: Wait for event
 		//length
-		AppendMessage("Waiting To Read Length\n");
+		char temp[256];
+		sprintf(temp,"Waiting To Read Length\r\n");
+		AppendMessage(temp);
         dwBytes1 = ReadComm(lpData, sizeof(unsigned char)*4, dwTimeout);
 		DWORD readSize = CUtilities::BytesToInt(lpData);
-		AppendMessage("Read Length\n");
-		//packet
-		AppendMessage("Waiting To Read packet\n");
-		dwBytes2 = ReadComm(lpData, min(dwSize,readSize), dwTimeout);
-		AppendMessage("Read Packet\n");
+		readSize = ntohl(readSize);
+		//DWORD readSize = CUtilities::BytesToInt(lpData);
+		sprintf(temp,"Read Length = %d [%d,%d,%d,%d]\r\n",readSize,lpData[0],lpData[1],lpData[2],lpData[3]);
+		AppendMessage(temp);
+		
+		// Not Guarentee that all data comes in single read.
+		sprintf(temp,"Waiting To Read packet\r\n");
+		AppendMessage(temp);
+		DWORD index = 0;
+		while(readSize != 0)
+		{
+			//packet
+			dwBytes2 = ReadComm(&lpData[index], min(dwSize,readSize), dwTimeout);
+			readSize -= dwBytes2; 
+			index    += dwBytes2;
+			sprintf(temp,"Read Packet [read = %d, Remaining = %d]\r\n",index,readSize);
+			AppendMessage(temp);
+		}
+		sprintf(temp,"Read Packet\r\n");
+		AppendMessage(temp);
         // Error? - need to signal error
-        if (dwBytes2 == (DWORD)-1L)
+        if (index == (DWORD)-1L)
         {
             // Do not send event if we are closing
             if (IsOpen())
@@ -1049,7 +1066,7 @@ void CSocketComm::Run()
         }
         else if (dwBytes2 > 0L)
         {
-            OnDataReceived( lpData, dwBytes2);
+            OnDataReceived( lpData, index);
         }
 
         //Sleep(0);

@@ -428,7 +428,7 @@ void CNetworkArbiterDlg::OnBnClickedC3LaserStatus()
 		#endif
 	
 		unsigned char sizeArray[4];
-		CUtilities::IntToBytes(sizeArray,nLen);
+		CUtilities::IntToBytes(sizeArray,htonl(nLen));
 		m_SocketObjectServer[0].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
 		m_SocketObjectServer[0].WriteComm(msgProxy.byData, nLen, INFINITE);
 	}

@@ -617,7 +617,7 @@ void CServerSocketDlg::OnBtnSend(const char* strText, int portOffset, int size, 
 		else
 		{			
 			unsigned char sizeArray[4];
-			CUtilities::IntToBytes(sizeArray,nLen);
+			CUtilities::IntToBytes(sizeArray,htonl(nLen));
 			m_SocketManager[portOffset].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
 			m_SocketManager[portOffset].WriteComm(msgProxy.byData, nLen, INFINITE);
 		}
