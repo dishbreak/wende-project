@@ -44,7 +44,8 @@ void RoverProcessingRoutines()
       //perform laser detection check
       bSuccess = DetectionProcessing();
       
-      if(bSuccess || bMovementComplete)
+      if((roverMode == INPUT_CRAWL_AND_STOP_MODE && bSuccess && bMovementComplete) || 
+		 (roverMode != INPUT_CRAWL_AND_STOP_MODE && (bSuccess || bMovementComplete)))
       {
         roverState = ROVER_DONE_STATE;
         //kill the motors
