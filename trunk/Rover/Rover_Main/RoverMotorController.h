@@ -15,6 +15,8 @@
 #define LOOP_TIME  100
 #define SPEED_MULTIPLIER  ((1000/(3*53))*(204/LOOP_TIME))
 
+
+
 //motor data structure
 //Laser Detection data struct
 typedef struct __motor_data {
@@ -42,4 +44,9 @@ int calcLeftMotorSpeed();
 //PWM speed
 int calcPWM(motor_data* motorData);
 
+unsigned long getRightMotor();
+unsigned long getLeftMotor();
+unsigned long getminMotor();
+
 #endif
+
