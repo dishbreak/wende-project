@@ -34,9 +34,9 @@
 
 #define fast_stopdistance	2100  // 2m + 5% buffer
 #define slow_stopdistance	2100  // 2m + 5% buffer
-#define crawl_stopdistance	1417   // (.7+.65)m + 5% buffer
+#define crawl_stopdistance	1150   // (.7+.65)m + 5% buffer
 #define pass_stopdistance	3150 // ms, 3m/(.05m/s) + 5% buffer
-#define spiral_stopdistance	80000 // ms, made up. will need to be updated based on testing.
+#define spiral_stopdistance	4500 // ms, made up. will need to be updated based on testing.
 
 
 //main rover movement routine
