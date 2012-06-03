@@ -23,6 +23,7 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 	unsigned long seed; // seed for the PRNG
 	//Create spiral parameter variables
 	static int Xspiral = 0;
+        static boolean First_Mode_Entry = true;
 	const int SpiralTightness = 200;
 	
 	
@@ -55,10 +56,12 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 	
 	//*** OVERFLOWs after 49 days, Consider updating***
 	move_time = millis() - move_start; // compute the current time spent moving
-	
-	
-	
-	
+	/* debug distance print
+        Serial.print("Motor Distance ");	
+        Serial.print(getRightMotor());
+        Serial.print(" - ");
+        Serial.println(getLeftMotor());	
+	*/
 	//if we are in a mode that needs to spin and we have not spun long enough
 	if ((mode == INPUT_FAST_MODE || mode == INPUT_SLOW_MODE || mode == INPUT_CRAWL_AND_STOP_MODE) && (move_time < spin_time)) {
 		// Left Motor
@@ -75,7 +78,7 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 	
 	// Spiral Mode
 	else if (mode == INPUT_SPIRAL_MODE) {
-		if (mode_over(move_time - spin_time, mode) == 0 ){
+		if (mode_over(getminMotor(), mode) == 0 || First_Mode_Entry){
 			// set motor parameters for spiral
 			// Left Motor
 			leftMotor->Kp = fast_Kp; // proportional gain value
@@ -98,11 +101,12 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 			leftMotor->targetSpeed = 0;
 			return 1;
 		}
+                First_Mode_Entry = false;
 	}
 	
 	//move straight at a fast speed for fast mode
 	else if (mode == INPUT_FAST_MODE) {
-		if (mode_over(move_time - spin_time, mode) == 0 ){
+		if (mode_over(getminMotor(), mode) == 0 || First_Mode_Entry){
 			// Left Motor
 			leftMotor->Kp = fast_Kp; // proportional gain value
 			leftMotor->Ki = fast_Ki; // integrative gain value
@@ -112,18 +116,20 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 			rightMotor->Kp = fast_Kp; // proportional gain value
 			rightMotor->Ki = fast_Ki; // integrative gain value
 			rightMotor->Kd = fast_Kd; // derivative gain value
-`		}
+			rightMotor->targetSpeed = fast_speed;
+		}
 		// time over, shutdown motors
 		else{
 			rightMotor->targetSpeed = 0;
 			leftMotor->targetSpeed = 0;
 			return 1;
 		}
+                First_Mode_Entry = false;
 	}
 	
 	// else, we are in a mode that requires straight, slow movement (slow mode, crawl&stop, pass through)
 	else {
-		if(mode_over(move_time - spin_time, mode) == 0){
+		if(mode_over(getminMotor(), mode) == 0 || First_Mode_Entry){
 			// Left Motor
 			leftMotor->Kp = slow_Kp; // proportional gain value
 			leftMotor->Ki = slow_Ki; // integrative gain value
@@ -141,6 +147,7 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 			leftMotor->targetSpeed = 0;
 			return 1;
 		}
+                First_Mode_Entry = false;
 	}
 
     return 0;
@@ -164,19 +171,19 @@ int mode_over(unsigned long move_time, int mode){
 	int max_time = 0; // maximum time allocated for a given mode
 	
 	if(mode == INPUT_FAST_MODE){
-		max_time = fast_stoptime;
+		max_time = fast_stopdistance;
 	}
 	else if (mode == INPUT_SLOW_MODE){
-		max_time = slow_stoptime;
+		max_time = slow_stopdistance;
 	}
 	else if (mode == INPUT_CRAWL_AND_STOP_MODE){
-		max_time = crawl_stoptime;
+		max_time = crawl_stopdistance;
 	}
 	else if (mode == INPUT_PASS_THROUGH_MODE){
-		max_time = pass_stoptime;
+		max_time = pass_stopdistance;
 	}
 	else if (mode == INPUT_SPIRAL_MODE){
-		max_time = spiral_stoptime;
+		max_time = spiral_stopdistance;
 	}
 	else{ // invalid mode, exit function in error
 		return -1;

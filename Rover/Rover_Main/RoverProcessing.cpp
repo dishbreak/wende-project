@@ -26,7 +26,11 @@ void RoverProcessingRoutines()
       {
         roverState = ROVER_READY_STATE;
         //Testing****
-        roverMode = INPUT_FAST_MODE;
+        //roverMode = INPUT_SLOW_MODE;
+        //roverMode = INPUT_FAST_MODE;
+        roverMode = INPUT_SPIRAL_MODE;
+        //roverMode = INPUT_PASS_THROUGH_MODE;
+        //roverMode = INPUT_CRAWL_AND_STOP_MODE;
       }
       break;
       

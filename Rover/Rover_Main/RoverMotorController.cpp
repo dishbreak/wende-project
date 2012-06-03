@@ -4,10 +4,12 @@
 //used for encoders
 volatile boolean bLeftFwd = true;
 volatile boolean bRightFwd = true;
-volatile long LM_count = 0; // Interrupt variables should be volatile (stored in RAM)
-volatile long RM_count = 0;
-long oldLMcount = 0;
-long oldRMcount = 0;
+
+volatile unsigned long LM_count = 0; // Interrupt variables should be volatile (stored in RAM)
+volatile unsigned long RM_count = 0;
+
+unsigned long oldLMcount = 0;
+unsigned long oldRMcount = 0;
 
 
 /**
@@ -72,7 +74,7 @@ void RoverMotorRoutines(motor_data* leftMotor, motor_data* rightMotor)
     rightMotor->measuredSpeed = calcRightMotorSpeed();
 
     leftMotor->PWM_val = calcPWM(leftMotor);
-    rightMotor->PWM_val = calcPWM(leftMotor);
+    rightMotor->PWM_val = calcPWM(rightMotor);
     setRightMotor(bRightFwd,rightMotor->PWM_val);
     setLeftMotor(bLeftFwd,leftMotor->PWM_val);
   }
@@ -97,6 +99,36 @@ void incRightMotor()
 }
 
 /**
+* getLeftMotor: 
+* Description: ISR to returns left motor encoder value
+*/
+unsigned long getLeftMotor()
+{
+  return(LM_count);
+}
+
+/**
+* getRightMotor: 
+* Description: ISR to returns right motor encoder value
+*/
+unsigned long getRightMotor()
+{
+  return(RM_count);
+}
+
+/**
+* getMinMotor: 
+* Description: ISR to returns right motor encoder value
+*/
+unsigned long getminMotor()
+{
+  if (LM_count > RM_count)
+    return(RM_count);
+  else
+    return(LM_count);
+}
+
+/**
 * calcRightMotorSpeed: 
 * Description: Calculate measured speed based on encoder counts
 * @return measured speed
@@ -105,7 +137,7 @@ int calcRightMotorSpeed()
 {
   int SpeedValue;
   SpeedValue = (RM_count-oldRMcount)*SPEED_MULTIPLIER;
-  oldLMcount = LM_count;
+  oldRMcount = RM_count;
   return SpeedValue;
 }
 
