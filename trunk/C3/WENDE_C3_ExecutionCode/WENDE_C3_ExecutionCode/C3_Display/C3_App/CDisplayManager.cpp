@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CDisplayManager.h"
-//#include "Coordinates.h"
+#include "Coordinates.h"
 
 
 using namespace C3_App;
@@ -34,20 +34,21 @@ CDisplayManager * CDisplayManager::getCDisplayManager()
 
 int CDisplayManager::Update_Rover_PPI_Position(int x, int y)
 {
-	//for now, just dump everything to the globals.
-	extern int roverContactX;
-	extern int roverContactY;
+	////for now, just dump everything to the globals.
+	//extern int roverContactX;
+	//extern int roverContactY;
 
-	//only act on the information if it's new
-	if ((x != roverContactX) || (y != roverContactY))
-	{
-		roverContactX = x;
-		roverContactY = y;
-		C3_User_Interface::Instance->pPPI->Invalidate();
-	}
+	////only act on the information if it's new
+	//if ((x != roverContactX) || (y != roverContactY))
+	//{
+	//	roverContactX = x;
+	//	roverContactY = y;
+	//	C3_User_Interface::Instance->pPPI->Invalidate();
+	//}
+	Coordinates* coordsObj = Coordinates::GetCoordinatesHandle();
+	coordsObj->SetNewCoordinatePair(x, y);
+
 	return 0;
-	//Coordinates* coordsObj = Coordinates::GetCoordinatesHandle();
-	//coordsObj->SetNewCoordinatePair(x, y);
 }
 
 ////////////////////////////////////////////////////////////////////////

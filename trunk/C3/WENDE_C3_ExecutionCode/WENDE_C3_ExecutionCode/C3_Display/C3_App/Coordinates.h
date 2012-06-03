@@ -6,11 +6,15 @@
 class Coordinates {
 public:
 	static Coordinates * GetCoordinatesHandle();
-	void SetNewCoordinatePair(int,int);
+	void SetNewCoordinatePair(int xCoord, int yCoord);
 	struct CoordinatePair {
 		int x;
 		int y;
 	};
+	//struct RatioPair {
+	//	float x;
+	//	float y;
+	//}
 	CoordinatePair GetNewCoordinatePair();
 private:
 	Coordinates();

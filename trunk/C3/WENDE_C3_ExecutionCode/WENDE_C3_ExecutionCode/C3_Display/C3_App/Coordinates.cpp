@@ -10,6 +10,8 @@ Coordinates::Coordinates() {
 	Coordinates::CurWorldCoords.y = 0;
 	Coordinates::OldWorldCoords.x = 0;
 	Coordinates::OldWorldCoords.y = 0;
+	Coordinates::PixelCoords.x = 0;
+	Coordinates::PixelCoords.y = 0;
 	Coordinates::WorldBounds.x    = 5000;
 	Coordinates::WorldBounds.y    = 5000;
 	Coordinates::PixelBounds.x    = 300;
@@ -29,7 +31,7 @@ Coordinates * Coordinates::GetCoordinatesHandle() {
 
 void Coordinates::SetNewCoordinatePair(int xCoord, int yCoord) {
 	//Only update if the coordinates are new
-	if (xCoord != CurWorldCoords.x && yCoord != CurWorldCoords.y)
+	if ((xCoord != CurWorldCoords.x) || (yCoord != CurWorldCoords.y))
 	{
 		//Copy old coords out
 		OldWorldCoords.x = CurWorldCoords.x;
@@ -52,10 +54,10 @@ Coordinates::CoordinatePair Coordinates::TranslateCoords(Coordinates::Coordinate
 	float coordsRatio = 0.0;
 	//Translate X
 	coordsRatio = (float) WorldCoords.x / WorldBounds.x;
-	newCoords.x = coordsRatio * PixelBounds.x;
+	newCoords.x = (int) (coordsRatio * PixelBounds.x);
 	//Translate Y
 	coordsRatio = 0.0;
 	coordsRatio = (float) WorldCoords.y / WorldBounds.y;
-	newCoords.y = coordsRatio * PixelBounds.y;
+	newCoords.y = (int) (coordsRatio * PixelBounds.y);
 	return newCoords;
 }
