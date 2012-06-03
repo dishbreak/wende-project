@@ -208,6 +208,10 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\Calibrator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CDisplayManager.h"
 				>
 			</File>
@@ -318,6 +322,10 @@
 			</File>
 			<File
 				RelativePath=".\C3_App.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Calibrator.cpp"
 				>
 			</File>
 			<File
