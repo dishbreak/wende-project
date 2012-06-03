@@ -22,15 +22,16 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 	static unsigned long move_start; // initial movement time (ms)
 	unsigned long seed; // seed for the PRNG
 	//Create spiral parameter variables
-	static int Xspiral = 0;
+	const int SpiralTightness = 100;
+	static double Xspiral = 0;
         static boolean First_Mode_Entry = true;
-	const int SpiralTightness = 200;
+
 	
 	
 	if (init == 1) {
 		init = 0; // only init once
 		
-		Xspiral = 0; //initalize for spiral mode
+		Xspiral = 30; //initalize for spiral mode
 		
 		// if we are in a mode that needs to spin, generate random number, else set to 0
 		if(mode == INPUT_SPIRAL_MODE || mode == INPUT_PASS_THROUGH_MODE){
@@ -90,9 +91,14 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 			rightMotor->Ki = fast_Ki; // integrative gain value
 			rightMotor->Kd = fast_Kd; // derivative gain value
 			// compute the new speed for the  right wheel
-			rightMotor->targetSpeed = (int)(127*atan((double)Xspiral/(double)SpiralTightness));
-			
-			Xspiral++; //increment spiral parameter for next run though
+                        if ( atan((double)Xspiral/(double)SpiralTightness) < 1 ){
+      			  rightMotor->targetSpeed = (int)((fast_speed-10)*atan((double)Xspiral/(double)SpiralTightness));
+			  Xspiral=Xspiral+0.0022; //increment spiral parameter for next run though
+                        }
+                        else
+                        {
+                         rightMotor->targetSpeed = (fast_speed-10);
+                        }
 		
 		}
 		// time over, shutdown motors
