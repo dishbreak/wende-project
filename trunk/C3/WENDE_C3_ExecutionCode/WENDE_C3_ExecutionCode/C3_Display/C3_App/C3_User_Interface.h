@@ -34,6 +34,7 @@ namespace C3_App {
 	public:
 		C3_User_Interface(void)
 		{
+			LoadStatusInds();
 			InitializeComponent();
 			instance = this;
 			//
@@ -118,6 +119,10 @@ namespace C3_App {
 	public: System::Drawing::Image ^ OnlineInd;
 			System::Drawing::Image ^ OfflineInd;
 			System::Drawing::Image ^ UnknownInd;
+			System::Drawing::Image ^ UnknownNsInd;
+			System::Drawing::Image ^ InactiveInd;
+			System::Drawing::Image ^ EnergizedInd;
+			System::Drawing::Image ^ AcquiredInd;
 	public: 
 
 	//private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
@@ -131,6 +136,18 @@ namespace C3_App {
 		/// Required designer variable.
 		/// </summary>
 		System::ComponentModel::Container ^components;
+
+		void LoadStatusInds(void) {
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
+			this->OnlineInd    = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Online")));
+			this->OfflineInd   = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Offline")));
+			this->UnknownInd   = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Unknown")));
+			this->UnknownNsInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Unknown-NoShield")));
+			this->InactiveInd  = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Inactive")));
+			this->EnergizedInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Energized")));
+			this->AcquiredInd  = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Acquired")));
+			delete resources;
+		}
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -171,10 +188,6 @@ namespace C3_App {
 			this->pbLaserComms = (gcnew System::Windows::Forms::PictureBox());
 			this->gbAlerts = (gcnew System::Windows::Forms::GroupBox());
 			this->tbAlertsPanel = (gcnew System::Windows::Forms::TextBox());
-			//Status indicators
-			this->OnlineInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Online.Image")));
-			this->OfflineInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Offline.Image")));
-			this->UnknownInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Unknown.Image")));
 			this->pPPIPanel->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -347,6 +360,7 @@ namespace C3_App {
 			this->pbCameraComms->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pbCameraComms->TabIndex = 0;
 			this->pbCameraComms->TabStop = false;
+			this->pbCameraComms->Click += gcnew System::EventHandler(this, &C3_User_Interface::pbCameraComms_Click);
 			// 
 			// groupBox5
 			// 
@@ -624,6 +638,8 @@ private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs
 			 }
 			 //TODO: Add set the bool for unexported data to FALSE
 			 delete dlgExportDti;
+		 }
+private: System::Void pbCameraComms_Click(System::Object^  sender, System::EventArgs^  e) {
 		 }
 };
 }
