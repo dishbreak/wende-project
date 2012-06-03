@@ -3,6 +3,7 @@
 #include <string>
 
 using namespace System;
+using namespace System::Drawing;
 
 class CDisplayManager
 {
@@ -37,7 +38,6 @@ private:
 	CDisplayManager(){};
     ~CDisplayManager(){};
     static CDisplayManager * displayMgr;
-
 
 };
 

@@ -1,9 +1,13 @@
 #include "stdafx.h"
 #include "CDisplayManager.h"
+#include <fstream>
+#include <iostream> 
+
 #include "Coordinates.h"
 
 
 using namespace C3_App;
+using namespace std;
 
 //initialize static pointer to 0
 CDisplayManager * CDisplayManager::displayMgr = 0;
@@ -238,8 +242,14 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 
 int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath)
 {
-	C3_User_Interface::Instance->pbLiveFeed->Image = 
-		System::Drawing::Image::FromFile(sImagePath);
+	System::Diagnostics::Debug::WriteLine(sImagePath);
+
+	Bitmap^ bmCameraImage;
+
+	// Use managed C to garbage collect automatically
+	bmCameraImage = gcnew Bitmap(sImagePath);
+	C3_User_Interface::Instance->pbLiveFeed->Image = bmCameraImage;
+ 		
 	return 0;
 }
 
