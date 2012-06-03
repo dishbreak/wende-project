@@ -115,6 +115,9 @@ namespace C3_App {
 	private: System::Windows::Forms::GroupBox^  gbAlerts;
 	public: System::Windows::Forms::TextBox^  tbAlertsPanel;
 
+	public: System::Drawing::Image ^ OnlineInd;
+			System::Drawing::Image ^ OfflineInd;
+			System::Drawing::Image ^ UnknownInd;
 	public: 
 
 	//private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
@@ -168,6 +171,10 @@ namespace C3_App {
 			this->pbLaserComms = (gcnew System::Windows::Forms::PictureBox());
 			this->gbAlerts = (gcnew System::Windows::Forms::GroupBox());
 			this->tbAlertsPanel = (gcnew System::Windows::Forms::TextBox());
+			//Status indicators
+			this->OnlineInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Online.Image")));
+			this->OfflineInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Offline.Image")));
+			this->UnknownInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Unknown.Image")));
 			this->pPPIPanel->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
