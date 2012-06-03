@@ -123,6 +123,10 @@ namespace C3_App {
 			System::Drawing::Image ^ InactiveInd;
 			System::Drawing::Image ^ EnergizedInd;
 			System::Drawing::Image ^ AcquiredInd;
+	private: System::Windows::Forms::Label^  label8;
+	private: System::Windows::Forms::Button^  CalibrateButton;
+	private: bool IsCalibrated; 
+
 	public: 
 
 	//private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
@@ -139,7 +143,7 @@ namespace C3_App {
 
 		void LoadStatusInds(void) {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
-			this->OnlineInd    = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Online")));
+			this->OnlineInd    = System::Drawing::Image::FromFile("Online.png");
 			this->OfflineInd   = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Offline")));
 			this->UnknownInd   = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Unknown")));
 			this->UnknownNsInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Unknown-NoShield")));
@@ -175,6 +179,8 @@ namespace C3_App {
 			this->pbCameraStatus = (gcnew System::Windows::Forms::PictureBox());
 			this->pbCameraComms = (gcnew System::Windows::Forms::PictureBox());
 			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->CalibrateButton = (gcnew System::Windows::Forms::Button());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
@@ -360,10 +366,11 @@ namespace C3_App {
 			this->pbCameraComms->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pbCameraComms->TabIndex = 0;
 			this->pbCameraComms->TabStop = false;
-			this->pbCameraComms->Click += gcnew System::EventHandler(this, &C3_User_Interface::pbCameraComms_Click);
 			// 
 			// groupBox5
 			// 
+			this->groupBox5->Controls->Add(this->label8);
+			this->groupBox5->Controls->Add(this->CalibrateButton);
 			this->groupBox5->Controls->Add(this->label7);
 			this->groupBox5->Controls->Add(this->label6);
 			this->groupBox5->Controls->Add(this->label5);
@@ -372,10 +379,29 @@ namespace C3_App {
 			this->groupBox5->Controls->Add(this->pbOverallStatus);
 			this->groupBox5->Location = System::Drawing::Point(420, 356);
 			this->groupBox5->Name = L"groupBox5";
-			this->groupBox5->Size = System::Drawing::Size(438, 261);
+			this->groupBox5->Size = System::Drawing::Size(438, 272);
 			this->groupBox5->TabIndex = 2;
 			this->groupBox5->TabStop = false;
 			this->groupBox5->Text = L"Demo State";
+			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->Location = System::Drawing::Point(242, 237);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(0, 13);
+			this->label8->TabIndex = 9;
+			// 
+			// CalibrateButton
+			// 
+			this->CalibrateButton->Location = System::Drawing::Point(103, 232);
+			this->CalibrateButton->Name = L"CalibrateButton";
+			this->CalibrateButton->Size = System::Drawing::Size(239, 29);
+			this->CalibrateButton->TabIndex = 8;
+			this->CalibrateButton->Text = L"Ready to Calibrate";
+			this->CalibrateButton->UseVisualStyleBackColor = true;
+			this->CalibrateButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::calibrateButton_Click);
+			//this->pbCameraComms->Click += gcnew System::EventHandler(this, &C3_User_Interface::pbCameraComms_Click);
 			// 
 			// label7
 			// 
@@ -639,7 +665,19 @@ private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs
 			 //TODO: Add set the bool for unexported data to FALSE
 			 delete dlgExportDti;
 		 }
-private: System::Void pbCameraComms_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void calibrateButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->CalibrateButton->Text = "Calibrating...";
+			 this->CalibrateButton->Enabled = false;
+			 System::Threading::Thread::Sleep(5000);
+			 if (!IsCalibrated) {
+				 this->CalibrateButton->Text = "Calibration Failed.";
+				 IsCalibrated = true;
+				 this->CalibrateButton->Enabled = true;
+			 }
+			 else {
+				 this->CalibrateButton->Text = "Calibration Success!";
+				 this->CalibrateButton->Enabled = false;
+			 }
 		 }
 };
 }
