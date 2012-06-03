@@ -1,7 +1,7 @@
 #pragma once
 #using <system.drawing.dll>
 #include "CPPIConfig.h"
-//#include "Coordinates.h"
+#include "Coordinates.h"
 
 namespace C3_App {
 
@@ -189,6 +189,7 @@ namespace C3_App {
 			// 
 			// pPPIPanel
 			// 
+			this->pPPIPanel->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->pPPIPanel->Controls->Add(this->groupBox1);
 			this->pPPIPanel->Controls->Add(this->groupBox2);
 			this->pPPIPanel->Controls->Add(this->groupBox3);
@@ -267,25 +268,27 @@ namespace C3_App {
 				this->Column3});
 			this->dgvDtiLog->Location = System::Drawing::Point(65, 19);
 			this->dgvDtiLog->Name = L"dgvDtiLog";
+			this->dgvDtiLog->ReadOnly = true;
 			this->dgvDtiLog->Size = System::Drawing::Size(343, 280);
 			this->dgvDtiLog->TabIndex = 0;
-			//make the dgv non-editable for the user
-			this->dgvDtiLog->ReadOnly = true;
 			// 
 			// Column1
 			// 
 			this->Column1->HeaderText = L"Date/Time";
 			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
 			// 
 			// Column2
 			// 
 			this->Column2->HeaderText = L"DTI (m)";
 			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
 			// 
 			// Column3
 			// 
 			this->Column3->HeaderText = L"PASS / FAIL";
 			this->Column3->Name = L"Column3";
+			this->Column3->ReadOnly = true;
 			// 
 			// groupBox4
 			// 
@@ -295,7 +298,7 @@ namespace C3_App {
 			this->groupBox4->Controls->Add(this->pbCameraComms);
 			this->groupBox4->Location = System::Drawing::Point(3, 356);
 			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(417, 261);
+			this->groupBox4->Size = System::Drawing::Size(411, 272);
 			this->groupBox4->TabIndex = 1;
 			this->groupBox4->TabStop = false;
 			this->groupBox4->Text = L"Camera";
@@ -346,7 +349,7 @@ namespace C3_App {
 			this->groupBox5->Controls->Add(this->pbLaserActivity);
 			this->groupBox5->Controls->Add(this->pbRoverAcq);
 			this->groupBox5->Controls->Add(this->pbOverallStatus);
-			this->groupBox5->Location = System::Drawing::Point(426, 356);
+			this->groupBox5->Location = System::Drawing::Point(420, 356);
 			this->groupBox5->Name = L"groupBox5";
 			this->groupBox5->Size = System::Drawing::Size(438, 261);
 			this->groupBox5->TabIndex = 2;
@@ -416,7 +419,7 @@ namespace C3_App {
 			this->groupBox6->Controls->Add(this->label4);
 			this->groupBox6->Controls->Add(this->pbLaserStatus);
 			this->groupBox6->Controls->Add(this->pbLaserComms);
-			this->groupBox6->Location = System::Drawing::Point(870, 356);
+			this->groupBox6->Location = System::Drawing::Point(864, 356);
 			this->groupBox6->Name = L"groupBox6";
 			this->groupBox6->Size = System::Drawing::Size(449, 261);
 			this->groupBox6->TabIndex = 3;
@@ -464,7 +467,7 @@ namespace C3_App {
 			// gbAlerts
 			// 
 			this->gbAlerts->Controls->Add(this->tbAlertsPanel);
-			this->gbAlerts->Location = System::Drawing::Point(3, 623);
+			this->gbAlerts->Location = System::Drawing::Point(3, 634);
 			this->gbAlerts->Name = L"gbAlerts";
 			this->gbAlerts->Size = System::Drawing::Size(1316, 51);
 			this->gbAlerts->TabIndex = 4;
@@ -520,11 +523,11 @@ namespace C3_App {
 		}
 #pragma endregion
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
-				 extern int roverContactX;
-				 extern int roverContactY;
-				 /*Coordinates * coordsObj = Coordinates::GetCoordinatesHandle();
+				 //extern int roverContactX;
+				 //extern int roverContactY;
+				 Coordinates * coordsObj = Coordinates::GetCoordinatesHandle();
 				 Coordinates::CoordinatePair RoverContact;
-				 RoverContact = coordsObj->GetNewCoordinatePair();*/
+				 RoverContact = coordsObj->GetNewCoordinatePair();
 
 				 System::Drawing::Graphics^ g = e->Graphics;
 				 g->Clear(Color::White);
@@ -558,10 +561,10 @@ namespace C3_App {
 				 // Draw Contact (rover)
 
 				 System::Drawing::Image^ roverContact = System::Drawing::Image::FromFile( "delta.png" );
-				 /*int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;
-				 int y = pPPI->Height / 2 - (roverContact->Height / 2) - RoverContact.y;*/
-				 int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
-				 int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
+				 int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;
+				 int y = pPPI->Height / 2 - (roverContact->Height / 2) - RoverContact.y;
+				 //int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
+				 //int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
 				 g->DrawImage(roverContact, x, y);
 				 
 			 }	  
