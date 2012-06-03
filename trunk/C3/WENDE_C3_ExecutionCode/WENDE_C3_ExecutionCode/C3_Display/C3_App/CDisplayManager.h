@@ -17,7 +17,7 @@ public:
     int Update_Laser_Activity_Indicator(int nLaserActivityStatus);
 	int Update_Overall_Status(void);
     int Update_Rover_Acquired_Indicator(int nRoverAcqStatus);
-    int Store_Latest_DTI(int nDTI);
+    int Store_Latest_DTI(int nDTI, bool bPassed);
 	int Update_Live_Video_Feed(String ^ sImagePath);
 	void Update_Notification_Panel(int nAlertID);
 	void Disable_All_Controls(void);

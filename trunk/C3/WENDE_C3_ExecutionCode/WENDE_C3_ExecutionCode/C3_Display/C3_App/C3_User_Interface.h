@@ -1,7 +1,7 @@
 #pragma once
 #using <system.drawing.dll>
 #include "CPPIConfig.h"
-
+//#include "Coordinates.h"
 
 namespace C3_App {
 
@@ -522,6 +522,9 @@ namespace C3_App {
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 				 extern int roverContactX;
 				 extern int roverContactY;
+				 /*Coordinates * coordsObj = Coordinates::GetCoordinatesHandle();
+				 Coordinates::CoordinatePair RoverContact;
+				 RoverContact = coordsObj->GetNewCoordinatePair();*/
 
 				 System::Drawing::Graphics^ g = e->Graphics;
 				 g->Clear(Color::White);
@@ -555,6 +558,8 @@ namespace C3_App {
 				 // Draw Contact (rover)
 
 				 System::Drawing::Image^ roverContact = System::Drawing::Image::FromFile( "delta.png" );
+				 /*int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;
+				 int y = pPPI->Height / 2 - (roverContact->Height / 2) - RoverContact.y;*/
 				 int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
 				 int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
 				 g->DrawImage(roverContact, x, y);

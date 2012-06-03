@@ -12,8 +12,8 @@ Coordinates::Coordinates() {
 	Coordinates::OldWorldCoords.y = 0;
 	Coordinates::WorldBounds.x    = 5000;
 	Coordinates::WorldBounds.y    = 5000;
-	Coordinates::PixelBounds.x    = 320;
-	Coordinates::PixelBounds.y    = 320;
+	Coordinates::PixelBounds.x    = 300;
+	Coordinates::PixelBounds.y    = 300;
 }
 
 Coordinates::~Coordinates() {

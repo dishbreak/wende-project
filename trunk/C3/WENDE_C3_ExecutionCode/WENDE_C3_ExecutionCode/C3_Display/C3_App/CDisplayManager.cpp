@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "CDisplayManager.h"
+//#include "Coordinates.h"
+
+
 using namespace C3_App;
 
 //initialize static pointer to 0
@@ -43,6 +46,8 @@ int CDisplayManager::Update_Rover_PPI_Position(int x, int y)
 		C3_User_Interface::Instance->pPPI->Invalidate();
 	}
 	return 0;
+	//Coordinates* coordsObj = Coordinates::GetCoordinatesHandle();
+	//coordsObj->SetNewCoordinatePair(x, y);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -274,3 +279,23 @@ void CDisplayManager::Disable_All_Controls(void)
 	C3_User_Interface::Instance->cmdExport->Enabled = false;
 }
 
+
+
+int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed) {
+	//get current date/time
+	System::DateTime TimeStamp(0, System::DateTimeKind::Local);
+	TimeStamp = System::DateTime::Now;
+	//convert to meters
+	float fDTI = (float) nDTI / 1000;
+	//assemble fields
+	System::String^ TimeField = 
+		System::String::Concat( TimeStamp.ToShortDateString(),
+								" ",
+								TimeStamp.ToShortTimeString());
+	System::String^ DtiField = fDTI.ToString();
+	System::String^ PassField = bPassed.ToString();
+	//append the row
+	C3_User_Interface::Instance->dgvDtiLog->Rows->Add(
+		TimeField, DtiField, PassField);
+	return 0;
+}
