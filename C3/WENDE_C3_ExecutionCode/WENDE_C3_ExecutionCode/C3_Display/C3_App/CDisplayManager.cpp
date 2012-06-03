@@ -71,8 +71,7 @@ int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 	else 	
 	{
 		C3_User_Interface::Instance->pbCameraStatus->Image = 
-			System::Drawing::Image::FromFile ("Online.png");
-
+			C3_User_Interface::Instance->OnlineInd;
 		Set_Camera_Status(1);
 	}
 

@@ -263,11 +263,47 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\Acquired.png"
+				>
+			</File>
+			<File
 				RelativePath=".\app.ico"
 				>
 			</File>
 			<File
 				RelativePath=".\app.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\delta.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Energized.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Inactive.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Offline.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Online.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Unknown-NoShield.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Unknown.png"
+				>
+			</File>
+			<File
+				RelativePath=".\UnknownInd.Image.bmp"
 				>
 			</File>
 		</Filter>
