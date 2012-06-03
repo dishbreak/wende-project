@@ -99,7 +99,6 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
                         {
                          rightMotor->targetSpeed = (fast_speed-10);
                         }
-		
 		}
 		// time over, shutdown motors
 		else{
@@ -161,7 +160,7 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 
 /********************************************************************
 name: 	mode_over
-inputs: unsigned long move_time - time in ms the rover has spent moving
+inputs: unsigned long move_dist - distance in mm the rover has spent moving
 						not including in place spin
 		int mode - the current movement mode the rovers is in
 
@@ -171,31 +170,31 @@ output: int - 0 if the trial is not past its max time, 1 if it is,
 description: checks if the Rover had exceeded the maximum movement 
 			 time for it's current mode.
 ********************************************************************/
-int mode_over(unsigned long move_time, int mode){
+int mode_over(unsigned long move_dist, int mode){
 
 	int ret_val = 0;  // value to return
-	int max_time = 0; // maximum time allocated for a given mode
+	int max_dist = 0; // maximum time allocated for a given mode
 	
 	if(mode == INPUT_FAST_MODE){
-		max_time = fast_stopdistance;
+		max_dist = fast_stopdistance;
 	}
 	else if (mode == INPUT_SLOW_MODE){
-		max_time = slow_stopdistance;
+		max_dist = slow_stopdistance;
 	}
 	else if (mode == INPUT_CRAWL_AND_STOP_MODE){
-		max_time = crawl_stopdistance;
+		max_dist = crawl_stopdistance;
 	}
 	else if (mode == INPUT_PASS_THROUGH_MODE){
-		max_time = pass_stopdistance;
+		max_dist = pass_stopdistance;
 	}
 	else if (mode == INPUT_SPIRAL_MODE){
-		max_time = spiral_stopdistance;
+		max_dist = spiral_stopdistance;
 	}
 	else{ // invalid mode, exit function in error
 		return -1;
 	}
 	
-	if(move_time > max_time){
+	if(move_dist > max_dist){
 		return 1;
 	}
 	else{

@@ -118,7 +118,7 @@ unsigned long getRightMotor()
 
 /**
 * getMinMotor: 
-* Description: ISR to returns right motor encoder value
+* Description: returns motor encoder value that is smallest
 */
 unsigned long getminMotor()
 {
