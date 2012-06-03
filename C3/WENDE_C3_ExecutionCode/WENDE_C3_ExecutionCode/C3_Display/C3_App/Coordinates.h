@@ -1,3 +1,6 @@
+#ifndef COORDINATES_H
+#define COORDINATES_H
+
 #include "stdafx.h"
 
 class Coordinates {
@@ -20,3 +23,5 @@ private:
 	CoordinatePair WorldBounds;
 	static Coordinates * coordsObj;
 };
+
+#endif
