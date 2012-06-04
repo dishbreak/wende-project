@@ -5,11 +5,11 @@
 using namespace System;
 using namespace System::Drawing;
 
-class CDisplayManager
+ref class CDisplayManager
 {
 public: 
     //function that gets the handle to the singleton CDisplayManager
-    static CDisplayManager * getCDisplayManager();
+    static CDisplayManager ^ getCDisplayManager();
     int Update_Rover_PPI_Position(int x, int y);
     int Update_Camera_Subsystem_Indicator(int nCameraStatus);
     int Update_Camera_Communication_Indicator(int nCameraCommStatus);
@@ -33,27 +33,10 @@ public:
 	int Get_Laser_Com_Status(void);
 	int Get_Camera_Com_Status(void);
 
-	enum NotifyMesg {
-		PatientLeftEvacArea,
-		SystemOperational,
-		SystemNonOperational
-	};
-
 //constructor made private to ensure this stays a singleton
 private:
 	CDisplayManager(){};
     ~CDisplayManager(){};
-    static CDisplayManager * displayMgr;
-	enum NotifyType {
-		Alert,
-		Warning,
-		Information
-	};
-	struct Notification {
-		enum NotfyType notifyType;
-		enum NotifyMesg notifyMesg;
-		int Timestamp;
-	};
-	struct Notification MakeNotification(NotifyMesg notifyMesg);
+    static CDisplayManager ^ displayMgr = nullptr;
 };
 

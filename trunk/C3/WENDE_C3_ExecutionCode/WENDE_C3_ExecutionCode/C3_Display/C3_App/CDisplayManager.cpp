@@ -2,14 +2,15 @@
 #include "CDisplayManager.h"
 #include <fstream>
 #include <iostream> 
-
+#include "Notification.h"
+#include "Notifier.h"
 #include "Coordinates.h"
 
 using namespace C3_App;
 using namespace std;
 
 //initialize static pointer to 0
-CDisplayManager * CDisplayManager::displayMgr = 0;
+//CDisplayManager ^ CDisplayManager::displayMgr = 0;
 
 // Class variable for determining overall status
 int m_nCameraStatus;
@@ -21,11 +22,11 @@ int m_nCameraComStatus;
 //              CDisplayManager, one is new'd and returned.
 // Author:      Vishal Kotcherlakota
 ////////////////////////////////////////////////////////////////////////
-CDisplayManager * CDisplayManager::getCDisplayManager()
+CDisplayManager ^ CDisplayManager::getCDisplayManager()
 {
     if(!displayMgr)
     {
-        displayMgr = new CDisplayManager();
+        displayMgr = gcnew CDisplayManager();
     }
     return displayMgr;
 }
@@ -309,14 +310,8 @@ int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed) {
 	return 0;
 }
 
-//struct CDisplayManager::Notification CDisplayManager::MakeNotification(NotifyMesg notifyMesg)
-//{
-//	switch(notifyMesg) {
-//		case PatientLeftEvacArea:
-//			break;
-//		case SystemOperational:
-//			break;
-//		default:
-//			break;
-//	}
-//}
+int CDisplayManager::Update_Rover_Acquired_Indicator(int nRoverAcqStatus)
+{
+	//
+	return 0;
+}
