@@ -3,7 +3,8 @@
 
 Calibrator::Calibrator()
 {
-	//
+	//Create Delegate
+	//CalibrateResponse^ calibrateResponse = gcnew(
 }
 
 Calibrator::~Calibrator()

@@ -33,11 +33,27 @@ public:
 	int Get_Laser_Com_Status(void);
 	int Get_Camera_Com_Status(void);
 
+	enum NotifyMesg {
+		PatientLeftEvacArea,
+		SystemOperational,
+		SystemNonOperational
+	};
+
 //constructor made private to ensure this stays a singleton
 private:
 	CDisplayManager(){};
     ~CDisplayManager(){};
     static CDisplayManager * displayMgr;
-
+	enum NotifyType {
+		Alert,
+		Warning,
+		Information
+	};
+	struct Notification {
+		enum NotfyType notifyType;
+		enum NotifyMesg notifyMesg;
+		int Timestamp;
+	};
+	struct Notification MakeNotification(NotifyMesg notifyMesg);
 };
 
