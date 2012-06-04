@@ -168,7 +168,7 @@ namespace C3_App {
 					 nCameraStatus = 0;
 				 //commented out because CDisplayManager is now a singleton
 				 //CDisplayManager dispman;
-                 CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+                 CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 
 				 dispman->Update_Camera_Subsystem_Indicator(nCameraStatus);
 

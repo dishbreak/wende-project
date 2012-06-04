@@ -95,7 +95,7 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 	static int cameraStatusMessageCount = 0;
 
     ////get a handle to the CDisplayManager
-    CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+    CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 
 	while(1)
 	{
@@ -149,7 +149,7 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 	static int laserStatusMessageCount = 0;
 
     ////get a handle to the CDisplayManager
-    CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+    CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 
 	while(1)
 	{
@@ -217,7 +217,7 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				y = sTrackMessage.Tracks->Y; //y += 1;
 
 				////get a handle to the CDisplayManager
-                CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+                CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 				dispman->Update_Rover_PPI_Position(x, y);
 			}
 			else
@@ -259,7 +259,7 @@ UINT WINAPI ImageThread (LPVOID pParam)
 				sImagePath = m_CameraImage->imagePath;
 				String ^ ssImagePath = gcnew String(sImagePath);
 				
-				CDisplayManager *dispman = CDisplayManager::getCDisplayManager();
+				CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 				dispman->Update_Live_Video_Feed(ssImagePath);
 
 				// Set the event

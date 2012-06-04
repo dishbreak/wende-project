@@ -236,6 +236,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Notification.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Notifier.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
@@ -342,6 +350,14 @@
 			</File>
 			<File
 				RelativePath=".\GUIConfiguration.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Notification.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Notifier.cpp"
 				>
 			</File>
 			<File
