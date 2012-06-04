@@ -144,12 +144,12 @@ namespace C3_App {
 		void LoadStatusInds(void) {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
 			this->OnlineInd    = System::Drawing::Image::FromFile("Online.png");
-			this->OfflineInd   = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Offline")));
-			this->UnknownInd   = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Unknown")));
-			this->UnknownNsInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Unknown-NoShield")));
-			this->InactiveInd  = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Inactive")));
-			this->EnergizedInd = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Energized")));
-			this->AcquiredInd  = (cli::safe_cast< System::Drawing::Image ^ >(resources->GetObject(L"Acquired")));
+			this->OfflineInd   = System::Drawing::Image::FromFile("Offline.png");
+			this->UnknownInd   = System::Drawing::Image::FromFile("Unknown.png");
+			this->UnknownNsInd = System::Drawing::Image::FromFile("Unknown-NoShield.png");
+			this->InactiveInd  = System::Drawing::Image::FromFile("Inactive.png");
+			this->EnergizedInd = System::Drawing::Image::FromFile("Energized.png");
+			this->AcquiredInd  = System::Drawing::Image::FromFile("Acquired.png");
 			delete resources;
 		}
 
