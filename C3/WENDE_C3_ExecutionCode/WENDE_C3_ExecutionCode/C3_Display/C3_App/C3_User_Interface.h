@@ -401,7 +401,6 @@ namespace C3_App {
 			this->CalibrateButton->Text = L"Ready to Calibrate";
 			this->CalibrateButton->UseVisualStyleBackColor = true;
 			this->CalibrateButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::calibrateButton_Click);
-			//this->pbCameraComms->Click += gcnew System::EventHandler(this, &C3_User_Interface::pbCameraComms_Click);
 			// 
 			// label7
 			// 
@@ -533,7 +532,6 @@ namespace C3_App {
 			this->tbAlertsPanel->ReadOnly = true;
 			this->tbAlertsPanel->Size = System::Drawing::Size(1283, 34);
 			this->tbAlertsPanel->TabIndex = 0;
-			this->tbAlertsPanel->Text = L"ALERT: CONTACT HAS LEFT THE PLAYING FIELD - INVESTIGATE IMMEDIATELY!";
 			this->tbAlertsPanel->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// C3_User_Interface
