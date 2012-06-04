@@ -6,6 +6,7 @@
 #include "Test_Driver.h"
 #include "CNetworkMonitor.h"
 #include <process.h>
+#include "CC3AppControl.h"
 
 using namespace C3_App;
 //globals--for now
@@ -26,6 +27,10 @@ int main(array<System::String ^> ^args)
 	// Networking thread. 
 	CNetworkMonitor nm;
 	nm.InitializeThread();
+
+	// Run up Controller and Processing
+	// CC3AppControl ac;
+	// ac.RunC3App();
 
 	// Show test form
 	Test_Driver td;
