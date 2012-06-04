@@ -211,7 +211,7 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				
 				// release the mutex
 				m_CameraTracks.ReleaseMutex();
-
+	
 				// Will need to build this up to handle multiple tracks
 				x = sTrackMessage.Tracks->X; //x += 1;
 				y = sTrackMessage.Tracks->Y; //y += 1;

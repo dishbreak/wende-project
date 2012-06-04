@@ -309,15 +309,14 @@ int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed) {
 	return 0;
 }
 
-struct CDisplayManager::Notification CDisplayManager::MakeNotification(NotifyMesg notifyMesg)
-{
-	switch(notifyMesg) {
-		case PatientLeftEvacArea:
-			break;
-		case SystemOperational:
-			break;
-			case 
-		default:
-			break;
-	}
-}
+//struct CDisplayManager::Notification CDisplayManager::MakeNotification(NotifyMesg notifyMesg)
+//{
+//	switch(notifyMesg) {
+//		case PatientLeftEvacArea:
+//			break;
+//		case SystemOperational:
+//			break;
+//		default:
+//			break;
+//	}
+//}
