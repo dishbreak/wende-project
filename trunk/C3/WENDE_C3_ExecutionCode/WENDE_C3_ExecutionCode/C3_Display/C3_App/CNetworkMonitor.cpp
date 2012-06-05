@@ -209,8 +209,8 @@ UINT WINAPI TrackThread (LPVOID pParam)
 	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
 	else m_CameraTracks->ShmInfo.Clients++;
 
-	int x = 1;
-	int y = 1;
+	int x = 0;
+	int y = 0;
 
 	while(1)
 	{
@@ -233,6 +233,8 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				////get a handle to the CDisplayManager
                 CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 				dispman->Update_Rover_PPI_Position(x, y);
+
+				if(x >= 1 || y >= 1) dispman->Update_Rover_Acquired_Indicator(1);
 			}
 			else
 			{
