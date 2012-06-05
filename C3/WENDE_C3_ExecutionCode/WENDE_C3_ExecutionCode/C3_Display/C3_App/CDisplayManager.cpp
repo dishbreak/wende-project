@@ -365,6 +365,15 @@ int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed)
 
 int CDisplayManager::Update_Rover_Acquired_Indicator(int nRoverAcqStatus)
 {
-	//
+	if(nRoverAcqStatus == 1)
+	{
+		C3_User_Interface::Instance->pbRoverAcq->Image = 
+			C3_User_Interface::Instance->AcquiredInd;
+	}
+	else
+	{
+		C3_User_Interface::Instance->pbRoverAcq->Image = 
+			C3_User_Interface::Instance->UnknownNsInd;
+	}
 	return 0;
 }
