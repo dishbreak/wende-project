@@ -17,7 +17,6 @@ typedef int                 BOOL;
 typedef unsigned char       BYTE;
 typedef unsigned short      WORD;
 typedef float               FLOAT;
-typedef double              DOUBLE;
 typedef signed char         INT8;
 typedef signed short        INT16;
 typedef signed int          INT32;
@@ -36,8 +35,8 @@ typedef long				LONG;
 #define SHM_MAX_TRACKS			10			// Max number of internal tracks
 #define SHM_MAX_LASERS			10			// Max number of laser tracks
 #define SHM_MAX_IMAGE_NAME		FILENAME_MAX// Max characters in the iamge name
-#define SHM_MAX_IMAGE_WIDTH		400  		// Max image size in width direction
-#define SHM_MAX_IMAGE_HEIGHT	300	    	// Max image size in the height direction
+#define SHM_MAX_IMAGE_WIDTH		320  		// Max image size in width direction
+#define SHM_MAX_IMAGE_HEIGHT	240	    	// Max image size in the height direction
 #define SHM_MAX_IAMGE_CHANNELS	3			// Max image channels 
 // Max image size
 #define SHM_MAX_IMAGE_SIZE		SHM_MAX_IMAGE_WIDTH*SHM_MAX_IMAGE_HEIGHT*SHM_MAX_IAMGE_CHANNELS	
@@ -101,24 +100,6 @@ typedef union
 		INT32		 EL;		// EL Location
 	};
 } C3_TRACK_POINT;
-/////////////////////////////////////////////////////////////////////////////////
-// Struct: C3_TRACK_POINT_DOUBLE
-//
-// purpose: defines the structure for representing C3 Tracks
-/////////////////////////////////////////////////////////////////////////////////
-typedef union
-{
-	struct
-	{
-		DOUBLE		 X;			// X location (offset) 
-		DOUBLE		 Y;			// Y location (offset)
-	};
-	struct
-	{
-		DOUBLE		 AZ;		// AZ Location
-		DOUBLE		 EL;		// EL Location
-	};
-} C3_TRACK_POINT_DOUBLE;
 /////////////////////////////////////////////////////////////////////////////////
 // Struct: LASER_POINTING_MSG_SHM
 //
@@ -203,12 +184,29 @@ typedef union
 /////////////////////////////////////////////////////////////////////////////////
 typedef struct {
 	DWORD  ProcessID;
-	
+	DWORD  Time;
+
 	UINT32 PacketNumber;
 	UINT32 Status;
+	
+	UINT32 ValidChars;
 	UINT32 SubsystemId;
 	
+	CHAR   textStr[SHM_MAX_STATUS_TEXT];
 	// TODO PERFORMANCE COUNTER - FIX
 
 	SHM_INFO_STRUCT		ShmInfo;			// Shared SHM information
 }LASER_STATUS_MSG_SHM;
+
+/////////////////////////////////////////////////////////////////////////////////
+// Struct: LASER_STATUS_MSG_SHM
+//
+// purpose: defines the structure for internal message passing of laser status
+//          commands
+/////////////////////////////////////////////////////////////////////////////////
+typedef struct {
+	UINT32 DTI;
+	UINT32 POCResult;
+	UINT32 AlertType;
+	SHM_INFO_STRUCT		ShmInfo;
+}ALGORITHM_INTERFACE_MSG_SHM;
