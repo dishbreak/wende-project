@@ -1,6 +1,7 @@
 // C3_App.cpp : main project file.
 
 #include "stdafx.h"
+#include "splash.h"
 #include "C3_User_Interface.h"
 #include "GUIConfiguration.h"
 #include "Test_Driver.h"
@@ -16,6 +17,12 @@ int roverContactY = 0;
 [STAThreadAttribute]
 int main(array<System::String ^> ^args)
 {
+    //  =======================================================================
+    //  Display the splash screen using the overloaded construcutor
+    //  =======================================================================
+    //  Launch splash screen
+    CSplash splash1(TEXT(".\\Splash.bmp"), RGB(128, 128, 128));
+    splash1.ShowSplash();
 
 	//Fist call to configuration singleton
 	CGUIConfiguration::Instance();
@@ -23,11 +30,10 @@ int main(array<System::String ^> ^args)
 	// Enabling Windows XP visual effects before any controls are created
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
+	Sleep(50000);
+	splash1.CloseSplash();
 
-	// Networking thread. 
-	CNetworkMonitor nm;
-	nm.InitializeThread();
-
+	
 	// Run up Controller and Processing
 	// CC3AppControl ac;
 	// ac.RunC3App();
@@ -38,13 +44,12 @@ int main(array<System::String ^> ^args)
 	{
 		td.Show();
 	}
-    Application::Run(gcnew C3_User_Interface());
-    
-    //Ensure that the threads run
-    while(1)
-    {
-//        Sleep (10000);
-    }
+	
+	// Networking thread. 
+	CNetworkMonitor nm;
+	nm.InitializeThread();
+
+    Application::Run(gcnew C3_User_Interface(&nm));
 	
 	return 0;
 }

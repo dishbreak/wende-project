@@ -2,6 +2,7 @@
 #using <system.drawing.dll>
 #include "CPPIConfig.h"
 #include "Coordinates.h"
+#include "CNetworkMonitor.h"
 
 namespace C3_App {
 
@@ -30,6 +31,7 @@ namespace C3_App {
 
 		typedef System::Windows::Forms::Form base;
 		static C3_User_Interface^ instance;
+		CNetworkMonitor *m_monitor;
 		
 		// DELEGATE STUFF
 		// Called from "Update_Table", delegates responsibility to "Worker_Update_Table"
@@ -37,12 +39,24 @@ namespace C3_App {
 		delegate void Delegate_Update_Notifications(System::String ^ sNotification);
 
 	public:
+		C3_User_Interface(CNetworkMonitor *monitor)
+		{
+			LoadStatusInds();
+			InitializeComponent();
+
+			instance = this;
+			m_monitor = monitor;
+			//
+			//TODO: Add the constructor code here
+			//
+		}
 		C3_User_Interface(void)
 		{
 			LoadStatusInds();
 			InitializeComponent();
 
 			instance = this;
+			m_monitor = NULL;
 			//
 			//TODO: Add the constructor code here
 			//
@@ -548,6 +562,7 @@ namespace C3_App {
 			this->Controls->Add(this->pPPIPanel);
 			this->Name = L"C3_User_Interface";
 			this->Text = L"C3_Subsystem";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &C3_User_Interface::C3_User_Interface_FormClosing);
 			this->pPPIPanel->ResumeLayout(false);
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox2->ResumeLayout(false);
@@ -710,6 +725,13 @@ private: System::Void calibrateButton_Click(System::Object^  sender, System::Eve
 				 this->CalibrateButton->Text = "Calibration Success!";
 				 this->CalibrateButton->Enabled = false;
 			 }
+		 }
+		 private: System::Void C3_User_Interface_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+			if (m_monitor != NULL)
+			{
+		   	    m_monitor->StopThreads();
+				Sleep(5000);
+			}
 		 }
 };
 }

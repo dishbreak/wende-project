@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(NoInherit)"
+				AdditionalDependencies="user32.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
@@ -252,6 +252,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Splash.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
@@ -358,6 +362,10 @@
 			</File>
 			<File
 				RelativePath=".\Notifier.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Splash.cpp"
 				>
 			</File>
 			<File
