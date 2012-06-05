@@ -32,7 +32,7 @@ void TestTrackFilter();
 /////////////////////////////////////////////////////////////////////////////////
 int _tmain(int argc, _TCHAR* argv[])
 {
-	TestKalmanFilter();
+	//TestKalmanFilter();
 	TestTrackFilter();
 
 	/////////////////////////////////////////////////////////////////////////////////
@@ -194,11 +194,11 @@ void TestKalmanFilter()
 void TestTrackFilter()
 {
 	vector<string> files;
-	files.insert(files.begin(),"TEST_5.txt");
-	files.insert(files.begin(),"TEST_4.txt");
-	files.insert(files.begin(),"TEST_3.txt");
-	files.insert(files.begin(),"TEST_2.txt");
-	files.insert(files.begin(),"TEST_1.txt");
+	files.insert(files.begin(),"TestTrack_fast.txt");
+	files.insert(files.begin(),"TestTrack_slow.txt");
+	files.insert(files.begin(),"TestTrack_spiral.txt");
+	files.insert(files.begin(),"TestTrack_stopCrawl.txt");
+	//files.insert(files.begin(),"TestTrack_.txt");
 	for (unsigned int jj = 0; jj < files.size(); jj++)
 	{
 		printf("TEST FILE --- %d ---\n",jj);
