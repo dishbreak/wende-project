@@ -183,6 +183,8 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 		}
 		else
 		{
+			dispman->Store_Latest_DTI(m_LaserStatus->PacketNumber, false);
+
 			if (dispman->Get_Laser_Com_Status() != 0)
 			{
 				dispman->Update_Laser_Communication_Indicator(0);

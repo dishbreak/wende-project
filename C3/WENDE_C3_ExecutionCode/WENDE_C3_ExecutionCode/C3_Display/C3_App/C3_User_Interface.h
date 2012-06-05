@@ -30,12 +30,17 @@ namespace C3_App {
 
 		typedef System::Windows::Forms::Form base;
 		static C3_User_Interface^ instance;
+		
+		// DELEGATE STUFF
+		// Called from "Update_Table", delegates responsibility to "Worker_Update_Table"
+		delegate void Delegate_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed);
 
 	public:
 		C3_User_Interface(void)
 		{
 			LoadStatusInds();
 			InitializeComponent();
+
 			instance = this;
 			//
 			//TODO: Add the constructor code here
@@ -567,6 +572,22 @@ namespace C3_App {
 
 		}
 #pragma endregion
+
+	// DELEGATE STUFF
+	// Public call to update table with pre-calculated values. Parameters are calculated in DisplayManager.
+	// Creates an instance of delegate method (declared ~ line 35). BeginInvoke called against the form.
+	// For thread safety. 
+	public: void Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed){
+
+		Delegate_Update_Table^ action = gcnew Delegate_Update_Table(this, &C3_User_Interface::Worker_Update_Table);
+		this->BeginInvoke(action, TimeField, DTI, bPassed);
+	};
+
+	// Worked method does actual work of updating the table
+	private: void Worker_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed){
+		C3_User_Interface::dgvDtiLog->Rows->Add(TimeField, DTI, bPassed);
+	};
+
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 				 //extern int roverContactX;
 				 //extern int roverContactY;
