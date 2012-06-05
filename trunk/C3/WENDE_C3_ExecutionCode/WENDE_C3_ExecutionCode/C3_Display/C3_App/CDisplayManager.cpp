@@ -341,7 +341,8 @@ void CDisplayManager::Disable_All_Controls(void)
 
 
 
-int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed) {
+int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed) 
+{
 	//get current date/time
 	System::DateTime TimeStamp(0, System::DateTimeKind::Local);
 	TimeStamp = System::DateTime::Now;
@@ -355,10 +356,12 @@ int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed) {
 	System::String^ DtiField = fDTI.ToString();
 	System::String^ PassField = bPassed.ToString();
 	//append the row
-	C3_User_Interface::Instance->dgvDtiLog->Rows->Add(
-		TimeField, DtiField, PassField);
+
+	C3_User_Interface::Instance->Update_Table(TimeField, DtiField, PassField);
+
 	return 0;
 }
+
 
 int CDisplayManager::Update_Rover_Acquired_Indicator(int nRoverAcqStatus)
 {
