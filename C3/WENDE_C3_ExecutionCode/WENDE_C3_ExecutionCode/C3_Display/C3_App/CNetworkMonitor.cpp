@@ -16,6 +16,7 @@ UINT WINAPI TrackThread (LPVOID pParam);
 UINT WINAPI ImageThread (LPVOID pParam);
 UINT WINAPI LaserStatusThread (LPVOID pParam);
 UINT WINAPI CameraStatusThread(LPVOID pParam);
+UINT WINAPI ProcessingInterfaceThread(LPVOID pParam);
 
 void CNetworkMonitor::InitializeThread()
 {
@@ -77,6 +78,21 @@ void CNetworkMonitor::InitializeThread()
 	{
 		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 		ResumeThread( hThread4 );
+	}
+
+	HANDLE hThread5;
+	UINT uiThreadId5 = 0;
+	hThread5 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
+										0,					   // stack
+										ProcessingInterfaceThread,			   // Thread proc
+										NULL,					   // Thread param
+										CREATE_SUSPENDED,		   // creation mode
+										&uiThreadId5);			   // Thread ID
+
+	if ( NULL != hThread5)
+	{
+		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
+		ResumeThread( hThread5 );
 	}
 }
 
@@ -285,6 +301,60 @@ UINT WINAPI ImageThread (LPVOID pParam)
 				m_CameraImage.ReleaseMutex();
 
 
+			}
+			else
+			{
+				// unable to get mutex???
+			}
+		}
+		else
+		{
+			// loss of comm
+		}
+	}
+
+	_endthreadex( 0 );
+    
+	return 1L;
+}
+
+UINT WINAPI ProcessingInterfaceThread (LPVOID pParam)
+{
+	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM>		 m_ProcessingInterface;
+	m_ProcessingInterface.Acquire(CGUIConfiguration::Instance().SHM_C3_PROCESSING_STATUS,
+								CGUIConfiguration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,
+								CGUIConfiguration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2,
+								CGUIConfiguration::Instance().SHM_C3_PROCESSING_STATUS_MUTEX);
+	
+	CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
+	int nDTIValue = 0;
+	int nTrialResult = false;
+	int nAlertType = 0;
+
+	while(1)
+	{
+		// aquire the mutex
+		if (m_ProcessingInterface.isCreated() && m_ProcessingInterface.WaitForCommunicationEventServer() == WAIT_OBJECT_0)
+		{
+			if (m_ProcessingInterface.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+			{
+				nAlertType = m_ProcessingInterface->AlertType;	// 1..n for different conditions: end of trial etc..
+				nDTIValue = m_ProcessingInterface->DTI;			// Actual DTI value
+				nTrialResult = m_ProcessingInterface->POCResult;	// Pass / fail
+
+				// Only call if the alert is relevant
+				if(nAlertType != 0)
+				{
+					// Call notification panel... trigger other events
+					if(nDTIValue > 0)
+						dispman->Store_Latest_DTI(nDTIValue, nTrialResult); 
+				}
+
+				// Set the event
+				m_ProcessingInterface.SetEventClient();
+			
+				// release the mutex
+				m_ProcessingInterface.ReleaseMutex();
 			}
 			else
 			{
