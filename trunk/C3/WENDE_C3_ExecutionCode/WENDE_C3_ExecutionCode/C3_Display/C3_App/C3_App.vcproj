@@ -380,34 +380,34 @@
 					/>
 				</FileConfiguration>
 			</File>
-		</Filter>
-		<Filter
-			Name="TinyXml"
-			>
-			<File
-				RelativePath="..\..\SharedSource\tinyxml\tinystr.cpp"
+			<Filter
+				Name="TinyXml"
 				>
-			</File>
-			<File
-				RelativePath="..\..\SharedSource\tinyxml\tinystr.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\SharedSource\tinyxml\tinyxml.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\SharedSource\tinyxml\tinyxml.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\SharedSource\tinyxml\tinyxmlerror.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\SharedSource\tinyxml\tinyxmlparser.cpp"
-				>
-			</File>
+				<File
+					RelativePath="..\..\SharedSource\tinyxml\tinystr.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\SharedSource\tinyxml\tinystr.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\SharedSource\tinyxml\tinyxml.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\SharedSource\tinyxml\tinyxml.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\SharedSource\tinyxml\tinyxmlerror.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\SharedSource\tinyxml\tinyxmlparser.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\ClassDiagram21.cd"

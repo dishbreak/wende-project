@@ -28,10 +28,12 @@ public:
 	void Set_Laser_Status(int nLaserStatus);
 	void Set_Laser_Com_Status(int nLaserComStatus);
 	void Set_Camera_Com_Status(int nCameraComStatus);
+	void Set_Laser_Activity(int nLaserActivityStatus);
 	int Get_Camera_Status(void);
 	int Get_Laser_Status(void);
 	int Get_Laser_Com_Status(void);
 	int Get_Camera_Com_Status(void);
+	int Get_Laser_Activity(void);
 
 //constructor made private to ensure this stays a singleton
 private:
