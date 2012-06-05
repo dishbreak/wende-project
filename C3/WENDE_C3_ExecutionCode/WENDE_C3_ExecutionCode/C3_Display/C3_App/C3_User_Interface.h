@@ -34,6 +34,7 @@ namespace C3_App {
 		// DELEGATE STUFF
 		// Called from "Update_Table", delegates responsibility to "Worker_Update_Table"
 		delegate void Delegate_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed);
+		delegate void Delegate_Update_Notifications(System::String ^ sNotification);
 
 	public:
 		C3_User_Interface(void)
@@ -577,15 +578,27 @@ namespace C3_App {
 	// Public call to update table with pre-calculated values. Parameters are calculated in DisplayManager.
 	// Creates an instance of delegate method (declared ~ line 35). BeginInvoke called against the form.
 	// For thread safety. 
-	public: void Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed){
-
+	public: void Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed)
+	{
 		Delegate_Update_Table^ action = gcnew Delegate_Update_Table(this, &C3_User_Interface::Worker_Update_Table);
 		this->BeginInvoke(action, TimeField, DTI, bPassed);
 	};
 
 	// Worked method does actual work of updating the table
-	private: void Worker_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed){
+	private: void Worker_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed)
+	{
 		C3_User_Interface::dgvDtiLog->Rows->Add(TimeField, DTI, bPassed);
+	};
+
+	public: void Update_Notification_Panel(System::String ^ sNotification)
+	{
+		Delegate_Update_Notifications^ action = gcnew Delegate_Update_Notifications(this, &C3_User_Interface::Worker_Update_Notification_Panel);
+		this->BeginInvoke(action, sNotification);
+	};
+
+	private: void Worker_Update_Notification_Panel(System::String ^ sNotification)
+	{
+		C3_User_Interface::tbAlertsPanel->Text = sNotification;
 	};
 
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
