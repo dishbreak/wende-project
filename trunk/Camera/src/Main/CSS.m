@@ -4,6 +4,12 @@ classdef CSS
         LaserColor = 1;                 % [R G B] => [1 2 3]
         BoundColor = 3;                 % [R G B] => [1 2 3]
         RoverColor = 2;                 % [R G B] => [1 2 3]
+        brightness = 80;
+        contrast = 10;
+        exposure = -10;
+        saturation = 200;
+        sharpness = 50;
+        whitebalance =2500;
         vid = [];
         FR = [];
         row = [];
@@ -22,16 +28,13 @@ classdef CSS
         transCoordRover2 =[];
         roverSep = [];
         roverSepNT = [];
-        rmSmallAreaPlanePF = [];
         outputPoints = [];
-        tolImage = [];
         bgImage = [];
         MTFrame = [];
+        RemMT = [];
         laserProps = [];
         targetProps = [];
-        bb = [];
-        bbObj1 = [];
-        bbObj2 = [];
+        centerPoint = [];
     end
     
     methods
@@ -46,17 +49,33 @@ classdef CSS
                 catch
                     obj.vid = videoinput('winvideo', 2, 'YUY2_1280x720');
                 end
+            elseif strcmp('Logitech HD Pro Webcam C920',deviceName)
+                try
+                    obj.vid = videoinput('winvideo', 1, 'RGB24_1280x720');
+                catch
+                    obj.vid = videoinput('winvideo', 2, 'RGB24_1280x720');
+                end
             else
-                camera_id = camera_info.DeviceInfo.DeviceID(end);
-                resolution = char(camera_info.DeviceInfo.SupportedFormats(end));
+                camera_id = camera_info.DeviceInfo(1).DeviceID;
+                resolution = char(camera_info.DeviceInfo(1).SupportedFormats);
                 obj.vid = videoinput(camera_name, camera_id, resolution);
                 obj.vid.FrameGrabInterval = 1;
             end
         end
         function ConfigCamera(obj)
+            src = getselectedsource(obj.vid);
             set(obj.vid,'ReturnedColorSpace','rgb')
             set(obj.vid, 'FramesPerTrigger', 1);
             set(obj.vid, 'TriggerRepeat', Inf);
+%             set(src,'WhiteBalanceMode','manual')
+%             set(src,'ExposureMode','manual')
+%             set(src,'BacklightCompensation','off')
+%             set(src,'Brightness',obj.brightness)
+%             set(src,'Contrast',obj.contrast)
+%             set(src,'Exposure',obj.exposure)
+%             set(src,'Saturation',obj.saturation)
+%             set(src,'Sharpness',obj.sharpness)
+%             set(src,'WhiteBalance',obj.whitebalance)
         end
         function StartCamera(obj)
             start(obj.vid)
@@ -71,37 +90,26 @@ classdef CSS
             [obj.FR,obj.timeStamp] = getdata(obj.vid,1);       
         end
         function obj = CalibratePlayingField(obj)
-            obj = obj.ProccesPlayingField(imread('CalibImg.png'));
+            obj = obj.ProccesPlayingField(imread('CalibImg.png'),0);
             obj.TestPointsMtx = obj.outputPoints;
-            obj = obj.ProccesPlayingField(obj.FR);
+            try
+                obj = obj.ProccesPlayingField(obj.FR,1);
+            catch
+                disp('NO CALIBRATION POINTS FOUND!!')
+            end
             obj.CalibPointsMtx = obj.outputPoints;
-            obj.transformMtx = cp2tform(obj.CalibPointsMtx,obj.TestPointsMtx,'similarity');
+            obj.transformMtx = cp2tform(obj.CalibPointsMtx,obj.TestPointsMtx,'projective');
             for i = 1:length(obj.CalibPointsMtx)
                 obj.CalibPointsMtxTrans = [obj.CalibPointsMtxTrans ; tformfwd(obj.transformMtx,obj.CalibPointsMtx(i,1),obj.CalibPointsMtx(i,2))];
             end
         end
-         function obj = getBackgroundData(obj,samples)
-%             bg = uint8(mean(samples,4));
-%             dSamps = double(samples);
-%             dSampsR = dSamps(:,:,1,:);
-%             dSampsG = dSamps(:,:,2,:);
-%             dSampsB = dSamps(:,:,3,:);
-%             stdImagR = std(dSampsR,1,4);
-%             stdImagG = std(dSampsG,1,4);
-%             stdImagB = std(dSampsB,1,4);
-%             stdImag(:,:,1) = stdImagR;
-%             stdImag(:,:,2) = stdImagG;
-%             stdImag(:,:,3) = stdImagB;
-            obj.tolImage = uint8(6.*rgb2gray(stdImag));
-            
-            obj.bgImage = wiener2(rgb2gray(bg),[10 10]);
-%         end
-
-
-        function obj = ProccesPlayingField(obj,frame)
+         function obj = getBackgroundData(obj,bg)
+            obj.bgImage = wiener2(rgb2gray(bg),[5 5]);
+         end
+        function obj = ProccesPlayingField(obj,frame,mtSave)
             imFrame = rgb2ycbcr(frame);
             bwFrame = im2bw(imFrame(:,:,2),.55);
-            bwRemAr = bwareaopen(bwFrame,3000);
+            bwRemAr = bwareaopen(bwFrame,1000);
             findDisk = strel('disk',1);
             imDisk = imclose(bwRemAr,findDisk);
             imfillDisk = imfill(imDisk,'holes');
@@ -112,10 +120,19 @@ classdef CSS
                 deltaObj = diff(imBoundsObj).^2;
                 perObj = sum(sqrt(sum(deltaObj,2)));
                 areaObj = statsPF(k).Area;
+                centPoints(k,:) = statsPF(k).Centroid;
                 whichCirc(k) = 4*pi*areaObj/perObj^2;
             end
             [valCirc pCirc] = max(whichCirc);
             circPF = imBounds{pCirc};
+            if mtSave == 1
+                obj.RemMT = logical(zeros(size(bwFrame)));
+                for pts = 1:length(circPF)
+                    obj.RemMT(circPF(pts,1),circPF(pts,2)) = true;
+                end
+                obj.RemMT = imfill(obj.RemMT,'holes');
+                obj.centerPoint = centPoints(pCirc,:);
+            end
             [Sval SouthPointFind] = max(circPF(:,1));
             [Nval NorthPointFind] = min(circPF(:,1));
             [Eval EastPointFind] = max(circPF(:,2));
@@ -123,32 +140,26 @@ classdef CSS
             obj.outputPoints = [ fliplr(circPF(NorthPointFind,:)); fliplr(circPF(EastPointFind,:)); fliplr(circPF(SouthPointFind,:)); fliplr(circPF(WestPointFind,:))];
         end
         function obj = TrackMotion(obj)
-            grFR = wiener2(rgb2gray(obj.FR),[10 10]);
-            im = wiener2(rgb2gray(im1),[10 10]);
-            brighterThanBg = (grFR > obj.bgImage + obj.tolImage);
-            darkerThanBg = (grFR < obj.bgImage - obj.tolImage);
-            ImThr = (brighterThanBg | darkerThanBg);
-            Im = bwareaopen(ImThr,50);
-            modFrame(:,:,1) = double(obj.FR(:,:,1)).*Im;
-            modFrame(:,:,2) = double(obj.FR(:,:,2)).*Im;
-            modFrame(:,:,3) = double(obj.FR(:,:,3)).*Im;
-            obj.MTFrame = uint8(modFrame);
+            grFR  = rgb2gray(obj.FR);
+            brighterThanBg = (grFR > obj.bgImage + 20);
+            darkerThanBg = (grFR < obj.bgImage - 20); 
+            ImThr = uint8((brighterThanBg | darkerThanBg) & obj.RemMT);
+%             Im = uint8(bwareaopen(ImThr,50));
+            obj.MTFrame = obj.FR.*repmat(ImThr,[1 1 3]);
         end
         function obj = ProcessLaserFrame(obj)
-            redCh = rgb2gray(obj.MTFrame);
-            detectionPlane = im2bw(redCh,.98);
-            obj.laserProps = regionprops(logical(detectionPlane), 'Area', 'Centroid','BoundingBox');
+            redCh = obj.MTFrame(:,:,1);
+            detectionPlane = im2bw(redCh,.9);
+            obj.laserProps = regionprops(logical(detectionPlane), 'Area', 'Centroid');
             area = [obj.laserProps.Area];
             [num_pixels, index] = max(area);
             threshold = 5;
             if (num_pixels > threshold)
                 obj.row = obj.laserProps(index).Centroid(2);
                 obj.col = obj.laserProps(index).Centroid(1);
-                obj.bb  = obj.laserProps(index).BoundingBox;
             else 
                 obj.row = NaN;
                 obj.col = NaN;
-                obj.bb = [];
             end
             try
                 obj.transCoordLaser = tformfwd(obj.transformMtx,obj.col,obj.row);
@@ -157,43 +168,39 @@ classdef CSS
             end
         end
         function obj = ProcessRoverFrame(obj)
-            greenCh = imsubtract(obj.MTFrame(:,:,2), rgb2gray(obj.MTFrame));
-            detectionPlane = im2bw(greenCh,0.05);
-            rmSmallAreaPlane = bwareaopen(detectionPlane,20);
-            obj.targetProps = regionprops(rmSmallAreaPlane, 'Area', 'Centroid','BoundingBox');
-            [~, index] = sort([obj.targetProps.Area],'descend');
-            
-            if isempty(stats)
-                obj.targetProps = regionprops(obj.MTFrame,'Area','Centroid','BoundingBox');
+            greenCh = 2*obj.MTFrame(:,:,2)-obj.MTFrame(:,:,1)-obj.MTFrame(:,:,3);
+            detectionPlane = im2bw(greenCh,0.12);
+            %rmSmallAreaPlane = bwareaopen(detectionPlane,25);
+            obj.targetProps = regionprops(detectionPlane, 'Area', 'Centroid');
+            [~, index] = sort([obj.targetProps.Area],'descend');     
+            if isempty(obj.targetProps)
+                obj.targetProps = regionprops(obj.MTFrame,'Area','Centroid');
                 [~, index] = max([obj.targetProps.Area]);
             end
-            
             try
                 obj.rowObj1 = obj.targetProps(index(1)).Centroid(2);
                 obj.colObj1 = obj.targetProps(index(1)).Centroid(1);
-                obj.bbObj1  = obj.targetProps(index(1)).BoundingBox;
                 obj.transCoordRover1 = tformfwd(obj.transformMtx,obj.colObj1,obj.rowObj1);
             catch
                 obj.rowObj1 = NaN;
                 obj.colObj1 = NaN;
-                obj.bbObj1  = [];
                 obj.transCoordRover1 = [obj.colObj1,obj.rowObj1];
             end
             try
                 obj.rowObj2 = obj.targetProps(index(2)).Centroid(2);
                 obj.colObj2 = obj.targetProps(index(2)).Centroid(1);
-                obj.bbObj2  = obj.targetProps(index(2)).BoundingBox;
                 obj.transCoordRover2 = tformfwd(obj.transformMtx,obj.colObj2,obj.rowObj2);
             catch
                 obj.rowObj2 = NaN;
                 obj.colObj2 = NaN;
-                obj.bbObj2  = [];
                 obj.transCoordRover2 = [obj.colObj2,obj.rowObj2];
             end
         end
-        function PlotDetection(obj,bb,Color)
-            rectangle('Position',bb,'EdgeColor',Color,'LineWidth',2)
-
+        function PlotDetection(obj,x,y,Color,Marker)
+            try
+                hold on 
+                plot(x, y, [Color Marker],'MarkerSize',5,'LineWidth',5)
+            end
         end
         function obj = findRoverSep(obj)
             pixPerMeterNT = sqrt((obj.CalibPointsMtx(2,1)-obj.CalibPointsMtx(4,1))^2+(obj.CalibPointsMtx(2,2)-obj.CalibPointsMtx(2,2))^2)/obj.outerDiameter;
