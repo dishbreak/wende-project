@@ -16,6 +16,7 @@ CUtilities::~CUtilities(void)
 	return converter.vInt;
 #else
 	int value = (bytes[0] << 24) +(bytes[1] << 16) +(bytes[2] << 8) +(bytes[3] << 0);
+//	0xFF000000
 	return value;
 #endif
 }
@@ -50,9 +51,9 @@ CUtilities::~CUtilities(void)
 	memcpy(bytes,converter.bytes,SIZE_OF_INT);
 #else
 	bytes[0] = (value & 0xFF000000) >> 24; 
-	bytes[1] = (value & 0xFF000000) >> 16; 
-	bytes[2] = (value & 0xFF000000) >>  8; 
-	bytes[3] = (value & 0xFF000000) >>  0; 
+	bytes[1] = (value & 0x00FF0000) >> 16; 
+	bytes[2] = (value & 0x0000FF00) >>  8; 
+	bytes[3] = (value & 0x000000FF) >>  0; 
 #endif
 }
  void   CUtilities::ShortToBytes (BYTE * bytes,  short  value)
@@ -62,8 +63,8 @@ CUtilities::~CUtilities(void)
 	converter.vShort = value;
 	memcpy(bytes,converter.bytes,SIZE_OF_SHORT);
 #else
-	bytes[0] = (value & 0xFF000000) >>  8; 
-	bytes[1] = (value & 0xFF000000) >>  0; 
+	bytes[0] = (value & 0xFF00) >>  8; 
+	bytes[1] = (value & 0x00FF) >>  0; 
 #endif
 }
  void   CUtilities::DoubleToBytes(BYTE * bytes,  double value)

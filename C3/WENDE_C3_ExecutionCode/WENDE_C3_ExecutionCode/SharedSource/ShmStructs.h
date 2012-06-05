@@ -28,6 +28,7 @@ typedef unsigned __int64    UINT64;
 typedef char				CHAR;
 typedef short				SHORT;
 typedef long				LONG;
+typedef double              DOUBLE;
 /////////////////////////////////////////////////////////////////////////////////
 // Struct: max sizes
 /////////////////////////////////////////////////////////////////////////////////
@@ -73,8 +74,6 @@ typedef struct {
 	UINT32 PacketNumber;
 	UINT32 Status;
 	UINT32 LaserOnOf;
-	
-	UINT32 ValidChars;
 	UINT32 SubsystemId;
 	
 	CHAR   textStr[SHM_MAX_STATUS_TEXT];
@@ -101,7 +100,25 @@ typedef union
 	};
 } C3_TRACK_POINT;
 /////////////////////////////////////////////////////////////////////////////////
-// Struct: LASER_POINTING_MSG_SHM
+// Struct: C3_TRACK
+//
+// purpose: defines the structure for representing C3 Tracks
+/////////////////////////////////////////////////////////////////////////////////
+typedef union
+{
+	struct
+	{
+		DOUBLE		 X;			// X location (offset) 
+		DOUBLE		 Y;			// Y location (offset)
+	};
+	struct
+	{
+		DOUBLE		 AZ;		// AZ Location
+		DOUBLE		 EL;		// EL Location
+	};
+} C3_TRACK_POINT_DOUBLE;
+/////////////////////////////////////////////////////////////////////////////////
+// Struct: CAMERA_TRACK_MSG_SHM
 //
 // purpose: defines the structure for internal message passing of camera track
 //          commands
@@ -208,5 +225,6 @@ typedef struct {
 	UINT32 DTI;
 	UINT32 POCResult;
 	UINT32 AlertType;
+	
 	SHM_INFO_STRUCT		ShmInfo;
 }ALGORITHM_INTERFACE_MSG_SHM;
