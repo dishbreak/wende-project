@@ -109,7 +109,11 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 				dispman->Update_Camera_Communication_Indicator(1);
 
 				// TODO: Remove once laser interface added.
-				dispman->Update_Laser_Activity_Indicator(m_CameraStatus->LaserOnOf);
+				if (dispman->Get_Laser_Activity() != m_CameraStatus->LaserOnOf)
+				{
+					dispman->Update_Laser_Activity_Indicator(m_CameraStatus->LaserOnOf);
+				}
+
 				dispman->Update_Overall_Status();
 
 				// Set the event
@@ -125,8 +129,12 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 		}
 		else
 		{
-			dispman->Update_Camera_Communication_Indicator(0);
-			dispman->Update_Overall_Status();
+			if (dispman->Get_Camera_Com_Status() != 0)
+			{
+				dispman->Update_Camera_Communication_Indicator(0);
+				dispman->Update_Overall_Status();
+			}
+			else { /* no  update needed */}
 		}
 	}
 
@@ -175,8 +183,12 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 		}
 		else
 		{
-			dispman->Update_Laser_Communication_Indicator(0);
-			dispman->Update_Overall_Status();
+			if (dispman->Get_Laser_Com_Status() != 0)
+			{
+				dispman->Update_Laser_Communication_Indicator(0);
+				dispman->Update_Overall_Status();
+			}
+			else { /* no  update needed */}
 		}
 	}
 
