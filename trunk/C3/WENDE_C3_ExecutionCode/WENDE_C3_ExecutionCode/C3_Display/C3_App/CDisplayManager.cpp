@@ -314,18 +314,23 @@ void CDisplayManager::Update_Notification_Panel(int nAlertID)
 	switch(nAlertID)
 	{
 		case 1:
+			// If alert status = 1 (Rover stopped before failure)
 			C3_User_Interface::Instance->tbAlertsPanel->Text = 
 				L"INFORMATION: TRIAL SUCCESS";
 		case 2:
+			// If alert status = 2 (Contact is > 0.7m away from centre)
 			C3_User_Interface::Instance->tbAlertsPanel->Text = 
 				L"ALERT: PATIENT HAS LEFT EVAC AREA!";
 		case 3:
+			// If alert status = 3 (Rover not stopped before failure line)
 			C3_User_Interface::Instance->tbAlertsPanel->Text = 
 				L"ALERT: TRIAL FAILED";
 		case 4:
+			// If alert status = 4 (calibration failed) or subsystems do not work
 			C3_User_Interface::Instance->tbAlertsPanel->Text = 
 				L"WARNING: WENDE SYSTEM NOT OPERATIONAL";
 		default:
+			// If alert status = 5 (calibration success) & subsystems work
 			C3_User_Interface::Instance->tbAlertsPanel->Text = 
 				L"INFORMATION: WENDE SYSTEM OPERATIONAL";
 	}

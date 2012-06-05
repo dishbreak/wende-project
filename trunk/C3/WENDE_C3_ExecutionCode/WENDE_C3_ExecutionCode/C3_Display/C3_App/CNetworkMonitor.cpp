@@ -338,8 +338,8 @@ UINT WINAPI ProcessingInterfaceThread (LPVOID pParam)
 		{
 			if (m_ProcessingInterface.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-				nAlertType = m_ProcessingInterface->AlertType;	// 1..n for different conditions: end of trial etc..
-				nDTIValue = m_ProcessingInterface->DTI;			// Actual DTI value
+				nAlertType = m_ProcessingInterface->AlertType;		// 1..n for different conditions: end of trial etc..
+				nDTIValue = m_ProcessingInterface->DTI;				// Actual DTI value
 				nTrialResult = m_ProcessingInterface->POCResult;	// Pass / fail
 
 				// Only call if the alert is relevant
