@@ -66,6 +66,11 @@ public:
 	string SHM_C3_CAMERA_IMAGE_MUTEX;			// Camera IMAGE MUTEX File Name
 	string SHM_C3_CAMERA_IMAGE_EVENT1;			// Camera IMAGE Event1 File Name
 	string SHM_C3_CAMERA_IMAGE_EVENT2;			// Camera IMAGE Event2 File Name
+	//Process interface SHM
+	string SHM_C3_PROCESSING_STATUS;			// Processing IMAGE SHM File Name
+	string SHM_C3_PROCESSING_STATUS_MUTEX;		// Processing IMAGE MUTEX File Name
+	string SHM_C3_PROCESSING_STATUS_EVENT1;		// Processing IMAGE Event1 File Name
+	string SHM_C3_PROCESSING_STATUS_EVENT2;		// Processing IMAGE Event2 File Name
 	// DEBUG ITEMS
 	bool isShowDebugPannel;						// Flag to determine if we show
 												// the debug pannel
