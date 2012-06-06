@@ -21,7 +21,7 @@ Notification::Notification(Notification::NotifyMesg incoming)
 	//warning-type
 	case NotifyMesg::SystemNonOperational:
 		notifyType = NotifyType::Warning;
-		NotifyText = "WENDE SYSTEM NON OPERATIONAL!";
+		NotifyText = "WENDE SYSTEM NOT OPERATIONAL!";
 		Contradict = NotifyMesg::SystemOperational;
 		break;
 	//information-type
@@ -29,6 +29,16 @@ Notification::Notification(Notification::NotifyMesg incoming)
 		notifyType = NotifyType::Information;
 		NotifyText = "WENDE SYSTEM OPERATIONAL";
 		Contradict = NotifyMesg::SystemNonOperational;
+		break;
+	case NotifyMesg::TrialSuccess:
+		notifyType = NotifyType::Information;
+		NotifyText = "TRIAL SUCCESS";
+		Contradict = NotifyMesg::TrialSuccess;
+		break;
+	case NotifyMesg::TrialFailed:
+		notifyType = NotifyType::Alert;
+		NotifyText = "TRIAL FAILURE";
+		Contradict = NotifyMesg::AllClear;
 		break;
 	case NotifyMesg::AllClear:
 		notifyType = NotifyType::Information;

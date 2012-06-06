@@ -237,8 +237,6 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 		}
 		else
 		{
-			dispman->Store_Latest_DTI(m_LaserStatus->PacketNumber, false);
-
 			if (dispman->Get_Laser_Com_Status() != 0)
 			{
 				dispman->Update_Laser_Communication_Indicator(0);
@@ -379,7 +377,7 @@ UINT WINAPI ProcessingInterfaceThread (LPVOID pParam)
 	CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 	int nDTIValue = 0;
 	int nTrialResult = false;
-	int nAlertType = 0;
+	int nAlertType = 1;
 
 	while(isRunningInternal)
 	{
@@ -395,6 +393,7 @@ UINT WINAPI ProcessingInterfaceThread (LPVOID pParam)
 				// Only call if the alert is relevant
 				if(nAlertType != 0)
 				{
+					dispman->Update_Notification_Panel(4);
 					// Call notification panel... trigger other events
 					if(nDTIValue > 0)
 					{
@@ -410,7 +409,7 @@ UINT WINAPI ProcessingInterfaceThread (LPVOID pParam)
 			}
 			else { /* unable to get mutex??? */	}
 		}
-		else { /* loss of comm */	}
+		else { /* loss of comm */						dispman->Update_Notification_Panel(4);}
 		/* Enter the critical section -- other threads are locked out */
 		EnterCriticalSection(&cNetworMonitor->cs);		
 		/* Do some thread-safe processing! */
