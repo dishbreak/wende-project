@@ -15,6 +15,8 @@
 #include "C3FilterClass.h"
 #include "C3Track.h"
 #include <vector>
+#include <conio.h>
+#include <stdio.h>
 
 using std::vector;
 using std::cout;
@@ -27,14 +29,19 @@ using std::string;
 /////////////////////////////////////////////////////////////////////////////////
 void TestKalmanFilter();
 void TestTrackFilter();
+void TestCalibration(HANDLE hconsole);
+
+C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE*);
+
 /////////////////////////////////////////////////////////////////////////////////
 // Declare main functions
 /////////////////////////////////////////////////////////////////////////////////
 int _tmain(int argc, _TCHAR* argv[])
 {
-	TestKalmanFilter();
+	HANDLE hconsole = GetStdHandle (STD_OUTPUT_HANDLE);
+	//TestKalmanFilter();
 	//TestTrackFilter();
-
+	TestCalibration(hconsole);
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup local variables
 	/////////////////////////////////////////////////////////////////////////////////
@@ -194,11 +201,11 @@ void TestKalmanFilter()
 void TestTrackFilter()
 {
 	vector<string> files;
-	files.insert(files.begin(),"TestTrack_fast.txt");
-	files.insert(files.begin(),"TestTrack_slow.txt");
-	files.insert(files.begin(),"TestTrack_spiral.txt");
-	files.insert(files.begin(),"TestTrack_stopCrawl.txt");
-	//files.insert(files.begin(),"TestTrack_.txt");
+	files.insert(files.begin(),"TEST_5.txt");
+	files.insert(files.begin(),"TEST_4.txt");
+	files.insert(files.begin(),"TEST_3.txt");
+	files.insert(files.begin(),"TEST_2.txt");
+	files.insert(files.begin(),"TEST_1.txt");
 	for (unsigned int jj = 0; jj < files.size(); jj++)
 	{
 		printf("TEST FILE --- %d ---\n",jj);
@@ -228,4 +235,60 @@ void TestTrackFilter()
 		}
 		myfile.close();
 	}
+}
+// Calibration Unit Test
+void TestCalibration(HANDLE hconsole)
+{
+	char files[4][256] = {{"TEST_CAL_1.txt"},
+					      {"TEST_CAL_2.txt"},
+	                      {"TEST_CAL_3.txt"},
+					      {"TEST_CAL_4.txt"}};
+	C3_TRACK_POINT_DOUBLE testPoints[4];
+	C3_TRACK_POINT_DOUBLE procResult;
+	C3_TRACK_POINT_DOUBLE fileResult;
+	
+	procResult.X = 0;
+	procResult.Y = 0;
+
+	double         MAX_ERROR      = 0.005;
+
+	for (unsigned int jj = 0; jj < 4; jj++)
+	{
+		printf("TEST CALIBRATION FILE --- %d (%s)---\n",jj,files[jj]);
+		
+		ifstream myfile (files[jj]);
+		if ( myfile.is_open() )
+		{
+			myfile >> testPoints[0].X >> testPoints[0].Y >>testPoints[1].X >> testPoints[1].Y >>testPoints[2].X >> testPoints[2].Y >>testPoints[3].X >> testPoints[3].Y >> fileResult.X >> fileResult.Y;
+			procResult = calibrate(testPoints); //get laser data
+			if (abs(fileResult.X-procResult.X) < MAX_ERROR && abs(fileResult.Y-procResult.Y) < MAX_ERROR)
+			{
+				SetConsoleTextAttribute(hconsole,FOREGROUND_GREEN);
+				printf("PASS!!!!!!!::Difference [Xlaser,Ylaser]= [%f,%f]\n",abs(fileResult.X-procResult.X),abs(fileResult.Y-procResult.Y));
+			}
+			else
+			{
+				SetConsoleTextAttribute(hconsole,FOREGROUND_RED);
+				printf("FAILED!!!!!::Difference [Xlaser,Ylaser]= [%f,%f]\n",abs(fileResult.X-procResult.X),abs(fileResult.Y-procResult.Y));		
+			}
+			SetConsoleTextAttribute(hconsole,FOREGROUND_BLUE|FOREGROUND_GREEN|FOREGROUND_RED);
+			
+			myfile.close();
+		}
+	}
+}
+
+// Calibration Method
+C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points){
+
+	C3_TRACK_POINT_DOUBLE laserPosition;
+	double m1 = ((points[1].Y-points[0].Y) / (points[1].X - points[0].X));
+	double m2 = ((points[3].Y-points[2].Y) / (points[3].X - points[2].X));	 
+	double b1 = points[0].Y-m1*points[0].X; 
+	double b2 = points[3].Y-m2*points[3].X;
+	 
+	laserPosition.X = (b2-b1) / (m1-m2); 
+	laserPosition.Y = laserPosition.X*m1+b1;
+		
+	return laserPosition;
 }
