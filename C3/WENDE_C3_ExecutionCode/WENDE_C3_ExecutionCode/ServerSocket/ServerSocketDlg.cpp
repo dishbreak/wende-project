@@ -499,7 +499,8 @@ void CServerSocketDlg::OnBtnSendTrack()
 	cameraTracks track;
 	track.set_time(osBinaryTime);									// set the operational time
 	track.set_laseron(m_statusLaserOnCtrl.GetCheck()==BST_CHECKED);	// set laser status
-	
+	track.set_status((cameraMsgs::systemStatus)m_CameraStatus);	// set camera status
+
 	AddTrack(&m_trackEnable0,&m_trackXEditBox0,&m_trackYEditBox0, &track);
 	AddTrack(&m_trackEnable1,&m_trackXEditBox1,&m_trackYEditBox1, &track);
 	AddTrack(&m_trackEnable2,&m_trackXEditBox2,&m_trackYEditBox2, &track);

@@ -11,6 +11,8 @@
 #include "PictureCtrl.h"
 #include "C3ArbiterConfiguration.h"
 #include <string>
+static const UINT WMU_NOTIFY_TASKBAR_ICON 
+   = ::RegisterWindowMessage( _T("WMU_NOTIFY_TASKBAR_ICON") );
 
 // CNetworkArbiterDlg dialog	
 class CNetworkArbiterDlg : public CDialog
@@ -35,6 +37,7 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg LRESULT OnNotifyTaskbarIcon(  WPARAM wParam, LPARAM lParam );
 	DECLARE_MESSAGE_MAP()
 	static UINT WINAPI SocketClientStartThreadProc(LPVOID pParam);
 	static UINT WINAPI SocketServerStartThreadProc(LPVOID pParam);
@@ -68,4 +71,7 @@ public:
 	CButton m_LaserOnOff;
 	CEdit m_LaserPWMAz;
 	CEdit m_LaserPWMEl;
+	void AddTaskbarIcon();
+	afx_msg void OnDestroy();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

@@ -65,9 +65,18 @@ BOOL CNetworkArbiterApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
+	//CNetworkArbiterDlg dlg;
+	//m_pMainWnd = &dlg;
+	//INT_PTR nResponse = dlg.DoModal();
+
 	CNetworkArbiterDlg dlg;
-	m_pMainWnd = &dlg;
-	INT_PTR nResponse = dlg.DoModal();
+	INT_PTR nResponse = IDCANCEL;
+	if(dlg.Create( CNetworkArbiterDlg::IDD ))
+	{
+		dlg.ShowWindow( SW_HIDE );
+		m_pMainWnd = &dlg;
+		nResponse = dlg.RunModalLoop();
+	}
 	if (nResponse == IDOK)
 	{
 		// TODO: Place code here to handle when the dialog is
