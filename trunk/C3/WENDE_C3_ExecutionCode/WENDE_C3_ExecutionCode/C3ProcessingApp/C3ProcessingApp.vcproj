@@ -22,6 +22,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="0"
+			ManagedExtensions="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -43,12 +44,12 @@
 				Optimization="0"
 				AdditionalIncludeDirectories="../SharedSource/;.;..\SharedSource\tinyxml;..\SharedSource\eigen\Eigen"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
+				MinimalRebuild="false"
+				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -63,6 +64,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
+				AssemblyDebug="1"
 				SubSystem="1"
 				TargetMachine="1"
 			/>
@@ -173,6 +175,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\C3NotificationHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\C3ProcessingApp.cpp"
 				>
 			</File>
@@ -222,6 +228,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\C3NotificationHandler.h"
+				>
+			</File>
 			<File
 				RelativePath=".\C3ProcessingConfiguration.h"
 				>
