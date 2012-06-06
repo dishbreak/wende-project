@@ -37,8 +37,15 @@ public:
 
 //constructor made private to ensure this stays a singleton
 private:
-	CDisplayManager(){};
+	CDisplayManager();
     ~CDisplayManager(){};
+    // Class variable for determining overall status
+    int m_nCameraStatus;
+    int m_nLaserStatus;
+    int m_nLaserComStatus;
+    int m_nCameraComStatus;
+    int m_nLaserActivityStatus;
+    int m_OverStatus;
     static CDisplayManager ^ displayMgr = nullptr;
 };
 
