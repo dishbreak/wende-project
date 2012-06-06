@@ -40,7 +40,7 @@ public:
 	string SHM_C3_LASER_POINTING_EVENT1;			// Laser Event1 File Name
 	string SHM_C3_LASER_POINTING_EVENT2;			// Laser Event2 File Name
 	//Process interface SHM
-	string SHM_C3_PROCESSING_STATUS;				// Processing IMAGE SHM File Name
+	string SHM_C3_PROCESSING_STATUS;			// Processing IMAGE SHM File Name
 	string SHM_C3_PROCESSING_STATUS_MUTEX;			// Processing IMAGE MUTEX File Name
 	string SHM_C3_PROCESSING_STATUS_EVENT1;			// Processing IMAGE Event1 File Name
 	string SHM_C3_PROCESSING_STATUS_EVENT2;			// Processing IMAGE Event2 File Name

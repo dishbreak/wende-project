@@ -17,6 +17,7 @@
 #include <vector>
 #include <conio.h>
 #include <stdio.h>
+#include "C3NotificationHandler.h"
 
 using std::vector;
 using std::cout;
@@ -69,10 +70,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	else m_LaserCommand->ShmInfo.Clients++;	
 
 	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> m_DisplayNotification;
-	m_DisplayNotification.Acquire(C3ProcessingConfiguration::Instance().SHM_C3_PROCESSING_STATUS,			// shared mem file name
-								C3ProcessingConfiguration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,	// shared mem mutex name
-								C3ProcessingConfiguration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2,	// shared mem event name
-								C3ProcessingConfiguration::Instance().SHM_C3_PROCESSING_STATUS_MUTEX);	// shared mem event name
+	m_DisplayNotification.Acquire("testname",			// shared mem file name
+								"testmutex",	// shared mem mutex name
+								"testevent1",	// shared mem event name
+								"testevent2");	// shared mem event name
 	if (m_DisplayNotification.isServer()) m_DisplayNotification->ShmInfo.Clients = 0;
 	else m_DisplayNotification->ShmInfo.Clients++;	
 
@@ -141,9 +142,11 @@ int _tmain(int argc, _TCHAR* argv[])
 		if(m_DisplayNotification.isCreated() && 
 			m_DisplayNotification.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 		{
-			m_DisplayNotification->AlertType = 3;
+			m_DisplayNotification->AlertType = C3NotificationHandler::Instance().Get_Alert_Type();
+			m_DisplayNotification->DTI = C3NotificationHandler::Instance().Get_DTI_Value();
+			m_DisplayNotification->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
 
-			m_DisplayNotification.SetEventClient();
+			m_DisplayNotification.SetEventServer();
 
 			m_DisplayNotification.ReleaseMutex();
 		}
