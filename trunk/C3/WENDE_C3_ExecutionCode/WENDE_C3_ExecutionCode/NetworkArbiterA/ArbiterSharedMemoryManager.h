@@ -82,6 +82,8 @@ private:
 	#else
 	int DecodeLaserStatusMessage_DEBUG(laserStatus *ss, char* temp);
 	#endif
+	//DECODE THE STATUS
+	string DecodeStatus(int status);
 /////////////////////////////////////////////////////////////
 // Private Functions... singleton items
 /////////////////////////////////////////////////////////////

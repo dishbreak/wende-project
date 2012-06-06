@@ -1,14 +1,40 @@
+///////////////////////////////////////////////////////////////////////////////////////////
+//	File: Utilities.cpp
+//  Programmer: Benjamin Kurt Heiner
+//  Date: 06-03-2012
+//
+//	Purpose: This file contains ally converstion functions for converting froma basic tpye 
+//           to a byte array
+//
+///////////////////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "Utilties.h"
 
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: CUtilities (default constructor)
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: default constructor
+///////////////////////////////////////////////////////////////////////////////////////////
 CUtilities::CUtilities(void)
 {
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: ~CUtilities (default destructor)
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: default constructor
+///////////////////////////////////////////////////////////////////////////////////////////
 CUtilities::~CUtilities(void)
 {
 }
- int CUtilities::BytesToInt   ( BYTE * bytes)
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: BytesToInt
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: convert ths bytes to int
+///////////////////////////////////////////////////////////////////////////////////////////
+int CUtilities::BytesToInt   ( BYTE * bytes)
 {
 #if 1
     int_or_bytes converter;
@@ -20,6 +46,12 @@ CUtilities::~CUtilities(void)
 	return value;
 #endif
 }
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: BytesToShort
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: convert ths bytes to short
+///////////////////////////////////////////////////////////////////////////////////////////
  short  CUtilities::BytesToShort ( BYTE * bytes) 
 {
 #if 1
@@ -31,19 +63,37 @@ CUtilities::~CUtilities(void)
 	return value;
 #endif
 }
- double CUtilities::BytesToDouble( BYTE * bytes)
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: BytesToDouble
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: convert ths bytes to double
+///////////////////////////////////////////////////////////////////////////////////////////
+double CUtilities::BytesToDouble( BYTE * bytes)
 {
 	double_or_bytes converter;
 	memcpy(converter.bytes,bytes,SIZE_OF_DOUBLE);
 	return converter.vDoubloe;
 }
- float  CUtilities::BytesToFloat ( BYTE * bytes)
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: BytesToFloat
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: convert ths bytes to float
+///////////////////////////////////////////////////////////////////////////////////////////
+float  CUtilities::BytesToFloat ( BYTE * bytes)
 {
 	float_or_bytes converter;
 	memcpy(converter.bytes,bytes,SIZE_OF_FLOAT);
 	return converter.vFloat;
 }
- void   CUtilities::IntToBytes   (BYTE * bytes,  int    value)
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: IntToBytes
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: convert ths int to bytes
+///////////////////////////////////////////////////////////////////////////////////////////
+void   CUtilities::IntToBytes   (BYTE * bytes,  int    value)
 {
 #if 1
 	int_or_bytes converter;
@@ -56,7 +106,13 @@ CUtilities::~CUtilities(void)
 	bytes[3] = (value & 0x000000FF) >>  0; 
 #endif
 }
- void   CUtilities::ShortToBytes (BYTE * bytes,  short  value)
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: ShortToBytes
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: convert ths short to bytes
+///////////////////////////////////////////////////////////////////////////////////////////
+void   CUtilities::ShortToBytes (BYTE * bytes,  short  value)
 {
 #if 1
 	short_or_bytes converter;
@@ -67,13 +123,25 @@ CUtilities::~CUtilities(void)
 	bytes[1] = (value & 0x00FF) >>  0; 
 #endif
 }
- void   CUtilities::DoubleToBytes(BYTE * bytes,  double value)
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: DoubleToBytes
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: convert ths double to bytes
+///////////////////////////////////////////////////////////////////////////////////////////
+void   CUtilities::DoubleToBytes(BYTE * bytes,  double value)
 {
 	double_or_bytes converter;
 	converter.vDoubloe = value;
 	memcpy(bytes,converter.bytes,SIZE_OF_DOUBLE);
 }
- void   CUtilities::FloatToBytes (BYTE * bytes,  float  value)
+///////////////////////////////////////////////////////////////////////////////////////////
+// Function: FloatToBytes
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: convert ths float to bytes
+///////////////////////////////////////////////////////////////////////////////////////////
+void   CUtilities::FloatToBytes (BYTE * bytes,  float  value)
 {
 	float_or_bytes converter;
 	converter.vFloat = value;

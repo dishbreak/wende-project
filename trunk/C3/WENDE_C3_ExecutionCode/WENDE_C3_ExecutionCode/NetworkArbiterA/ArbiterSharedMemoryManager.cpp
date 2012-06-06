@@ -71,7 +71,7 @@ int CArbiterSharedMemoryManager::DecodeCameraStatusMessage_DEBUG(cameraStatus *s
 		sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,ss->laseron());
 	    sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 		sprintf(temp, "%s|-->str = %s   \r\n", temp,ss->text().c_str());
-		sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->status());
+		sprintf(temp, "%s|-->Status = %s   \r\n", temp,DecodeStatus((int)ss->status()).c_str());
 		sprintf(temp, "%s\r\n\r\n", temp);
 
 	return cameraStatusMessageCount;
@@ -103,7 +103,6 @@ void CArbiterSharedMemoryManager::DecodeCameraStatusMessage(LPCTSTR strText, cha
 		C3CameraStatus->Status		 = ss.status();
 		C3CameraStatus->SubsystemId  = 3;
 		C3CameraStatus->Time		 = static_cast<DWORD>(ss.time());
-		C3CameraStatus->ValidChars	 = 0; 
 		// loops through clients and sends events
 		int eventsToSend = C3CameraStatus->ShmInfo.Clients;
 		for (int pp = 0; pp < eventsToSend; pp++)
@@ -134,7 +133,7 @@ int CArbiterSharedMemoryManager::DecodeCameraTrackMessage_DEBUG(cameraTracks *tr
 	sprintf(temp, "+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
 	sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,tr->laseron());
 	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
-	sprintf(temp, "%s|-->Status = %d   \r\n", temp,tr->status());
+	sprintf(temp, "%s|-->Status = %s   \r\n", temp,DecodeStatus((int)tr->status()).c_str());
 	sprintf(temp, "%s|-->Tracks = %d   \r\n", temp,tr->target_size());
 	for (int ii = 0; ii < tr->target_size(); ii++)
 	{
@@ -331,7 +330,7 @@ int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(CLaserStatus *ss
 	static int  laserStatusMessageCount = 0;
 	// debug string for display 
 	sprintf(temp, "+LASER STATUS MESSAGE(%d)\r\n", ++laserStatusMessageCount);
-	sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->LaserStatus.status);
+	sprintf(temp, "%s|-->Status = %s   \r\n", temp,DecodeStatus((int)ss->LaserStatus.status).c_str());
 	sprintf(temp, "%s\r\n\r\n", temp);
 
 	return laserStatusMessageCount;
@@ -396,4 +395,20 @@ void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char
 		// release the mutex
 		C3LaserStatus.ReleaseMutex();
 	}
+}
+//DECODE THE STATUS
+string CArbiterSharedMemoryManager::DecodeStatus(int status)
+{
+	string resultStatus;
+	switch (status)
+	{
+		case  0: { resultStatus = "DOWN";			break;}
+   	    case  1: { resultStatus = "READY";			break;}
+	    case  2: { resultStatus = "OPERATIONAL";	break;}
+		case  3: { resultStatus = "ERROR";			break;}
+		case  4: { resultStatus = "FAILED";			break;}
+		case  5:
+		default: { resultStatus = "UNKOWN";			break;}
+	}
+	return resultStatus;
 }

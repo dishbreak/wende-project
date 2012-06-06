@@ -89,6 +89,9 @@ BEGIN_MESSAGE_MAP(CNetworkArbiterDlg, CDialog)
 	ON_EN_CHANGE(IDC_EDIT1, &CNetworkArbiterDlg::OnEnChangePort)
 	ON_BN_CLICKED(IDC_C3_LASER_STATUS, &CNetworkArbiterDlg::OnBnClickedC3LaserStatus)
 	ON_BN_CLICKED(IDC_LASER_ON_OFF, &CNetworkArbiterDlg::OnBnClickedLaserOnOff)
+	ON_WM_DESTROY()
+	ON_WM_SIZE()
+	ON_REGISTERED_MESSAGE( WMU_NOTIFY_TASKBAR_ICON, OnNotifyTaskbarIcon )
 END_MESSAGE_MAP()
 
 
@@ -125,7 +128,26 @@ BOOL CNetworkArbiterDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 
+	AddTaskbarIcon();
+	// The one and only window has been initialized, so show and update it.
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+void CNetworkArbiterDlg::AddTaskbarIcon()
+{
+   DWORD dwMessage = NIM_ADD;
+   NOTIFYICONDATA   nid;
+
+   nid.cbSize = sizeof(NOTIFYICONDATA); 
+   nid.hWnd = GetSafeHwnd(); 
+   nid.uID = 0; 
+   nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP; 
+   nid.uCallbackMessage = WMU_NOTIFY_TASKBAR_ICON; 
+   nid.hIcon = GetIcon( TRUE );
+   lstrcpyn( nid.szTip, AfxGetAppName(), sizeof( nid.szTip ) );
+
+   ::Shell_NotifyIcon( dwMessage,  // message identifier 
+                       &nid);      // pointer to structure
 }
 
 void CNetworkArbiterDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -196,7 +218,6 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// start thread to bring up com scokets
 	RunThread();
-
 	return 0;
 }
 
@@ -437,4 +458,77 @@ void CNetworkArbiterDlg::OnBnClickedC3LaserStatus()
 void CNetworkArbiterDlg::OnBnClickedLaserOnOff()
 {
 	// TODO: Add your control notification handler code here
+}
+
+void CNetworkArbiterDlg::OnDestroy()
+{
+	CDialog::OnDestroy();
+
+	// TODO: Add your message handler code here
+	   // remove the taskbar icon
+   DWORD dwMessage = NIM_DELETE;
+   NOTIFYICONDATA   nid;
+
+   nid.cbSize = sizeof(NOTIFYICONDATA);
+   nid.uID = 0;
+   nid.hWnd = GetSafeHwnd();
+
+   ::Shell_NotifyIcon( dwMessage,  // message identifier 
+                       &nid);      // pointer to structure
+
+	CDialog::OnDestroy();	
+}
+
+void CNetworkArbiterDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialog::OnSize(nType, cx, cy);
+
+	// TODO: Add your message handler code here
+	if( SIZE_MINIMIZED  == nType )
+	{
+	  ShowWindow( SW_HIDE );
+	}
+}
+LRESULT CNetworkArbiterDlg::OnNotifyTaskbarIcon(  WPARAM wParam, LPARAM lParam )
+{
+
+	UINT uID = (UINT)wParam;       // this is the ID you assigned to your taskbar icon
+	UINT uMouseMsg = (UINT)lParam; // mouse messages
+
+	switch (uMouseMsg)
+   {
+	case WM_LBUTTONDOWN:
+      break;
+   case WM_LBUTTONDBLCLK:
+      if( IsIconic() )
+      {
+         ShowWindow( SW_RESTORE );
+      }
+      ShowWindow( SW_SHOW );
+      SetForegroundWindow();
+      break;
+	case WM_RBUTTONDOWN:
+      {
+         CMenu* pMenu = GetMenu();
+         if( pMenu )
+         {
+            CMenu *pSubMenu = NULL;
+            pSubMenu = pMenu->GetSubMenu( 0 );
+            {
+              SetForegroundWindow(); // *** little patch here ***				
+			  POINT pointCursor;			   
+			  ::GetCursorPos( &pointCursor );			   
+			  pSubMenu->TrackPopupMenu( TPM_RIGHTALIGN, 
+                                         pointCursor.x, pointCursor.y, 
+                                         this );
+            }
+         }
+      }
+      break;
+	case WM_RBUTTONDBLCLK:
+      break;
+	case WM_MOUSEMOVE:
+      break;
+   }
+   return 0L;
 }
