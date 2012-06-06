@@ -36,7 +36,7 @@ namespace C3_App {
 		// DELEGATE STUFF
 		// Called from "Update_Table", delegates responsibility to "Worker_Update_Table"
 		delegate void Delegate_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed);
-		delegate void Delegate_Update_Notifications(System::String ^ sNotification);
+		delegate void Delegate_Update_Notifications(System::String ^ sNotification, System::Drawing::Color tBgColor, System::Drawing::Color tFgColor);
 
 	public:
 		C3_User_Interface(CNetworkMonitor *monitor)
@@ -605,15 +605,17 @@ namespace C3_App {
 		C3_User_Interface::dgvDtiLog->Rows->Add(TimeField, DTI, bPassed);
 	};
 
-	public: void Update_Notification_Panel(System::String ^ sNotification)
+	public: void Update_Notification_Panel(System::String ^ sNotification, System::Drawing::Color tBgColor, System::Drawing::Color tFgColor)
 	{
 		Delegate_Update_Notifications^ action = gcnew Delegate_Update_Notifications(this, &C3_User_Interface::Worker_Update_Notification_Panel);
-		this->BeginInvoke(action, sNotification);
+		this->BeginInvoke(action, sNotification, tBgColor, tFgColor);
 	};
 
-	private: void Worker_Update_Notification_Panel(System::String ^ sNotification)
+	private: void Worker_Update_Notification_Panel(System::String ^ sNotification, System::Drawing::Color tBgColor, System::Drawing::Color tFgColor)
 	{
 		C3_User_Interface::tbAlertsPanel->Text = sNotification;
+		C3_User_Interface::tbAlertsPanel->BackColor = tBgColor;
+		C3_User_Interface::tbAlertsPanel->ForeColor = tFgColor;
 	};
 
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
