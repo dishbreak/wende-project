@@ -363,6 +363,8 @@ int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed)
 	//append the row
 
 	C3_User_Interface::Instance->Update_Table(TimeField, DtiField, PassField);
+	Notification newNote(Notification::NotifyMesg::SystemNonOperational);
+	C3_User_Interface::Instance->Update_Notification_Panel(newNote.NotifyText, newNote.bgColor, newNote.fgColor);
 
 	return 0;
 }
