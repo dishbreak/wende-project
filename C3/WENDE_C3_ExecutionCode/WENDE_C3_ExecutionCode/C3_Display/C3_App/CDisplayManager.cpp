@@ -298,7 +298,7 @@ int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath)
 
 	// Use managed C to garbage collect automatically
 	bmCameraImage = gcnew Bitmap(sImagePath);
-	C3_User_Interface::Instance->pbLiveFeed->Image = bmCameraImage;
+	C3_User_Interface::Instance->Update_Live_Feed_Panel(bmCameraImage);
  		
 	return 0;
 }

@@ -37,6 +37,7 @@ namespace C3_App {
 		// Called from "Update_Table", delegates responsibility to "Worker_Update_Table"
 		delegate void Delegate_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed);
 		delegate void Delegate_Update_Notifications(System::String ^ sNotification, System::Drawing::Color tBgColor, System::Drawing::Color tFgColor);
+		delegate void Delegate_Update_Live_Feed_Panel(System::Drawing::Bitmap^ bmLiveImage);
 
 	public:
 		C3_User_Interface(CNetworkMonitor *monitor)
@@ -616,6 +617,17 @@ namespace C3_App {
 		C3_User_Interface::tbAlertsPanel->Text = sNotification;
 		C3_User_Interface::tbAlertsPanel->BackColor = tBgColor;
 		C3_User_Interface::tbAlertsPanel->ForeColor = tFgColor;
+	};
+
+	public: void Update_Live_Feed_Panel(System::Drawing::Bitmap^ bmLiveImage)
+	{
+		Delegate_Update_Live_Feed_Panel^ action = gcnew Delegate_Update_Live_Feed_Panel(this, &C3_User_Interface::Worker_Update_Live_Feed_Panel);
+		this->BeginInvoke(action, bmLiveImage);
+	};
+
+	private: void Worker_Update_Live_Feed_Panel(System::Drawing::Bitmap ^ bmLiveImage)
+	{
+		C3_User_Interface::pbLiveFeed->Image = bmLiveImage;
 	};
 
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
