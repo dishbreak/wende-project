@@ -311,29 +311,49 @@ int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath)
 ////////////////////////////////////////////////////////////////////////
 void CDisplayManager::Update_Notification_Panel(int nAlertID)
 {
+	Notification::NotifyMesg mesgType;
+
 	switch(nAlertID)
 	{
 		case 1:
-			// If alert status = 1 (Rover stopped before failure)
-			C3_User_Interface::Instance->tbAlertsPanel->Text = 
-				L"INFORMATION: TRIAL SUCCESS";
+
+			// If alert status = 1 (Rover stopped before failure)			
+			mesgType = Notification::NotifyMesg::TrialSuccess;
+			break;
+
 		case 2:
+			
 			// If alert status = 2 (Contact is > 0.7m away from centre)
-			C3_User_Interface::Instance->tbAlertsPanel->Text = 
-				L"ALERT: PATIENT HAS LEFT EVAC AREA!";
+			mesgType = Notification::NotifyMesg::PatientLeftEvacArea;
+			break;
+
 		case 3:
+
 			// If alert status = 3 (Rover not stopped before failure line)
-			C3_User_Interface::Instance->tbAlertsPanel->Text = 
-				L"ALERT: TRIAL FAILED";
+			mesgType = Notification::NotifyMesg::TrialFailed;
+			break;
+
 		case 4:
+
 			// If alert status = 4 (calibration failed) or subsystems do not work
-			C3_User_Interface::Instance->tbAlertsPanel->Text = 
-				L"WARNING: WENDE SYSTEM NOT OPERATIONAL";
-		default:
+
+			mesgType = Notification::NotifyMesg::SystemNonOperational;
+			break;
+
+		case 5:
+
 			// If alert status = 5 (calibration success) & subsystems work
-			C3_User_Interface::Instance->tbAlertsPanel->Text = 
-				L"INFORMATION: WENDE SYSTEM OPERATIONAL";
+
+			if(m_nCameraStatus == 1 && m_nLaserStatus ==1)
+				mesgType = Notification::NotifyMesg::SystemOperational;
+			else
+				mesgType = Notification::NotifyMesg::SystemNonOperational;
+
+			break;
 	}
+	
+	Notification newNote(mesgType);
+	C3_User_Interface::Instance->Update_Notification_Panel(newNote.NotifyText, newNote.bgColor, newNote.fgColor);
 }
 ////////////////////////////////////////////////////////////////////////
 // Description: Disables all controls during POC demo				
@@ -363,8 +383,6 @@ int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed)
 	//append the row
 
 	C3_User_Interface::Instance->Update_Table(TimeField, DtiField, PassField);
-	Notification newNote(Notification::NotifyMesg::SystemNonOperational);
-	C3_User_Interface::Instance->Update_Notification_Panel(newNote.NotifyText, newNote.bgColor, newNote.fgColor);
 
 	return 0;
 }

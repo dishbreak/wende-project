@@ -8,6 +8,8 @@ public:
 		PatientLeftEvacArea,
 		SystemOperational,
 		SystemNonOperational,
+		TrialSuccess,
+		TrialFailed,
 		AllClear
 	};
 	enum class NotifyType {
