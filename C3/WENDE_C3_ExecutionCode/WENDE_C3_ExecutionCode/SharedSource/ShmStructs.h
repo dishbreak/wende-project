@@ -222,6 +222,9 @@ typedef struct {
 //          commands
 /////////////////////////////////////////////////////////////////////////////////
 typedef struct {
+	DWORD  ProcessID;
+	DWORD  Time;
+
 	UINT32 DTI;
 	UINT32 POCResult;
 	UINT32 AlertType;
