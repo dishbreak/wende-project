@@ -20,11 +20,11 @@ class CLaserCommand
 	public:
 		// data
 		LASER_COMMAND_STRUCT LaserStatus;
-		// This message is used by the c3 team to decode
-		// the status sent from the laser
+		// This function is used by the c3 team to send
+		// command to the laser
 		void  BytesToStatus( BYTE *bytes);
-		// This function is used by the laser teamto send
-		// status to the C3
+		// This message is used by the laser team to decode
+		// the command sent from the c3
 		BYTE* StatusToBytes();
 	
 	private:
