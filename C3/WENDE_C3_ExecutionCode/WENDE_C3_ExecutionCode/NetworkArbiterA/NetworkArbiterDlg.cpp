@@ -208,8 +208,8 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// set the dialog controls..
 	CString port;
-	port.Format(_T("%d"), m_configArbiter.Connection.port);
-	m_AddressControlValue = htonl(inet_addr(m_configArbiter.Connection.ip.c_str()));
+	port.Format(_T("%d"), C3ArbiterConfiguration::Instance().Connection.port);
+	m_AddressControlValue = htonl(inet_addr(C3ArbiterConfiguration::Instance().Connection.ip.c_str()));
 	m_AddressPort         = port;
 	//CString text;
 	//text.Format(_T("%f"),100.0);
@@ -270,7 +270,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketClientStartThreadProc(LPVOID pParam)
 	CNetworkArbiterDlg* pThis = reinterpret_cast<CNetworkArbiterDlg*>( pParam );
 	// set the dialog controls..
 	CString port;
-	port.Format(_T("%d"), pThis->m_configArbiter.Connection.port);
+	port.Format(_T("%d"), C3ArbiterConfiguration::Instance().Connection.port);
 	// setup the client sockets
 	for (int ii = 0; ii < SOCKET_COUNTS_CLIENTS; ii++)
 	{
@@ -283,8 +283,8 @@ UINT WINAPI CNetworkArbiterDlg::SocketClientStartThreadProc(LPVOID pParam)
 		while (!pThis->m_SocketObjectClients[ii].IsOpen())
 		{
 			// To use TCP socket
-			port.Format(_T("%d"), pThis->m_configArbiter.Connection.port+ii);
-			pThis->m_SocketObjectClients[ii].ConnectTo( pThis->m_configArbiter.Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
+			port.Format(_T("%d"), C3ArbiterConfiguration::Instance().Connection.port+ii);
+			pThis->m_SocketObjectClients[ii].ConnectTo( C3ArbiterConfiguration::Instance().Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
 			if (!pThis->m_SocketObjectClients[ii].IsOpen())
 			{
 				Sleep(5);
@@ -313,7 +313,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketServerStartThreadProc(LPVOID pParam)
 	CNetworkArbiterDlg* pThis = reinterpret_cast<CNetworkArbiterDlg*>( pParam );
 	// set the dialog controls..
 	CString port;
-	port.Format(_T("%d"), pThis->m_configArbiter.Connection.port);
+	port.Format(_T("%d"), C3ArbiterConfiguration::Instance().Connection.port);
 	// setup the server sockets
 	for (int ii = 0; ii < SOCKET_COUNTS_SERVERS; ii++)
 	{
@@ -339,7 +339,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketServerStartThreadProc(LPVOID pParam)
 		while (!pThis->m_SocketObjectServer[ii].IsOpen())
 		{
 			// To use TCP socket
-			port.Format(_T("%d"), pThis->m_configArbiter.Connection.port+ii+SOCKET_COUNTS_CLIENTS);
+			port.Format(_T("%d"), C3ArbiterConfiguration::Instance().Connection.port+ii+SOCKET_COUNTS_CLIENTS);
 			pThis->m_SocketObjectServer[ii].SetSmartAddressing( false );
 			pThis->m_SocketObjectServer[ii].CreateSocket( port, AF_INET, SOCK_STREAM, 0); // TCP
 		}
@@ -347,6 +347,8 @@ UINT WINAPI CNetworkArbiterDlg::SocketServerStartThreadProc(LPVOID pParam)
 		pThis->m_SocketObjectServer[ii].SetServerState( true );	// run as server
 		// Now you may start the server/client thread to do the work for you...
 		pThis->m_SocketObjectServer[ii].WatchComm();
+		//
+		pThis->m_cNetworkMonitor.InitializeThread(&pThis->m_SocketObjectServer[ii]);
 	}
 	pThis->m_hThreadServer = NULL;
 	
@@ -357,7 +359,9 @@ UINT WINAPI CNetworkArbiterDlg::SocketServerStartThreadProc(LPVOID pParam)
 
 void CNetworkArbiterDlg::OnBnClickedUpdateTcp()
 {
-	m_configArbiter.WriteXMLFile();
+	m_cNetworkMonitor.StopThreads();
+	Sleep(5000);
+	C3ArbiterConfiguration::Instance().WriteXMLFile();
 	// Stop the thread that is running....
 	if ( NULL != m_hThreadClient)
 	{
@@ -399,7 +403,7 @@ void CNetworkArbiterDlg::OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pRe
 	struct in_addr addr;
 	addr.s_addr = htonl((long)temp);
 
-	m_configArbiter.Connection.ip = inet_ntoa(addr);
+	C3ArbiterConfiguration::Instance().Connection.ip = inet_ntoa(addr);
 }
 
 void CNetworkArbiterDlg::OnEnChangePort()
@@ -412,7 +416,7 @@ void CNetworkArbiterDlg::OnEnChangePort()
 	// TODO:  Add your control notification handler code here
 
 	m_PortCtrl.GetWindowTextA(m_AddressPort);
-	m_configArbiter.Connection.port = atoi(m_AddressPort);
+	C3ArbiterConfiguration::Instance().Connection.port = atoi(m_AddressPort);
 }
 
 void CNetworkArbiterDlg::OnBnClickedC3LaserStatus()

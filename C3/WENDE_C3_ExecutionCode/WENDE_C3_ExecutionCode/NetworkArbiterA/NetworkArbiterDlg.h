@@ -10,6 +10,7 @@
 #include "tcpip/SocketManager.h"
 #include "PictureCtrl.h"
 #include "C3ArbiterConfiguration.h"
+#include "NetworkMonitor.h"
 #include <string>
 static const UINT WMU_NOTIFY_TASKBAR_ICON 
    = ::RegisterWindowMessage( _T("WMU_NOTIFY_TASKBAR_ICON") );
@@ -65,7 +66,6 @@ public:
 	CEdit m_PortCtrl;
 	CPictureCtrl m_picCtrl;
 
-	C3ArbiterConfiguration m_configArbiter;
 	afx_msg void OnBnClickedC3LaserStatus();
 	afx_msg void OnBnClickedLaserOnOff();
 	CButton m_LaserOnOff;
@@ -74,4 +74,5 @@ public:
 	void AddTaskbarIcon();
 	afx_msg void OnDestroy();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	CNetworkMonitor m_cNetworkMonitor;
 };

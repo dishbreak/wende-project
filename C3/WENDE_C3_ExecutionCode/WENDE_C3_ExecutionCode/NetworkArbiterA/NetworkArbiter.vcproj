@@ -302,6 +302,42 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Parsers"
+			>
+			<File
+				RelativePath="..\SharedSource\cameraMsgs.pb.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\cameraMsgs.pb.h"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\LaserCommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\LaserCommand.h"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\laserMsgs.pb.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\laserMsgs.pb.h"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\LaserStatus.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\LaserStatus.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ArbiterSharedMemoryManager.cpp"
 			>
@@ -319,39 +355,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\SharedSource\cameraMsgs.pb.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\SharedSource\cameraMsgs.pb.h"
-			>
-		</File>
-		<File
 			RelativePath="..\SharedSource\CSharedStruct.h"
-			>
-		</File>
-		<File
-			RelativePath="..\SharedSource\LaserCommand.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\SharedSource\LaserCommand.h"
-			>
-		</File>
-		<File
-			RelativePath="..\SharedSource\laserMsgs.pb.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\SharedSource\laserMsgs.pb.h"
-			>
-		</File>
-		<File
-			RelativePath="..\SharedSource\LaserStatus.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\SharedSource\LaserStatus.h"
 			>
 		</File>
 		<File
@@ -364,6 +368,14 @@
 		</File>
 		<File
 			RelativePath=".\NetworkArbiterDlg.h"
+			>
+		</File>
+		<File
+			RelativePath=".\NetworkMonitor.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\NetworkMonitor.h"
 			>
 		</File>
 		<File

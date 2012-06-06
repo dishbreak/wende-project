@@ -152,7 +152,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////
-		// Get Input messages
+		// Send Output5 messages
 		/////////////////////////////////////////////////////////////////////////////////
 		// Verify that the shm is setup and aquire the mutex 
 		if (readMessageSuccess == true && m_LaserCommand.isCreated() &&
@@ -168,7 +168,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			m_LaserCommand->PointLocation.AZ = 21; //TODO FIX THIS VALUE TO ACTUAL
 
 			// Set the event to let client know
-			m_LaserCommand.SetEventClient();
+			m_LaserCommand.SetEventServer();
 
 			// release the mutex
 			m_LaserCommand.ReleaseMutex();

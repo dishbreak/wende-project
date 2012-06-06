@@ -6,10 +6,26 @@ using std::string;
 class C3ArbiterConfiguration
 {
 public:
-	C3ArbiterConfiguration(void);
-	~C3ArbiterConfiguration(void);
+	//Singleton Manager for the shatred memory
+	static C3ArbiterConfiguration& Instance()
+	{
+		// create singleton
+		static C3ArbiterConfiguration singleton;
+		// return reference to singleton
+		return singleton;
+	}
+	~C3ArbiterConfiguration(void);				// Defualt Destructor
+	
 	void WriteXMLFile();
+
+private:
 	void ReadXMLFile();
+	// Private constructor
+	C3ArbiterConfiguration();								
+	// Prevent copy-construction
+	C3ArbiterConfiguration(const C3ArbiterConfiguration&);           
+	// Prevent assignment
+	C3ArbiterConfiguration& operator=(const C3ArbiterConfiguration&);
 
 public:
 	//Configuration file
