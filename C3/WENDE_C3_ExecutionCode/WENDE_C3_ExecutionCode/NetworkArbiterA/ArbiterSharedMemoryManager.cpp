@@ -236,7 +236,12 @@ string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 	char cCurrentPath[FILENAME_MAX];
 	if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath) / sizeof(TCHAR)))
 	{
-		strcpy(cCurrentPath,"");
+		strcat(cCurrentPath,"");
+	}
+	else
+	{
+		strcat(cCurrentPath,"\\Images\\");
+		mkdir(cCurrentPath);
 	}
 	cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
 	strftime(timeStr, FILENAME_MAX, "CameraImage-%Y-%m-%d-%H-%M-%S.jpg", localtime(&messageTime));
