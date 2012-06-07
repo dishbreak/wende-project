@@ -86,7 +86,7 @@ void C3Configuration::ReadXMLFile()
 		// should always have a valid root but handle gracefully if it does
 		if (pElem)
 		{
-			CString name=pElem->Value();
+			//CString name=pElem->Value();
 			// save this for later
 			hRoot=TiXmlHandle(pElem);
 			/////////////////////

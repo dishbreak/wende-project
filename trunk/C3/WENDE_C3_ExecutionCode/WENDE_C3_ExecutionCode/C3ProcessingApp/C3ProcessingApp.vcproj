@@ -175,6 +175,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\SharedSource\C3Configuration.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\C3NotificationHandler.cpp"
 				>
 			</File>
@@ -183,7 +187,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\C3ProcessingConfiguration.cpp"
+				RelativePath="..\SharedSource\ConnectionSettings.cpp"
 				>
 			</File>
 			<File
@@ -229,11 +233,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\SharedSource\C3Configuration.h"
+				>
+			</File>
+			<File
 				RelativePath=".\C3NotificationHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\C3ProcessingConfiguration.h"
+				RelativePath="..\SharedSource\ConnectionSettings.h"
 				>
 			</File>
 			<File

@@ -11,7 +11,7 @@
 #include <fstream>
 #include <string>
 #include <process.h>
-#include "C3ProcessingConfiguration.h"
+#include "C3Configuration.h"
 #include "C3FilterClass.h"
 #include "C3Track.h"
 #include <vector>
@@ -31,7 +31,11 @@ using std::string;
 void TestKalmanFilter();
 void TestTrackFilter();
 void TestCalibration(HANDLE hconsole);
+/////////////////////////////////////////////////////////////////////////////////
+// NON TEST FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////
 C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE*);
+UINT WINAPI AlgorithmThread (LPVOID pParam);
 /////////////////////////////////////////////////////////////////////////////////
 // Declare main functions
 /////////////////////////////////////////////////////////////////////////////////
@@ -54,32 +58,45 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Setup the shared memory
 	/////////////////////////////////////////////////////////////////////////////////
 	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;// shared memory data struct wrapper
-	m_CameraTracks.Acquire(C3ProcessingConfiguration::Instance().SHM_C3_CAMERA_TRACK,			// shared mem file name
-						   C3ProcessingConfiguration::Instance().SHM_C3_CAMERA_TRACK_MUTEX,		// shared mem mutex name
-						   C3ProcessingConfiguration::Instance().SHM_C3_CAMERA_TRACK_EVENT1,	// shared mem event name
-						   C3ProcessingConfiguration::Instance().SHM_C3_CAMERA_TRACK_EVENT2);	// shared mem event name
+	m_CameraTracks.Acquire(C3Configuration::Instance().SHM_C3_CAMERA_TRACK,			// shared mem file name
+						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_MUTEX,		// shared mem mutex name
+						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_EVENT1,	// shared mem event name
+						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_EVENT2);	// shared mem event name
 	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
 	else m_CameraTracks->ShmInfo.Clients++;
 	
 	CSharedStruct<LASER_POINT_DIRECTION_SHM> m_LaserCommand;
-	m_LaserCommand.Acquire(C3ProcessingConfiguration::Instance().SHM_C3_LASER_POINTING,			// shared mem file name
-						   C3ProcessingConfiguration::Instance().SHM_C3_LASER_POINTING_MUTEX,	// shared mem mutex name
-						   C3ProcessingConfiguration::Instance().SHM_C3_LASER_POINTING_EVENT1,	// shared mem event name
-						   C3ProcessingConfiguration::Instance().SHM_C3_LASER_POINTING_EVENT2);	// shared mem event name
+	m_LaserCommand.Acquire(C3Configuration::Instance().SHM_C3_LASER_POINTING,			// shared mem file name
+						   C3Configuration::Instance().SHM_C3_LASER_POINTING_MUTEX,	// shared mem mutex name
+						   C3Configuration::Instance().SHM_C3_LASER_POINTING_EVENT1,	// shared mem event name
+						   C3Configuration::Instance().SHM_C3_LASER_POINTING_EVENT2);	// shared mem event name
 	if (m_LaserCommand.isServer()) m_LaserCommand->ShmInfo.Clients = 0;
 	else m_LaserCommand->ShmInfo.Clients++;	
 
 	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> m_DisplayNotification;
-	m_DisplayNotification.Acquire("testname",			// shared mem file name
-								"testmutex",	// shared mem mutex name
-								"testevent1",	// shared mem event name
-								"testevent2");	// shared mem event name
+	m_DisplayNotification.Acquire(C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,			// shared mem file name
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,	// shared mem mutex name
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,	// shared mem event name
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS);	// shared mem event name
 	if (m_DisplayNotification.isServer()) m_DisplayNotification->ShmInfo.Clients = 0;
-	else m_DisplayNotification->ShmInfo.Clients++;	
+	else m_DisplayNotification->ShmInfo.Clients++;
 
-
-	CAMERA_TRACK_MSG_SHM					 inData;		// temporary holder of the current data 
+	CAMERA_TRACK_MSG_SHM					 inData;		  // temporary holder of the current data 
 	
+	HANDLE hThread1;
+	UINT uiThreadId1 = 0;
+	hThread1 = (HANDLE)_beginthreadex(NULL,				      // Security attributes
+										0,					  // stack
+									  AlgorithmThread,		  // Thread proc
+									  &m_DisplayNotification,	  // Thread param
+									  CREATE_SUSPENDED,		  // creation mode
+									  &uiThreadId1);  	      // Thread ID
+
+	if ( NULL != hThread1)
+	{
+		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
+		ResumeThread( hThread1 );
+	}
 	/////////////////////////////////////////////////////////////////////////////////
 	// Spin and process the input messages and send commands
 	/////////////////////////////////////////////////////////////////////////////////
@@ -126,33 +143,29 @@ int _tmain(int argc, _TCHAR* argv[])
 				printf("\r\n\r\n");
 				readMessageSuccess = true;
 			}
-			else
-			{
-				// unable to get mutex???
-			}
+			else{ /* unable to get mutex??? */}
 		}
-		else
-		{
-			// loss of comm
-		}
+		else{ /* loss of comm*/	}
 
 		/////////////////////////////////////////////////////////////////////////////////
 		// DO PROCESSING !!!!
 		/////////////////////////////////////////////////////////////////////////////////
-		if(m_DisplayNotification.isCreated() && 
-			m_DisplayNotification.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+		if (readMessageSuccess)
 		{
-			m_DisplayNotification->AlertType = C3NotificationHandler::Instance().Get_Alert_Type();
-			m_DisplayNotification->DTI = C3NotificationHandler::Instance().Get_DTI_Value();
-			m_DisplayNotification->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
+			if(m_DisplayNotification.isCreated() && 
+				m_DisplayNotification.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+			{
+				m_DisplayNotification->AlertType = C3NotificationHandler::Instance().Get_Alert_Type();
+				m_DisplayNotification->DTI       = C3NotificationHandler::Instance().Get_DTI_Value();
+				m_DisplayNotification->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
 
-			m_DisplayNotification.SetEventServer();
+				m_DisplayNotification.SetEventServer();
 
-			m_DisplayNotification.ReleaseMutex();
+				m_DisplayNotification.ReleaseMutex();
+			}
 		}
-
 		/////////////////////////////////////////////////////////////////////////////////
-		// Send Output5 messages
+		// Send Output messages
 		/////////////////////////////////////////////////////////////////////////////////
 		// Verify that the shm is setup and aquire the mutex 
 		if (readMessageSuccess == true && m_LaserCommand.isCreated() &&
@@ -164,7 +177,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			m_LaserCommand->ProcessID    = m_LaserCommand.GetProcessID();
 			m_LaserCommand->Time		 = inData.Time;
 			
-			m_LaserCommand->PointLocation.AZ = 20; //TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->PointLocation.EL = 20; //TODO FIX THIS VALUE TO ACTUAL
 			m_LaserCommand->PointLocation.AZ = 21; //TODO FIX THIS VALUE TO ACTUAL
 
 			// Set the event to let client know
@@ -176,6 +189,42 @@ int _tmain(int argc, _TCHAR* argv[])
 		else{ /* unable to get mutex??? */}
 	}
 
+	return 1L;
+}
+// Calibration Method
+C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points){
+
+	C3_TRACK_POINT_DOUBLE laserPosition;
+	double m1 = ((points[1].Y-points[0].Y) / (points[1].X - points[0].X));
+	double m2 = ((points[3].Y-points[2].Y) / (points[3].X - points[2].X));	 
+	double b1 = points[0].Y-m1*points[0].X; 
+	double b2 = points[3].Y-m2*points[3].X;
+	 
+	laserPosition.X = (b2-b1) / (m1-m2); 
+	laserPosition.Y = laserPosition.X*m1+b1;
+		
+	return laserPosition;
+
+}
+// algorithm thread
+UINT WINAPI AlgorithmThread (LPVOID pParam)
+{
+	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *m_DisplayNotification = (CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *)pParam;
+	while(1)
+	{
+		if ((*m_DisplayNotification).isCreated() && (*m_DisplayNotification).WaitForCommunicationEventServer() == WAIT_OBJECT_0)
+		{
+			if ((*m_DisplayNotification).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+			{
+				(*m_DisplayNotification)->AlertType = C3NotificationHandler::Instance().Get_Alert_Type();
+				(*m_DisplayNotification)->DTI = C3NotificationHandler::Instance().Get_DTI_Value();
+				(*m_DisplayNotification)->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
+				(*m_DisplayNotification).ReleaseMutex();
+			}
+		}
+	}
+	_endthreadex( 0 );
+    
 	return 1L;
 }
 /////////////////////////////////////////////////////////////////////////////////
@@ -322,35 +371,4 @@ void TestCalibration(HANDLE hconsole)
 			myfile.close();
 		}
 	}
-}
-
-//// Calibration Method
-//C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points){
-//
-//	C3_TRACK_POINT_DOUBLE laserPosition;
-//	double m1 = ((points[1].Y-points[0].Y) / (points[1].X - points[0].X));
-//	double m2 = ((points[3].Y-points[2].Y) / (points[3].X - points[2].X));	 
-//	double b1 = points[0].Y-m1*points[0].X; 
-//	double b2 = points[3].Y-m2*points[3].X;
-//	 
-//	laserPosition.X = (b2-b1) / (m1-m2); 
-//	laserPosition.Y = laserPosition.X*m1+b1;
-//		
-//	return laserPosition;
-//
-//}
-// Calibration Method
-C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points){
-
-	C3_TRACK_POINT_DOUBLE laserPosition;
-	double m1 = ((points[1].Y-points[0].Y) / (points[1].X - points[0].X));
-	double m2 = ((points[3].Y-points[2].Y) / (points[3].X - points[2].X));	 
-	double b1 = points[0].Y-m1*points[0].X; 
-	double b2 = points[3].Y-m2*points[3].X;
-	 
-	laserPosition.X = (b2-b1) / (m1-m2); 
-	laserPosition.Y = laserPosition.X*m1+b1;
-		
-	return laserPosition;
-
 }
