@@ -41,7 +41,7 @@ CDisplayManager ^ CDisplayManager::getCDisplayManager()
 // Author:		Mike Payne
 ////////////////////////////////////////////////////////////////////////
 
-int CDisplayManager::Update_Rover_PPI_Position(int x, int y)
+int CDisplayManager::Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoords, int NumValidTracks)
 {
 	////for now, just dump everything to the globals.
 	//extern int roverContactX;
@@ -54,8 +54,11 @@ int CDisplayManager::Update_Rover_PPI_Position(int x, int y)
 	//	roverContactY = y;
 	//	C3_User_Interface::Instance->pPPI->Invalidate();
 	//}
-	Coordinates* coordsObj = Coordinates::GetCoordinatesHandle();
-	coordsObj->SetNewCoordinatePair(x, y);
+	Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
+	//if any of the coordinates are different, invalidate the PPI display.
+	if(coordsObj->SetNewCoordinates(inputCoords, NumValidTracks)) {
+		C3_User_Interface::Instance->pPPI->Invalidate();
+	}
 
 	return 0;
 }
@@ -376,13 +379,17 @@ int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed)
 	TimeStamp = System::DateTime::Now;
 	//convert to meters
 	float fDTI = (float) nDTI / 1000;
+	//Pass/Fail?
+
 	//assemble fields
 	System::String^ TimeField = 
 		System::String::Concat( TimeStamp.ToShortDateString(),
 								" ",
 								TimeStamp.ToShortTimeString());
 	System::String^ DtiField = fDTI.ToString();
-	System::String^ PassField = bPassed.ToString();
+	System::String^ PassField;
+	if (bPassed) { PassField = "PASS"; }
+	else { PassField = "FAIL"; }
 	//append the row
 
 	C3_User_Interface::Instance->Update_Table(TimeField, DtiField, PassField);

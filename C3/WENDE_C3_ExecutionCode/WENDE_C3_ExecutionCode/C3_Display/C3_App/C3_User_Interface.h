@@ -163,7 +163,6 @@ namespace C3_App {
 		System::ComponentModel::Container ^components;
 
 		void LoadStatusInds(void) {
-			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
 			this->OnlineInd    = System::Drawing::Image::FromFile("Online.png");
 			this->OfflineInd   = System::Drawing::Image::FromFile("Offline.png");
 			this->UnknownInd   = System::Drawing::Image::FromFile("Unknown.png");
@@ -171,7 +170,6 @@ namespace C3_App {
 			this->InactiveInd  = System::Drawing::Image::FromFile("Inactive.png");
 			this->EnergizedInd = System::Drawing::Image::FromFile("Energized.png");
 			this->AcquiredInd  = System::Drawing::Image::FromFile("Acquired.png");
-			delete resources;
 		}
 
 #pragma region Windows Form Designer generated code
@@ -631,11 +629,8 @@ namespace C3_App {
 	};
 
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
-				 //extern int roverContactX;
-				 //extern int roverContactY;
-				 Coordinates * coordsObj = Coordinates::GetCoordinatesHandle();
-				 Coordinates::CoordinatePair RoverContact;
-				 RoverContact = coordsObj->GetNewCoordinatePair();
+				 ////extern int roverContactX;
+				 ////extern int roverContactY;
 
 				 System::Drawing::Graphics^ g = e->Graphics;
 				 g->Clear(Color::White);
@@ -667,13 +662,21 @@ namespace C3_App {
 				 g->DrawEllipse(bluePen, gPlayingField);
 
 				 // Draw Contact (rover)
-
-				 System::Drawing::Image^ roverContact = System::Drawing::Image::FromFile( "delta.png" );
-				 int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;
-				 int y = pPPI->Height / 2 - (roverContact->Height / 2) - RoverContact.y;
-				 //int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
-				 //int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
-				 g->DrawImage(roverContact, x, y);
+				  Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
+				 array<CoordinatePair^>^ RoverContact = coordsObj->GetNewCoordinatePair();
+				 System::Drawing::Image^ RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
+				 CoordinatePair^ offset = gcnew CoordinatePair();
+				 offset->x = pPPI->Width/2 - (RoverSymbol->Width/2);
+				 offset->y = pPPI->Width/2 - (RoverSymbol->Width/2);
+				 for(int i = 0; i < coordsObj->GetValidTracks(); i++) {
+					 g->DrawImage(RoverSymbol, offset->x - RoverContact[i]->x, offset->y - RoverContact[i]->y);
+				 }
+				 
+				 //int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;
+				 //int y = pPPI->Height / 2 - (roverContact->Height / 2) - RoverContact.y;
+				 ////int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
+				 ////int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
+				 //g->DrawImage(roverContact, x, y);
 				 
 			 }	  
 
