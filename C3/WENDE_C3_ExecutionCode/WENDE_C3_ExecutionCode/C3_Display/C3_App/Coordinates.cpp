@@ -56,8 +56,14 @@ bool Coordinates::SetNewCoordinates(array<CoordinatePair^>^ InputSet, int NumVal
 	bool HasNewTrack = false;
 	ValidTracks = NumValidTracks;
 	for(int i = 0; i < TotalTracks ; i++) {
-		bool TrackChanged = SetNewCoordinatePair(InputSet[i], CurWorldCoords[i], OldWorldCoords[i]);
-		if (!HasNewTrack) { HasNewTrack = TrackChanged; }
+        if((InputSet[i]->x != CurWorldCoords[i]->x) || (InputSet[i]->y != CurWorldCoords[i]->y)) {
+            HasNewTrack = true;
+            OldWorldCoords[i]->x = CurWorldCoords[i]->x;
+            OldWorldCoords[i]->y = CurWorldCoords[i]->y;
+            CurWorldCoords[i]->x = InputSet[i]->x;
+            CurWorldCoords[i]->y = InputSet[i]->y;     
+        }
+		//bool TrackChanged = SetNewCoordinatePair(InputSet[i], CurWorldCoords[i], OldWorldCoords[i]);
 	}
 	PixelCoords = TranslateCoords(CurWorldCoords);
 	return HasNewTrack;
@@ -68,8 +74,8 @@ bool Coordinates::SetNewCoordinatePair(CoordinatePair^ Input, CoordinatePair^ Cu
 	bool IsNewTrack = false;
 	if ((Input->x != Current->x) || (Input->y != Current->y)) {
 		IsNewTrack = true;
-		Prev = gcnew CoordinatePair(Current);
-		Current = gcnew CoordinatePair(Input);
+		//Prev = CoordinatePair(Current);
+		//Current = CoordinatePair(Input);
 	}
 	return IsNewTrack;
 }
