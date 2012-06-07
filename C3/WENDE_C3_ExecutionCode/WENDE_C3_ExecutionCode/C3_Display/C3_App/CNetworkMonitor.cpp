@@ -5,7 +5,7 @@
 #include <process.h>
 #include "CNetworkMonitor.h"
 #include "CDisplayManager.h"
-#include "GUIConfiguration.h"
+#include "C3Configuration.h"
 #include <fstream>
 #include <iostream>
 
@@ -132,10 +132,10 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 	CNetworkMonitor* cNetworMonitor = (CNetworkMonitor*)pParam;
 	bool isRunningInternal = cNetworMonitor->_isRunning;
 	CSharedStruct<CAMERA_STATUS_MSG_SHM>	 m_CameraStatus;
-	m_CameraStatus.Acquire(CGUIConfiguration::Instance().SHM_C3_CAMERA_STATUS,
-						   CGUIConfiguration::Instance().SHM_C3_CAMERA_STATUS_MUTEX,
-						   CGUIConfiguration::Instance().SHM_C3_CAMERA_STATUS_EVENT1,
-						   CGUIConfiguration::Instance().SHM_C3_CAMERA_STATUS_EVENT2);
+	m_CameraStatus.Acquire(C3Configuration::Instance().SHM_C3_CAMERA_STATUS,
+						   C3Configuration::Instance().SHM_C3_CAMERA_STATUS_MUTEX,
+						   C3Configuration::Instance().SHM_C3_CAMERA_STATUS_EVENT1,
+						   C3Configuration::Instance().SHM_C3_CAMERA_STATUS_EVENT2);
 	if (m_CameraStatus.isServer()) m_CameraStatus->ShmInfo.Clients = 0;
 	else m_CameraStatus->ShmInfo.Clients++;
 
@@ -202,10 +202,10 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 	CNetworkMonitor* cNetworMonitor = (CNetworkMonitor*)pParam;
 	bool isRunningInternal = cNetworMonitor->_isRunning;
 	CSharedStruct<LASER_STATUS_MSG_SHM>	 m_LaserStatus;
-	m_LaserStatus.Acquire(CGUIConfiguration::Instance().SHM_C3_LASER_STATUS,
-						  CGUIConfiguration::Instance().SHM_C3_LASER_STATUS_MUTEX,
-						  CGUIConfiguration::Instance().SHM_C3_LASER_STATUS_EVENT1,
-						  CGUIConfiguration::Instance().SHM_C3_LASER_STATUS_EVENT2);
+	m_LaserStatus.Acquire(C3Configuration::Instance().SHM_C3_LASER_STATUS,
+						  C3Configuration::Instance().SHM_C3_LASER_STATUS_MUTEX,
+						  C3Configuration::Instance().SHM_C3_LASER_STATUS_EVENT1,
+						  C3Configuration::Instance().SHM_C3_LASER_STATUS_EVENT2);
 	if (m_LaserStatus.isServer()) m_LaserStatus->ShmInfo.Clients = 0;
 	else m_LaserStatus->ShmInfo.Clients++;
 
@@ -262,10 +262,10 @@ UINT WINAPI TrackThread (LPVOID pParam)
 	bool isRunningInternal = cNetworMonitor->_isRunning;
 	CAMERA_TRACK_MSG_SHM sTrackMessage; 
 	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;
-	m_CameraTracks.Acquire(CGUIConfiguration::Instance().SHM_C3_CAMERA_TRACK,
-						   CGUIConfiguration::Instance().SHM_C3_CAMERA_TRACK_MUTEX,
-						   CGUIConfiguration::Instance().SHM_C3_CAMERA_TRACK_EVENT1,
-						   CGUIConfiguration::Instance().SHM_C3_CAMERA_TRACK_EVENT2);
+	m_CameraTracks.Acquire(C3Configuration::Instance().SHM_C3_CAMERA_TRACK,
+						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_MUTEX,
+						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_EVENT1,
+						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_EVENT2);
 	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
 	else m_CameraTracks->ShmInfo.Clients++;
 
@@ -318,10 +318,10 @@ UINT WINAPI ImageThread (LPVOID pParam)
 	CSharedStruct<CAMERA_IMAGE_MSG_SHM>		 m_CameraImage;
 	char * sImagePath;
 	//System::String ^ sImagePath;
-	m_CameraImage.Acquire(CGUIConfiguration::Instance().SHM_C3_CAMERA_IMAGE,
-						  CGUIConfiguration::Instance().SHM_C3_CAMERA_IMAGE_MUTEX,
-						  CGUIConfiguration::Instance().SHM_C3_CAMERA_IMAGE_EVENT1,
-						  CGUIConfiguration::Instance().SHM_C3_CAMERA_IMAGE_EVENT2);
+	m_CameraImage.Acquire(C3Configuration::Instance().SHM_C3_CAMERA_IMAGE,
+						  C3Configuration::Instance().SHM_C3_CAMERA_IMAGE_MUTEX,
+						  C3Configuration::Instance().SHM_C3_CAMERA_IMAGE_EVENT1,
+						  C3Configuration::Instance().SHM_C3_CAMERA_IMAGE_EVENT2);
 
 	if (m_CameraImage.isServer()) m_CameraImage->ShmInfo.Clients = 0;
 	else m_CameraImage->ShmInfo.Clients++;
@@ -369,10 +369,10 @@ UINT WINAPI ProcessingInterfaceThread (LPVOID pParam)
 	CNetworkMonitor* cNetworMonitor = (CNetworkMonitor*)pParam;
 	bool isRunningInternal = cNetworMonitor->_isRunning;
 	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM>		 m_ProcessingInterface;
-	m_ProcessingInterface.Acquire(CGUIConfiguration::Instance().SHM_C3_PROCESSING_STATUS,
-								CGUIConfiguration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,
-								CGUIConfiguration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2,
-								CGUIConfiguration::Instance().SHM_C3_PROCESSING_STATUS_MUTEX);
+	m_ProcessingInterface.Acquire(C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,
+								C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,
+								C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2,
+								C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_MUTEX);
 	
 	CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 	int nDTIValue = 0;

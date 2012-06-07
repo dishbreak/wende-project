@@ -208,6 +208,10 @@
 				</File>
 			</File>
 			<File
+				RelativePath="..\..\SharedSource\C3Configuration.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Calibrator.h"
 				>
 			</File>
@@ -220,6 +224,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\SharedSource\ConnectionSettings.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Coordinates.h"
 				>
 			</File>
@@ -229,10 +237,6 @@
 			</File>
 			<File
 				RelativePath="..\..\SharedSource\CSharedStruct.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GUIConfiguration.h"
 				>
 			</File>
 			<File
@@ -337,6 +341,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\SharedSource\C3Configuration.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Calibrator.cpp"
 				>
 			</File>
@@ -349,11 +357,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Coordinates.cpp"
+				RelativePath="..\..\SharedSource\ConnectionSettings.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GUIConfiguration.cpp"
+				RelativePath=".\Coordinates.cpp"
 				>
 			</File>
 			<File

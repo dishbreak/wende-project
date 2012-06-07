@@ -59,7 +59,8 @@ C3Configuration::C3Configuration(void)
 		// network
 		Connection.ip = "192.168.1.70";
 		Connection.port= 4444;
-		
+		// DEBUG ITEMS
+		isShowDebugPannel           = false;
 		// TODO Add logic to check if file already exists
 		WriteXMLFile();
 	}
@@ -174,6 +175,13 @@ void C3Configuration::ReadXMLFile()
 				pElem->QueryDoubleAttribute("FAILURE_LINE_RADIUS",&WENDE_FAILURE_LINE_RADIUS);
 			}
 			else { /* ERROR ???? */ }
+			pElem=hRoot.FirstChild("DEBUG_PANNEL").Element();
+			if (pElem)
+			{
+				// Read the camera pointing directions
+				pElem->QueryBoolAttribute("ENABLE",&isShowDebugPannel);
+			}
+			else{/* ERROR ????*/}
 		}
 		else{ /* ERROR ???? */}
 	}
@@ -271,5 +279,16 @@ void C3Configuration::WriteXMLFile()
 	root->LinkEndChild( playingFieldRadius );  
 	playingFieldRadius->SetDoubleAttribute("PLAYING_FIELD_RADIUS", WENDE_PLAYING_FIELD_RADIUS);
 	playingFieldRadius->SetDoubleAttribute("FAILURE_LINE_RADIUS", WENDE_FAILURE_LINE_RADIUS);
+
+	TiXmlComment * comment8 = new TiXmlComment();
+	comment8->SetValue("Debug Configuration items" );  
+	root->LinkEndChild( comment8 );  
+
+	TiXmlElement * debugPannel = new TiXmlElement( "DEBUG_PANNEL" );  
+	root->LinkEndChild( debugPannel );  
+	debugPannel->SetAttribute("ENABLE", isShowDebugPannel);
+
+
 	doc.SaveFile( CfgFile.c_str() ); 
+
 }
