@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "C3Track.h"
 #include "C3Utilities.h"
 #include "C3Configuration.h"
@@ -90,26 +90,26 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		double playingFieldOrigin12 =  0.0;
 
 		// Find Camera to Laser Translation and Rotation Parameters
-		double cameraTheta = atan2(playingFieldOrigin11-cameraOrigin11,playingFieldOrigin12-cameraOrigin12);
-		double laserTheta  = atan2(playingFieldOrigin11-laserOrigin11 ,playingFieldOrigin12-laserOrigin12 );
-		double theta       = laserTheta - cameraTheta;
+		//double cameraTheta = atan2(playingFieldOrigin11-cameraOrigin11,playingFieldOrigin12-cameraOrigin12);
+		//double laserTheta  = atan2(playingFieldOrigin11-laserOrigin11 ,playingFieldOrigin12-laserOrigin12 );
+		//double theta       = laserTheta - cameraTheta;
 
 		// Find Laser Origin in camera space
-		double laserOriginCameraSpace11 = laserOrigin11*cos(cameraTheta) - laserOrigin12*sin(cameraTheta);
-		double laserOriginCameraSpace12 = laserOrigin11*sin(cameraTheta) + laserOrigin12*cos(cameraTheta); 
+		//double laserOriginCameraSpace11 = laserOrigin11*cos(cameraTheta) - laserOrigin12*sin(cameraTheta);
+		//double laserOriginCameraSpace12 = laserOrigin11*sin(cameraTheta) + laserOrigin12*cos(cameraTheta); 
 		
 		// camera to laser translation vector (Camera Coordinate system has Origin in playing field)
-		// TODO ... DO WE NEED THIS ... FIX
-		double cameraToLaserX = laserOriginCameraSpace11 - playingFieldOrigin11;
-		double cameraToLaserY = laserOriginCameraSpace12 - playingFieldOrigin12;
-		//Alternative translation method
-		// double theta = input('Input Theta Degrees (Bearing between Camera & Laser): '); //Pull from calibration?
-		// double range = laserOrigin11 - playingFieldOrigin11; //Just x? Not sure what we want for this range between laserOrigin and center of the field.
-		// double cameraToLaserX = -range*sin(theta);
-		// double cameraToLaserY = -range*cos(theta);
+		//double cameraToLaserX = laserOriginCameraSpace11 - playingFieldOrigin11;
+		//double cameraToLaserY = laserOriginCameraSpace12 - playingFieldOrigin12;
+
+		//Alternative translation method(USE THIS ONE)
+		double theta = 180 - atan2(laserOrigin11,laserOrigin12);
+		double range = sqrt(pow(laserOrigin11,2) + pow(laserOrigin12,2));
+		double cameraToLaserX = -range*sin(theta);
+		double cameraToLaserY = -range*cos(theta);
 
 
-		// Transform laser & rover postions into laseer
+		// Transform laser & rover postions into laser
 		// translate camera x/y into relative X/Y coordinates system (relative to laser Origin)
 		double relativeLaserX = cameraLaserPosition.X - cameraToLaserX;
 		double relativeLaserY = cameraLaserPosition.Y - cameraToLaserY;
