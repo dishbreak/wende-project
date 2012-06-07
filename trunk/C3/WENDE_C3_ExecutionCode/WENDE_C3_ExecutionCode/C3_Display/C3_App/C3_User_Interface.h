@@ -144,6 +144,7 @@ namespace C3_App {
 			System::Drawing::Image ^ InactiveInd;
 			System::Drawing::Image ^ EnergizedInd;
 			System::Drawing::Image ^ AcquiredInd;
+    private: System::Drawing::Image ^ RoverSymbol;
 	private: System::Windows::Forms::Label^  label8;
 	private: System::Windows::Forms::Button^  CalibrateButton;
 	private: bool IsCalibrated; 
@@ -170,6 +171,7 @@ namespace C3_App {
 			this->InactiveInd  = System::Drawing::Image::FromFile("Inactive.png");
 			this->EnergizedInd = System::Drawing::Image::FromFile("Energized.png");
 			this->AcquiredInd  = System::Drawing::Image::FromFile("Acquired.png");
+            this->RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
 		}
 
 #pragma region Windows Form Designer generated code
@@ -664,7 +666,7 @@ namespace C3_App {
 				 // Draw Contact (rover)
 				  Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
 				 array<CoordinatePair^>^ RoverContact = coordsObj->GetNewCoordinatePair();
-				 System::Drawing::Image^ RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
+				 //System::Drawing::Image^ RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
 				 CoordinatePair^ offset = gcnew CoordinatePair();
 				 offset->x = pPPI->Width/2 - (RoverSymbol->Width/2);
 				 offset->y = pPPI->Width/2 - (RoverSymbol->Width/2);
