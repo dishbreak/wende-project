@@ -9,7 +9,7 @@
 #include "ConnectionSettings.h"
 #include "tcpip/SocketManager.h"
 #include "PictureCtrl.h"
-#include "C3ArbiterConfiguration.h"
+#include "C3Configuration.h"
 #include "NetworkMonitor.h"
 #include <string>
 static const UINT WMU_NOTIFY_TASKBAR_ICON 

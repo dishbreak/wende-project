@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "C3FilterClass.h"
-#include "C3ProcessingConfiguration.h"
 #include <math.h>
 #include <iostream>
+#include "C3Configuration.h"
 
 using std::endl;
 using std::cout;
@@ -11,7 +11,7 @@ using std::cout;
 C3FilterClass::C3FilterClass(void) :
 			   m_isInit(false)
 {
-	this->m_kalman.processNoise = C3ProcessingConfiguration::Instance().PROCESS_NOISE;
+	this->m_kalman.processNoise = C3Configuration::Instance().PROCESS_NOISE;
 	m_kalman.I = MatrixXd::Identity(6,6);
 	m_kalman.F = MatrixXd::Identity(6,6);
 	m_kalman.H = MatrixXd::Identity(2,6);

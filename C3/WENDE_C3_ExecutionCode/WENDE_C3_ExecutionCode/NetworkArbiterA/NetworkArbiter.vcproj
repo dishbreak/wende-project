@@ -222,11 +222,11 @@
 			Name="TCPIP"
 			>
 			<File
-				RelativePath=".\ConnectionSettings.cpp"
+				RelativePath="..\SharedSource\ConnectionSettings.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ConnectionSettings.h"
+				RelativePath="..\SharedSource\ConnectionSettings.h"
 				>
 			</File>
 			<File
@@ -347,11 +347,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\C3ArbiterConfiguration.cpp"
+			RelativePath="..\SharedSource\C3Configuration.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\C3ArbiterConfiguration.h"
+			RelativePath="..\SharedSource\C3Configuration.h"
 			>
 		</File>
 		<File

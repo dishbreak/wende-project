@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "C3Track.h"
 #include "C3Utilities.h"
-#include "C3ProcessingConfiguration.h"
+#include "C3Configuration.h"
 #include <cmath>
 
 C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
@@ -13,7 +13,7 @@ C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
 				   m_passTime(0),
 				   m_travelRange(0)
 {
-	m_playingFieldRadius = C3ProcessingConfiguration::Instance().WENDE_PLAYING_FIELD_RADIUS;
+	m_playingFieldRadius = C3Configuration::Instance().WENDE_PLAYING_FIELD_RADIUS;
 
 	if (m_playingFieldRadius < C3Utilities::EuclideanDistance(cameraRoverPosition))
 	{
