@@ -60,9 +60,6 @@ int CDisplayManager::Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoor
 		C3_User_Interface::Instance->pPPI->Invalidate();
 	}
 
-	if(inputCoords[0]->x > 0 || inputCoords[0]->y > 0) 
-		displayMgr->Update_Rover_Acquired_Indicator(1);
-
 	return 0;
 }
 
