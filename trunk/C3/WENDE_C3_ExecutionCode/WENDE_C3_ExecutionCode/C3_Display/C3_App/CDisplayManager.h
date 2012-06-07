@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "C3_User_Interface.h"
 #include <string>
+#include "Coordinates.h"
 
 using namespace System;
 using namespace System::Drawing;
@@ -10,7 +11,7 @@ ref class CDisplayManager
 public: 
     //function that gets the handle to the singleton CDisplayManager
     static CDisplayManager ^ getCDisplayManager();
-    int Update_Rover_PPI_Position(int x, int y);
+    int Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoords, int NumValidTracks);
     int Update_Camera_Subsystem_Indicator(int nCameraStatus);
     int Update_Camera_Communication_Indicator(int nCameraCommStatus);
     int Update_Laser_Subsystem_Indicator(int nLaserStatus);
