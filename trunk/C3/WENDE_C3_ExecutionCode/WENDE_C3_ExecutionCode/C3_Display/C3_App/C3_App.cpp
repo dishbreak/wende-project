@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "splash.h"
 #include "C3_User_Interface.h"
-#include "GUIConfiguration.h"
+#include "C3Configuration.h"
 #include "Test_Driver.h"
 #include "CNetworkMonitor.h"
 #include <process.h>
@@ -25,7 +25,7 @@ int main(array<System::String ^> ^args)
     splash1.ShowSplash();
 
 	//Fist call to configuration singleton
-	CGUIConfiguration::Instance();
+	C3Configuration::Instance();
 
 	// Enabling Windows XP visual effects before any controls are created
 	Application::EnableVisualStyles();
@@ -40,7 +40,7 @@ int main(array<System::String ^> ^args)
 
 	// Show test form
 	Test_Driver td;
-	if (CGUIConfiguration::Instance().isShowDebugPannel == true)
+	if (C3Configuration::Instance().isShowDebugPannel == true)
 	{
 		td.Show();
 	}

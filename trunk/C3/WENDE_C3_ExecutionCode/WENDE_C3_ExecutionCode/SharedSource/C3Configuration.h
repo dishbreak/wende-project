@@ -67,4 +67,6 @@ public:
 	double WENDE_FAILURE_LINE_RADIUS;				// The Failure line for the WENDE POCs
 	//Kalman Filter Values
 	int	   PROCESS_NOISE;							// ...
+	// DEBUG ITEMS
+	bool isShowDebugPannel;							// Flag to determine if we show
 };
