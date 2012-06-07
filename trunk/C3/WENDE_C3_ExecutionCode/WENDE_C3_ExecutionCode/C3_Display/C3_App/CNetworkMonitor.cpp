@@ -294,12 +294,15 @@ UINT WINAPI TrackThread (LPVOID pParam)
 					freshCoordinates[i]->x = sTrackMessage.Tracks[i].X;
 					freshCoordinates[i]->y = sTrackMessage.Tracks[i].Y;
 				}
-				//x = sTrackMessage.Tracks->X; //x += 1;
-				//y = sTrackMessage.Tracks->Y; //y += 1;
 
 				////get a handle to the CDisplayManager
                 CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 				dispman->Update_Rover_PPI_Position(freshCoordinates, sTrackMessage.ValidTracks);
+
+				if(sTrackMessage.ValidTracks >= 1)
+					dispman->Update_Rover_Acquired_Indicator(1);
+				else
+					dispman->Update_Rover_Acquired_Indicator(0);
 
 				//This check is already built into DisplayManager
 				//if(x >= 1 || y >= 1) dispman->Update_Rover_Acquired_Indicator(1);
