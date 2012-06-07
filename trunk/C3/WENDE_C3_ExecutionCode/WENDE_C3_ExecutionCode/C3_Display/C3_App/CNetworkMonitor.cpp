@@ -417,7 +417,8 @@ UINT WINAPI ProcessingInterfaceThread (LPVOID pParam)
 			}
 			else { /* unable to get mutex??? */	}
 		}
-		else { /* loss of comm */						dispman->Update_Notification_Panel(4);}
+		else { /* loss of comm */						dispman->Update_Notification_Panel(4);
+		dispman->Store_Latest_DTI(m_ProcessingInterface->ProcessID, false);}
 		/* Enter the critical section -- other threads are locked out */
 		EnterCriticalSection(&cNetworMonitor->cs);		
 		/* Do some thread-safe processing! */

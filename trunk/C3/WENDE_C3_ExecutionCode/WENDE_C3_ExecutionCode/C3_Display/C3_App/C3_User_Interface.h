@@ -38,6 +38,14 @@ namespace C3_App {
 		delegate void Delegate_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed);
 		delegate void Delegate_Update_Notifications(System::String ^ sNotification, System::Drawing::Color tBgColor, System::Drawing::Color tFgColor);
 		delegate void Delegate_Update_Live_Feed_Panel(System::Drawing::Bitmap^ bmLiveImage);
+		delegate void Delegate_Update_Camera_Subsystem_Indicator(System::Drawing::Image^ bmCamSubsystem);
+		delegate void Delegate_Update_Laser_Subsystem_Indicator(System::Drawing::Image^ bmLaserSubsystem);
+		delegate void Delegate_Update_Camera_Comm_Indicator(System::Drawing::Image^ bmCamCom);
+		delegate void Delegate_Update_Laser_Comm_Indicator(System::Drawing::Image^ bmLaserCom);
+		delegate void Delegate_Update_Overall_Status_Indicator(System::Drawing::Image^ bmOverall);
+		delegate void Delegate_Update_Laser_Activity_Indicator(System::Drawing::Image^ bmLaserActivity);
+		delegate void Delegate_Update_Rover_Acquired_Indicator(System::Drawing::Image^ bmRoverAcquired);
+
 
 	public:
 		C3_User_Interface(CNetworkMonitor *monitor)
@@ -629,6 +637,106 @@ namespace C3_App {
 	{
 		C3_User_Interface::pbLiveFeed->Image = bmLiveImage;
 	};
+
+	// Camera Subsystem Indicator
+	public: void Update_Camera_Subsystem_Indicator(System::Drawing::Image^ bmCamSubsystem)
+	{
+		Delegate_Update_Camera_Subsystem_Indicator^ action = 
+			gcnew Delegate_Update_Camera_Subsystem_Indicator(this, &C3_User_Interface::Worker_Update_Camera_Subsystem_Indicator);
+
+		this->BeginInvoke(action, bmCamSubsystem);
+	};
+
+	private: void Worker_Update_Camera_Subsystem_Indicator(System::Drawing::Image^ bmCamSubsystem)
+	{
+		C3_User_Interface::pbCameraStatus->Image = bmCamSubsystem;
+	};
+
+ 	// Camera Comm Indicator
+	public: void Update_Camera_Comm_Indicator(System::Drawing::Image^ bmCamCom)
+	{
+		Delegate_Update_Camera_Comm_Indicator^ action = 
+			gcnew Delegate_Update_Camera_Comm_Indicator(this, &C3_User_Interface::Worker_Update_Camera_Comm_Indicator);
+
+		this->BeginInvoke(action, bmCamCom);
+	};
+
+	private: void Worker_Update_Camera_Comm_Indicator(System::Drawing::Image^ bmCamCom)
+	{
+		C3_User_Interface::pbCameraComms->Image = bmCamCom;
+	};
+
+	// Laser Subsystem Indicator
+	public: void Update_Laser_Subsystem_Indicator(System::Drawing::Image^ bmLaserSubsystem)
+	{
+		Delegate_Update_Laser_Subsystem_Indicator^ action = 
+			gcnew Delegate_Update_Laser_Subsystem_Indicator(this, &C3_User_Interface::Worker_Update_Laser_Subsystem_Indicator);
+
+		this->BeginInvoke(action, bmLaserSubsystem);
+	};
+
+	private: void Worker_Update_Laser_Subsystem_Indicator(System::Drawing::Image^ bmLaserSubsystem)
+	{
+		C3_User_Interface::pbLaserStatus->Image = bmLaserSubsystem;
+	};
+
+	// Laser Comm Indicator
+	public: void Update_Laser_Comm_Indicator(System::Drawing::Image^ bmLaserCom)
+	{
+		Delegate_Update_Laser_Comm_Indicator^ action = 
+			gcnew Delegate_Update_Laser_Comm_Indicator(this, &C3_User_Interface::Worker_Update_Laser_Comm_Indicator);
+
+		this->BeginInvoke(action, bmLaserCom);
+	};
+
+	private: void Worker_Update_Laser_Comm_Indicator(System::Drawing::Image^ bmLaserCom)
+	{
+		C3_User_Interface::pbLaserComms->Image = bmLaserCom;
+	};
+
+	// Overall Status Indicator
+	public: void Update_Overall_Status_Indicator(System::Drawing::Image^ bmOverall)
+	{
+		Delegate_Update_Overall_Status_Indicator^ action = 
+			gcnew Delegate_Update_Overall_Status_Indicator(this, &C3_User_Interface::Worker_Update_Overall_Status_Indicator_Indicator);
+
+		this->BeginInvoke(action, bmOverall);
+	};
+
+	private: void Worker_Update_Overall_Status_Indicator_Indicator(System::Drawing::Image^ bmOverall)
+	{
+		C3_User_Interface::pbOverallStatus->Image = bmOverall;
+	};
+
+	// Laser Activity Indicator
+	public: void Update_Laser_Activity_Indicator(System::Drawing::Image^ bmLaserActivity)
+	{
+		Delegate_Update_Laser_Activity_Indicator^ action = 
+			gcnew Delegate_Update_Laser_Activity_Indicator(this, &C3_User_Interface::Worker_Update_Laser_Activity_Indicator);
+
+		this->BeginInvoke(action, bmLaserActivity);
+	};
+
+	private: void Worker_Update_Laser_Activity_Indicator(System::Drawing::Image^ bmLaserActivity)
+	{
+		C3_User_Interface::pbLaserActivity->Image = bmLaserActivity;
+	};
+
+	// Rover Acquired
+	public: void Update_Rover_Acquired_Indicator(System::Drawing::Image^ bmRoverAcquired)
+	{
+		Delegate_Update_Rover_Acquired_Indicator^ action = 
+			gcnew Delegate_Update_Rover_Acquired_Indicator(this, &C3_User_Interface::Worker_Update_Rover_Acquired_Indicator);
+
+		this->BeginInvoke(action, bmRoverAcquired);
+	};
+
+	private: void Worker_Update_Rover_Acquired_Indicator(System::Drawing::Image^ bmRoverAcquired)
+	{
+		C3_User_Interface::pbRoverAcq->Image = bmRoverAcquired;
+	};
+
+
 
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 				 ////extern int roverContactX;
