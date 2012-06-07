@@ -60,6 +60,9 @@ int CDisplayManager::Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoor
 		C3_User_Interface::Instance->pPPI->Invalidate();
 	}
 
+	if(inputCoords[0]->x > 0 || inputCoords[0]->y > 0) 
+		displayMgr->Update_Rover_Acquired_Indicator(1);
+
 	return 0;
 }
 
@@ -76,8 +79,8 @@ int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 	{
 		if (Get_Camera_Status() != 0)
 		{
-			C3_User_Interface::Instance->pbCameraStatus->Image = 
-				C3_User_Interface::Instance->OfflineInd;
+			C3_User_Interface::Instance->Update_Camera_Subsystem_Indicator(
+				C3_User_Interface::Instance->OfflineInd);
 		}
 		Set_Camera_Status(0);
 	}
@@ -86,8 +89,8 @@ int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 	{
 		if (Get_Camera_Status() != 1)
 		{
-			C3_User_Interface::Instance->pbCameraStatus->Image = 
-				C3_User_Interface::Instance->OnlineInd;
+			C3_User_Interface::Instance->Update_Camera_Subsystem_Indicator(
+				C3_User_Interface::Instance->OnlineInd);
 		}
 		Set_Camera_Status(1);
 	}
@@ -106,8 +109,8 @@ int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 	{
 		if (Get_Laser_Status() != 0)
 		{
-			C3_User_Interface::Instance->pbLaserStatus->Image = 
-				C3_User_Interface::Instance->OfflineInd;
+			C3_User_Interface::Instance->Update_Laser_Subsystem_Indicator(
+				C3_User_Interface::Instance->OfflineInd);
 		}
 		Set_Laser_Status(0);
 	}
@@ -116,8 +119,8 @@ int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 	{
 		if (Get_Laser_Status() != 1)
 		{
-			C3_User_Interface::Instance->pbLaserStatus->Image = 
-				C3_User_Interface::Instance->OnlineInd;
+			C3_User_Interface::Instance->Update_Laser_Subsystem_Indicator(
+				C3_User_Interface::Instance->OnlineInd);
 		}
 		Set_Laser_Status(1);
 	}
@@ -135,13 +138,13 @@ int CDisplayManager::Update_Laser_Activity_Indicator(int nLaserActivityStatus)
 	{
 		if(nLaserActivityStatus == 1)
 		{
-			C3_User_Interface::Instance->pbLaserActivity->Image = 
-				C3_User_Interface::Instance->EnergizedInd;
+			C3_User_Interface::Instance->Update_Laser_Activity_Indicator( 
+				C3_User_Interface::Instance->EnergizedInd);
 		}
 		else
 		{
-			C3_User_Interface::Instance->pbLaserActivity->Image = 
-				C3_User_Interface::Instance->InactiveInd;
+			C3_User_Interface::Instance->Update_Laser_Activity_Indicator(
+				C3_User_Interface::Instance->InactiveInd);
 		}
 		Set_Laser_Activity(nLaserActivityStatus);
 	}
@@ -167,8 +170,8 @@ int CDisplayManager::Update_Overall_Status(void)
 	{
 	   if (m_OverStatus != 1)
 	   {
-	   		C3_User_Interface::Instance->pbOverallStatus->Image = 
-				C3_User_Interface::Instance->OnlineInd;
+	   		C3_User_Interface::Instance->Update_Overall_Status_Indicator( 
+				C3_User_Interface::Instance->OnlineInd);
 	   }
 	   m_OverStatus = 1;
 	}
@@ -176,8 +179,8 @@ int CDisplayManager::Update_Overall_Status(void)
 	{
 		if (m_OverStatus != 0)
 		{
-			C3_User_Interface::Instance->pbOverallStatus->Image = 
-				C3_User_Interface::Instance->OfflineInd;
+			C3_User_Interface::Instance->Update_Overall_Status_Indicator( 
+				C3_User_Interface::Instance->OfflineInd);
 		}
 		m_OverStatus = 0;
 	}
@@ -239,13 +242,13 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 	{
 		if (Get_Camera_Com_Status() != 0)
 		{
-			C3_User_Interface::Instance->pbCameraComms->Image = 
-				C3_User_Interface::Instance->OfflineInd;
+			C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
+				C3_User_Interface::Instance->OfflineInd);
 		}
 		if (Get_Camera_Status() != -1)
 		{
-			C3_User_Interface::Instance->pbCameraStatus->Image =
-				C3_User_Interface::Instance->UnknownInd;
+			C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
+				C3_User_Interface::Instance->UnknownInd);
 		}
 		Set_Camera_Com_Status(0);
 		Set_Camera_Status(-1);
@@ -255,8 +258,8 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 	{
 		if (Get_Camera_Com_Status() != 1)
 		{
-			C3_User_Interface::Instance->pbCameraComms->Image = 
-				C3_User_Interface::Instance->OnlineInd;
+			C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
+				C3_User_Interface::Instance->OnlineInd);
 		}
 		Set_Camera_Com_Status(1);
 	}
@@ -271,13 +274,13 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 	{
 		if (Get_Laser_Com_Status() != 0)
 		{
-			C3_User_Interface::Instance->pbLaserComms->Image = 
-				C3_User_Interface::Instance->OfflineInd;
+			C3_User_Interface::Instance->Update_Laser_Comm_Indicator( 
+				C3_User_Interface::Instance->OfflineInd);
 		}
 		if (Get_Laser_Status() != -1)
 		{
-			C3_User_Interface::Instance->pbLaserStatus->Image =
-				C3_User_Interface::Instance->UnknownInd;
+			C3_User_Interface::Instance->Update_Laser_Comm_Indicator(
+				C3_User_Interface::Instance->UnknownInd);
 		}
 		Set_Laser_Com_Status(0);
 		Set_Laser_Status(-1);
@@ -285,10 +288,10 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 	// Status is ONLINE
 	else 	
 	{
-		if (Get_Laser_Status() != 1)
+		if (Get_Laser_Com_Status() != 1)
 		{
-			C3_User_Interface::Instance->pbLaserComms->Image = 
-				C3_User_Interface::Instance->OnlineInd;
+			C3_User_Interface::Instance->Update_Laser_Comm_Indicator(
+				C3_User_Interface::Instance->OnlineInd);
 		}
 		Set_Laser_Com_Status(1);
 	}
@@ -402,13 +405,13 @@ int CDisplayManager::Update_Rover_Acquired_Indicator(int nRoverAcqStatus)
 {
 	if(nRoverAcqStatus == 1)
 	{
-		C3_User_Interface::Instance->pbRoverAcq->Image = 
-			C3_User_Interface::Instance->AcquiredInd;
+		C3_User_Interface::Instance->Update_Rover_Acquired_Indicator( 
+			C3_User_Interface::Instance->AcquiredInd);
 	}
 	else
 	{
-		C3_User_Interface::Instance->pbRoverAcq->Image = 
-			C3_User_Interface::Instance->UnknownNsInd;
+		C3_User_Interface::Instance->Update_Rover_Acquired_Indicator( 
+			C3_User_Interface::Instance->UnknownNsInd);
 	}
 	return 0;
 }
