@@ -52,8 +52,8 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	HANDLE hconsole = GetStdHandle (STD_OUTPUT_HANDLE);
 	//TestKalmanFilter();
-	//TestTrackFilter();
-	TestCalibration(hconsole);
+	TestTrackFilter();
+	//TestCalibration(hconsole);
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup local variables
 	/////////////////////////////////////////////////////////////////////////////////
@@ -420,11 +420,10 @@ void TestKalmanFilter()
 void TestTrackFilter()
 {
 	vector<string> files;
-	files.insert(files.begin(),"TEST_5.txt");
-	files.insert(files.begin(),"TEST_4.txt");
-	files.insert(files.begin(),"TEST_3.txt");
-	files.insert(files.begin(),"TEST_2.txt");
-	files.insert(files.begin(),"TEST_1.txt");
+	files.insert(files.begin(),"TestTrack_fast.txt");
+	files.insert(files.begin(),"TestTrack_slow.txt");
+	files.insert(files.begin(),"TestTrack_stopCrawl.txt");
+	files.insert(files.begin(),"TestTrack_spiral.txt");
 	for (unsigned int jj = 0; jj < files.size(); jj++)
 	{
 		printf("TEST FILE --- %d ---\n",jj);
@@ -448,8 +447,8 @@ void TestTrackFilter()
 			myfile >> roverPoint.X >> roverPoint.Y >> laserPoint.X >> laserPoint.Y >> time;
 			procResult = track.UpdateTrack(roverPoint,laserPoint,time);
 			myfile >> fileResult.AZ >> fileResult.EL;
-			assert(abs(fileResult.AZ-procResult.AZ) < MAX_ERROR && 
-				   abs(fileResult.EL-procResult.EL) < MAX_ERROR);
+			/*assert(abs(fileResult.AZ-procResult.AZ) < MAX_ERROR && 
+				   abs(fileResult.EL-procResult.EL) < MAX_ERROR);*/
 			printf("Iteration (%d)::Difference [X,Y]= [%f,%f]\n", ii,abs(fileResult.X-procResult.X),abs(fileResult.Y-procResult.Y));
 		}
 		myfile.close();
