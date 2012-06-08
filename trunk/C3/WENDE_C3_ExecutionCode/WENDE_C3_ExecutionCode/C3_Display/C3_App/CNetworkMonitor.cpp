@@ -388,9 +388,7 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 		} else { 
 			/* loss of comm */
 			dispman->Update_Notification_Panel(4);
-			dispman->Store_Latest_DTI(m_ProcessingInterface->ProcessID, false);
 		}
-		else { /* loss of comm */						dispman->Update_Notification_Panel(4);}
 		/* Enter the critical section -- other threads are locked out */
 		EnterCriticalSection(&cNetworMonitor->cs);		
 		/* Do some thread-safe processing! */
