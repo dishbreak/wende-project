@@ -558,7 +558,6 @@ namespace C3_App {
 			// tbAlertsPanel
 			// 
 			this->tbAlertsPanel->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->tbAlertsPanel->Enabled = false;
 			this->tbAlertsPanel->Font = (gcnew System::Drawing::Font(L"Courier New", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->tbAlertsPanel->ForeColor = System::Drawing::Color::Red;
