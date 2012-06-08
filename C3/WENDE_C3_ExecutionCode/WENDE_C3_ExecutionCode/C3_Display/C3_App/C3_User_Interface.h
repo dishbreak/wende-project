@@ -842,9 +842,10 @@ private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs
 			 //TODO: Add set the bool for unexported data to FALSE
 			 delete dlgExportDti;
 		 }
-private: System::Void calibrateButton_Click(System::Object^  sender, System::EventArgs^  e) {
+		private: System::Void calibrateButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			 this->CalibrateButton->Text = "Calibrating...";
 			 this->CalibrateButton->Enabled = false;
+			 m_monitor->StartCalibration();
 			 System::Threading::Thread::Sleep(5000);
 			 if (!IsCalibrated) {
 				 this->CalibrateButton->Text = "Calibration Failed.";

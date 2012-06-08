@@ -13,16 +13,23 @@
 using namespace System;
 using namespace std;
 
-
 UINT WINAPI TrackThread (LPVOID pParam);
 UINT WINAPI ImageThread (LPVOID pParam);
 UINT WINAPI LaserStatusThread (LPVOID pParam);
 UINT WINAPI CameraStatusThread(LPVOID pParam);
-UINT WINAPI ProcessingInterfaceThread(LPVOID pParam);
+UINT WINAPI ProcessingInterfaceReceiveThread(LPVOID pParam);
+UINT WINAPI ProcessingInterfaceTransmitThread(LPVOID pParam);
 
 CNetworkMonitor::CNetworkMonitor()
 :_isRunning(false)
 {
+	functionArray[0] = TrackThread;
+	functionArray[1] = ImageThread,
+	functionArray[2] = LaserStatusThread,
+	functionArray[3] = CameraStatusThread;
+	functionArray[4] = ProcessingInterfaceReceiveThread;
+	functionArray[5] = ProcessingInterfaceTransmitThread;
+
 	/* Initialize the critical section before entering multi-threaded context. */
 	InitializeCriticalSection(&cs);
 }
@@ -40,6 +47,15 @@ void CNetworkMonitor::StopThreads()
 	/* Leave the critical section -- other threads can now EnterCriticalSection() */
 	LeaveCriticalSection(&cs);
 }
+void CNetworkMonitor::StartCalibration()
+{
+	int ii = C3_NETWORK_THREAD_COUNT - 1;
+
+	if ( NULL != threads[ii].handle)
+	{
+		ResumeThread( threads[ii].handle );
+	}
+}
 void CNetworkMonitor::InitializeThread()
 {
 	if (!_isRunning)
@@ -50,81 +66,28 @@ void CNetworkMonitor::InitializeThread()
 		_isRunning = true;
 		/* Leave the critical section -- other threads can now EnterCriticalSection() */
 		LeaveCriticalSection(&cs);
-
-		HANDLE hThread1;
-		UINT uiThreadId1 = 0;
-		hThread1 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
-											0,					  // stack
-										 CameraStatusThread,		// Thread proc
-										 this,					  // Thread param
-										 CREATE_SUSPENDED,		  // creation mode
-										 &uiThreadId1);			  // Thread ID
-
-		if ( NULL != hThread1)
+		int ii = 0;
+		for (; ii < C3_NETWORK_THREAD_COUNT-1;  ii++)
 		{
-			//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
-			ResumeThread( hThread1 );
+			threads[ii].handle = (HANDLE)_beginthreadex( NULL,				       // Security attributes
+				 										0,					       // stack
+				      									functionArray[ii],		   // Thread proc
+														this,					   // Thread param
+														CREATE_SUSPENDED,		   // creation mode
+														&threads[ii].uiThreadId);  // Thread ID
+
+			if ( NULL != threads[ii].handle)
+			{
+				ResumeThread( threads[ii].handle );
+			}
 		}
-
-		HANDLE hThread2;
-		UINT uiThreadId2 = 0;
-		hThread2 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
-											0,					  // stack
-										 LaserStatusThread,   // Thread proc
-										 this,					  // Thread param
-										 CREATE_SUSPENDED,		  // creation mode
-										 &uiThreadId2);			  // Thread ID
-
-		if ( NULL != hThread2)
-		{
-			//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
-			ResumeThread( hThread2 );
-		}
-
-		HANDLE hThread3;
-		UINT uiThreadId3 = 0;
-		hThread3 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
-											0,					  // stack
-										 TrackThread,   // Thread proc
-										 this,					  // Thread param
-										 CREATE_SUSPENDED,		  // creation mode
-										 &uiThreadId3);			  // Thread ID
-
-		if ( NULL != hThread3)
-		{
-			//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
-			ResumeThread( hThread3 );
-		}
-
-		HANDLE hThread4;
-		UINT uiThreadId4 = 0;
-		hThread4 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
-											10000,					   // stack
-										 ImageThread,			   // Thread proc
-										 this,					   // Thread param
-										 CREATE_SUSPENDED,		   // creation mode
-										 &uiThreadId4);			   // Thread ID
-
-		if ( NULL != hThread4)
-		{
-			//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
-			ResumeThread( hThread4 );
-		}
-
-		HANDLE hThread5;
-		UINT uiThreadId5 = 0;
-		hThread5 = (HANDLE)_beginthreadex(NULL,				       // Security attributes
-											0,					   // stack
-											ProcessingInterfaceThread,			   // Thread proc
-											this,					   // Thread param
-											CREATE_SUSPENDED,		   // creation mode
-											&uiThreadId5);			   // Thread ID
-
-		if ( NULL != hThread5)
-		{
-			//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
-			ResumeThread( hThread5 );
-		}
+		ii = C3_NETWORK_THREAD_COUNT - 1;
+		threads[ii].handle = (HANDLE)_beginthreadex( NULL,				            // Security attributes
+				 										0,					        // stack
+				      									functionArray[ii],		    // Thread proc
+														this,					    // Thread param
+														CREATE_SUSPENDED,		    // creation mode
+														&threads[ii].uiThreadId);   // Thread ID
 	}
 }
 
@@ -375,16 +338,18 @@ UINT WINAPI ImageThread (LPVOID pParam)
 	return 1L;
 }
 
-UINT WINAPI ProcessingInterfaceThread (LPVOID pParam)
+UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 {
 	CNetworkMonitor* cNetworMonitor = (CNetworkMonitor*)pParam;
 	bool isRunningInternal = cNetworMonitor->_isRunning;
 	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM>		 m_ProcessingInterface;
 	m_ProcessingInterface.Acquire(C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,
-								C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,
-								C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2,
-								C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_MUTEX);
-	
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_MUTEX,
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2);
+	if (m_ProcessingInterface.isServer()) m_ProcessingInterface->ShmInfo.Clients = 0;
+	else m_ProcessingInterface->ShmInfo.Clients++;
+
 	CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 	int nDTIValue = 0;
 	int nTrialResult = false;
@@ -397,37 +362,75 @@ UINT WINAPI ProcessingInterfaceThread (LPVOID pParam)
 		{
 			if (m_ProcessingInterface.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-				nAlertType = m_ProcessingInterface->AlertType;		// 1..n for different conditions: end of trial etc..
-				nDTIValue = m_ProcessingInterface->DTI;				// Actual DTI value
+				nAlertType   = m_ProcessingInterface->AlertType;		// 1..n for different conditions: end of trial etc..
+				nDTIValue    = m_ProcessingInterface->DTI;				// Actual DTI value
 				nTrialResult = m_ProcessingInterface->POCResult;	// Pass / fail
 
 				// Only call if the alert is relevant
 				if(nAlertType != 0)
 				{
+					// A
 					dispman->Update_Notification_Panel(4);
+
 					// Call notification panel... trigger other events
 					if(nDTIValue > 0)
 					{
 						dispman->Store_Latest_DTI(nDTIValue, nTrialResult); 
 					}
-				}
-
-				// Set the event
-				m_ProcessingInterface.SetEventClient();
-			
+				}			
 				// release the mutex
 				m_ProcessingInterface.ReleaseMutex();
 			}
 			else { /* unable to get mutex??? */	}
+		} else { 
+			/* loss of comm */
+			dispman->Update_Notification_Panel(4);
+			dispman->Store_Latest_DTI(m_ProcessingInterface->ProcessID, false);
 		}
-		else { /* loss of comm */						dispman->Update_Notification_Panel(4);
-		dispman->Store_Latest_DTI(m_ProcessingInterface->ProcessID, false);}
 		/* Enter the critical section -- other threads are locked out */
 		EnterCriticalSection(&cNetworMonitor->cs);		
 		/* Do some thread-safe processing! */
 		isRunningInternal = cNetworMonitor->_isRunning;
 		/* Leave the critical section -- other threads can now EnterCriticalSection() */
 		LeaveCriticalSection(&cNetworMonitor->cs);
+	}
+
+	_endthreadex( 0 );
+    
+	return 1L;
+}
+
+UINT WINAPI ProcessingInterfaceTransmitThread(LPVOID pParam)
+{
+	CNetworkMonitor* cNetworMonitor = (CNetworkMonitor*)pParam;
+	
+	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM>		 m_ProcessingInterface;
+
+	m_ProcessingInterface.Acquire(C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_MUTEX,
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2);
+
+	int ii = C3_NETWORK_THREAD_COUNT - 1;
+
+	while(1)
+	{
+		if (m_ProcessingInterface.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+		{
+			// set the calibration flag
+			m_ProcessingInterface->AlertType = 0;
+
+			// Set the event
+			m_ProcessingInterface.SetEventClient();	
+
+			// release the mutex
+			m_ProcessingInterface.ReleaseMutex();
+			// suspend thread;
+			if ( NULL != cNetworMonitor->threads[ii].handle)
+			{
+				SuspendThread( cNetworMonitor->threads[ii].handle );
+			}
+		}
 	}
 
 	_endthreadex( 0 );
