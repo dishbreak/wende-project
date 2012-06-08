@@ -371,7 +371,8 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 				// Only call if the alert is relevant
 				if(nAlertType != 0)
 				{
-					// A
+					// Update the Calibration button
+                    dispman->Update_Calibration_Reply(nAlertType);
 					//dispman->Update_Notification_Panel(4);
 
 
