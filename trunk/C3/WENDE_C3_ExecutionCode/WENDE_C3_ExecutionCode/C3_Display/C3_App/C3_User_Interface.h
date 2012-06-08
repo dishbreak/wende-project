@@ -45,6 +45,7 @@ namespace C3_App {
 		delegate void Delegate_Update_Overall_Status_Indicator(System::Drawing::Image^ bmOverall);
 		delegate void Delegate_Update_Laser_Activity_Indicator(System::Drawing::Image^ bmLaserActivity);
 		delegate void Delegate_Update_Rover_Acquired_Indicator(System::Drawing::Image^ bmRoverAcquired);
+		delegate void Delegate_Update_Calibration_Button(System::String ^ ButtonText, bool ButtonIsActive);
 
 
 	public:
@@ -157,7 +158,11 @@ namespace C3_App {
 	private: System::Windows::Forms::Button^  CalibrateButton;
 	private: bool IsCalibrated; 
 
-	public: 
+	public: enum class CalibrationState {
+				Calibrating,
+				Failed,
+				Success
+			};
 
 	//private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
 
@@ -736,7 +741,31 @@ namespace C3_App {
 		C3_User_Interface::pbRoverAcq->Image = bmRoverAcquired;
 	};
 
-
+	public: void Update_Calibration_Button(CalibrationState calibState) {
+				Delegate_Update_Calibration_Button ^ action = 
+					gcnew Delegate_Update_Calibration_Button(this, &C3_User_Interface::Worker_Update_Calibrate_Button);
+				System::String ^ ButtonText = "";
+				bool ButtonIsActive = false;
+				switch(calibState) {
+					 case CalibrationState::Calibrating:
+						 ButtonText = "Calibrating...";
+						 break;
+					 case CalibrationState::Failed:
+						 ButtonText = "Calibration Failed!";
+						 ButtonIsActive = true;
+						 break;
+					 case CalibrationState::Success:
+						 ButtonText = "Calbrated!";
+						 break;
+					 default:
+						 break;
+				}
+				this->BeginInvoke(action, ButtonText, ButtonIsActive);
+			}
+	private: void Worker_Update_Calibrate_Button(System::String ^ ButtonText, bool ButtonIsActive) {
+				 C3_User_Interface::CalibrateButton->Text = ButtonText;
+				 C3_User_Interface::CalibrateButton->Enabled = ButtonIsActive;
+			 }
 
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 				 ////extern int roverContactX;

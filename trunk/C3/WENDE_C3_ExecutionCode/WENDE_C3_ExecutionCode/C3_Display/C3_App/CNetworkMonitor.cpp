@@ -258,6 +258,8 @@ UINT WINAPI TrackThread (LPVOID pParam)
 					freshCoordinates[i]->y = sTrackMessage.Tracks[i].Y;
 				}
 
+
+
 				////get a handle to the CDisplayManager
                 CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 				dispman->Update_Rover_PPI_Position(freshCoordinates, sTrackMessage.ValidTracks);
@@ -370,7 +372,8 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 				if(nAlertType != 0)
 				{
 					// A
-					dispman->Update_Notification_Panel(4);
+					//dispman->Update_Notification_Panel(4);
+
 
 					// Call notification panel... trigger other events
 					if(nDTIValue > 0)
