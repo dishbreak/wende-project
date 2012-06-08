@@ -8,6 +8,7 @@ ref class CoordinatePair {
 public:
 	int x;
 	int y;
+	bool IsOutOfBounds;
 	CoordinatePair();
 	CoordinatePair(int xInput, int yInput);
 	CoordinatePair(CoordinatePair ^Other);

@@ -6,16 +6,19 @@
 CoordinatePair::CoordinatePair() {
 	x = 0;
 	y = 0;
+	IsOutOfBounds = false;
 }
 
 CoordinatePair::CoordinatePair(int xInput, int yInput){
 	x = xInput;
 	y = yInput;
+	IsOutOfBounds = false;
 }
 
 CoordinatePair::CoordinatePair(CoordinatePair ^Other) {
 	x = Other->x;
 	y = Other->y;
+	IsOutOfBounds = Other->IsOutOfBounds;
 }
 
 RatioPair::RatioPair() {
@@ -72,7 +75,6 @@ bool Coordinates::SetNewCoordinates(array<CoordinatePair^>^ InputSet, int NumVal
             CurWorldCoords[i]->x = InputSet[i]->x;
             CurWorldCoords[i]->y = InputSet[i]->y;     
         }
-		//bool TrackChanged = SetNewCoordinatePair(InputSet[i], CurWorldCoords[i], OldWorldCoords[i]);
 	}
 	PixelCoords = TranslateCoords(CurWorldCoords);
 	return HasNewTrack;
@@ -108,6 +110,9 @@ CoordinatePair^ Coordinates::TranslateCoords(CoordinatePair^ WorldCoords) {
     newCoords->x = (int) (WorldPxRatio->x * WorldCoords->x) + PixelShift->x;
 	//Translate Y
     newCoords->y = (int) (WorldPxRatio->y * WorldCoords->y) + PixelShift->y;
+	if ((newCoords->x > PixelBounds->x) || (newCoords->y > PixelBounds->y)) {
+		newCoords->IsOutOfBounds = true;
+	}
 	return newCoords;
 }
 
