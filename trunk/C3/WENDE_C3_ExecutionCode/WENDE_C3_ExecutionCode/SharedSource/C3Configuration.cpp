@@ -56,6 +56,7 @@ C3Configuration::C3Configuration(void)
 		SHM_C3_CAMERA_IMAGE_MUTEX		= "SHM_C3_CAMERA_IMAGE_MUTEX";
 		SHM_C3_CAMERA_IMAGE_EVENT1		= "SHM_C3_CAMERA_IMAGE_EVENT1";
 		SHM_C3_CAMERA_IMAGE_EVENT2		= "SHM_C3_CAMERA_IMAGE_EVENT2";
+
 		// network
 		ConnectionArbiter.ip = "192.168.1.70";
 		ConnectionArbiter.port= 4444;
