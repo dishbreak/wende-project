@@ -762,8 +762,8 @@ namespace C3_App {
 
 				 // Draw Playing Field Line
 
-				 gPlayingField.Width = gFailureLine.Width - 150;
-				 gPlayingField.Height = gFailureLine.Height - 150;
+				 gPlayingField.Width = 105;
+				 gPlayingField.Height = 105;
 				 gPlayingField.X = pPPI->Width / 2 - (gPlayingField.Width / 2);
 				 gPlayingField.Y = pPPI->Height / 2 - (gPlayingField.Height / 2);
 
@@ -776,10 +776,13 @@ namespace C3_App {
 				 array<CoordinatePair^>^ RoverContact = coordsObj->GetNewCoordinatePair();
 				 //System::Drawing::Image^ RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
 				 CoordinatePair^ offset = gcnew CoordinatePair();
-				 offset->x = pPPI->Width/2 - (RoverSymbol->Width/2);
-				 offset->y = pPPI->Width/2 - (RoverSymbol->Width/2);
+				 offset->x = (RoverSymbol->Width/2);
+				 offset->y = (RoverSymbol->Height/2);
+                 CoordinatePair^ Padding = gcnew CoordinatePair((pPPI->Width - gFailureLine.Width) / 2, 
+                                                                 (pPPI->Height - gFailureLine.Height) / 2);
 				 for(int i = 0; i < coordsObj->GetValidTracks(); i++) {
-					 g->DrawImage(RoverSymbol, offset->x - RoverContact[i]->x, offset->y - RoverContact[i]->y);
+					 g->DrawImage(RoverSymbol, Padding->x - offset->x + RoverContact[i]->x,
+                         Padding->y - offset->y + RoverContact[i]->y);
 				 }
 				 
 				 //int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;

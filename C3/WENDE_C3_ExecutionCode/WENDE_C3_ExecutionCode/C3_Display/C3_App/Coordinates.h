@@ -15,6 +15,12 @@ public:
 };
 
 
+ref class RatioPair {
+public:
+    float x;
+    float y;
+    RatioPair();
+};
 
 ref class Coordinates {
 public:
@@ -35,6 +41,8 @@ private:
 	array<CoordinatePair^>^ PixelCoords;
 	CoordinatePair^ PixelBounds;
 	CoordinatePair^ WorldBounds;
+    CoordinatePair^ PixelShift;
+    RatioPair^ WorldPxRatio;
 	int ValidTracks;
 	int TotalTracks;
 	static Coordinates ^ coordsObj = nullptr;
