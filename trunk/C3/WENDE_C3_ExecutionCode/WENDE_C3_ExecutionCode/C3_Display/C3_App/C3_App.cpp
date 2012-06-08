@@ -44,6 +44,9 @@ int main(array<System::String ^> ^args)
 	{
 		td.Show();
 	}
+
+	CC3AppControl ac;
+	ac.RunC3App();
 	
 	// Networking thread. 
 	CNetworkMonitor nm;
