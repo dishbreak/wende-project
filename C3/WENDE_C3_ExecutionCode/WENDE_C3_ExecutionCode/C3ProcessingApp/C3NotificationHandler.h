@@ -13,6 +13,10 @@ typedef enum {
 	CALIBRATION_IN_PROGRESS_5,	//                   ---> receive fourth   ---> calibrate
 	CALIBRATION_FAILED,
 	CALIBRATION_SUCCESS,
+	TARGET_LEFT_PLAYING_FIELD,
+	DTI_UPDATE,
+	POC_STARTED,
+	POC_ENTERED,
 	NUM_ALERTS_TYPES
 }C3_Alert_Types; 
 

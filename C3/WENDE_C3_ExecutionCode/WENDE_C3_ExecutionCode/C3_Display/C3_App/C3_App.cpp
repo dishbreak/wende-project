@@ -35,8 +35,8 @@ int main(array<System::String ^> ^args)
 
 	
 	// Run up Controller and Processing
-	// CC3AppControl ac;
-	// ac.RunC3App();
+	CC3AppControl ac;
+	ac.RunC3App();
 
 	// Show test form
 	Test_Driver td;

@@ -61,7 +61,9 @@ public:
 	string SHM_C3_PROCESSING_STATUS_EVENT1;			// Processing IMAGE Event1 File Name
 	string SHM_C3_PROCESSING_STATUS_EVENT2;			// Processing IMAGE Event2 File Name
 	//network setup
-	ConnectionSettings Connection;
+	ConnectionSettings ConnectionArbiter;
+	//driver setup
+	ConnectionSettings ConnectionDriver;
 	//WENDE SETUP
 	double WENDE_PLAYING_FIELD_RADIUS;				// The radius of the playing field
 	double WENDE_FAILURE_LINE_RADIUS;				// The Failure line for the WENDE POCs
@@ -69,4 +71,8 @@ public:
 	int	   PROCESS_NOISE;							// ...
 	// DEBUG ITEMS
 	bool isShowDebugPannel;							// Flag to determine if we show
+	// DEBUG start apps
+	string driverStartPath;
+	string processingStartPath;
+	string arbiterStartPath;
 };

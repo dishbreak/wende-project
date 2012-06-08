@@ -57,10 +57,16 @@ C3Configuration::C3Configuration(void)
 		SHM_C3_CAMERA_IMAGE_EVENT1		= "SHM_C3_CAMERA_IMAGE_EVENT1";
 		SHM_C3_CAMERA_IMAGE_EVENT2		= "SHM_C3_CAMERA_IMAGE_EVENT2";
 		// network
-		Connection.ip = "192.168.1.70";
-		Connection.port= 4444;
+		ConnectionArbiter.ip = "192.168.1.70";
+		ConnectionArbiter.port= 4444;
+		//driver
+		ConnectionDriver.ip = "192.168.1.70";
+		ConnectionDriver.port = 4447;
 		// DEBUG ITEMS
 		isShowDebugPannel           = false;
+		driverStartPath			= "ServerSocket.exe";
+		processingStartPath		= "C3ProcessingApp.exe";
+		arbiterStartPath		= "NetworkArbiter.exe";
 		// TODO Add logic to check if file already exists
 		WriteXMLFile();
 	}
@@ -93,11 +99,18 @@ void C3Configuration::ReadXMLFile()
 			/////////////////////
 			// block: connection
 			/////////////////////
-			pElem=hRoot.FirstChild("Connection").Element();
+			pElem=hRoot.FirstChild("ConnectionArbiter").Element();
 			if (pElem)
 			{
-				Connection.ip   = pElem->Attribute("ip");
-				Connection.port = atoi(pElem->Attribute("port"));	
+				ConnectionArbiter.ip   = pElem->Attribute("ip");
+				ConnectionArbiter.port = atoi(pElem->Attribute("port"));	
+			}
+			else{ /* ERROR ???? */}
+			pElem=hRoot.FirstChild("ConnectionDriver").Element();
+			if (pElem)
+			{
+				ConnectionDriver.ip   = pElem->Attribute("ip");
+				ConnectionDriver.port = atoi(pElem->Attribute("port"));	
 			}
 			else{ /* ERROR ???? */}
 			pElem=hRoot.FirstChild("SHM_FILE_CAMERA_STATUS").Element();
@@ -110,6 +123,15 @@ void C3Configuration::ReadXMLFile()
 				SHM_C3_CAMERA_STATUS_EVENT2 = pElem->Attribute("EVENT_CLIENT");
 			}
 			else{ /* ERROR ???? */}
+			pElem=hRoot.FirstChild("StartupPaths").Element();
+			if (pElem)
+			{
+				// Read the camera pointing directions
+				arbiterStartPath    = pElem->Attribute("Arbiter");
+				processingStartPath = pElem->Attribute("Processing");
+				driverStartPath     = pElem->Attribute("Driver");
+			}
+			else{ /* ERROR ???? */}	
 			pElem=hRoot.FirstChild("SHM_FILE_CAMERA_TRACK").Element();
 			if (pElem)
 			{
@@ -208,10 +230,10 @@ void C3Configuration::WriteXMLFile()
 	comment3->SetValue("Port is the starting port for messages" );  
 	root->LinkEndChild( comment3 );  
 
-	TiXmlElement * cxn = new TiXmlElement( "Connection" );  
+	TiXmlElement * cxn = new TiXmlElement( "ConnectionArbiter" );  
 	root->LinkEndChild( cxn );  
-	cxn->SetAttribute("ip", Connection.ip.c_str());
-	cxn->SetAttribute("port", Connection.port); // floating point attrib
+	cxn->SetAttribute("ip", ConnectionArbiter.ip.c_str());
+	cxn->SetAttribute("port", ConnectionArbiter.port); // floating point attrib
 
 	TiXmlComment * comment4 = new TiXmlComment();
 	comment4->SetValue("Settings for the WENDE C3 Processing Shared Memory Strings");
@@ -288,7 +310,26 @@ void C3Configuration::WriteXMLFile()
 	root->LinkEndChild( debugPannel );  
 	debugPannel->SetAttribute("ENABLE", isShowDebugPannel);
 
+	TiXmlComment * comment9 = new TiXmlComment();
+	comment9->SetValue("Settings for the WENDE C3 Driver (DEBUG)     " );  
+	root->LinkEndChild( comment9 );  
+	TiXmlComment * comment10 = new TiXmlComment();
+	comment10->SetValue("IP Address of the server              " );  
+	root->LinkEndChild( comment10 );
+	TiXmlComment * comment11 = new TiXmlComment();
+	comment11->SetValue("Port is the starting port for messages" );  
+	root->LinkEndChild( comment11 );  
+
+	TiXmlElement * cxnd = new TiXmlElement( "ConnectionDriver" );  
+	root->LinkEndChild( cxnd );  
+	cxnd->SetAttribute("ip", ConnectionDriver.ip.c_str());
+	cxnd->SetAttribute("port", ConnectionDriver.port); // floating point attrib
+
+	TiXmlElement * stPaths = new TiXmlElement( "StartupPaths" );  
+	root->LinkEndChild( stPaths );  
+	stPaths->SetAttribute("Arbiter", arbiterStartPath.c_str());
+	stPaths->SetAttribute("Processing", processingStartPath.c_str());
+	stPaths->SetAttribute("Driver", driverStartPath.c_str());
 
 	doc.SaveFile( CfgFile.c_str() ); 
-
 }
