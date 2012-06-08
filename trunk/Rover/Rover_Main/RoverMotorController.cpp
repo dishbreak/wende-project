@@ -75,8 +75,8 @@ void RoverMotorRoutines(motor_data* leftMotor, motor_data* rightMotor)
 
     leftMotor->PWM_val = calcPWM(leftMotor);
     rightMotor->PWM_val = calcPWM(rightMotor);
-    setRightMotor(bRightFwd,rightMotor->PWM_val);
-    setLeftMotor(bLeftFwd,leftMotor->PWM_val);
+    setRightMotor(bRightFwd, (rightMotor->targetSpeed!=0) * rightMotor->PWM_val);
+    setLeftMotor(bLeftFwd, (leftMotor->targetSpeed!=0) * leftMotor->PWM_val);
   }
 }
 
@@ -126,6 +126,15 @@ unsigned long getminMotor()
     return(RM_count);
   else
     return(LM_count);
+}
+
+
+void zero_all_counts()
+{
+  LM_count = 0;
+  oldLMcount = 0;
+  RM_count = 0;
+  oldRMcount = 0;
 }
 
 /**

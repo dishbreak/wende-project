@@ -41,6 +41,9 @@ void incRightMotor();
 int calcRightMotorSpeed();
 int calcLeftMotorSpeed();
 
+//Zero all counters
+void zero_all_counts();
+
 //PWM speed
 int calcPWM(motor_data* motorData);
 
