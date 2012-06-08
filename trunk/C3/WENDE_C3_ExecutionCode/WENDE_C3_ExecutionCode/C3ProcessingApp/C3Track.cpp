@@ -40,7 +40,7 @@ unsigned int C3Track::getNumHistoryPoints() const
 	return m_historyPoints.getNumHistoryPoints();
 }
 
-C3_TRACK_POINT_DOUBLE C3Track::getPredicationPoint() const
+C3_TRACK_POINT_DOUBLE C3Track::getPredictionPoint() const
 {
 	return m_predictionPoint;
 }
@@ -103,7 +103,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		//double cameraToLaserY = laserOriginCameraSpace12 - playingFieldOrigin12;
 
 		//Alternative translation method(USE THIS ONE)
-		double theta = 3.141592 - atan2(laserOrigin11,laserOrigin12); // yea I remembered Pi to the 6th decimal place so what..wanna fight about it? also, kept it in radians for the next 3 lines.
+		double theta = M_PI - atan2(laserOrigin12,laserOrigin11); // yea I remembered Pi to the 6th decimal place so what..wanna fight about it? also, kept it in radians for the next 3 lines.
 		double range = sqrt(pow(laserOrigin11,2) + pow(laserOrigin12,2));
 		double cameraToLaserX = -range*sin(theta);
 		double cameraToLaserY = -range*cos(theta);
@@ -125,7 +125,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		double localPipR   = sqrt(relativePipX*relativePipX+relativePipY*relativePipY);
 
 		// TODO ... Configuration for local laser height... fix
-		double LaserHeight  = 5;
+		double LaserHeight  = 5; //convert to meters
 
 		// transform local x/y into local az/el coordinate system
 		double localLaserAz = atan2(localLaserX,localLaserY)*180/M_PI;

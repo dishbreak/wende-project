@@ -81,7 +81,7 @@ void C3Tracker::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struc
 			// prediction point (assumes velocity)
 			else
 			{
-				//correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getPredicationPoint());
+				//correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getPredictionPoint());
 			}
 
 			// assign to the closest tracker if within max distance and not in mapping list
