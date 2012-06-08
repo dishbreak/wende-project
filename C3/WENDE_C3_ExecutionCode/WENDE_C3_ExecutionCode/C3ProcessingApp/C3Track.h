@@ -62,7 +62,7 @@ class C3Track
 		// returns the last saved point containd in the history array
 		C3_TRACK_POINT_DOUBLE getLastHistoryPoint() const;
 		// returns the last prediction from the kalman filter
-		C3_TRACK_POINT_DOUBLE getPredicationPoint() const;
+		C3_TRACK_POINT_DOUBLE getPredictionPoint() const;
 		// Return the track current DTI
 		double getDTI() const;
 		// Return the track current TTI
