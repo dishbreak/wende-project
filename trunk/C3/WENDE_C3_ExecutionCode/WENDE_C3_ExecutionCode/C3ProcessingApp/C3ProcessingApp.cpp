@@ -36,6 +36,7 @@ void TestCalibration(HANDLE hconsole);
 /////////////////////////////////////////////////////////////////////////////////
 C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE*);
 C3_TRACK_POINT_DOUBLE getCalibrationPointCommand();
+void updateCalibrationState();
 UINT WINAPI AlgorithmThread (LPVOID pParam);
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
@@ -172,15 +173,16 @@ int _tmain(int argc, _TCHAR* argv[])
 			////////////////////////
 			if (C3NotificationHandler::Instance().Get_IsCalibration() == true)
 			{
-				// get next command
 				commandOut = getCalibrationPointCommand();
-
 				// wait until time passes...
-				if (waitMessages < WAIT_MESSAGES)
+				if (waitMessages >= WAIT_MESSAGES)
 				{
 					// make sure the camera saw the laser
 					if (inData.ValidLasers != 0)
 					{
+						// get next command
+						commandOut = getCalibrationPointCommand();
+
 						// save point (assumes single laser)
 						testPoints[calIndex].X = inData.Lasers[0].X;
 						testPoints[calIndex].Y = inData.Lasers[0].Y;
@@ -192,10 +194,10 @@ int _tmain(int argc, _TCHAR* argv[])
 							laserOrigin = calibrate(testPoints);
 							//rest index
 							calIndex    = 0;
-							// set to success
-							C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_SUCCESS);	
-							C3NotificationHandler::Instance().Set_IsCalibration(false);	
 						}
+						// walk the states
+						updateCalibrationState();
+
 						// set flag
 						sendMessageSuccess = true;
 					}
@@ -272,41 +274,72 @@ C3_TRACK_POINT_DOUBLE getCalibrationPointCommand()
 	{
 		case CALIBRATION_IN_PROGRESS_1:
 			{
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_2);	
 				command.AZ = DEGREES_TO_TICKS(90);
 				command.EL = DEGREES_TO_TICKS(90);
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_2:
 			{
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_3);	
 				command.AZ = DEGREES_TO_TICKS(90);
 				command.EL = DEGREES_TO_TICKS(95);
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_3:
 			{
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_4);	
 				command.AZ = DEGREES_TO_TICKS(95);
 				command.EL = DEGREES_TO_TICKS(90);
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_4:
 			{
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_5);	
 				command.AZ = DEGREES_TO_TICKS(95);
 				command.EL = DEGREES_TO_TICKS(95);
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_5:
 			{
-				command.AZ = DEGREES_TO_TICKS(90);
-				command.EL = DEGREES_TO_TICKS(90);
+				command.AZ = DEGREES_TO_TICKS(95);
+				command.EL = DEGREES_TO_TICKS(95);
 				break;
 			}
 	}
 	return command;
 };
+void updateCalibrationState()
+{
+	switch(C3NotificationHandler::Instance().Get_Alert_Type())
+	{
+		case CALIBRATION_IN_PROGRESS_1:
+			{
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_2);	
+				break;
+			}
+		case CALIBRATION_IN_PROGRESS_2:
+			{
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_3);	
+				break;
+			}
+		case CALIBRATION_IN_PROGRESS_3:
+			{
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_4);	
+				break;
+			}
+		case CALIBRATION_IN_PROGRESS_4:
+			{
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_5);	
+				break;
+			}
+		case CALIBRATION_IN_PROGRESS_5:
+			{
+				// set to success
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_SUCCESS);	
+				C3NotificationHandler::Instance().Set_IsCalibration(false);	
+
+				break;
+			}
+	}
+};
+
 // Calibration Method
 C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points){
 
