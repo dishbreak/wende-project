@@ -40,6 +40,7 @@ UINT WINAPI AlgorithmThread (LPVOID pParam);
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
 /////////////////////////////////////////////////////////////////////////////////
+#define WAIT_MESSAGES    8
 #define TICK_OFFSET      1086
 #define TICKS_PER_DEGREE 20.6
 #define DEGREES_TO_TICKS(DEG)(TICK_OFFSET+DEG*TICKS_PER_DEGREE)
@@ -63,7 +64,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	bool sendMessageSuccess = false;
 	C3_TRACK_POINT_DOUBLE commandOut;
 	C3_TRACK_POINT_DOUBLE laserOrigin;
-	C3_TRACK_POINT_DOUBLE testPoints[5];
+	C3_TRACK_POINT_DOUBLE testPoints[4];
+	int waitMessages = 0;
 	int calIndex = 0;
 	CAMERA_TRACK_MSG_SHM					 inData;		  // temporary holder of the current data 
 	/////////////////////////////////////////////////////////////////////////////////
@@ -170,19 +172,19 @@ int _tmain(int argc, _TCHAR* argv[])
 			////////////////////////
 			if (C3NotificationHandler::Instance().Get_IsCalibration() == true)
 			{
-				// TODO ADD IN WAIT CODE...
-				// can be number of messages before process input....
-				if (1)
+				// get next command
+				commandOut = getCalibrationPointCommand();
+
+				// wait until time passes...
+				if (waitMessages < WAIT_MESSAGES)
 				{
+					// make sure the camera saw the laser
 					if (inData.ValidLasers != 0)
 					{
 						// save point (assumes single laser)
 						testPoints[calIndex].X = inData.Lasers[0].X;
 						testPoints[calIndex].Y = inData.Lasers[0].Y;
 						calIndex++;
-
-						// get next command
-						commandOut = getCalibrationPointCommand();
 
 						if (C3NotificationHandler::Instance().Get_Alert_Type() == C3_Alert_Types::CALIBRATION_IN_PROGRESS_5)
 						{	
@@ -205,6 +207,14 @@ int _tmain(int argc, _TCHAR* argv[])
 						C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_FAILED);	
 						C3NotificationHandler::Instance().Set_IsCalibration(false);	
 					}
+					waitMessages = 0;
+				}
+				else
+				{
+					// just send the same command since we have what we need.
+					sendMessageSuccess = true;
+					// increment count
+					waitMessages++;
 				}
 			}
 			////////////////////////
