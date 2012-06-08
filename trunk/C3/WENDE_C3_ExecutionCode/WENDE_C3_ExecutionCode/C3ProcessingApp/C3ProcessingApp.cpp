@@ -35,7 +35,14 @@ void TestCalibration(HANDLE hconsole);
 // NON TEST FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////
 C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE*);
+C3_TRACK_POINT_DOUBLE getCalibrationPointCommand();
 UINT WINAPI AlgorithmThread (LPVOID pParam);
+/////////////////////////////////////////////////////////////////////////////////
+// MACROS
+/////////////////////////////////////////////////////////////////////////////////
+#define TICK_OFFSET      1086
+#define TICKS_PER_DEGREE 20.6
+#define DEGREES_TO_TICKS(DEG)(TICK_OFFSET+DEG*TICKS_PER_DEGREE)
 /////////////////////////////////////////////////////////////////////////////////
 // Declare main functions
 /////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +60,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	bool readMessageSuccess = false;						// determines that the 
 															// message was recived 
 															// correctly
-
+	bool sendMessageSuccess = false;
+	C3_TRACK_POINT_DOUBLE commandOut;
+	C3_TRACK_POINT_DOUBLE laserOrigin;
+	C3_TRACK_POINT_DOUBLE testPoints[5];
+	int calIndex = 0;
+	CAMERA_TRACK_MSG_SHM					 inData;		  // temporary holder of the current data 
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup the shared memory
 	/////////////////////////////////////////////////////////////////////////////////
@@ -75,14 +87,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> m_DisplayNotification;
 	m_DisplayNotification.Acquire(C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,			// shared mem file name
-								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,	// shared mem mutex name
-								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,	// shared mem event name
-								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS);	// shared mem event name
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_MUTEX,	// shared mem mutex name
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,	// shared mem event name
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2);	// shared mem event name
 	if (m_DisplayNotification.isServer()) m_DisplayNotification->ShmInfo.Clients = 0;
 	else m_DisplayNotification->ShmInfo.Clients++;
-
-	CAMERA_TRACK_MSG_SHM					 inData;		  // temporary holder of the current data 
-	
+	/////////////////////////////////////////////////////////////////////////////////
+	// Thread
+	/////////////////////////////////////////////////////////////////////////////////
 	HANDLE hThread1;
 	UINT uiThreadId1 = 0;
 	hThread1 = (HANDLE)_beginthreadex(NULL,				      // Security attributes
@@ -104,6 +116,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		// reset the success flag
 		readMessageSuccess = false;
+		sendMessageSuccess = false;
 
 		/////////////////////////////////////////////////////////////////////////////////
 		// Get Input messages
@@ -152,6 +165,57 @@ int _tmain(int argc, _TCHAR* argv[])
 		/////////////////////////////////////////////////////////////////////////////////
 		if (readMessageSuccess)
 		{
+			////////////////////////
+			// DO CALIBRATION!!!!!!
+			////////////////////////
+			if (C3NotificationHandler::Instance().Get_IsCalibration() == true)
+			{
+				// TODO ADD IN WAIT CODE...
+				// can be number of messages before process input....
+				if (1)
+				{
+					if (inData.ValidLasers != 0)
+					{
+						// save point (assumes single laser)
+						testPoints[calIndex].X = inData.Lasers[0].X;
+						testPoints[calIndex].Y = inData.Lasers[0].Y;
+						calIndex++;
+
+						// get next command
+						commandOut = getCalibrationPointCommand();
+
+						if (C3NotificationHandler::Instance().Get_Alert_Type() == C3_Alert_Types::CALIBRATION_IN_PROGRESS_5)
+						{	
+							// do calibration
+							laserOrigin = calibrate(testPoints);
+							//rest index
+							calIndex    = 0;
+							// set to success
+							C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_SUCCESS);	
+							C3NotificationHandler::Instance().Set_IsCalibration(false);	
+						}
+						// set flag
+						sendMessageSuccess = true;
+					}
+					else
+					{
+						//rest index
+						calIndex    = 0;
+						// set to success
+						C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_FAILED);	
+						C3NotificationHandler::Instance().Set_IsCalibration(false);	
+					}
+				}
+			}
+			////////////////////////
+			// DO TRACKING!!!!!!
+			////////////////////////
+			else
+			{
+				// TODO FIX THIS
+				sendMessageSuccess = true;
+			}
+
 			if(m_DisplayNotification.isCreated() && 
 				m_DisplayNotification.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
@@ -168,17 +232,17 @@ int _tmain(int argc, _TCHAR* argv[])
 		// Send Output messages
 		/////////////////////////////////////////////////////////////////////////////////
 		// Verify that the shm is setup and aquire the mutex 
-		if (readMessageSuccess == true && m_LaserCommand.isCreated() &&
+		if (sendMessageSuccess == true && m_LaserCommand.isCreated() &&
 			m_LaserCommand.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 		{
 			// set the output data
-			m_LaserCommand->LaserOnOff   = true;
+			m_LaserCommand->LaserOnOff   = false;
 			m_LaserCommand->PacketNumber = cameraTrackMessageCount;
 			m_LaserCommand->ProcessID    = m_LaserCommand.GetProcessID();
 			m_LaserCommand->Time		 = inData.Time;
 			
-			m_LaserCommand->PointLocation.EL = 20; //TODO FIX THIS VALUE TO ACTUAL
-			m_LaserCommand->PointLocation.AZ = 21; //TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->PointLocation.EL = commandOut.EL; //TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->PointLocation.AZ = commandOut.AZ; //TODO FIX THIS VALUE TO ACTUAL
 
 			// Set the event to let client know
 			m_LaserCommand.SetEventServer();
@@ -191,6 +255,48 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	return 1L;
 }
+C3_TRACK_POINT_DOUBLE getCalibrationPointCommand()
+{
+	C3_TRACK_POINT_DOUBLE command;
+	switch(C3NotificationHandler::Instance().Get_Alert_Type())
+	{
+		case CALIBRATION_IN_PROGRESS_1:
+			{
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_2);	
+				command.AZ = DEGREES_TO_TICKS(90);
+				command.EL = DEGREES_TO_TICKS(90);
+				break;
+			}
+		case CALIBRATION_IN_PROGRESS_2:
+			{
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_3);	
+				command.AZ = DEGREES_TO_TICKS(90);
+				command.EL = DEGREES_TO_TICKS(95);
+				break;
+			}
+		case CALIBRATION_IN_PROGRESS_3:
+			{
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_4);	
+				command.AZ = DEGREES_TO_TICKS(95);
+				command.EL = DEGREES_TO_TICKS(90);
+				break;
+			}
+		case CALIBRATION_IN_PROGRESS_4:
+			{
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_5);	
+				command.AZ = DEGREES_TO_TICKS(95);
+				command.EL = DEGREES_TO_TICKS(95);
+				break;
+			}
+		case CALIBRATION_IN_PROGRESS_5:
+			{
+				command.AZ = DEGREES_TO_TICKS(90);
+				command.EL = DEGREES_TO_TICKS(90);
+				break;
+			}
+	}
+	return command;
+};
 // Calibration Method
 C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points){
 
@@ -209,17 +315,22 @@ C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points){
 // algorithm thread
 UINT WINAPI AlgorithmThread (LPVOID pParam)
 {
-	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *m_DisplayNotification = (CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *)pParam;
+	CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> m_DisplayNotification;
+	m_DisplayNotification.Acquire(C3Configuration::Instance().SHM_C3_PROCESSING_STATUS,			// shared mem file name
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_MUTEX,	// shared mem mutex name
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,	// shared mem event name
+								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2);	// shared mem event name
 	while(1)
 	{
-		if ((*m_DisplayNotification).isCreated() && (*m_DisplayNotification).WaitForCommunicationEventServer() == WAIT_OBJECT_0)
+		if (m_DisplayNotification.isCreated() && m_DisplayNotification.WaitForCommunicationEventClient() == WAIT_OBJECT_0)
 		{
-			if ((*m_DisplayNotification).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+			if (m_DisplayNotification.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
-				(*m_DisplayNotification)->AlertType = C3NotificationHandler::Instance().Get_Alert_Type();
-				(*m_DisplayNotification)->DTI = C3NotificationHandler::Instance().Get_DTI_Value();
-				(*m_DisplayNotification)->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
-				(*m_DisplayNotification).ReleaseMutex();
+				// read state
+				C3NotificationHandler::Instance().Set_IsCalibration(m_DisplayNotification->AlertType == C3_Alert_Types::CALIBRATION_INIT);	
+				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_1);	
+				// release mutex
+				m_DisplayNotification.ReleaseMutex();
 			}
 		}
 	}
