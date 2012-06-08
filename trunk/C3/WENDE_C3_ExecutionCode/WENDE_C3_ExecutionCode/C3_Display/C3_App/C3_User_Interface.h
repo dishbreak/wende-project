@@ -154,6 +154,7 @@ namespace C3_App {
 			System::Drawing::Image ^ EnergizedInd;
 			System::Drawing::Image ^ AcquiredInd;
     private: System::Drawing::Image ^ RoverSymbol;
+			 System::Drawing::Image ^ UhOhSymbol;
 	private: System::Windows::Forms::Label^  label8;
 	private: System::Windows::Forms::Button^  CalibrateButton;
 	private: bool IsCalibrated; 
@@ -185,6 +186,7 @@ namespace C3_App {
 			this->EnergizedInd = System::Drawing::Image::FromFile("Energized.png");
 			this->AcquiredInd  = System::Drawing::Image::FromFile("Acquired.png");
             this->RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
+			this->UhOhSymbol = System::Drawing::Image::FromFile("UhOh.png");
 		}
 
 #pragma region Windows Form Designer generated code
@@ -810,8 +812,13 @@ namespace C3_App {
                  CoordinatePair^ Padding = gcnew CoordinatePair((pPPI->Width - gFailureLine.Width) / 2, 
                                                                  (pPPI->Height - gFailureLine.Height) / 2);
 				 for(int i = 0; i < coordsObj->GetValidTracks(); i++) {
+					 if(RoverContact[i]->IsOutOfBounds) {
+						 g->DrawImage(UhOhSymbol, 10, 10);
+					 }
+					 else {
 					 g->DrawImage(RoverSymbol, Padding->x - offset->x + RoverContact[i]->x,
                          Padding->y - offset->y + RoverContact[i]->y);
+					 }
 				 }
 				 
 				 //int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;
