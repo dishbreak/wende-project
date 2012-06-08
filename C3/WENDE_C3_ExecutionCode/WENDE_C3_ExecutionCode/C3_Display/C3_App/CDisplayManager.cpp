@@ -412,3 +412,25 @@ int CDisplayManager::Update_Rover_Acquired_Indicator(int nRoverAcqStatus)
 	}
 	return 0;
 }
+
+int CDisplayManager::Update_Calibration_Reply(int nAlertID) {
+	C3_User_Interface::CalibrationState calibState;
+	switch(nAlertID) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			calibState = C3_User_Interface::CalibrationState::Calibrating;
+		case 6:
+			calibState = C3_User_Interface::CalibrationState::Failed;
+		case 7:
+			calibState = C3_User_Interface::CalibrationState::Success;
+		default:
+			break;
+	}
+	C3_User_Interface::Instance->Update_Calibration_Button(calibState);
+	return 0;
+}
+
