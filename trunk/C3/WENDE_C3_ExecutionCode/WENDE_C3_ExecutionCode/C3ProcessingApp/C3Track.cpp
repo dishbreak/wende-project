@@ -103,7 +103,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		//double cameraToLaserY = laserOriginCameraSpace12 - playingFieldOrigin12;
 
 		//Alternative translation method(USE THIS ONE)
-		double theta = M_PI - atan2(laserOrigin12,laserOrigin11); // yea I remembered Pi to the 6th decimal place so what..wanna fight about it? also, kept it in radians for the next 3 lines.
+		double theta = M_PI - atan2(laserOrigin12,laserOrigin11); // yea I used a constant included by cmath that goes to 20 decimal places to 1up you so what..wanna fight about it?
 		double range = sqrt(pow(laserOrigin11,2) + pow(laserOrigin12,2));
 		double cameraToLaserX = -range*sin(theta);
 		double cameraToLaserY = -range*cos(theta);
