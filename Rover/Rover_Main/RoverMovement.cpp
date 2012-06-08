@@ -41,7 +41,7 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 			seed = (unsigned long)readLightSensor() + (unsigned long)readLaserDetector() + 
 					(unsigned long)mode + millis() + micros(); // attempt to get some randomness...
 			randomSeed(  seed  ); 
-			spin_time = random(1, 20); // random number between 1 and 20 seconds 
+			spin_time = random(1, 10); // random number between 1 and 10 seconds 
 			spin_time *= 1000; // convert to ms
 		}
 		
@@ -63,6 +63,7 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
         Serial.print(" - ");
         Serial.println(getLeftMotor());	
 	*/
+
 	//if we are in a mode that needs to spin and we have not spun long enough
 	if ((mode == INPUT_FAST_MODE || mode == INPUT_SLOW_MODE || mode == INPUT_CRAWL_AND_STOP_MODE) && (move_time < spin_time)) {
 		// Left Motor
@@ -79,6 +80,14 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 	
 	// Spiral Mode
 	else if (mode == INPUT_SPIRAL_MODE) {
+                if (First_Mode_Entry)
+                {
+                  leftMotor->cumError = 0;
+                  leftMotor->lastError = 0;
+                  rightMotor->cumError = 0;
+                  rightMotor->lastError = 0;
+                  zero_all_counts();
+                }
 		if (mode_over(getminMotor(), mode) == 0 || First_Mode_Entry){
 			// set motor parameters for spiral
 			// Left Motor
@@ -111,7 +120,15 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 	
 	//move straight at a fast speed for fast mode
 	else if (mode == INPUT_FAST_MODE) {
-		if (mode_over(getminMotor(), mode) == 0 || First_Mode_Entry){
+                if (First_Mode_Entry)
+                {
+                  leftMotor->cumError = 0;
+                  leftMotor->lastError = 0;
+                  rightMotor->cumError = 0;
+                  rightMotor->lastError = 0;
+                  zero_all_counts();
+                }
+                if (mode_over(getminMotor(), mode) == 0 || First_Mode_Entry){
 			// Left Motor
 			leftMotor->Kp = fast_Kp; // proportional gain value
 			leftMotor->Ki = fast_Ki; // integrative gain value
@@ -134,6 +151,15 @@ boolean RoverMovementRoutines(int mode, motor_data* leftMotor, motor_data* right
 	
 	// else, we are in a mode that requires straight, slow movement (slow mode, crawl&stop, pass through)
 	else {
+                if (First_Mode_Entry)
+                {
+                  leftMotor->cumError = 0;
+                  leftMotor->lastError = 0;
+                  rightMotor->cumError = 0;
+                  rightMotor->lastError = 0;
+                  zero_all_counts();
+                }
+
 		if(mode_over(getminMotor(), mode) == 0 || First_Mode_Entry){
 			// Left Motor
 			leftMotor->Kp = slow_Kp; // proportional gain value
