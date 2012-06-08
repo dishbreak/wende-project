@@ -18,19 +18,28 @@ CoordinatePair::CoordinatePair(CoordinatePair ^Other) {
 	y = Other->y;
 }
 
-//CoordinatePair^ CoordinatePair::operator->() {
-//	return this;
-//}
+RatioPair::RatioPair() {
+    x = 0.0;
+    y = 0.0;
+}
 
 Coordinates::Coordinates(int TrackNum) {
 	//initialize all coordinate pairs
 	TotalTracks = TrackNum;
 	WorldBounds = gcnew CoordinatePair(2000,2000);
 	PixelBounds = gcnew CoordinatePair(300,300);
-	//CoordinatePair PixelBounds(300,300);
+    WorldPxRatio = gcnew RatioPair();
+    PixelShift = gcnew CoordinatePair();
 	CurWorldCoords = MakeCoordinatePairArray();
 	OldWorldCoords = MakeCoordinatePairArray();
 	PixelCoords = MakeCoordinatePairArray();
+
+    //calculate the ratio between world and pixels
+    WorldPxRatio->x = (float) 0.5 * PixelBounds->x / WorldBounds->x;
+    WorldPxRatio->y = (float) -0.5 * PixelBounds->y / WorldBounds->y;
+    //calculate the shift between world and pixels
+    PixelShift->x = PixelBounds->x / 2;
+    PixelShift->y = PixelBounds->y / 2;
 }
 
 Coordinates::~Coordinates() {
@@ -96,12 +105,9 @@ CoordinatePair^ Coordinates::TranslateCoords(CoordinatePair^ WorldCoords) {
 	CoordinatePair^ newCoords = gcnew CoordinatePair();
 	float coordsRatio = 0.0;
 	//Translate X
-	coordsRatio = (float) WorldCoords->x / WorldBounds->x;
-	newCoords->x = (int) (coordsRatio * PixelBounds->x);
+    newCoords->x = (int) (WorldPxRatio->x * WorldCoords->x) + PixelShift->x;
 	//Translate Y
-	coordsRatio = 0.0;
-	coordsRatio = (float) WorldCoords->y / WorldBounds->y;
-	newCoords->y = (int) (coordsRatio * PixelBounds->y);
+    newCoords->y = (int) (WorldPxRatio->y * WorldCoords->y) + PixelShift->y;
 	return newCoords;
 }
 
