@@ -236,6 +236,9 @@ UINT WINAPI TrackThread (LPVOID pParam)
 	int x = 0;
 	int y = 0;
 
+	////get a handle to the CDisplayManager
+    CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
+
 	while(isRunningInternal)
 	{
 		// aquire the mutex
@@ -243,6 +246,12 @@ UINT WINAPI TrackThread (LPVOID pParam)
 		{
 			if (m_CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
+				 ////set camera state
+                dispman->Update_Camera_Subsystem_Indicator(m_CameraTracks->Status);
+				dispman->Update_Camera_Communication_Indicator(1);
+
+				dispman->Update_Overall_Status();
+
 				sTrackMessage = *m_CameraTracks.GetStruct();
 				// Set the event
 				m_CameraTracks.SetEventClient();
@@ -258,8 +267,6 @@ UINT WINAPI TrackThread (LPVOID pParam)
 					freshCoordinates[i]->y = sTrackMessage.Tracks[i].Y;
 				}
 
-
-
 				////get a handle to the CDisplayManager
                 CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 				dispman->Update_Rover_PPI_Position(freshCoordinates, sTrackMessage.ValidTracks);
@@ -272,7 +279,15 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				//This check is already built into DisplayManager
 				//if(x >= 1 || y >= 1) dispman->Update_Rover_Acquired_Indicator(1);
 			}
-			else { /* unable to get mutex??? */	}
+			else {
+				if (dispman->Get_Camera_Com_Status() != 0)
+				{
+					dispman->Update_Camera_Communication_Indicator(0);
+					dispman->Update_Overall_Status();
+				}
+				else { /* no  update needed */}
+
+			}
 		}
 		else { /* loss of comm */	}
 		/* Enter the critical section -- other threads are locked out */
@@ -373,7 +388,6 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 				{
 					// Update the Calibration button
                     dispman->Update_Calibration_Reply(nAlertType);
-					//dispman->Update_Notification_Panel(4);
 
 
 					// Call notification panel... trigger other events

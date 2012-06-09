@@ -208,6 +208,10 @@
 				</File>
 			</File>
 			<File
+				RelativePath="..\..\SharedSource\C3AlertStates.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\SharedSource\C3Configuration.h"
 				>
 			</File>

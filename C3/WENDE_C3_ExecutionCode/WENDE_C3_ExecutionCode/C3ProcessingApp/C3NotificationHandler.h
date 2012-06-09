@@ -1,24 +1,6 @@
 #include "stdafx.h"
 #include <windows.h>
-
-/////////////////////////////////////////////////////////////////////////////////
-// Struct: enum types
-/////////////////////////////////////////////////////////////////////////////////
-typedef enum {
-	CALIBRATION_INIT    = 0,
-	CALIBRATION_IN_PROGRESS_1,	// send first point   
-	CALIBRATION_IN_PROGRESS_2,	// send second point ---> receive first
-	CALIBRATION_IN_PROGRESS_3,	// send third point	 ---> receive second  
-	CALIBRATION_IN_PROGRESS_4,	// send fourth point ---> receive third
-	CALIBRATION_IN_PROGRESS_5,	//                   ---> receive fourth   ---> calibrate
-	CALIBRATION_FAILED,
-	CALIBRATION_SUCCESS,
-	TARGET_LEFT_PLAYING_FIELD,
-	DTI_UPDATE,
-	POC_STARTED,
-	POC_ENTERED,
-	NUM_ALERTS_TYPES
-}C3_Alert_Types; 
+#include "C3AlertStates.h"
 
 class C3NotificationHandler
 {

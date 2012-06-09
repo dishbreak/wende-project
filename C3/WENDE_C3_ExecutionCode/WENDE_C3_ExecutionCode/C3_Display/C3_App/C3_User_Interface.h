@@ -3,7 +3,7 @@
 #include "CPPIConfig.h"
 #include "Coordinates.h"
 #include "CNetworkMonitor.h"
-
+#include "C3AlertStates.h"
 namespace C3_App {
 
 	using namespace System;
@@ -56,6 +56,9 @@ namespace C3_App {
 
 			instance = this;
 			m_monitor = monitor;
+
+			operationalState  = C3_Alert_Types::C3_DISPLAY_STARTUP;
+
 			//
 			//TODO: Add the constructor code here
 			//
@@ -157,13 +160,7 @@ namespace C3_App {
 			 System::Drawing::Image ^ UhOhSymbol;
 	private: System::Windows::Forms::Label^  label8;
 	private: System::Windows::Forms::Button^  CalibrateButton;
-	private: bool IsCalibrated; 
-
-	public: enum class CalibrationState {
-				Calibrating,
-				Failed,
-				Success
-			};
+	private: C3_Alert_Types operationalState; 
 
 	//private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
 
@@ -600,7 +597,6 @@ namespace C3_App {
 			this->gbAlerts->ResumeLayout(false);
 			this->gbAlerts->PerformLayout();
 			this->ResumeLayout(false);
-
 		}
 #pragma endregion
 
@@ -742,22 +738,34 @@ namespace C3_App {
 		C3_User_Interface::pbRoverAcq->Image = bmRoverAcquired;
 	};
 
-	public: void Update_Calibration_Button(CalibrationState calibState) {
+	public: void Update_Calibration_Button(C3_Alert_Types calibState) {
 				Delegate_Update_Calibration_Button ^ action = 
 					gcnew Delegate_Update_Calibration_Button(this, &C3_User_Interface::Worker_Update_Calibrate_Button);
 				System::String ^ ButtonText = "";
 				bool ButtonIsActive = false;
 				switch(calibState) {
-					 case CalibrationState::Calibrating:
-						 ButtonText = "Calibrating...";
-						 break;
-					 case CalibrationState::Failed:
-						 ButtonText = "Calibration Failed!";
-						 ButtonIsActive = true;
-						 break;
-					 case CalibrationState::Success:
+					case C3_Alert_Types::CALIBRATION_INIT:
+					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_1:
+					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_2:
+					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_3:
+					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_4:
+					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_5:
+						{
+							 ButtonText = "Calibrating...";
+							 break;
+						}
+					case C3_Alert_Types::CALIBRATION_FAILED:
+						{
+							 ButtonText = "Calibration Failed!";
+							 ButtonIsActive = true;
+							 break;
+						}
+					case C3_Alert_Types::CALIBRATION_SUCCESS:
+						{
 						 ButtonText = "Calbrated!";
+						 C3_Alert_Types::C3_DISPLAY_STARTUP;
 						 break;
+						}
 					 default:
 						 break;
 				}
@@ -878,18 +886,12 @@ private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs
 			 delete dlgExportDti;
 		 }
 		private: System::Void calibrateButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 this->CalibrateButton->Text = "Calibrating...";
-			 this->CalibrateButton->Enabled = false;
-			 m_monitor->StartCalibration();
-			 System::Threading::Thread::Sleep(5000);
-			 if (!IsCalibrated) {
-				 this->CalibrateButton->Text = "Calibration Failed.";
-				 IsCalibrated = true;
-				 this->CalibrateButton->Enabled = true;
-			 }
-			 else {
-				 this->CalibrateButton->Text = "Calibration Success!";
+			 if (operationalState == C3_Alert_Types::C3_DISPLAY_STARTUP)
+			 {
+				 this->CalibrateButton->Text = "Calibrating...";
 				 this->CalibrateButton->Enabled = false;
+				 m_monitor->StartCalibration();
+				 operationalState  = C3_Alert_Types::CALIBRATION_INIT;
 			 }
 		 }
 		 private: System::Void C3_User_Interface_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
