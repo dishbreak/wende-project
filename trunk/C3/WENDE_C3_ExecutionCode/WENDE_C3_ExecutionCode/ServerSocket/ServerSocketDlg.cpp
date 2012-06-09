@@ -934,10 +934,10 @@ void CServerSocketDlg::OnBnClickedBtnSendImage2()
 }
 void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired)
 {
-// This is used only to call QueueTimerHandler
-// Typically, this function is static member of CTimersDlg
-CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
-obj->OnBtnSendImage();
+	// This is used only to call QueueTimerHandler
+	// Typically, this function is static member of CTimersDlg
+	CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
+	obj->OnBtnSendImage();
 } 
 void CServerSocketDlg::OnBnClickedBtnSendLaserStatus()
 {

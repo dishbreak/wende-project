@@ -213,6 +213,14 @@ int _tmain(int argc, _TCHAR* argv[])
 				}
 				else
 				{
+					if (inData.ValidLasers == 0)
+					{
+						//rest index
+						calIndex    = 0;
+						// set to success
+						C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_FAILED);	
+						C3NotificationHandler::Instance().Set_IsCalibration(false);	
+					}
 					// just send the same command since we have what we need.
 					sendMessageSuccess = true;
 					// increment count
