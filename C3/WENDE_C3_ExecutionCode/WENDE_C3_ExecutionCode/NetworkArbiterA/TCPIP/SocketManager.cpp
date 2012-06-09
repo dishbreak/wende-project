@@ -49,7 +49,7 @@ CSocketManager::~CSocketManager()
 //////////////////////////////////////////////////////////////////////
 // Destructor
 //////////////////////////////////////////////////////////////////////
-void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom)
+void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom,__int64 startTime)
 {
 	// TODO FIX THIS
 	static char temp [1024];
@@ -66,23 +66,23 @@ void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockA
 	{
 		case C3_CAMERA_STATUS: 
 		{ 
-			CArbiterSharedMemoryManager::Instance().DecodeCameraStatusMessage(inData,temp,dwCount); 
+			CArbiterSharedMemoryManager::Instance().DecodeCameraStatusMessage(inData,temp,dwCount,startTime); 
 			break; 
 		}
 		case C3_CAMERA_TRACK:  
 		{ 
-			CArbiterSharedMemoryManager::Instance().DecodeCameraTrackMessage(inData,temp,dwCount); 
+			CArbiterSharedMemoryManager::Instance().DecodeCameraTrackMessage(inData,temp,dwCount,startTime); 
 			break; 
 		}
 		case C3_CAMERA_IMAGE:  
 		{ 
-			CString loadName(CArbiterSharedMemoryManager::Instance().DecodeCameraImageMessage(inData,temp,dwCount).c_str()); 
+			CString loadName(CArbiterSharedMemoryManager::Instance().DecodeCameraImageMessage(inData,temp,dwCount,startTime).c_str()); 
 			m_picCtrl->Load(loadName);
 			break; 
 		}
 		case C3_LASER_STATUS:
 		{
-			CArbiterSharedMemoryManager::Instance().DecodeLaserStatusMessage(inData,temp,dwCount); 
+			CArbiterSharedMemoryManager::Instance().DecodeLaserStatusMessage(inData,temp,dwCount,startTime); 
 			break;
 		}
 		default: 
@@ -151,7 +151,7 @@ void CSocketManager::SetPictureWindow(CPictureCtrl* picCtrl)
 // Function: AppendMessage
 //  purpose: Process the receive messages
 //////////////////////////////////////////////////////////////////////
-void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount)
+void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime)
 {
 	LPBYTE lpData = lpBuffer;
 	SockAddrIn origAddr;
@@ -172,7 +172,7 @@ void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount)
 	}
 
 	// Display data to message list
-	DisplayData( lpData, dwCount, origAddr );
+	DisplayData( lpData, dwCount, origAddr, startTime );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

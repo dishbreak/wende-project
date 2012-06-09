@@ -35,11 +35,11 @@ public:
 	virtual void AppendMessage(LPCTSTR strText);
 public:
 
-	virtual void OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount);
+	virtual void OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime);
 	virtual void OnEvent(UINT uEvent, LPVOID lpvData);
 
 protected:
-	void DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom);
+	void DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom,__int64 startTime);
 	CEdit			 *m_pMsgCtrl;
 	C3PacketType	  m_MsgType;
 	CPictureCtrl	 *m_picCtrl;
