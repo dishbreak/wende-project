@@ -233,6 +233,12 @@ int _tmain(int argc, _TCHAR* argv[])
 			else
 			{
 				// TODO FIX THIS
+				C3FilterClass  kalman;
+				C3_TRACK_POINT_DOUBLE testPoint;
+
+				testPoint.X = inData.Tracks[0].X;
+				testPoint.Y = inData.Tracks[0].Y;
+				kalman.FilterInput(testPoint,0.250);
 				sendMessageSuccess = true;
 			}
 
@@ -260,7 +266,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			m_LaserCommand->PacketNumber = cameraTrackMessageCount;
 			m_LaserCommand->ProcessID    = m_LaserCommand.GetProcessID();
 			m_LaserCommand->Time		 = inData.Time;
-			
+			m_LaserCommand->startTime    = m_CameraTracks->startTime;
 			m_LaserCommand->PointLocation.EL = commandOut.EL; //TODO FIX THIS VALUE TO ACTUAL
 			m_LaserCommand->PointLocation.AZ = commandOut.AZ; //TODO FIX THIS VALUE TO ACTUAL
 

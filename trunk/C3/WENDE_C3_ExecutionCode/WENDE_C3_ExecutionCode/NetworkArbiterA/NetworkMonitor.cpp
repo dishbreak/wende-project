@@ -90,6 +90,18 @@ UINT WINAPI LaserCommandThread (LPVOID pParam)
 					memcpy(msgProxy.byData, T2CA((char*)pose.StatusToBytes()), nLen);
 					unsigned char sizeArray[4];
 					CUtilities::IntToBytes(sizeArray,htonl(nLen));
+
+					//end timing
+					LARGE_INTEGER start;
+				    LARGE_INTEGER end;
+			        LARGE_INTEGER countsPerSecond;
+				    ::QueryPerformanceCounter(&end);
+					::QueryPerformanceFrequency(&countsPerSecond);
+					start.QuadPart = m_LaserCommand->startTime;
+					double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+					char f[256];
+					sprintf(f,"\r\n%12.12f\r\n",elapsed);
+					cNetworMonitor->m_SocketObjectServer->AppendMessage(f);
 					cNetworMonitor->m_SocketObjectServer->WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
 					cNetworMonitor->m_SocketObjectServer->WriteComm(msgProxy.byData, nLen, INFINITE);
 				}
