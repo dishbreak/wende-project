@@ -135,6 +135,10 @@ void CServerSocketDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LASER_Y_0, m_laserYEditBox0);
 	DDX_Control(pDX, IDC_STATIC_PICTURE, m_picCtrl);
 	DDX_Control(pDX, IDC_LASER_STATUS_TEXT, m_LaserStatusText);
+	DDX_Control(pDX, IDC_BTN_SEND_STATUS_CONT, m_CameraStatusButton);
+	DDX_Control(pDX, IDC_BTN_SEND_TRACK2, m_CameraTrackButton);
+	DDX_Control(pDX, IDC_BTN_SEND_IMAGE2, m_CameraImageButton);
+	DDX_Control(pDX, IDC_BTN_SEND_IMAGE4, m_LaserStatusButton);
 }
 
 BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
@@ -885,14 +889,28 @@ void CServerSocketDlg::OnBnClickedLaserStatusOperational()
 
 void CServerSocketDlg::OnBnClickedBtnSendStatusCont()
 {
-	BOOL success = ::CreateTimerQueueTimer(
-		&m_timerHandleCameraStatus,
-		NULL,
-		TimerProcCameraStatus,
-		this,
-		0,
-		125,
-		WT_EXECUTEINTIMERTHREAD);
+	static bool isStart = true;
+	if (isStart == true)
+	{
+		isStart = false;
+		m_CameraStatusButton.SetWindowTextA("Stop Send Camera Status");
+		BOOL success = ::CreateTimerQueueTimer(&m_timerHandleCameraStatus,
+												NULL,
+												TimerProcCameraStatus,
+												this,
+												0,
+												125,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		isStart = true;
+		m_CameraStatusButton.SetWindowTextA("Send Camera Status (cont.)");
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleCameraStatus, NULL);
+		Sleep(5000);
+		CloseHandle (m_timerHandleCameraStatus);
+	}
 }
 void CALLBACK TimerProcCameraStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
 {
@@ -904,14 +922,28 @@ obj->OnBtnSendStatus();
 
 void CServerSocketDlg::OnBnClickedBtnSendTrack2()
 {
-	BOOL success = ::CreateTimerQueueTimer(
-		&m_timerHandleCameraStatus,
-		NULL,
-		TimerProcCameraTrack,
-		this,
-		0,
-		125,
-		WT_EXECUTEINTIMERTHREAD);
+	static bool isStart = true;
+	if (isStart == true)
+	{
+		isStart = false;
+		m_CameraTrackButton.SetWindowTextA("Stop Send Camera Track");
+		BOOL success = ::CreateTimerQueueTimer( &m_timerHandleCameraStatus,
+												NULL,
+												TimerProcCameraTrack,
+												this,
+												0,
+												125,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		isStart = true;
+		m_CameraTrackButton.SetWindowTextA("Send Camera Track (cont.)");
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleCameraStatus, NULL);
+		Sleep(5000);
+		CloseHandle (m_timerHandleCameraStatus);
+	}
 }
 void CALLBACK TimerProcCameraTrack(void* lpParametar, BOOLEAN TimerOrWaitFired)
 {
@@ -923,14 +955,28 @@ obj->OnBtnSendTrack();
 
 void CServerSocketDlg::OnBnClickedBtnSendImage2()
 {
-	BOOL success = ::CreateTimerQueueTimer(
-		&m_timerHandleCameraImage,
-		NULL,
-		TimerProcCameraImage,
-		this,
-		0,
-		1000,
-		WT_EXECUTEINTIMERTHREAD);
+	static bool isStart = true;
+	if (isStart == true)
+	{
+		m_CameraImageButton.SetWindowTextA("Stop Send Camera Image");
+		isStart = false;
+		BOOL success = ::CreateTimerQueueTimer( &m_timerHandleCameraImage,
+												NULL,
+												TimerProcCameraImage,
+												this,
+												0,
+												1000,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		m_CameraImageButton.SetWindowTextA("Send Camera Image (cont.)");
+		isStart = true;
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleCameraStatus, NULL);
+		Sleep(5000);
+		CloseHandle (m_timerHandleCameraStatus);
+	}
 }
 void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired)
 {
@@ -941,14 +987,28 @@ void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired)
 } 
 void CServerSocketDlg::OnBnClickedBtnSendLaserStatus()
 {
-BOOL success = ::CreateTimerQueueTimer(
-		&m_timerHandleCameraImage,
-		NULL,
-		TimerProcLaserStatus,
-		this,
-		0,
-		125,
-		WT_EXECUTEINTIMERTHREAD);
+	static bool isStart = true;
+	if (isStart == true)
+	{
+		isStart = false;
+		m_LaserStatusButton.SetWindowTextA("Stop Send Laser Status");
+		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandleCameraImage,
+												NULL,
+												TimerProcLaserStatus,
+												this,
+												0,
+												125,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		m_LaserStatusButton.SetWindowTextA("Send Laser Status (cont.)");
+		isStart = true;
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleCameraStatus, NULL);
+		Sleep(5000);
+		CloseHandle (m_timerHandleCameraStatus);
+	}
 }
 void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
 {
