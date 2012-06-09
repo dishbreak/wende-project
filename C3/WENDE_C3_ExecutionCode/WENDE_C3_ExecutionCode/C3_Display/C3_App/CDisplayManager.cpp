@@ -9,9 +9,6 @@
 using namespace C3_App;
 using namespace std;
 
-//initialize static pointer to 0
-//CDisplayManager ^ CDisplayManager::displayMgr = 0;
-
 CDisplayManager::CDisplayManager() {
     m_nCameraComStatus = 0;
     m_nCameraStatus = 0;
@@ -20,8 +17,6 @@ CDisplayManager::CDisplayManager() {
     m_nLaserStatus = 0;
     m_OverStatus = 0;
 }
-
-
 ////////////////////////////////////////////////////////////////////////
 // Description: Returns a pointer to the CDisplayManager. If there is no
 //              CDisplayManager, one is new'd and returned.
