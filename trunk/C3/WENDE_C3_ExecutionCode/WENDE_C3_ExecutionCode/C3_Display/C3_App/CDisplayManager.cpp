@@ -293,7 +293,7 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 	return 0;
 }
 
-int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath)
+int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath, __int64 nStartTime)
 {
 	System::Diagnostics::Debug::WriteLine(sImagePath);
 
@@ -301,7 +301,7 @@ int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath)
 
 	// Use managed C to garbage collect automatically
 	bmCameraImage = gcnew Bitmap(sImagePath);
-	C3_User_Interface::Instance->Update_Live_Feed_Panel(bmCameraImage);
+	C3_User_Interface::Instance->Update_Live_Feed_Panel(bmCameraImage, nStartTime);
  		
 	return 0;
 }

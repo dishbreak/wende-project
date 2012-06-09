@@ -20,7 +20,7 @@ public:
 	int Update_Overall_Status(void);
     int Update_Rover_Acquired_Indicator(int nRoverAcqStatus);
     int Store_Latest_DTI(int nDTI, bool bPassed);
-	int Update_Live_Video_Feed(String ^ sImagePath);
+	int Update_Live_Video_Feed(String ^ sImagePath, __int64 nStartTime);
 	int Update_Calibration_Reply(int nAlertID);
 	void Update_Notification_Panel(int nAlertID);
 	void Disable_All_Controls(void);

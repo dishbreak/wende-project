@@ -629,8 +629,10 @@ namespace C3_App {
 		C3_User_Interface::tbAlertsPanel->ForeColor = tFgColor;
 	};
 
-	public: void Update_Live_Feed_Panel(System::Drawing::Bitmap^ bmLiveImage)
+	public: void Update_Live_Feed_Panel(System::Drawing::Bitmap^ bmLiveImage, __int64 nStartTime)
 	{
+		Record_Update_Live_Feed_Panel(nStartTime);
+
 		Delegate_Update_Live_Feed_Panel^ action = gcnew Delegate_Update_Live_Feed_Panel(this, &C3_User_Interface::Worker_Update_Live_Feed_Panel);
 		this->BeginInvoke(action, bmLiveImage);
 	};
@@ -662,6 +664,18 @@ namespace C3_App {
 
 		this->BeginInvoke(action, bmCamCom);
 	};
+
+	private: void Record_Update_Live_Feed_Panel(__int64 nStartTime)
+	{
+		LARGE_INTEGER start;
+		LARGE_INTEGER end;
+		LARGE_INTEGER countsPerSecond;
+
+		::QueryPerformanceCounter(&end);
+		::QueryPerformanceFrequency(&countsPerSecond);
+		start.QuadPart = nStartTime;
+		double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+	}
 
 	private: void Worker_Update_Camera_Comm_Indicator(System::Drawing::Image^ bmCamCom)
 	{
