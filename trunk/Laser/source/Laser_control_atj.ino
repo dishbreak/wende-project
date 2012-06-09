@@ -10,6 +10,7 @@
 #define TICK_OFFSET 1086
 #define TICKS_PER_DEGREE 20.6
 #define DEGREES_TO_TICKS(DEG) (TICK_OFFSET + DEG * TICKS_PER_DEGREE)
+#define TEST 1
 
 Servo myservoAz;  // create servo object to control a servo  - Azimuth
 Servo myservoEl; //elevation servo object
