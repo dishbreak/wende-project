@@ -208,8 +208,8 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// set the dialog controls..
 	CString port;
-	port.Format(_T("%d"), C3Configuration::Instance().Connection.port);
-	m_AddressControlValue = htonl(inet_addr(C3Configuration::Instance().Connection.ip.c_str()));
+	port.Format(_T("%d"), C3Configuration::Instance().ConnectionArbiter.port);
+	m_AddressControlValue = htonl(inet_addr(C3Configuration::Instance().ConnectionArbiter.ip.c_str()));
 	m_AddressPort         = port;
 	//CString text;
 	//text.Format(_T("%f"),100.0);
@@ -270,7 +270,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketClientStartThreadProc(LPVOID pParam)
 	CNetworkArbiterDlg* pThis = reinterpret_cast<CNetworkArbiterDlg*>( pParam );
 	// set the dialog controls..
 	CString port;
-	port.Format(_T("%d"), C3Configuration::Instance().Connection.port);
+	port.Format(_T("%d"), C3Configuration::Instance().ConnectionArbiter.port);
 	// setup the client sockets
 	for (int ii = 0; ii < SOCKET_COUNTS_CLIENTS; ii++)
 	{
@@ -283,8 +283,8 @@ UINT WINAPI CNetworkArbiterDlg::SocketClientStartThreadProc(LPVOID pParam)
 		while (!pThis->m_SocketObjectClients[ii].IsOpen())
 		{
 			// To use TCP socket
-			port.Format(_T("%d"), C3Configuration::Instance().Connection.port+ii);
-			pThis->m_SocketObjectClients[ii].ConnectTo( C3Configuration::Instance().Connection.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
+			port.Format(_T("%d"), C3Configuration::Instance().ConnectionArbiter.port+ii);
+			pThis->m_SocketObjectClients[ii].ConnectTo( C3Configuration::Instance().ConnectionArbiter.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
 			if (!pThis->m_SocketObjectClients[ii].IsOpen())
 			{
 				Sleep(5);
@@ -313,7 +313,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketServerStartThreadProc(LPVOID pParam)
 	CNetworkArbiterDlg* pThis = reinterpret_cast<CNetworkArbiterDlg*>( pParam );
 	// set the dialog controls..
 	CString port;
-	port.Format(_T("%d"), C3Configuration::Instance().Connection.port);
+	port.Format(_T("%d"), C3Configuration::Instance().ConnectionArbiter.port);
 	// setup the server sockets
 	for (int ii = 0; ii < SOCKET_COUNTS_SERVERS; ii++)
 	{
@@ -339,7 +339,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketServerStartThreadProc(LPVOID pParam)
 		while (!pThis->m_SocketObjectServer[ii].IsOpen())
 		{
 			// To use TCP socket
-			port.Format(_T("%d"), C3Configuration::Instance().Connection.port+ii+SOCKET_COUNTS_CLIENTS);
+			port.Format(_T("%d"), C3Configuration::Instance().ConnectionArbiter.port+ii+SOCKET_COUNTS_CLIENTS);
 			pThis->m_SocketObjectServer[ii].SetSmartAddressing( false );
 			pThis->m_SocketObjectServer[ii].CreateSocket( port, AF_INET, SOCK_STREAM, 0); // TCP
 		}
@@ -403,7 +403,7 @@ void CNetworkArbiterDlg::OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pRe
 	struct in_addr addr;
 	addr.s_addr = htonl((long)temp);
 
-	C3Configuration::Instance().Connection.ip = inet_ntoa(addr);
+	C3Configuration::Instance().ConnectionArbiter.ip = inet_ntoa(addr);
 }
 
 void CNetworkArbiterDlg::OnEnChangePort()
@@ -416,7 +416,7 @@ void CNetworkArbiterDlg::OnEnChangePort()
 	// TODO:  Add your control notification handler code here
 
 	m_PortCtrl.GetWindowTextA(m_AddressPort);
-	C3Configuration::Instance().Connection.port = atoi(m_AddressPort);
+	C3Configuration::Instance().ConnectionArbiter.port = atoi(m_AddressPort);
 }
 
 void CNetworkArbiterDlg::OnBnClickedC3LaserStatus()

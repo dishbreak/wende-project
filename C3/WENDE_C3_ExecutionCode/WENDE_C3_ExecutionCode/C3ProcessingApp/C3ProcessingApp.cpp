@@ -453,37 +453,7 @@ void TestTrackFilter()
 		}
 		myfile.close();
 	}
-
 }
-// Calibration Unit Test
-void TestCalibration()
-{
-	vector<string> files;
-	files.insert(files.begin(),"TEST_CAL_4.txt");
-	files.insert(files.begin(),"TEST_CAL_3.txt");
-	files.insert(files.begin(),"TEST_CAL_2.txt");
-	files.insert(files.begin(),"TEST_CAL_1.txt");
-	C3_TRACK_POINT_DOUBLE testPoints[4];
-	C3_TRACK_POINT_DOUBLE procResult;
-	C3_TRACK_POINT_DOUBLE fileResult;
-
-	double         MAX_ERROR      = 0.005;
-
-	for (unsigned int jj = 0; jj < files.size(); jj++)
-	{
-		printf("TEST CALIBRATION FILE --- %d ---\n",jj);
-		
-		ifstream myfile (files[jj].c_str());
-		myfile >> testPoints[0].X >> testPoints[0].Y >>testPoints[1].X >> testPoints[1].Y >>testPoints[2].X >> testPoints[2].Y >>testPoints[3].X >> testPoints[3].Y >> fileResult.X >> fileResult.Y;
-		procResult = calibrate(testPoints); //get laser data
-		printf("::Difference [Xlaser,Ylaser]= [%f,%f]\n",abs(fileResult.X-procResult.X),abs(fileResult.Y-procResult.Y));
-		assert(abs(fileResult.X-procResult.X) < MAX_ERROR && 
-				   abs(fileResult.Y-procResult.Y) < MAX_ERROR);
-		
-		myfile.close();
-	}
-}
-
 // Calibration Unit Test
 void TestCalibration(HANDLE hconsole)
 {
