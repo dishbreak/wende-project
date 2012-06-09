@@ -137,6 +137,15 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 
 				dispman->Update_Overall_Status();
 
+				LARGE_INTEGER start;
+				LARGE_INTEGER end;
+				LARGE_INTEGER countsPerSecond;
+
+				::QueryPerformanceCounter(&end);
+				::QueryPerformanceFrequency(&countsPerSecond);
+				start.QuadPart = m_CameraStatus->startTime;
+				double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+
 				// Set the event
 				m_CameraStatus.SetEventClient();
 
@@ -206,6 +215,15 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 				dispman->Update_Laser_Subsystem_Indicator(m_LaserStatus->Status);
 				dispman->Update_Laser_Communication_Indicator(1);
 				dispman->Update_Overall_Status();
+
+				LARGE_INTEGER start;
+				LARGE_INTEGER end;
+				LARGE_INTEGER countsPerSecond;
+
+				::QueryPerformanceCounter(&end);
+				::QueryPerformanceFrequency(&countsPerSecond);
+				start.QuadPart = m_LaserStatus->startTime;
+				double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
 
 				// Set the event
 				m_LaserStatus.SetEventClient();
@@ -277,6 +295,16 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				dispman->Update_Overall_Status();
 
 				sTrackMessage = *m_CameraTracks.GetStruct();
+
+				LARGE_INTEGER start;
+				LARGE_INTEGER end;
+				LARGE_INTEGER countsPerSecond;
+
+				::QueryPerformanceCounter(&end);
+				::QueryPerformanceFrequency(&countsPerSecond);
+				start.QuadPart = m_CameraTracks->startTime;
+				double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+
 				// Set the event
 				m_CameraTracks.SetEventClient();
 
