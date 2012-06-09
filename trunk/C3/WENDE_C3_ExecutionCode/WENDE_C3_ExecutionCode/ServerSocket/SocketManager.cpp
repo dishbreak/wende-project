@@ -36,7 +36,7 @@ CSocketManager::~CSocketManager()
 }
 
 
-void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom)
+void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom,__int64 startTime)
 {
 	CString strData;
 #ifndef UNICODE
@@ -99,7 +99,7 @@ void CSocketManager::SetMessageWindow(CEdit* pMsgCtrl)
 }
 
 
-void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount)
+void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime)
 {
 	LPBYTE lpData = lpBuffer;
 	SockAddrIn origAddr;
@@ -120,7 +120,7 @@ void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount)
 	}
 
 	// Display data to message list
-	DisplayData( lpData, dwCount, origAddr );
+	DisplayData( lpData, dwCount, origAddr, startTime );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

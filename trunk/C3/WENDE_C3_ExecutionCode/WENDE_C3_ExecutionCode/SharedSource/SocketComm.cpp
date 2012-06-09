@@ -219,7 +219,7 @@ void CSocketComm::AppendMessage(LPCTSTR strText)
 //              called every time new data is available.
 // PARAMETERS:
 ///////////////////////////////////////////////////////////////////////////////
-void CSocketComm::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount)
+void CSocketComm::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime)
 {
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -1066,7 +1066,9 @@ void CSocketComm::Run()
         }
         else if (dwBytes2 > 0L)
         {
-            OnDataReceived( lpData, index);
+			LARGE_INTEGER start;
+			::QueryPerformanceCounter(&start);
+            OnDataReceived( lpData, index,(__int64)start.QuadPart);
         }
 
         //Sleep(0);

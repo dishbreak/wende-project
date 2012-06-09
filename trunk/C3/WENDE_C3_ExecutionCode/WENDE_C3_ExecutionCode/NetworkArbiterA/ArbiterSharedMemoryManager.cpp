@@ -81,7 +81,7 @@ int CArbiterSharedMemoryManager::DecodeCameraStatusMessage_DEBUG(cameraStatus *s
 //  Purpose: This function decodes network traffic from camera
 //           specifically decodes the status message.
 ////////////////////////////////////////////////////////////////////////
-void CArbiterSharedMemoryManager::DecodeCameraStatusMessage(LPCTSTR strText, char* temp,DWORD size)
+void CArbiterSharedMemoryManager::DecodeCameraStatusMessage(LPCTSTR strText, char* temp,DWORD size,__int64 startTime)
 {
 	// protobuf message
 	cameraStatus ss;
@@ -103,7 +103,17 @@ void CArbiterSharedMemoryManager::DecodeCameraStatusMessage(LPCTSTR strText, cha
 		C3CameraStatus->Status		 = ss.status();
 		C3CameraStatus->SubsystemId  = 3;
 		C3CameraStatus->Time		 = static_cast<DWORD>(ss.time());
-		::QueryPerformanceCounter((LARGE_INTEGER*)&C3CameraStatus->startTime);
+
+		//end timing
+		LARGE_INTEGER start;
+		LARGE_INTEGER end;
+		LARGE_INTEGER countsPerSecond;
+		::QueryPerformanceCounter(&end);
+		::QueryPerformanceFrequency(&countsPerSecond);
+		start.QuadPart = startTime;
+		double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+		C3CameraStatus->startTime= startTime;
+
 		// loops through clients and sends events
 		int eventsToSend = C3CameraStatus->ShmInfo.Clients;
 		for (int pp = 0; pp < eventsToSend; pp++)
@@ -154,7 +164,7 @@ int CArbiterSharedMemoryManager::DecodeCameraTrackMessage_DEBUG(cameraTracks *tr
 //  Purpose: This function decodes network traffic from camera
 //           specifically decodes the status message.
 ////////////////////////////////////////////////////////////////////////
-void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp,DWORD size)
+void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char* temp,DWORD size,__int64 startTime)
 {
 	// protobuf message
 	cameraTracks tr;
@@ -177,7 +187,17 @@ void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char
 		C3CameraTracks->SubsystemId  = 3;
 		C3CameraTracks->Time		 = static_cast<DWORD>(tr.time());
 		C3CameraTracks->ValidTracks  = tr.target_size();
-		::QueryPerformanceCounter((LARGE_INTEGER*)&C3CameraTracks->startTime);
+		
+		//end timing
+		LARGE_INTEGER start;
+		LARGE_INTEGER end;
+		LARGE_INTEGER countsPerSecond;
+		::QueryPerformanceCounter(&end);
+		::QueryPerformanceFrequency(&countsPerSecond);
+		start.QuadPart = startTime;
+		double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+		C3CameraTracks->startTime= startTime;
+
 		for (int ii = 0; ii < tr.target_size(); ii++)
 		{
 			C3CameraTracks->Tracks[ii].X = tr.target(ii).x();
@@ -290,7 +310,7 @@ string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 //  Purpose: This function decodes network traffic from camera
 //           specifically decodes the status message.
 ////////////////////////////////////////////////////////////////////////
-string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, char* temp,DWORD size)
+string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, char* temp,DWORD size,__int64 startTime)
 {
 	// protobuf message
 	cameraImage im;
@@ -311,7 +331,17 @@ string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, c
 		C3CameraImage->PacketNumber = packetNumebr;
 		C3CameraImage->ProcessID    = C3CameraImage.GetProcessID();
 		C3CameraImage->Time			= static_cast<DWORD>(im.time());
-		::QueryPerformanceCounter((LARGE_INTEGER*)&C3CameraImage->startTime);
+		
+		//end timing
+		LARGE_INTEGER start;
+		LARGE_INTEGER end;
+		LARGE_INTEGER countsPerSecond;
+		::QueryPerformanceCounter(&end);
+		::QueryPerformanceFrequency(&countsPerSecond);
+		start.QuadPart = startTime;
+		double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+		C3CameraImage->startTime= startTime;
+
 		memcpy(C3CameraImage->imagePath,saveName.c_str(),saveName.size());
 		// loops through clients and sends events
 		int eventsToSend = C3CameraImage->ShmInfo.Clients;
@@ -362,7 +392,7 @@ int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(laserStatus *ss,
 //  Purpose: This function decodes network traffic from laser
 //           specifically decodes the status message.
 ////////////////////////////////////////////////////////////////////////
-void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char* temp,DWORD size)
+void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char* temp,DWORD size,__int64 startTime)
 {
 	
 	#ifndef LASER_USE_PROTOBUF
@@ -388,7 +418,16 @@ void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char
 		C3LaserStatus->PacketNumber = packetNumber;
 		C3LaserStatus->ProcessID    = C3LaserStatus.GetProcessID();
 		C3LaserStatus->SubsystemId  = 3;
-		::QueryPerformanceCounter((LARGE_INTEGER*)&C3LaserStatus->startTime);
+		//end timing
+		LARGE_INTEGER start;
+		LARGE_INTEGER end;
+		LARGE_INTEGER countsPerSecond;
+		::QueryPerformanceCounter(&end);
+		::QueryPerformanceFrequency(&countsPerSecond);
+		start.QuadPart = startTime;
+		double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+		C3LaserStatus->startTime= startTime;
+
 		#ifndef LASER_USE_PROTOBUF
 		C3LaserStatus->Status		= ss.LaserStatus.status;
 		#else

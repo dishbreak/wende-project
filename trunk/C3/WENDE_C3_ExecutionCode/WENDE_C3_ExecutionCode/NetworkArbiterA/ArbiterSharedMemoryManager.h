@@ -60,13 +60,13 @@ public:
 /////////////////////////////////////////////////////////////
 public:
 	// decodes the network camera status message
-	void DecodeCameraStatusMessage(LPCTSTR strText, char* temp,DWORD size);
+	void DecodeCameraStatusMessage(LPCTSTR strText, char* temp,DWORD size,__int64 startTime);
 	// decodes the network camera track message
-	void DecodeCameraTrackMessage (LPCTSTR strText, char* temp,DWORD size);
+	void DecodeCameraTrackMessage (LPCTSTR strText, char* temp,DWORD size,__int64 startTime);
 	// decodes the network camera image message
-	string DecodeCameraImageMessage (LPCTSTR strText, char* temp,DWORD size);
+	string DecodeCameraImageMessage (LPCTSTR strText, char* temp,DWORD size,__int64 startTime);
 	// decodes the network laser status message
-	void DecodeLaserStatusMessage(LPCTSTR strText, char* temp,DWORD size);
+	void DecodeLaserStatusMessage(LPCTSTR strText, char* temp,DWORD size,__int64 startTime);
 private:
 	// prepares the debug string
 	int DecodeCameraStatusMessage_DEBUG(cameraStatus *ss, char* temp);
