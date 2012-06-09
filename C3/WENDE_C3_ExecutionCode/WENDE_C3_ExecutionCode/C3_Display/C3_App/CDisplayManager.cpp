@@ -9,6 +9,8 @@
 using namespace C3_App;
 using namespace std;
 
+
+
 CDisplayManager::CDisplayManager() {
     m_nCameraComStatus = 0;
     m_nCameraStatus = 0;
