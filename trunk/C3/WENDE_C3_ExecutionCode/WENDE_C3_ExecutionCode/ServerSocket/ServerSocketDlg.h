@@ -153,6 +153,10 @@ public:
 	afx_msg void OnBnClickedBtnSendTrack2();
 	afx_msg void OnBnClickedBtnSendImage2();
 	afx_msg void OnBnClickedBtnSendLaserStatus();
+	CButton m_CameraStatusButton;
+	CButton m_CameraTrackButton;
+	CButton m_CameraImageButton;
+	CButton m_LaserStatusButton;
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -435,7 +435,7 @@ UINT WINAPI ProcessingInterfaceTransmitThread(LPVOID pParam)
 		if (m_ProcessingInterface.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 		{
 			// set the calibration flag
-			m_ProcessingInterface->AlertType = 0;
+			m_ProcessingInterface->AlertType = C3_Alert_Types::CALIBRATION_INIT;
 
 			// Set the event
 			m_ProcessingInterface.SetEventClient();	
