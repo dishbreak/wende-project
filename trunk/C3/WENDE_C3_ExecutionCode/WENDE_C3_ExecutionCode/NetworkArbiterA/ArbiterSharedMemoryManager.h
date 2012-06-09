@@ -84,6 +84,8 @@ private:
 	#endif
 	//DECODE THE STATUS
 	string DecodeStatus(int status);
+	// get start time 
+//	void getStartTime
 /////////////////////////////////////////////////////////////
 // Private Functions... singleton items
 /////////////////////////////////////////////////////////////
@@ -94,4 +96,5 @@ private:
 	CArbiterSharedMemoryManager(const CArbiterSharedMemoryManager&);           
 	// Prevent assignment
 	CArbiterSharedMemoryManager& operator=(const CArbiterSharedMemoryManager&);
+	
 };

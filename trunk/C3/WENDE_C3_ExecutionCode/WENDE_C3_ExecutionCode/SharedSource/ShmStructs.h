@@ -77,8 +77,7 @@ typedef struct {
 	UINT32 SubsystemId;
 	
 	CHAR   textStr[SHM_MAX_STATUS_TEXT];
-	// TODO PERFORMANCE COUNTER - FIX
-
+	__int64 startTime;
 	SHM_INFO_STRUCT		ShmInfo;			// Shared SHM information
 }CAMERA_STATUS_MSG_SHM;
 /////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +135,9 @@ typedef struct{
 
 	C3_TRACK_POINT Tracks[SHM_MAX_TRACKS];
 	C3_TRACK_POINT Lasers[SHM_MAX_LASERS];
-	// TODO PERFORMANCE COUNTER - FIX
+
+	__int64 startTime;
+	
 	SHM_INFO_STRUCT		ShmInfo;			// Shared SHM information
 }CAMERA_TRACK_MSG_SHM;
 /////////////////////////////////////////////////////////////////////////////////
@@ -150,7 +151,9 @@ typedef struct{
 	DWORD        Time;								// time of the message (based on camera)
 	UINT32		 PacketNumber;						// packet number
 	CHAR		 imagePath[SHM_MAX_IMAGE_NAME];		// the image path			
-	// TODO PERFORMANCE COUNTER - FIX
+	
+	__int64 startTime;
+	
 	SHM_INFO_STRUCT		ShmInfo;					// Shared SHM information
 }CAMERA_IMAGE_MSG_SHM;
 /////////////////////////////////////////////////////////////////////////////////
@@ -167,7 +170,9 @@ typedef struct{
 	UINT32		 LaserOnOff;						// Bool for Laser ON or OFF (0 or 1)
 
 	C3_TRACK_POINT	 PointLocation;					// relative pointing command
-	// TODO PERFORMANCE COUNTER - FIX
+
+	__int64 startTime;
+	
 	SHM_INFO_STRUCT		ShmInfo;					// Shared SHM information
 }LASER_POINT_DIRECTION_SHM;
 /////////////////////////////////////////////////////////////////////////////////
@@ -210,7 +215,8 @@ typedef struct {
 	UINT32 SubsystemId;
 	
 	CHAR   textStr[SHM_MAX_STATUS_TEXT];
-	// TODO PERFORMANCE COUNTER - FIX
+	
+	__int64 startTime;
 
 	SHM_INFO_STRUCT		ShmInfo;			// Shared SHM information
 }LASER_STATUS_MSG_SHM;
@@ -228,6 +234,8 @@ typedef struct {
 	UINT32 DTI;
 	UINT32 POCResult;
 	UINT32 AlertType;
-	
+
+	__int64 startTime;
+
 	SHM_INFO_STRUCT		ShmInfo;
 }ALGORITHM_INTERFACE_MSG_SHM;

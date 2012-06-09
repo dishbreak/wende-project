@@ -103,6 +103,7 @@ void CArbiterSharedMemoryManager::DecodeCameraStatusMessage(LPCTSTR strText, cha
 		C3CameraStatus->Status		 = ss.status();
 		C3CameraStatus->SubsystemId  = 3;
 		C3CameraStatus->Time		 = static_cast<DWORD>(ss.time());
+		::QueryPerformanceCounter((LARGE_INTEGER*)&C3CameraStatus->startTime);
 		// loops through clients and sends events
 		int eventsToSend = C3CameraStatus->ShmInfo.Clients;
 		for (int pp = 0; pp < eventsToSend; pp++)
@@ -176,6 +177,7 @@ void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char
 		C3CameraTracks->SubsystemId  = 3;
 		C3CameraTracks->Time		 = static_cast<DWORD>(tr.time());
 		C3CameraTracks->ValidTracks  = tr.target_size();
+		::QueryPerformanceCounter((LARGE_INTEGER*)&C3CameraTracks->startTime);
 		for (int ii = 0; ii < tr.target_size(); ii++)
 		{
 			C3CameraTracks->Tracks[ii].X = tr.target(ii).x();
@@ -309,6 +311,7 @@ string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, c
 		C3CameraImage->PacketNumber = packetNumebr;
 		C3CameraImage->ProcessID    = C3CameraImage.GetProcessID();
 		C3CameraImage->Time			= static_cast<DWORD>(im.time());
+		::QueryPerformanceCounter((LARGE_INTEGER*)&C3CameraImage->startTime);
 		memcpy(C3CameraImage->imagePath,saveName.c_str(),saveName.size());
 		// loops through clients and sends events
 		int eventsToSend = C3CameraImage->ShmInfo.Clients;
@@ -385,6 +388,7 @@ void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char
 		C3LaserStatus->PacketNumber = packetNumber;
 		C3LaserStatus->ProcessID    = C3LaserStatus.GetProcessID();
 		C3LaserStatus->SubsystemId  = 3;
+		::QueryPerformanceCounter((LARGE_INTEGER*)&C3LaserStatus->startTime);
 		#ifndef LASER_USE_PROTOBUF
 		C3LaserStatus->Status		= ss.LaserStatus.status;
 		#else
