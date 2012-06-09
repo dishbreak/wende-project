@@ -228,10 +228,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CLogger.h"
-				>
-			</File>
-			<File
 				RelativePath=".\CNetworkMonitor.h"
 				>
 			</File>
@@ -366,10 +362,6 @@
 			</File>
 			<File
 				RelativePath=".\CDisplayManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CLogger.cpp"
 				>
 			</File>
 			<File
