@@ -886,7 +886,9 @@ private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs
 			 delete dlgExportDti;
 		 }
 		private: System::Void calibrateButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 if (operationalState == C3_Alert_Types::C3_DISPLAY_STARTUP)
+			 if (operationalState == C3_Alert_Types::C3_DISPLAY_STARTUP ||
+				 operationalState == C3_Alert_Types::CALIBRATION_INIT   ||
+				 operationalState == C3_Alert_Types::CALIBRATION_FAILED)
 			 {
 				 this->CalibrateButton->Text = "Calibrating...";
 				 this->CalibrateButton->Enabled = false;
