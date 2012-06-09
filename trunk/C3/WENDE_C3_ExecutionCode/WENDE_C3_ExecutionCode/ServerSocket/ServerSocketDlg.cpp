@@ -7,6 +7,7 @@
 #include "ServerSocketDlg.h"
 #include <string>
 #include "cameraMsgs.pb.h"
+#include "C3Configuration.h"
 
 #ifndef LASER_USE_PROTOBUF
 #include "LaserStatus.h"
@@ -222,10 +223,7 @@ bool CServerSocketDlg::StartServer()
 		while (!m_SocketManager[MAX_CONNECTION-1].IsOpen())
 		{
 			port.Format(_T("%d"), ipPort+MAX_CONNECTION-1);
-			CString strLocal;
-			m_SocketManager[MAX_CONNECTION-1].GetLocalAddress( strLocal.GetBuffer(256), 256);
-			strLocal.ReleaseBuffer();
-			m_SocketManager[MAX_CONNECTION-1].ConnectTo( strLocal, port, AF_INET, SOCK_STREAM); // TCP
+			m_SocketManager[MAX_CONNECTION-1].ConnectTo( C3Configuration::Instance().ConnectionDriver.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
 			Sleep(5);
 		}
 	}
@@ -954,8 +952,8 @@ BOOL success = ::CreateTimerQueueTimer(
 }
 void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
 {
-// This is used only to call QueueTimerHandler
-// Typically, this function is static member of CTimersDlg
-CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
-obj->OnBnClickedBtnSendLasserStatus();
+	// This is used only to call QueueTimerHandler
+	// Typically, this function is static member of CTimersDlg
+	CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
+	obj->OnBnClickedBtnSendLasserStatus();
 } 
