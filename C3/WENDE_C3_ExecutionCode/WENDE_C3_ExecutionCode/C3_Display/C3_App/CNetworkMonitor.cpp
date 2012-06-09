@@ -137,15 +137,6 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 
 				dispman->Update_Overall_Status();
 
-				LARGE_INTEGER start;
-				LARGE_INTEGER end;
-				LARGE_INTEGER countsPerSecond;
-
-				::QueryPerformanceCounter(&end);
-				::QueryPerformanceFrequency(&countsPerSecond);
-				start.QuadPart = m_CameraStatus->startTime;
-				double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
-
 				// Set the event
 				m_CameraStatus.SetEventClient();
 
@@ -391,7 +382,7 @@ UINT WINAPI ImageThread (LPVOID pParam)
 				String ^ ssImagePath = gcnew String(sImagePath);
 
 				CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
-				dispman->Update_Live_Video_Feed(ssImagePath);
+				dispman->Update_Live_Video_Feed(ssImagePath, m_CameraImage->startTime);
 
 				// Set the event
 				m_CameraImage.SetEventClient();
@@ -443,7 +434,7 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 			{
 				nAlertType   = m_ProcessingInterface->AlertType;		// 1..n for different conditions: end of trial etc..
 				nDTIValue    = m_ProcessingInterface->DTI;				// Actual DTI value
-				nTrialResult = m_ProcessingInterface->POCResult;	// Pass / fail
+				nTrialResult = m_ProcessingInterface->POCResult;		// Pass / fail
 
 				// Only call if the alert is relevant
 				if(nAlertType != 0)
