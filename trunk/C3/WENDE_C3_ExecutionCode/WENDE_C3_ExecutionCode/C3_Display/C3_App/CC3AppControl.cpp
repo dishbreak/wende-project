@@ -5,6 +5,7 @@
 #include <shellapi.h>
 #include <time.h>
 #include <process.h>
+#include "C3Configuration.h"
 #pragma comment(lib, "shell32.lib")
 
 UINT WINAPI StartProcessingThread (LPVOID pParam);
@@ -17,10 +18,10 @@ void CC3AppControl::RunC3App()
 	UINT	uiProcessingThread = 0;
 	hProcessingThread = (HANDLE)_beginthreadex(NULL,			// Security attributes
 										0,						// stack
-										StartProcessingThread,		// Thread proc
-										NULL,					  // Thread param
-										CREATE_SUSPENDED,		  // creation mode
-										&uiProcessingThread);			  // Thread ID
+										StartProcessingThread,	// Thread proc
+										NULL,					// Thread param
+										CREATE_SUSPENDED,		// creation mode
+										&uiProcessingThread);	// Thread ID
 
 	if ( NULL != hProcessingThread){ResumeThread( hProcessingThread );}
 
@@ -28,10 +29,10 @@ void CC3AppControl::RunC3App()
 	UINT	uiControllerThread = 0;
 	hControllerThread = (HANDLE)_beginthreadex(NULL,			// Security attributes
 										0,						// stack
-										StartControllerThread,		// Thread proc
-										NULL,					  // Thread param
-										CREATE_SUSPENDED,		  // creation mode
-										&uiControllerThread);			  // Thread ID
+										StartControllerThread,	// Thread proc
+										NULL,					// Thread param
+										CREATE_SUSPENDED,		// creation mode
+										&uiControllerThread);	// Thread ID
 
 	if ( NULL != hControllerThread){ResumeThread( hControllerThread );}
 
