@@ -126,6 +126,8 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 			LeaveCriticalSection(&cNetworMonitor->statusLock);
 			if (m_CameraStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
+				EnterCriticalSection(&cNetworMonitor->statusLock);		
+			
 				////set camera state
 				dispman->Update_Camera_Subsystem_Indicator(m_CameraStatus->Status);
 				dispman->Update_Camera_Communication_Indicator(1);
@@ -142,6 +144,9 @@ UINT WINAPI CameraStatusThread (LPVOID pParam)
 
 				// release the mutex
 				m_CameraStatus.ReleaseMutex();
+				
+				/* Leave the critical section -- other threads can now EnterCriticalSection() */
+				LeaveCriticalSection(&cNetworMonitor->statusLock);
 			}
 			else
 			{
@@ -203,6 +208,8 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 		{
 			if (m_LaserStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
+				EnterCriticalSection(&cNetworMonitor->statusLock);		
+			
 				dispman->Update_Laser_Subsystem_Indicator(m_LaserStatus->Status);
 				dispman->Update_Laser_Communication_Indicator(1);
 				dispman->Update_Overall_Status();
@@ -221,17 +228,23 @@ UINT WINAPI LaserStatusThread (LPVOID pParam)
 
 				// release the mutex
 				m_LaserStatus.ReleaseMutex();
+
+				/* Leave the critical section -- other threads can now EnterCriticalSection() */
+				LeaveCriticalSection(&cNetworMonitor->statusLock);
 			}
 			else { /* unable to get mutex??? */	}
 		}
 		else
 		{
+			EnterCriticalSection(&cNetworMonitor->statusLock);		
 			if (dispman->Get_Laser_Com_Status() != 0)
 			{
 				dispman->Update_Laser_Communication_Indicator(0);
 				dispman->Update_Overall_Status();
 			}
 			else { /* no  update needed */}
+			/* Leave the critical section -- other threads can now EnterCriticalSection() */
+			LeaveCriticalSection(&cNetworMonitor->statusLock);
 		}
 		/* Enter the critical section -- other threads are locked out */
 		EnterCriticalSection(&cNetworMonitor->cs);		
@@ -276,6 +289,9 @@ UINT WINAPI TrackThread (LPVOID pParam)
 			LeaveCriticalSection(&cNetworMonitor->statusLock);
 			if (m_CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
+				/* Enter the critical section -- other threads are locked out */
+				EnterCriticalSection(&cNetworMonitor->statusLock);
+
 				////set camera state
 				dispman->Update_Camera_Subsystem_Indicator(m_CameraTracks->Status);
 				dispman->Update_Camera_Communication_Indicator(1);
@@ -321,6 +337,9 @@ UINT WINAPI TrackThread (LPVOID pParam)
 
 				//This check is already built into DisplayManager
 				//if(x >= 1 || y >= 1) dispman->Update_Rover_Acquired_Indicator(1);
+
+				/* Leave the critical section -- other threads can now EnterCriticalSection() */
+				LeaveCriticalSection(&cNetworMonitor->statusLock);
 			}
 			else 
 			{
@@ -377,6 +396,9 @@ UINT WINAPI ImageThread (LPVOID pParam)
 		{
 			if (m_CameraImage.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
+				/* Enter the critical section -- other threads are locked out */
+				EnterCriticalSection(&cNetworMonitor->statusLock);
+
 				// Display data...
 				sImagePath = m_CameraImage->imagePath;
 				String ^ ssImagePath = gcnew String(sImagePath);
@@ -389,8 +411,9 @@ UINT WINAPI ImageThread (LPVOID pParam)
 
 				// release the mutex
 				m_CameraImage.ReleaseMutex();
-
-
+				
+				/* Leave the critical section -- other threads can now EnterCriticalSection() */
+				LeaveCriticalSection(&cNetworMonitor->statusLock);
 			}
 			else { /* unable to get mutex??? */	}
 		}
@@ -432,6 +455,9 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 		{
 			if (m_ProcessingInterface.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
+				/* Enter the critical section -- other threads are locked out */
+				EnterCriticalSection(&cNetworMonitor->statusLock);
+
 				nAlertType   = m_ProcessingInterface->AlertType;		// 1..n for different conditions: end of trial etc..
 				nDTIValue    = m_ProcessingInterface->DTI;				// Actual DTI value
 				nTrialResult = m_ProcessingInterface->POCResult;		// Pass / fail
@@ -451,11 +477,23 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 				}			
 				// release the mutex
 				m_ProcessingInterface.ReleaseMutex();
+
+				
+				/* Leave the critical section -- other threads can now EnterCriticalSection() */
+				LeaveCriticalSection(&cNetworMonitor->statusLock);
 			}
 			else { /* unable to get mutex??? */	}
-		} else { 
+		} 
+		else 
+		{ 
+			/* Enter the critical section -- other threads are locked out */
+			EnterCriticalSection(&cNetworMonitor->statusLock);
+
 			/* loss of comm */
 			dispman->Update_Notification_Panel(4);
+
+			/* Leave the critical section -- other threads can now EnterCriticalSection() */
+			LeaveCriticalSection(&cNetworMonitor->statusLock);
 		}
 		/* Enter the critical section -- other threads are locked out */
 		EnterCriticalSection(&cNetworMonitor->cs);		

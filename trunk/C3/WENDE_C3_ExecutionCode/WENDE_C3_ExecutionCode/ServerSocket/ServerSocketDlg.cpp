@@ -899,7 +899,7 @@ void CServerSocketDlg::OnBnClickedBtnSendStatusCont()
 												TimerProcCameraStatus,
 												this,
 												0,
-												125,
+												250,
 												WT_EXECUTEINTIMERTHREAD);
 	}
 	else
@@ -932,7 +932,7 @@ void CServerSocketDlg::OnBnClickedBtnSendTrack2()
 												TimerProcCameraTrack,
 												this,
 												0,
-												125,
+												250,
 												WT_EXECUTEINTIMERTHREAD);
 	}
 	else
@@ -965,7 +965,7 @@ void CServerSocketDlg::OnBnClickedBtnSendImage2()
 												TimerProcCameraImage,
 												this,
 												0,
-												1000,
+												2000,
 												WT_EXECUTEINTIMERTHREAD);
 	}
 	else
@@ -997,7 +997,7 @@ void CServerSocketDlg::OnBnClickedBtnSendLaserStatus()
 												TimerProcLaserStatus,
 												this,
 												0,
-												125,
+												250,
 												WT_EXECUTEINTIMERTHREAD);
 	}
 	else

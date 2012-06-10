@@ -249,6 +249,8 @@ int CArbiterSharedMemoryManager::DecodeCameraImageMessage_DEBUG(cameraImage *im,
 ////////////////////////////////////////////////////////////////////////
 string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 {
+	static int oo = 0;
+	oo = (oo<=2)?oo+1:0;
 	// Current time
 	static char timeStr[FILENAME_MAX];
 	time_t messageTime;// = ss->time();
@@ -266,7 +268,8 @@ string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 		mkdir(cCurrentPath);
 	}
 	cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
-	strftime(timeStr, FILENAME_MAX, "CameraImage-%Y-%m-%d-%H-%M-%S.jpg", localtime(&messageTime));
+	strftime(timeStr, FILENAME_MAX, "CameraImage-%Y-%m-%d-%H-%M-%S", localtime(&messageTime));
+	sprintf(timeStr,"%s-%d-%d.bmp",timeStr,im->time(),oo);
 	strcat(cCurrentPath,timeStr);
 	CString saveName(cCurrentPath);
 	// create the image
@@ -286,7 +289,13 @@ string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 			{
 				if (ll+2 < maxL)
 				{
-					img.SetPixelRGB(col,row,st.at(ll+2),st.at(ll+1),st.at(ll+0));				
+					//img.SetPixelRGB(col,row,st.at(ll+2),st.at(ll+1),st.at(ll+0));				
+					if (oo==1)
+						img.SetPixelRGB(col,row,0,st.at(ll+1),st.at(ll+0));				
+					else if (00==2)
+						img.SetPixelRGB(col,row,st.at(ll+2),0,st.at(ll+0));				
+					else
+						img.SetPixelRGB(col,row,st.at(ll+2),st.at(ll+1),0);				
 				}
 				else
 				{
@@ -302,6 +311,16 @@ string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 	}
 	// save out the file
 	img.Save(saveName);
+	
+	bool found = false;
+	while(!found)
+	{
+		CFileStatus status;
+		if( CFile::GetStatus( saveName, status ) )
+		{
+			found = true;
+		}
+	}
 	//return the file name so that we know what to load.
 	return saveName;
 }

@@ -232,14 +232,17 @@ int _tmain(int argc, _TCHAR* argv[])
 			////////////////////////
 			else
 			{
-				// TODO FIX THIS
-				C3FilterClass  kalman;
-				C3_TRACK_POINT_DOUBLE testPoint;
+				if (inData.ValidTracks !=0)
+				{
+					// TODO FIX THIS
+					C3FilterClass  kalman;
+					C3_TRACK_POINT_DOUBLE testPoint;
 
-				testPoint.X = inData.Tracks[0].X;
-				testPoint.Y = inData.Tracks[0].Y;
-				kalman.FilterInput(testPoint,0.250);
-				sendMessageSuccess = true;
+					testPoint.X = inData.Tracks[0].X;
+					testPoint.Y = inData.Tracks[0].Y;
+					kalman.FilterInput(testPoint,0.250);
+					sendMessageSuccess = true;
+				}
 			}
 
 			if(m_DisplayNotification.isCreated() && 
