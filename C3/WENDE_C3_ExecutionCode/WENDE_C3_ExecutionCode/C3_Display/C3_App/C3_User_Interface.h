@@ -327,7 +327,6 @@ namespace C3_App {
 				this->Column3});
 			this->dgvDtiLog->Location = System::Drawing::Point(65, 19);
 			this->dgvDtiLog->Name = L"dgvDtiLog";
-			this->dgvDtiLog->ReadOnly = true;
 			this->dgvDtiLog->Size = System::Drawing::Size(343, 280);
 			this->dgvDtiLog->TabIndex = 0;
 			// 
@@ -558,7 +557,7 @@ namespace C3_App {
 			this->tbAlertsPanel->Font = (gcnew System::Drawing::Font(L"Courier New", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->tbAlertsPanel->ForeColor = System::Drawing::Color::Red;
-			this->tbAlertsPanel->Location = System::Drawing::Point(0, 11);
+			this->tbAlertsPanel->Location = System::Drawing::Point(16, 11);
 			this->tbAlertsPanel->Multiline = true;
 			this->tbAlertsPanel->Name = L"tbAlertsPanel";
 			this->tbAlertsPanel->ReadOnly = true;
@@ -597,6 +596,7 @@ namespace C3_App {
 			this->gbAlerts->ResumeLayout(false);
 			this->gbAlerts->PerformLayout();
 			this->ResumeLayout(false);
+
 		}
 #pragma endregion
 
@@ -675,6 +675,7 @@ namespace C3_App {
 		::QueryPerformanceFrequency(&countsPerSecond);
 		start.QuadPart = nStartTime;
 		double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+		System::Diagnostics::Debug::WriteLine(elapsed);
 	}
 
 	private: void Worker_Update_Camera_Comm_Indicator(System::Drawing::Image^ bmCamCom)
