@@ -1,4 +1,4 @@
-// C3_App.cpp : main project file.
+\// C3_App.cpp : main project file.
 
 #include "stdafx.h"
 #include "splash.h"

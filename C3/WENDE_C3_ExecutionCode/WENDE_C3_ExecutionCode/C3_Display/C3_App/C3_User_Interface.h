@@ -23,7 +23,7 @@ namespace C3_App {
 	///          resources associated with this form.
 	/// </summary>
 
-	
+
 
 	public ref class C3_User_Interface : public System::Windows::Forms::Form
 	{
@@ -32,12 +32,12 @@ namespace C3_App {
 		typedef System::Windows::Forms::Form base;
 		static C3_User_Interface^ instance;
 		CNetworkMonitor *m_monitor;
-		
+
 		// DELEGATE STUFF
 		// Called from "Update_Table", delegates responsibility to "Worker_Update_Table"
 		delegate void Delegate_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed);
 		delegate void Delegate_Update_Notifications(System::String ^ sNotification, System::Drawing::Color tBgColor, System::Drawing::Color tFgColor);
-		delegate void Delegate_Update_Live_Feed_Panel(System::Drawing::Bitmap^ bmLiveImage);
+		delegate void Delegate_Update_Live_Feed_Panel(String ^ sImagePath);
 		delegate void Delegate_Update_Camera_Subsystem_Indicator(System::Drawing::Image^ bmCamSubsystem);
 		delegate void Delegate_Update_Laser_Subsystem_Indicator(System::Drawing::Image^ bmLaserSubsystem);
 		delegate void Delegate_Update_Camera_Comm_Indicator(System::Drawing::Image^ bmCamCom);
@@ -58,7 +58,7 @@ namespace C3_App {
 			m_monitor = monitor;
 
 			operationalState  = C3_Alert_Types::C3_DISPLAY_STARTUP;
-
+			actionLiveVideo = gcnew Delegate_Update_Live_Feed_Panel(this, &C3_User_Interface::Worker_Update_Live_Feed_Panel);
 			//
 			//TODO: Add the constructor code here
 			//
@@ -125,7 +125,7 @@ namespace C3_App {
 
 
 	public: System::Windows::Forms::PictureBox^  pbOverallStatus;
-
+	public: Delegate_Update_Live_Feed_Panel^ actionLiveVideo;
 
 
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
@@ -143,7 +143,7 @@ namespace C3_App {
 	public: System::Windows::Forms::PictureBox^  pbLaserStatus;
 	public: System::Windows::Forms::PictureBox^  pbLaserComms;
 
-	//public: CPPIConfig^ pPPI;
+			//public: CPPIConfig^ pPPI;
 	public: System::Windows::Forms::Panel^  pPPI;
 	public: System::Windows::Forms::Button^  cmdExport;
 	private: System::Windows::Forms::GroupBox^  gbAlerts;
@@ -156,13 +156,13 @@ namespace C3_App {
 			System::Drawing::Image ^ InactiveInd;
 			System::Drawing::Image ^ EnergizedInd;
 			System::Drawing::Image ^ AcquiredInd;
-    private: System::Drawing::Image ^ RoverSymbol;
+	private: System::Drawing::Image ^ RoverSymbol;
 			 System::Drawing::Image ^ UhOhSymbol;
 	private: System::Windows::Forms::Label^  label8;
 	private: System::Windows::Forms::Button^  CalibrateButton;
 	private: C3_Alert_Types operationalState; 
 
-	//private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
+			 //private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
 
 
 
@@ -182,7 +182,7 @@ namespace C3_App {
 			this->InactiveInd  = System::Drawing::Image::FromFile("Inactive.png");
 			this->EnergizedInd = System::Drawing::Image::FromFile("Energized.png");
 			this->AcquiredInd  = System::Drawing::Image::FromFile("Acquired.png");
-            this->RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
+			this->RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
 			this->UhOhSymbol = System::Drawing::Image::FromFile("UhOh.png");
 		}
 
@@ -256,17 +256,20 @@ namespace C3_App {
 			this->pPPIPanel->Controls->Add(this->groupBox5);
 			this->pPPIPanel->Controls->Add(this->groupBox6);
 			this->pPPIPanel->Controls->Add(this->gbAlerts);
-			this->pPPIPanel->Location = System::Drawing::Point(12, 12);
+			this->pPPIPanel->Location = System::Drawing::Point(16, 15);
+			this->pPPIPanel->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pPPIPanel->Name = L"pPPIPanel";
-			this->pPPIPanel->Size = System::Drawing::Size(1329, 682);
+			this->pPPIPanel->Size = System::Drawing::Size(1772, 839);
 			this->pPPIPanel->TabIndex = 0;
 			// 
 			// groupBox1
 			// 
 			this->groupBox1->Controls->Add(this->pPPI);
-			this->groupBox1->Location = System::Drawing::Point(3, 3);
+			this->groupBox1->Location = System::Drawing::Point(4, 4);
+			this->groupBox1->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(417, 347);
+			this->groupBox1->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->groupBox1->Size = System::Drawing::Size(556, 427);
 			this->groupBox1->TabIndex = 0;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"PPI Display";
@@ -274,18 +277,21 @@ namespace C3_App {
 			// pPPI
 			// 
 			this->pPPI->CausesValidation = false;
-			this->pPPI->Location = System::Drawing::Point(6, 19);
+			this->pPPI->Location = System::Drawing::Point(8, 23);
+			this->pPPI->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pPPI->Name = L"pPPI";
-			this->pPPI->Size = System::Drawing::Size(405, 320);
+			this->pPPI->Size = System::Drawing::Size(540, 394);
 			this->pPPI->TabIndex = 0;
 			this->pPPI->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &C3_User_Interface::flowLayoutPanel1_Paint);
 			// 
 			// groupBox2
 			// 
 			this->groupBox2->Controls->Add(this->pbLiveFeed);
-			this->groupBox2->Location = System::Drawing::Point(426, 3);
+			this->groupBox2->Location = System::Drawing::Point(568, 4);
+			this->groupBox2->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(438, 347);
+			this->groupBox2->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->groupBox2->Size = System::Drawing::Size(584, 427);
 			this->groupBox2->TabIndex = 1;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Live Image";
@@ -293,9 +299,11 @@ namespace C3_App {
 			// pbLiveFeed
 			// 
 			this->pbLiveFeed->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLiveFeed.Image")));
-			this->pbLiveFeed->Location = System::Drawing::Point(58, 59);
+			this->pbLiveFeed->Location = System::Drawing::Point(8, 15);
+			this->pbLiveFeed->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pbLiveFeed->Name = L"pbLiveFeed";
-			this->pbLiveFeed->Size = System::Drawing::Size(330, 224);
+			this->pbLiveFeed->Size = System::Drawing::Size(568, 402);
+			this->pbLiveFeed->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
 			this->pbLiveFeed->TabIndex = 0;
 			this->pbLiveFeed->TabStop = false;
 			// 
@@ -303,18 +311,21 @@ namespace C3_App {
 			// 
 			this->groupBox3->Controls->Add(this->cmdExport);
 			this->groupBox3->Controls->Add(this->dgvDtiLog);
-			this->groupBox3->Location = System::Drawing::Point(870, 3);
+			this->groupBox3->Location = System::Drawing::Point(1160, 4);
+			this->groupBox3->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->groupBox3->Name = L"groupBox3";
-			this->groupBox3->Size = System::Drawing::Size(452, 347);
+			this->groupBox3->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->groupBox3->Size = System::Drawing::Size(603, 427);
 			this->groupBox3->TabIndex = 1;
 			this->groupBox3->TabStop = false;
 			this->groupBox3->Text = L"DTI Log";
 			// 
 			// cmdExport
 			// 
-			this->cmdExport->Location = System::Drawing::Point(65, 306);
+			this->cmdExport->Location = System::Drawing::Point(87, 377);
+			this->cmdExport->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->cmdExport->Name = L"cmdExport";
-			this->cmdExport->Size = System::Drawing::Size(343, 33);
+			this->cmdExport->Size = System::Drawing::Size(457, 41);
 			this->cmdExport->TabIndex = 1;
 			this->cmdExport->Text = L"&Export";
 			this->cmdExport->UseVisualStyleBackColor = true;
@@ -325,9 +336,11 @@ namespace C3_App {
 			this->dgvDtiLog->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvDtiLog->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->Column1, this->Column2, 
 				this->Column3});
-			this->dgvDtiLog->Location = System::Drawing::Point(65, 19);
+			this->dgvDtiLog->Location = System::Drawing::Point(87, 23);
+			this->dgvDtiLog->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->dgvDtiLog->Name = L"dgvDtiLog";
-			this->dgvDtiLog->Size = System::Drawing::Size(343, 280);
+			this->dgvDtiLog->RowTemplate->Height = 24;
+			this->dgvDtiLog->Size = System::Drawing::Size(457, 345);
 			this->dgvDtiLog->TabIndex = 0;
 			// 
 			// Column1
@@ -354,9 +367,11 @@ namespace C3_App {
 			this->groupBox4->Controls->Add(this->label1);
 			this->groupBox4->Controls->Add(this->pbCameraStatus);
 			this->groupBox4->Controls->Add(this->pbCameraComms);
-			this->groupBox4->Location = System::Drawing::Point(3, 356);
+			this->groupBox4->Location = System::Drawing::Point(4, 439);
+			this->groupBox4->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(411, 272);
+			this->groupBox4->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->groupBox4->Size = System::Drawing::Size(548, 335);
 			this->groupBox4->TabIndex = 1;
 			this->groupBox4->TabStop = false;
 			this->groupBox4->Text = L"Camera";
@@ -364,27 +379,30 @@ namespace C3_App {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(85, 123);
+			this->label2->Location = System::Drawing::Point(113, 151);
+			this->label2->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(37, 13);
+			this->label2->Size = System::Drawing::Size(48, 17);
 			this->label2->TabIndex = 3;
 			this->label2->Text = L"Status";
 			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(85, 42);
+			this->label1->Location = System::Drawing::Point(113, 52);
+			this->label1->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(84, 13);
+			this->label1->Size = System::Drawing::Size(111, 17);
 			this->label1->TabIndex = 2;
 			this->label1->Text = L"Communications";
 			// 
 			// pbCameraStatus
 			// 
 			this->pbCameraStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbCameraStatus.Image")));
-			this->pbCameraStatus->Location = System::Drawing::Point(88, 139);
+			this->pbCameraStatus->Location = System::Drawing::Point(117, 171);
+			this->pbCameraStatus->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pbCameraStatus->Name = L"pbCameraStatus";
-			this->pbCameraStatus->Size = System::Drawing::Size(239, 47);
+			this->pbCameraStatus->Size = System::Drawing::Size(319, 58);
 			this->pbCameraStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pbCameraStatus->TabIndex = 1;
 			this->pbCameraStatus->TabStop = false;
@@ -392,9 +410,10 @@ namespace C3_App {
 			// pbCameraComms
 			// 
 			this->pbCameraComms->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbCameraComms.Image")));
-			this->pbCameraComms->Location = System::Drawing::Point(88, 58);
+			this->pbCameraComms->Location = System::Drawing::Point(117, 71);
+			this->pbCameraComms->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pbCameraComms->Name = L"pbCameraComms";
-			this->pbCameraComms->Size = System::Drawing::Size(239, 47);
+			this->pbCameraComms->Size = System::Drawing::Size(319, 58);
 			this->pbCameraComms->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pbCameraComms->TabIndex = 0;
 			this->pbCameraComms->TabStop = false;
@@ -409,9 +428,11 @@ namespace C3_App {
 			this->groupBox5->Controls->Add(this->pbLaserActivity);
 			this->groupBox5->Controls->Add(this->pbRoverAcq);
 			this->groupBox5->Controls->Add(this->pbOverallStatus);
-			this->groupBox5->Location = System::Drawing::Point(420, 356);
+			this->groupBox5->Location = System::Drawing::Point(560, 439);
+			this->groupBox5->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->groupBox5->Name = L"groupBox5";
-			this->groupBox5->Size = System::Drawing::Size(438, 272);
+			this->groupBox5->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->groupBox5->Size = System::Drawing::Size(584, 335);
 			this->groupBox5->TabIndex = 2;
 			this->groupBox5->TabStop = false;
 			this->groupBox5->Text = L"Demo State";
@@ -419,16 +440,18 @@ namespace C3_App {
 			// label8
 			// 
 			this->label8->AutoSize = true;
-			this->label8->Location = System::Drawing::Point(242, 237);
+			this->label8->Location = System::Drawing::Point(323, 292);
+			this->label8->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(0, 13);
+			this->label8->Size = System::Drawing::Size(0, 17);
 			this->label8->TabIndex = 9;
 			// 
 			// CalibrateButton
 			// 
-			this->CalibrateButton->Location = System::Drawing::Point(103, 232);
+			this->CalibrateButton->Location = System::Drawing::Point(137, 286);
+			this->CalibrateButton->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->CalibrateButton->Name = L"CalibrateButton";
-			this->CalibrateButton->Size = System::Drawing::Size(239, 29);
+			this->CalibrateButton->Size = System::Drawing::Size(319, 36);
 			this->CalibrateButton->TabIndex = 8;
 			this->CalibrateButton->Text = L"Ready to Calibrate";
 			this->CalibrateButton->UseVisualStyleBackColor = true;
@@ -437,36 +460,40 @@ namespace C3_App {
 			// label7
 			// 
 			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(100, 162);
+			this->label7->Location = System::Drawing::Point(133, 199);
+			this->label7->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(66, 13);
+			this->label7->Size = System::Drawing::Size(88, 17);
 			this->label7->TabIndex = 7;
 			this->label7->Text = L"Laser Status";
 			// 
 			// label6
 			// 
 			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(100, 96);
+			this->label6->Location = System::Drawing::Point(133, 118);
+			this->label6->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(69, 13);
+			this->label6->Size = System::Drawing::Size(90, 17);
 			this->label6->TabIndex = 6;
 			this->label6->Text = L"Rover Status";
 			// 
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(100, 27);
+			this->label5->Location = System::Drawing::Point(133, 33);
+			this->label5->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(85, 13);
+			this->label5->Size = System::Drawing::Size(109, 17);
 			this->label5->TabIndex = 5;
 			this->label5->Text = L"WENDE System";
 			// 
 			// pbLaserActivity
 			// 
 			this->pbLaserActivity->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserActivity.Image")));
-			this->pbLaserActivity->Location = System::Drawing::Point(103, 179);
+			this->pbLaserActivity->Location = System::Drawing::Point(137, 220);
+			this->pbLaserActivity->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pbLaserActivity->Name = L"pbLaserActivity";
-			this->pbLaserActivity->Size = System::Drawing::Size(239, 47);
+			this->pbLaserActivity->Size = System::Drawing::Size(319, 58);
 			this->pbLaserActivity->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pbLaserActivity->TabIndex = 4;
 			this->pbLaserActivity->TabStop = false;
@@ -474,9 +501,10 @@ namespace C3_App {
 			// pbRoverAcq
 			// 
 			this->pbRoverAcq->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbRoverAcq.Image")));
-			this->pbRoverAcq->Location = System::Drawing::Point(103, 112);
+			this->pbRoverAcq->Location = System::Drawing::Point(137, 138);
+			this->pbRoverAcq->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pbRoverAcq->Name = L"pbRoverAcq";
-			this->pbRoverAcq->Size = System::Drawing::Size(239, 47);
+			this->pbRoverAcq->Size = System::Drawing::Size(319, 58);
 			this->pbRoverAcq->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pbRoverAcq->TabIndex = 3;
 			this->pbRoverAcq->TabStop = false;
@@ -484,9 +512,10 @@ namespace C3_App {
 			// pbOverallStatus
 			// 
 			this->pbOverallStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbOverallStatus.Image")));
-			this->pbOverallStatus->Location = System::Drawing::Point(103, 43);
+			this->pbOverallStatus->Location = System::Drawing::Point(137, 53);
+			this->pbOverallStatus->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pbOverallStatus->Name = L"pbOverallStatus";
-			this->pbOverallStatus->Size = System::Drawing::Size(239, 47);
+			this->pbOverallStatus->Size = System::Drawing::Size(319, 58);
 			this->pbOverallStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pbOverallStatus->TabIndex = 2;
 			this->pbOverallStatus->TabStop = false;
@@ -497,9 +526,11 @@ namespace C3_App {
 			this->groupBox6->Controls->Add(this->label4);
 			this->groupBox6->Controls->Add(this->pbLaserStatus);
 			this->groupBox6->Controls->Add(this->pbLaserComms);
-			this->groupBox6->Location = System::Drawing::Point(864, 356);
+			this->groupBox6->Location = System::Drawing::Point(1152, 439);
+			this->groupBox6->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->groupBox6->Name = L"groupBox6";
-			this->groupBox6->Size = System::Drawing::Size(449, 261);
+			this->groupBox6->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->groupBox6->Size = System::Drawing::Size(599, 321);
 			this->groupBox6->TabIndex = 3;
 			this->groupBox6->TabStop = false;
 			this->groupBox6->Text = L"Laser";
@@ -507,27 +538,30 @@ namespace C3_App {
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(103, 124);
+			this->label3->Location = System::Drawing::Point(137, 153);
+			this->label3->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(37, 13);
+			this->label3->Size = System::Drawing::Size(48, 17);
 			this->label3->TabIndex = 7;
 			this->label3->Text = L"Status";
 			// 
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(103, 43);
+			this->label4->Location = System::Drawing::Point(137, 53);
+			this->label4->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(84, 13);
+			this->label4->Size = System::Drawing::Size(111, 17);
 			this->label4->TabIndex = 6;
 			this->label4->Text = L"Communications";
 			// 
 			// pbLaserStatus
 			// 
 			this->pbLaserStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserStatus.Image")));
-			this->pbLaserStatus->Location = System::Drawing::Point(106, 140);
+			this->pbLaserStatus->Location = System::Drawing::Point(141, 172);
+			this->pbLaserStatus->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pbLaserStatus->Name = L"pbLaserStatus";
-			this->pbLaserStatus->Size = System::Drawing::Size(239, 47);
+			this->pbLaserStatus->Size = System::Drawing::Size(319, 58);
 			this->pbLaserStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pbLaserStatus->TabIndex = 5;
 			this->pbLaserStatus->TabStop = false;
@@ -535,9 +569,10 @@ namespace C3_App {
 			// pbLaserComms
 			// 
 			this->pbLaserComms->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserComms.Image")));
-			this->pbLaserComms->Location = System::Drawing::Point(106, 59);
+			this->pbLaserComms->Location = System::Drawing::Point(141, 73);
+			this->pbLaserComms->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->pbLaserComms->Name = L"pbLaserComms";
-			this->pbLaserComms->Size = System::Drawing::Size(239, 47);
+			this->pbLaserComms->Size = System::Drawing::Size(319, 58);
 			this->pbLaserComms->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pbLaserComms->TabIndex = 4;
 			this->pbLaserComms->TabStop = false;
@@ -545,9 +580,11 @@ namespace C3_App {
 			// gbAlerts
 			// 
 			this->gbAlerts->Controls->Add(this->tbAlertsPanel);
-			this->gbAlerts->Location = System::Drawing::Point(3, 634);
+			this->gbAlerts->Location = System::Drawing::Point(4, 782);
+			this->gbAlerts->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->gbAlerts->Name = L"gbAlerts";
-			this->gbAlerts->Size = System::Drawing::Size(1316, 51);
+			this->gbAlerts->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
+			this->gbAlerts->Size = System::Drawing::Size(1755, 63);
 			this->gbAlerts->TabIndex = 4;
 			this->gbAlerts->TabStop = false;
 			// 
@@ -557,20 +594,22 @@ namespace C3_App {
 			this->tbAlertsPanel->Font = (gcnew System::Drawing::Font(L"Courier New", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->tbAlertsPanel->ForeColor = System::Drawing::Color::Red;
-			this->tbAlertsPanel->Location = System::Drawing::Point(16, 11);
+			this->tbAlertsPanel->Location = System::Drawing::Point(21, 14);
+			this->tbAlertsPanel->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->tbAlertsPanel->Multiline = true;
 			this->tbAlertsPanel->Name = L"tbAlertsPanel";
 			this->tbAlertsPanel->ReadOnly = true;
-			this->tbAlertsPanel->Size = System::Drawing::Size(1283, 34);
+			this->tbAlertsPanel->Size = System::Drawing::Size(1711, 42);
 			this->tbAlertsPanel->TabIndex = 0;
 			this->tbAlertsPanel->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// C3_User_Interface
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1344, 698);
+			this->ClientSize = System::Drawing::Size(1444, 859);
 			this->Controls->Add(this->pPPIPanel);
+			this->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->Name = L"C3_User_Interface";
 			this->Text = L"C3_Subsystem";
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &C3_User_Interface::C3_User_Interface_FormClosing);
@@ -600,325 +639,504 @@ namespace C3_App {
 		}
 #pragma endregion
 
-	// DELEGATE STUFF
-	// Public call to update table with pre-calculated values. Parameters are calculated in DisplayManager.
-	// Creates an instance of delegate method (declared ~ line 35). BeginInvoke called against the form.
-	// For thread safety. 
+		// DELEGATE STUFF
+		// Public call to update table with pre-calculated values. Parameters are calculated in DisplayManager.
+		// Creates an instance of delegate method (declared ~ line 35). BeginInvoke called against the form.
+		// For thread safety. 
 	public: void Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed)
-	{
-		Delegate_Update_Table^ action = gcnew Delegate_Update_Table(this, &C3_User_Interface::Worker_Update_Table);
-		this->BeginInvoke(action, TimeField, DTI, bPassed);
-	};
+			{
+				try
+				{
+					Delegate_Update_Table^ action = gcnew Delegate_Update_Table(this, &C3_User_Interface::Worker_Update_Table);
+					this->BeginInvoke(action, TimeField, DTI, bPassed);
+				}
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Notification_Panel","error",MB_OKCANCEL);
+				}
+			};
 
-	// Worked method does actual work of updating the table
+			// Worked method does actual work of updating the table
 	private: void Worker_Update_Table(System::String ^ TimeField, System::String ^ DTI, System::String ^ bPassed)
-	{
-		C3_User_Interface::dgvDtiLog->Rows->Add(TimeField, DTI, bPassed);
-	};
+			 {
+				 try
+				 {
+					 C3_User_Interface::dgvDtiLog->Rows->Add(TimeField, DTI, bPassed);
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Update_Notification_Panel","error",MB_OKCANCEL);
+				 }
+			 };
 
 	public: void Update_Notification_Panel(System::String ^ sNotification, System::Drawing::Color tBgColor, System::Drawing::Color tFgColor)
-	{
-		Delegate_Update_Notifications^ action = gcnew Delegate_Update_Notifications(this, &C3_User_Interface::Worker_Update_Notification_Panel);
-		this->BeginInvoke(action, sNotification, tBgColor, tFgColor);
-	};
+			{
+				try
+				{
+					Delegate_Update_Notifications^ action = gcnew Delegate_Update_Notifications(this, &C3_User_Interface::Worker_Update_Notification_Panel);
+					this->BeginInvoke(action, sNotification, tBgColor, tFgColor);
+				}
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Notification_Panel","error",MB_OKCANCEL);
+				}
+			};
 
 	private: void Worker_Update_Notification_Panel(System::String ^ sNotification, System::Drawing::Color tBgColor, System::Drawing::Color tFgColor)
-	{
-		C3_User_Interface::tbAlertsPanel->Text = sNotification;
-		C3_User_Interface::tbAlertsPanel->BackColor = tBgColor;
-		C3_User_Interface::tbAlertsPanel->ForeColor = tFgColor;
-	};
+			 {
+				 try
+				 {
+					 C3_User_Interface::tbAlertsPanel->Text = sNotification;
+					 C3_User_Interface::tbAlertsPanel->BackColor = tBgColor;
+					 C3_User_Interface::tbAlertsPanel->ForeColor = tFgColor;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Notification_Panel","error",MB_OKCANCEL);
+				 }
+			 };
 
-	public: void Update_Live_Feed_Panel(System::Drawing::Bitmap^ bmLiveImage, __int64 nStartTime)
-	{
-		Record_Update_Live_Feed_Panel(nStartTime);
+	public: void Update_Live_Feed_Panel(String ^ sImagePath, __int64 nStartTime)
+			{
+				try
+				{
+					Record_Update_Live_Feed_Panel(nStartTime);
+					this->BeginInvoke(actionLiveVideo, sImagePath);
+				}
+				catch (...)
+				{
+					//MessageBoxA(NULL,"Update_Live_Feed_Panel","error",MB_OKCANCEL);
+				}
+			};
 
-		Delegate_Update_Live_Feed_Panel^ action = gcnew Delegate_Update_Live_Feed_Panel(this, &C3_User_Interface::Worker_Update_Live_Feed_Panel);
-		this->BeginInvoke(action, bmLiveImage);
-	};
+	private: void Worker_Update_Live_Feed_Panel(String ^ sImagePath)
+			 {
+				 try
+				 {
+					 C3_User_Interface::pbLiveFeed->Image = gcnew Bitmap(sImagePath);
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Live_Feed_Panel","error",MB_OKCANCEL);
+				 }
+			 };
 
-	private: void Worker_Update_Live_Feed_Panel(System::Drawing::Bitmap ^ bmLiveImage)
-	{
-		C3_User_Interface::pbLiveFeed->Image = bmLiveImage;
-	};
-
-	// Camera Subsystem Indicator
+			 // Camera Subsystem Indicator
 	public: void Update_Camera_Subsystem_Indicator(System::Drawing::Image^ bmCamSubsystem)
-	{
-		Delegate_Update_Camera_Subsystem_Indicator^ action = 
-			gcnew Delegate_Update_Camera_Subsystem_Indicator(this, &C3_User_Interface::Worker_Update_Camera_Subsystem_Indicator);
+			{
+				try
+				{
+					Delegate_Update_Camera_Subsystem_Indicator^ action = 
+						gcnew Delegate_Update_Camera_Subsystem_Indicator(this, &C3_User_Interface::Worker_Update_Camera_Subsystem_Indicator);
 
-		this->BeginInvoke(action, bmCamSubsystem);
-	};
+					this->BeginInvoke(action, bmCamSubsystem);
+				}
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Camera_Subsystem_Indicator","error",MB_OKCANCEL);
+				}
+			};
 
 	private: void Worker_Update_Camera_Subsystem_Indicator(System::Drawing::Image^ bmCamSubsystem)
-	{
-		C3_User_Interface::pbCameraStatus->Image = bmCamSubsystem;
-	};
+			 {
+				 try
+				 {
+					 C3_User_Interface::pbCameraStatus->Image = bmCamSubsystem;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Camera_Subsystem_Indicator","error",MB_OKCANCEL);
+				 }
+			 };
 
- 	// Camera Comm Indicator
+			 // Camera Comm Indicator
 	public: void Update_Camera_Comm_Indicator(System::Drawing::Image^ bmCamCom)
-	{
-		Delegate_Update_Camera_Comm_Indicator^ action = 
-			gcnew Delegate_Update_Camera_Comm_Indicator(this, &C3_User_Interface::Worker_Update_Camera_Comm_Indicator);
+			{
+				try
+				{
+					Delegate_Update_Camera_Comm_Indicator^ action = 
+						gcnew Delegate_Update_Camera_Comm_Indicator(this, &C3_User_Interface::Worker_Update_Camera_Comm_Indicator);
 
-		this->BeginInvoke(action, bmCamCom);
-	};
+					this->BeginInvoke(action, bmCamCom);
+				}
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Camera_Comm_Indicator","error",MB_OKCANCEL);
+				}
+			};
 
 	private: void Record_Update_Live_Feed_Panel(__int64 nStartTime)
-	{
-		LARGE_INTEGER start;
-		LARGE_INTEGER end;
-		LARGE_INTEGER countsPerSecond;
+			 {
+				 try
+				 {
+					 LARGE_INTEGER start;
+					 LARGE_INTEGER end;
+					 LARGE_INTEGER countsPerSecond;
 
-		::QueryPerformanceCounter(&end);
-		::QueryPerformanceFrequency(&countsPerSecond);
-		start.QuadPart = nStartTime;
-		double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
-		System::Diagnostics::Debug::WriteLine(elapsed);
-	}
+					 ::QueryPerformanceCounter(&end);
+					 ::QueryPerformanceFrequency(&countsPerSecond);
+					 start.QuadPart = nStartTime;
+					 double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
+					 System::Diagnostics::Debug::WriteLine(elapsed);
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Record_Update_Live_Feed_Panel","error",MB_OKCANCEL);
+				 }
+			 }
 
 	private: void Worker_Update_Camera_Comm_Indicator(System::Drawing::Image^ bmCamCom)
-	{
-		C3_User_Interface::pbCameraComms->Image = bmCamCom;
-	};
+			 {
+				 try
+				 {
+					 C3_User_Interface::pbCameraComms->Image = bmCamCom;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Camera_Comm_Indicator","error",MB_OKCANCEL);
+				 }
+			 };
 
-	// Laser Subsystem Indicator
+			 // Laser Subsystem Indicator
 	public: void Update_Laser_Subsystem_Indicator(System::Drawing::Image^ bmLaserSubsystem)
-	{
-		Delegate_Update_Laser_Subsystem_Indicator^ action = 
-			gcnew Delegate_Update_Laser_Subsystem_Indicator(this, &C3_User_Interface::Worker_Update_Laser_Subsystem_Indicator);
+			{
+				try
+				{
+					Delegate_Update_Laser_Subsystem_Indicator^ action = 
+						gcnew Delegate_Update_Laser_Subsystem_Indicator(this, &C3_User_Interface::Worker_Update_Laser_Subsystem_Indicator);
 
-		this->BeginInvoke(action, bmLaserSubsystem);
-	};
+					this->BeginInvoke(action, bmLaserSubsystem);
+				}
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Laser_Subsystem_Indicator","error",MB_OKCANCEL);
+				}
+			};
 
 	private: void Worker_Update_Laser_Subsystem_Indicator(System::Drawing::Image^ bmLaserSubsystem)
-	{
-		C3_User_Interface::pbLaserStatus->Image = bmLaserSubsystem;
-	};
+			 {
+				 try
+				 {
+					 C3_User_Interface::pbLaserStatus->Image = bmLaserSubsystem;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Laser_Subsystem_Indicator","error",MB_OKCANCEL);
+				 }
+			 };
 
-	// Laser Comm Indicator
+			 // Laser Comm Indicator
 	public: void Update_Laser_Comm_Indicator(System::Drawing::Image^ bmLaserCom)
-	{
-		Delegate_Update_Laser_Comm_Indicator^ action = 
-			gcnew Delegate_Update_Laser_Comm_Indicator(this, &C3_User_Interface::Worker_Update_Laser_Comm_Indicator);
+			{
+				try
+				{
+					Delegate_Update_Laser_Comm_Indicator^ action = 
+						gcnew Delegate_Update_Laser_Comm_Indicator(this, &C3_User_Interface::Worker_Update_Laser_Comm_Indicator);
 
-		this->BeginInvoke(action, bmLaserCom);
-	};
+					this->BeginInvoke(action, bmLaserCom);
+				}
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Laser_Comm_Indicator","error",MB_OKCANCEL);
+				}
+			};
 
 	private: void Worker_Update_Laser_Comm_Indicator(System::Drawing::Image^ bmLaserCom)
-	{
-		C3_User_Interface::pbLaserComms->Image = bmLaserCom;
-	};
+			 {
+				 try
+				 {
+					 C3_User_Interface::pbLaserComms->Image = bmLaserCom;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Laser_Comm_Indicator","error",MB_OKCANCEL);
+				 }
+			 };
 
-	// Overall Status Indicator
+			 // Overall Status Indicator
 	public: void Update_Overall_Status_Indicator(System::Drawing::Image^ bmOverall)
-	{
-		Delegate_Update_Overall_Status_Indicator^ action = 
-			gcnew Delegate_Update_Overall_Status_Indicator(this, &C3_User_Interface::Worker_Update_Overall_Status_Indicator_Indicator);
+			{
+				try
+				{
+					Delegate_Update_Overall_Status_Indicator^ action = 
+						gcnew Delegate_Update_Overall_Status_Indicator(this, &C3_User_Interface::Worker_Update_Overall_Status_Indicator_Indicator);
 
-		this->BeginInvoke(action, bmOverall);
-	};
+					this->BeginInvoke(action, bmOverall);
+				}
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Overall_Status_Indicator","error",MB_OKCANCEL);
+				}
+			};
 
 	private: void Worker_Update_Overall_Status_Indicator_Indicator(System::Drawing::Image^ bmOverall)
-	{
-		C3_User_Interface::pbOverallStatus->Image = bmOverall;
-	};
+			 {
+				 try
+				 {
+					 C3_User_Interface::pbOverallStatus->Image = bmOverall;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Overall_Status_Indicator_Indicator","error",MB_OKCANCEL);
+				 }
+			 };
 
-	// Laser Activity Indicator
+			 // Laser Activity Indicator
 	public: void Update_Laser_Activity_Indicator(System::Drawing::Image^ bmLaserActivity)
-	{
-		Delegate_Update_Laser_Activity_Indicator^ action = 
-			gcnew Delegate_Update_Laser_Activity_Indicator(this, &C3_User_Interface::Worker_Update_Laser_Activity_Indicator);
+			{
+				try
+				{
+					Delegate_Update_Laser_Activity_Indicator^ action = 
+						gcnew Delegate_Update_Laser_Activity_Indicator(this, &C3_User_Interface::Worker_Update_Laser_Activity_Indicator);
 
-		this->BeginInvoke(action, bmLaserActivity);
-	};
+					this->BeginInvoke(action, bmLaserActivity);
+				}
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Laser_Activity_Indicator","error",MB_OKCANCEL);
+				}
+			};
 
 	private: void Worker_Update_Laser_Activity_Indicator(System::Drawing::Image^ bmLaserActivity)
-	{
-		C3_User_Interface::pbLaserActivity->Image = bmLaserActivity;
-	};
+			 {
+				 try
+				 {
+					 C3_User_Interface::pbLaserActivity->Image = bmLaserActivity;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Laser_Activity_Indicator","error",MB_OKCANCEL);
+				 }
+			 };
 
-	// Rover Acquired
+			 // Rover Acquired
 	public: void Update_Rover_Acquired_Indicator(System::Drawing::Image^ bmRoverAcquired)
-	{
-		Delegate_Update_Rover_Acquired_Indicator^ action = 
-			gcnew Delegate_Update_Rover_Acquired_Indicator(this, &C3_User_Interface::Worker_Update_Rover_Acquired_Indicator);
+			{
+				try
+				{
+					Delegate_Update_Rover_Acquired_Indicator^ action = 
+						gcnew Delegate_Update_Rover_Acquired_Indicator(this, &C3_User_Interface::Worker_Update_Rover_Acquired_Indicator);
 
-		this->BeginInvoke(action, bmRoverAcquired);
-	};
+					this->BeginInvoke(action, bmRoverAcquired);
+				}
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Rover_Acquired_Indicator","error",MB_OKCANCEL);
+				}
+			};
 
 	private: void Worker_Update_Rover_Acquired_Indicator(System::Drawing::Image^ bmRoverAcquired)
-	{
-		C3_User_Interface::pbRoverAcq->Image = bmRoverAcquired;
-	};
+			 {
+				 try
+				 {
+					 C3_User_Interface::pbRoverAcq->Image = bmRoverAcquired;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Rover_Acquired_Indicator","error",MB_OKCANCEL);
+				 }
+			 };
 
 	public: void Update_Calibration_Button(C3_Alert_Types calibState) {
-				Delegate_Update_Calibration_Button ^ action = 
-					gcnew Delegate_Update_Calibration_Button(this, &C3_User_Interface::Worker_Update_Calibrate_Button);
-				System::String ^ ButtonText = "";
-				bool ButtonIsActive = false;
-				switch(calibState) {
-					case C3_Alert_Types::CALIBRATION_INIT:
-					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_1:
-					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_2:
-					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_3:
-					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_4:
-					case C3_Alert_Types::CALIBRATION_IN_PROGRESS_5:
-						{
-							 ButtonText = "Calibrating...";
+				try
+				{
+					Delegate_Update_Calibration_Button ^ action = 
+						gcnew Delegate_Update_Calibration_Button(this, &C3_User_Interface::Worker_Update_Calibrate_Button);
+					System::String ^ ButtonText = "";
+					bool ButtonIsActive = false;
+					switch(calibState) {
+						case C3_Alert_Types::CALIBRATION_INIT:
+						case C3_Alert_Types::CALIBRATION_IN_PROGRESS_1:
+						case C3_Alert_Types::CALIBRATION_IN_PROGRESS_2:
+						case C3_Alert_Types::CALIBRATION_IN_PROGRESS_3:
+						case C3_Alert_Types::CALIBRATION_IN_PROGRESS_4:
+						case C3_Alert_Types::CALIBRATION_IN_PROGRESS_5:
+							{
+								ButtonText = "Calibrating...";
+								break;
+							}
+						case C3_Alert_Types::CALIBRATION_FAILED:
+							{
+								ButtonText = "Calibration Failed!";
+								ButtonIsActive = true;
+								break;
+							}
+						case C3_Alert_Types::CALIBRATION_SUCCESS:
+							{
+								ButtonText = "Calbrated!";
+								C3_Alert_Types::C3_DISPLAY_STARTUP;
 							 break;
-						}
-					case C3_Alert_Types::CALIBRATION_FAILED:
-						{
-							 ButtonText = "Calibration Failed!";
-							 ButtonIsActive = true;
-							 break;
-						}
-					case C3_Alert_Types::CALIBRATION_SUCCESS:
-						{
-						 ButtonText = "Calbrated!";
-						 C3_Alert_Types::C3_DISPLAY_STARTUP;
-						 break;
-						}
-					 default:
-						 break;
+							}
+						default:
+							break;
+					}
+					this->BeginInvoke(action, ButtonText, ButtonIsActive);
 				}
-				this->BeginInvoke(action, ButtonText, ButtonIsActive);
+				catch (...)
+				{
+					MessageBoxA(NULL,"Update_Calibration_Button","error",MB_OKCANCEL);
+				}
 			}
 	private: void Worker_Update_Calibrate_Button(System::String ^ ButtonText, bool ButtonIsActive) {
-				 C3_User_Interface::CalibrateButton->Text = ButtonText;
-				 C3_User_Interface::CalibrateButton->Enabled = ButtonIsActive;
+				 try
+				 {
+					 C3_User_Interface::CalibrateButton->Text = ButtonText;
+					 C3_User_Interface::CalibrateButton->Enabled = ButtonIsActive;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"Worker_Update_Calibrate_Button","error",MB_OKCANCEL);
+				 }
 			 }
 
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
-				 ////extern int roverContactX;
-				 ////extern int roverContactY;
+				 try
+				 {
+					 ////extern int roverContactX;
+					 ////extern int roverContactY;
 
-				 System::Drawing::Graphics^ g = e->Graphics;
-				 g->Clear(Color::White);
+					 System::Drawing::Graphics^ g = e->Graphics;
+					 g->Clear(Color::White);
 
-				 System::Drawing::Rectangle rect = Form::ClientRectangle;
-				 System::Drawing::Rectangle gFailureLine;
-				 System::Drawing::Rectangle gPlayingField;
+					 System::Drawing::Rectangle rect = Form::ClientRectangle;
+					 System::Drawing::Rectangle gFailureLine;
+					 System::Drawing::Rectangle gPlayingField;
 
-				 // Draw Failure Line
+					 // Draw Failure Line
 
-				 gFailureLine.Width = 300;
-				 gFailureLine.Height = 300;
-				 gFailureLine.X = pPPI->Width / 2 - (gFailureLine.Width / 2);
-				 gFailureLine.Y = pPPI->Height / 2 - (gFailureLine.Height / 2);
+					 gFailureLine.Width = 300;
+					 gFailureLine.Height = 300;
+					 gFailureLine.X = pPPI->Width / 2 - (gFailureLine.Width / 2);
+					 gFailureLine.Y = pPPI->Height / 2 - (gFailureLine.Height / 2);
 
- 				 Pen^ redPen = gcnew Pen(Color::Red);
-				 redPen->Width = 2;
-				 g->DrawEllipse(redPen, gFailureLine);
+					 Pen^ redPen = gcnew Pen(Color::Red);
+					 redPen->Width = 2;
+					 g->DrawEllipse(redPen, gFailureLine);
 
-				 // Draw Playing Field Line
+					 // Draw Playing Field Line
 
-				 gPlayingField.Width = 105;
-				 gPlayingField.Height = 105;
-				 gPlayingField.X = pPPI->Width / 2 - (gPlayingField.Width / 2);
-				 gPlayingField.Y = pPPI->Height / 2 - (gPlayingField.Height / 2);
+					 gPlayingField.Width = 105;
+					 gPlayingField.Height = 105;
+					 gPlayingField.X = pPPI->Width / 2 - (gPlayingField.Width / 2);
+					 gPlayingField.Y = pPPI->Height / 2 - (gPlayingField.Height / 2);
 
-				 Pen^ bluePen = gcnew Pen(Color::Blue);
-				 bluePen->Width = 2;
-				 g->DrawEllipse(bluePen, gPlayingField);
+					 Pen^ bluePen = gcnew Pen(Color::Blue);
+					 bluePen->Width = 2;
+					 g->DrawEllipse(bluePen, gPlayingField);
 
-				 // Draw Contact (rover)
-				  Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
-				 array<CoordinatePair^>^ RoverContact = coordsObj->GetNewCoordinatePair();
-				 //System::Drawing::Image^ RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
-				 CoordinatePair^ offset = gcnew CoordinatePair();
-				 offset->x = (RoverSymbol->Width/2);
-				 offset->y = (RoverSymbol->Height/2);
-                 CoordinatePair^ Padding = gcnew CoordinatePair((pPPI->Width - gFailureLine.Width) / 2, 
-                                                                 (pPPI->Height - gFailureLine.Height) / 2);
-				 for(int i = 0; i < coordsObj->GetValidTracks(); i++) {
-					 if(RoverContact[i]->IsOutOfBounds) {
-						 g->DrawImage(UhOhSymbol, 10, 10);
+					 // Draw Contact (rover)
+					 Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
+					 array<CoordinatePair^>^ RoverContact = coordsObj->GetNewCoordinatePair();
+					 //System::Drawing::Image^ RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
+					 CoordinatePair^ offset = gcnew CoordinatePair();
+					 offset->x = (RoverSymbol->Width/2);
+					 offset->y = (RoverSymbol->Height/2);
+					 CoordinatePair^ Padding = gcnew CoordinatePair((pPPI->Width - gFailureLine.Width) / 2, 
+						 (pPPI->Height - gFailureLine.Height) / 2);
+					 for(int i = 0; i < coordsObj->GetValidTracks(); i++) {
+						 if(RoverContact[i]->IsOutOfBounds) {
+							 g->DrawImage(UhOhSymbol, 10, 10);
+						 }
+						 else {
+							 g->DrawImage(RoverSymbol, Padding->x - offset->x + RoverContact[i]->x,
+								 Padding->y - offset->y + RoverContact[i]->y);
+						 }
 					 }
-					 else {
-					 g->DrawImage(RoverSymbol, Padding->x - offset->x + RoverContact[i]->x,
-                         Padding->y - offset->y + RoverContact[i]->y);
-					 }
+
+					 //int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;
+					 //int y = pPPI->Height / 2 - (roverContact->Height / 2) - RoverContact.y;
+					 ////int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
+					 ////int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
+					 //g->DrawImage(roverContact, x, y);
 				 }
-				 
-				 //int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;
-				 //int y = pPPI->Height / 2 - (roverContact->Height / 2) - RoverContact.y;
-				 ////int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
-				 ////int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
-				 //g->DrawImage(roverContact, x, y);
-				 
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"flowLayoutPanel1_Paint","error",MB_OKCANCEL);
+				 } 
 			 }	  
 
-private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs^  e) {
-			 //dlgExportDTI->ShowDialog();
-			 //create a stream we can use to write to
-			 System::IO::FileStream^ srmOutput;
-			 //create strings as needed
-			 String^ rowEntry = "";
-			 //create an encoder we can use for writing
-			 System::Text::UnicodeEncoding uniEncoding;
-			 //create a new SaveFileDialog
-			 SaveFileDialog^ dlgExportDti = gcnew SaveFileDialog;
-			 //filter for CSV files, and set the filter to be the default one.
-			 dlgExportDti->Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
-			 dlgExportDti->FilterIndex = 1;
-			 //set the file dialog to My Documents
-			 dlgExportDti->InitialDirectory = Environment::GetFolderPath(Environment::SpecialFolder::MyDocuments);
-			 //call ShowDialog. This won't return until the user does something. If the user clicks OK...
-			 if ( dlgExportDti->ShowDialog() == System::Windows::Forms::DialogResult::OK )
-			 {
-				 //...open the file for writing, provided we can handle it.
-				 if ( (srmOutput = safe_cast<System::IO::FileStream^>(dlgExportDti->OpenFile())) != nullptr )
+	private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs^  e) {
+				 try
 				 {
-					 //Put in the first row for the CSV file
-					 String^ topRow = String::Concat(
-						 Column1->HeaderText, ",",
-						 Column2->HeaderText, ",",
-						 Column3->HeaderText, ",",
-						 "\n");
-					 //String^ topRow = "Trial Number,DTI (m),TTI (s),Pass/Fail,\n";
-					 srmOutput->Write( uniEncoding.GetBytes(topRow), 0, uniEncoding.GetByteCount(topRow));
-					 //loop through each row in the DtiLog
-					 for (int i = 0; i < (dgvDtiLog->RowCount - 1); i++)
+					 //dlgExportDTI->ShowDialog();
+					 //create a stream we can use to write to
+					 System::IO::FileStream^ srmOutput;
+					 //create strings as needed
+					 String^ rowEntry = "";
+					 //create an encoder we can use for writing
+					 System::Text::UnicodeEncoding uniEncoding;
+					 //create a new SaveFileDialog
+					 SaveFileDialog^ dlgExportDti = gcnew SaveFileDialog;
+					 //filter for CSV files, and set the filter to be the default one.
+					 dlgExportDti->Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+					 dlgExportDti->FilterIndex = 1;
+					 //set the file dialog to My Documents
+					 dlgExportDti->InitialDirectory = Environment::GetFolderPath(Environment::SpecialFolder::MyDocuments);
+					 //call ShowDialog. This won't return until the user does something. If the user clicks OK...
+					 if ( dlgExportDti->ShowDialog() == System::Windows::Forms::DialogResult::OK )
 					 {
-						 int trialNum = i+1;
-						 //for each row, pull out the data
-						 rowEntry = String::Concat(
-							 trialNum.ToString(), ",",		//Trial Number
-							 dgvDtiLog[0,i]->Value, ",",	//Date/Time
-							 dgvDtiLog[1,i]->Value, ",",	//DTI (m)
-							 dgvDtiLog[2,i]->Value, ",",	//Pass/Fail
-							 "\n");							//Newline
-						 srmOutput->Write( uniEncoding.GetBytes(rowEntry), 0, uniEncoding.GetByteCount(rowEntry));
+						 //...open the file for writing, provided we can handle it.
+						 if ( (srmOutput = safe_cast<System::IO::FileStream^>(dlgExportDti->OpenFile())) != nullptr )
+						 {
+							 //Put in the first row for the CSV file
+							 String^ topRow = String::Concat(
+								 Column1->HeaderText, ",",
+								 Column2->HeaderText, ",",
+								 Column3->HeaderText, ",",
+								 "\n");
+							 //String^ topRow = "Trial Number,DTI (m),TTI (s),Pass/Fail,\n";
+							 srmOutput->Write( uniEncoding.GetBytes(topRow), 0, uniEncoding.GetByteCount(topRow));
+							 //loop through each row in the DtiLog
+							 for (int i = 0; i < (dgvDtiLog->RowCount - 1); i++)
+							 {
+								 int trialNum = i+1;
+								 //for each row, pull out the data
+								 rowEntry = String::Concat(
+									 trialNum.ToString(), ",",		//Trial Number
+									 dgvDtiLog[0,i]->Value, ",",	//Date/Time
+									 dgvDtiLog[1,i]->Value, ",",	//DTI (m)
+									 dgvDtiLog[2,i]->Value, ",",	//Pass/Fail
+									 "\n");							//Newline
+								 srmOutput->Write( uniEncoding.GetBytes(rowEntry), 0, uniEncoding.GetByteCount(rowEntry));
+							 }
+							 //close the file pointer when it's done
+							 srmOutput->Close();
+						 }
 					 }
-					 //close the file pointer when it's done
-					 srmOutput->Close();
+					 //TODO: Add set the bool for unexported data to FALSE
+					 delete dlgExportDti;
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"cmdExport_Click","error",MB_OKCANCEL);
+				 } 
+			 }
+	private: System::Void calibrateButton_Click(System::Object^  sender, System::EventArgs^  e) {
+				 try
+				 {
+					 if (operationalState == C3_Alert_Types::C3_DISPLAY_STARTUP ||
+						 operationalState == C3_Alert_Types::CALIBRATION_INIT   ||
+						 operationalState == C3_Alert_Types::CALIBRATION_FAILED)
+					 {
+						 this->CalibrateButton->Text = "Calibrating...";
+						 this->CalibrateButton->Enabled = false;
+						 m_monitor->StartCalibration();
+						 operationalState  = C3_Alert_Types::CALIBRATION_INIT;
+					 }
+				 }
+				 catch (...)
+				 {
+					 MessageBoxA(NULL,"calibrateButton_Click","error",MB_OKCANCEL);
+				 } 
+			 }
+	private: System::Void C3_User_Interface_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+				 if (m_monitor != NULL)
+				 {
+					 m_monitor->StopThreads();
+					 Sleep(5000);
 				 }
 			 }
-			 //TODO: Add set the bool for unexported data to FALSE
-			 delete dlgExportDti;
-		 }
-		private: System::Void calibrateButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 if (operationalState == C3_Alert_Types::C3_DISPLAY_STARTUP ||
-				 operationalState == C3_Alert_Types::CALIBRATION_INIT   ||
-				 operationalState == C3_Alert_Types::CALIBRATION_FAILED)
-			 {
-				 this->CalibrateButton->Text = "Calibrating...";
-				 this->CalibrateButton->Enabled = false;
-				 m_monitor->StartCalibration();
-				 operationalState  = C3_Alert_Types::CALIBRATION_INIT;
-			 }
-		 }
-		 private: System::Void C3_User_Interface_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
-			if (m_monitor != NULL)
-			{
-		   	    m_monitor->StopThreads();
-				Sleep(5000);
-			}
-		 }
-};
+	};
 }
 
 

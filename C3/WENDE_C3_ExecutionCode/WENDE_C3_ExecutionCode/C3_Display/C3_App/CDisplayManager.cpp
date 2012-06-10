@@ -12,12 +12,12 @@ using namespace std;
 
 
 CDisplayManager::CDisplayManager() {
-    m_nCameraComStatus = 0;
-    m_nCameraStatus = 0;
-    m_nLaserActivityStatus = 0;
-    m_nLaserComStatus = 0;
-    m_nLaserStatus = 0;
-    m_OverStatus = 0;
+	m_nCameraComStatus = 0;
+	m_nCameraStatus = 0;
+	m_nLaserActivityStatus = 0;
+	m_nLaserComStatus = 0;
+	m_nLaserStatus = 0;
+	m_OverStatus = 0;
 }
 ////////////////////////////////////////////////////////////////////////
 // Description: Returns a pointer to the CDisplayManager. If there is no
@@ -26,11 +26,11 @@ CDisplayManager::CDisplayManager() {
 ////////////////////////////////////////////////////////////////////////
 CDisplayManager ^ CDisplayManager::getCDisplayManager()
 {
-    if(!displayMgr)
-    {
-        displayMgr = gcnew CDisplayManager();
-    }
-    return displayMgr;
+	if(!displayMgr)
+	{
+		displayMgr = gcnew CDisplayManager();
+	}
+	return displayMgr;
 }
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the PPI display when the new rover position is
@@ -40,23 +40,29 @@ CDisplayManager ^ CDisplayManager::getCDisplayManager()
 
 int CDisplayManager::Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoords, int NumValidTracks)
 {
-	////for now, just dump everything to the globals.
-	//extern int roverContactX;
-	//extern int roverContactY;
+	try
+	{
+		////for now, just dump everything to the globals.
+		//extern int roverContactX;
+		//extern int roverContactY;
 
-	////only act on the information if it's new
-	//if ((x != roverContactX) || (y != roverContactY))
-	//{
-	//	roverContactX = x;
-	//	roverContactY = y;
-	//	C3_User_Interface::Instance->pPPI->Invalidate();
-	//}
-	Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
-	//if any of the coordinates are different, invalidate the PPI display.
-	if(coordsObj->SetNewCoordinates(inputCoords, NumValidTracks)) {
-		C3_User_Interface::Instance->pPPI->Invalidate();
+		////only act on the information if it's new
+		//if ((x != roverContactX) || (y != roverContactY))
+		//{
+		//	roverContactX = x;
+		//	roverContactY = y;
+		//	C3_User_Interface::Instance->pPPI->Invalidate();
+		//}
+		Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
+		//if any of the coordinates are different, invalidate the PPI display.
+		if(coordsObj->SetNewCoordinates(inputCoords, NumValidTracks)) {
+			C3_User_Interface::Instance->pPPI->Invalidate();
+		}
 	}
-
+	catch (...)
+	{
+		MessageBoxA(NULL,"Update_Rover_PPI_Position","error",MB_OKCANCEL);
+	} 	
 	return 0;
 }
 
@@ -68,27 +74,33 @@ int CDisplayManager::Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoor
 
 int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 {
-	// Status is OFFLINE
-	if((nCameraStatus == 0) || (nCameraStatus == 3) || (nCameraStatus == 4)) 	
+	try
 	{
-		if (Get_Camera_Status() != 0)
+		// Status is OFFLINE
+		if((nCameraStatus == 0) || (nCameraStatus == 3) || (nCameraStatus == 4)) 	
 		{
-			C3_User_Interface::Instance->Update_Camera_Subsystem_Indicator(
-				C3_User_Interface::Instance->OfflineInd);
+			if (Get_Camera_Status() != 0)
+			{
+				C3_User_Interface::Instance->Update_Camera_Subsystem_Indicator(
+					C3_User_Interface::Instance->OfflineInd);
+			}
+			Set_Camera_Status(0);
 		}
-		Set_Camera_Status(0);
+		// Status is ONLINE
+		else 	
+		{
+			if (Get_Camera_Status() != 1)
+			{
+				C3_User_Interface::Instance->Update_Camera_Subsystem_Indicator(
+					C3_User_Interface::Instance->OnlineInd);
+			}
+			Set_Camera_Status(1);
+		}
 	}
-	// Status is ONLINE
-	else 	
+	catch (...)
 	{
-		if (Get_Camera_Status() != 1)
-		{
-			C3_User_Interface::Instance->Update_Camera_Subsystem_Indicator(
-				C3_User_Interface::Instance->OnlineInd);
-		}
-		Set_Camera_Status(1);
-	}
-
+		MessageBoxA(NULL,"Update_Camera_Subsystem_Indicator","error",MB_OKCANCEL);
+	} 	
 	return 0;
 }
 ////////////////////////////////////////////////////////////////////////
@@ -98,27 +110,33 @@ int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 ////////////////////////////////////////////////////////////////////////
 int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 {
-	// Status is OFFLINE
-	if((nLaserStatus == 0) || (nLaserStatus == 3) || (nLaserStatus == 4)) 		
+	try
 	{
-		if (Get_Laser_Status() != 0)
+		// Status is OFFLINE
+		if((nLaserStatus == 0) || (nLaserStatus == 3) || (nLaserStatus == 4)) 		
 		{
-			C3_User_Interface::Instance->Update_Laser_Subsystem_Indicator(
-				C3_User_Interface::Instance->OfflineInd);
+			if (Get_Laser_Status() != 0)
+			{
+				C3_User_Interface::Instance->Update_Laser_Subsystem_Indicator(
+					C3_User_Interface::Instance->OfflineInd);
+			}
+			Set_Laser_Status(0);
 		}
-		Set_Laser_Status(0);
+		// Status is ONLINE
+		else 	
+		{
+			if (Get_Laser_Status() != 1)
+			{
+				C3_User_Interface::Instance->Update_Laser_Subsystem_Indicator(
+					C3_User_Interface::Instance->OnlineInd);
+			}
+			Set_Laser_Status(1);
+		}
 	}
-	// Status is ONLINE
-	else 	
+	catch (...)
 	{
-		if (Get_Laser_Status() != 1)
-		{
-			C3_User_Interface::Instance->Update_Laser_Subsystem_Indicator(
-				C3_User_Interface::Instance->OnlineInd);
-		}
-		Set_Laser_Status(1);
-	}
-
+		MessageBoxA(NULL,"Update_Laser_Subsystem_Indicator","error",MB_OKCANCEL);
+	} 	
 	return 0;
 }
 ////////////////////////////////////////////////////////////////////////
@@ -128,20 +146,27 @@ int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 ////////////////////////////////////////////////////////////////////////
 int CDisplayManager::Update_Laser_Activity_Indicator(int nLaserActivityStatus)
 {
-	if (Get_Laser_Activity() != nLaserActivityStatus)
+	try
 	{
-		if(nLaserActivityStatus == 1)
+		if (Get_Laser_Activity() != nLaserActivityStatus)
 		{
-			C3_User_Interface::Instance->Update_Laser_Activity_Indicator( 
-				C3_User_Interface::Instance->EnergizedInd);
+			if(nLaserActivityStatus == 1)
+			{
+				C3_User_Interface::Instance->Update_Laser_Activity_Indicator( 
+					C3_User_Interface::Instance->EnergizedInd);
+			}
+			else
+			{
+				C3_User_Interface::Instance->Update_Laser_Activity_Indicator(
+					C3_User_Interface::Instance->InactiveInd);
+			}
+			Set_Laser_Activity(nLaserActivityStatus);
 		}
-		else
-		{
-			C3_User_Interface::Instance->Update_Laser_Activity_Indicator(
-				C3_User_Interface::Instance->InactiveInd);
-		}
-		Set_Laser_Activity(nLaserActivityStatus);
 	}
+	catch (...)
+	{
+		MessageBoxA(NULL,"Update_Laser_Activity_Indicator","error",MB_OKCANCEL);
+	} 	
 	return 0;
 }
 ////////////////////////////////////////////////////////////////////////
@@ -151,33 +176,40 @@ int CDisplayManager::Update_Laser_Activity_Indicator(int nLaserActivityStatus)
 ////////////////////////////////////////////////////////////////////////
 int CDisplayManager::Update_Overall_Status(void)
 {
-	int nLaserSubsystemStatus  = Get_Laser_Status();
-	int nCameraSubsystemStatus = Get_Camera_Status();
-	int nLaserComStatus        = Get_Laser_Com_Status();
-	int nCameraComStatus       = Get_Camera_Com_Status();
+	try
+	{
+		int nLaserSubsystemStatus  = Get_Laser_Status();
+		int nCameraSubsystemStatus = Get_Camera_Status();
+		int nLaserComStatus        = Get_Laser_Com_Status();
+		int nCameraComStatus       = Get_Camera_Com_Status();
 
-	// Set status to ONLINE if camera and laser are OK
-	if((nLaserSubsystemStatus == 1) && 
-	   (nCameraSubsystemStatus == 1) && 
-	   (nLaserComStatus == 1) && 
-	   (nCameraComStatus == 1))
-	{
-	   if (m_OverStatus != 1)
-	   {
-	   		C3_User_Interface::Instance->Update_Overall_Status_Indicator( 
-				C3_User_Interface::Instance->OnlineInd);
-	   }
-	   m_OverStatus = 1;
-	}
-	else
-	{
-		if (m_OverStatus != 0)
+		// Set status to ONLINE if camera and laser are OK
+		if((nLaserSubsystemStatus == 1) && 
+			(nCameraSubsystemStatus == 1) && 
+			(nLaserComStatus == 1) && 
+			(nCameraComStatus == 1))
 		{
-			C3_User_Interface::Instance->Update_Overall_Status_Indicator( 
-				C3_User_Interface::Instance->OfflineInd);
+			if (m_OverStatus != 1)
+			{
+				C3_User_Interface::Instance->Update_Overall_Status_Indicator( 
+					C3_User_Interface::Instance->OnlineInd);
+			}
+			m_OverStatus = 1;
 		}
-		m_OverStatus = 0;
+		else
+		{
+			if (m_OverStatus != 0)
+			{
+				C3_User_Interface::Instance->Update_Overall_Status_Indicator( 
+					C3_User_Interface::Instance->OfflineInd);
+			}
+			m_OverStatus = 0;
+		}
 	}
+	catch (...)
+	{
+		MessageBoxA(NULL,"Update_Overall_Status","error",MB_OKCANCEL);
+	} 	
 	return 0;
 }
 void CDisplayManager::Set_Camera_Status(int nCameraStatus)
@@ -231,78 +263,91 @@ int CDisplayManager::Get_Laser_Com_Status(void)
 ////////////////////////////////////////////////////////////////////////
 int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus)
 {
-	// Status is OFFLINE
-	if(nCameraCommStatus == 0) 		
+	try
 	{
-		if (Get_Camera_Com_Status() != 0)
+		// Status is OFFLINE
+		if(nCameraCommStatus == 0) 		
 		{
-			C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
-				C3_User_Interface::Instance->OfflineInd);
+			if (Get_Camera_Com_Status() != 0)
+			{
+				C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
+					C3_User_Interface::Instance->OfflineInd);
+			}
+			if (Get_Camera_Status() != -1)
+			{
+				C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
+					C3_User_Interface::Instance->UnknownInd);
+			}
+			Set_Camera_Com_Status(0);
+			Set_Camera_Status(-1);
 		}
-		if (Get_Camera_Status() != -1)
+		// Status is ONLINE
+		else 	
 		{
-			C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
-				C3_User_Interface::Instance->UnknownInd);
+			if (Get_Camera_Com_Status() != 1)
+			{
+				C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
+					C3_User_Interface::Instance->OnlineInd);
+			}
+			Set_Camera_Com_Status(1);
 		}
-		Set_Camera_Com_Status(0);
-		Set_Camera_Status(-1);
 	}
-	// Status is ONLINE
-	else 	
+	catch (...)
 	{
-		if (Get_Camera_Com_Status() != 1)
-		{
-			C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
-				C3_User_Interface::Instance->OnlineInd);
-		}
-		Set_Camera_Com_Status(1);
-	}
-
+		MessageBoxA(NULL,"Update_Camera_Communication_Indicator","error",MB_OKCANCEL);
+	} 	
 	return 0;
 }
 
 int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 {
-	// Status is OFFLINE
-	if(nLaserCommStatus == 0) 		
+	try
 	{
-		if (Get_Laser_Com_Status() != 0)
+		// Status is OFFLINE
+		if(nLaserCommStatus == 0) 		
 		{
-			C3_User_Interface::Instance->Update_Laser_Comm_Indicator( 
-				C3_User_Interface::Instance->OfflineInd);
+			if (Get_Laser_Com_Status() != 0)
+			{
+				C3_User_Interface::Instance->Update_Laser_Comm_Indicator( 
+					C3_User_Interface::Instance->OfflineInd);
+			}
+			if (Get_Laser_Status() != -1)
+			{
+				C3_User_Interface::Instance->Update_Laser_Comm_Indicator(
+					C3_User_Interface::Instance->UnknownInd);
+			}
+			Set_Laser_Com_Status(0);
+			Set_Laser_Status(-1);
 		}
-		if (Get_Laser_Status() != -1)
+		// Status is ONLINE
+		else 	
 		{
-			C3_User_Interface::Instance->Update_Laser_Comm_Indicator(
-				C3_User_Interface::Instance->UnknownInd);
+			if (Get_Laser_Com_Status() != 1)
+			{
+				C3_User_Interface::Instance->Update_Laser_Comm_Indicator(
+					C3_User_Interface::Instance->OnlineInd);
+			}
+			Set_Laser_Com_Status(1);
 		}
-		Set_Laser_Com_Status(0);
-		Set_Laser_Status(-1);
 	}
-	// Status is ONLINE
-	else 	
+	catch (...)
 	{
-		if (Get_Laser_Com_Status() != 1)
-		{
-			C3_User_Interface::Instance->Update_Laser_Comm_Indicator(
-				C3_User_Interface::Instance->OnlineInd);
-		}
-		Set_Laser_Com_Status(1);
-	}
-
+		MessageBoxA(NULL,"Update_Laser_Communication_Indicator","error",MB_OKCANCEL);
+	} 	
 	return 0;
 }
 
 int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath, __int64 nStartTime)
 {
-	System::Diagnostics::Debug::WriteLine(sImagePath);
-
-	Bitmap^ bmCameraImage;
-
-	// Use managed C to garbage collect automatically
-	bmCameraImage = gcnew Bitmap(sImagePath);
-	C3_User_Interface::Instance->Update_Live_Feed_Panel(bmCameraImage, nStartTime);
- 		
+	try
+	{
+		System::Diagnostics::Debug::WriteLine(sImagePath);
+		C3_User_Interface::Instance->Update_Live_Feed_Panel(sImagePath, nStartTime);
+	}
+	catch (...)
+	{
+		MessageBoxA(NULL,"Update_Live_Video_Feed","error",MB_OKCANCEL);
+	} 	
 	return 0;
 }
 
@@ -318,43 +363,43 @@ void CDisplayManager::Update_Notification_Panel(int nAlertID)
 
 	switch(nAlertID)
 	{
-		case 1:
+	case 1:
 
-			// If alert status = 1 (Rover stopped before failure)			
-			mesgType = Notification::NotifyMesg::TrialSuccess;
-			break;
+		// If alert status = 1 (Rover stopped before failure)			
+		mesgType = Notification::NotifyMesg::TrialSuccess;
+		break;
 
-		case 2:
-			
-			// If alert status = 2 (Contact is > 0.7m away from centre)
-			mesgType = Notification::NotifyMesg::PatientLeftEvacArea;
-			break;
+	case 2:
 
-		case 3:
+		// If alert status = 2 (Contact is > 0.7m away from centre)
+		mesgType = Notification::NotifyMesg::PatientLeftEvacArea;
+		break;
 
-			// If alert status = 3 (Rover not stopped before failure line)
-			mesgType = Notification::NotifyMesg::TrialFailed;
-			break;
+	case 3:
 
-		case 4:
+		// If alert status = 3 (Rover not stopped before failure line)
+		mesgType = Notification::NotifyMesg::TrialFailed;
+		break;
 
-			// If alert status = 4 (calibration failed) or subsystems do not work
+	case 4:
 
+		// If alert status = 4 (calibration failed) or subsystems do not work
+
+		mesgType = Notification::NotifyMesg::SystemNonOperational;
+		break;
+
+	case 5:
+
+		// If alert status = 5 (calibration success) & subsystems work
+
+		if(m_nCameraStatus == 1 && m_nLaserStatus ==1)
+			mesgType = Notification::NotifyMesg::SystemOperational;
+		else
 			mesgType = Notification::NotifyMesg::SystemNonOperational;
-			break;
 
-		case 5:
-
-			// If alert status = 5 (calibration success) & subsystems work
-
-			if(m_nCameraStatus == 1 && m_nLaserStatus ==1)
-				mesgType = Notification::NotifyMesg::SystemOperational;
-			else
-				mesgType = Notification::NotifyMesg::SystemNonOperational;
-
-			break;
+		break;
 	}
-	
+
 	Notification newNote(mesgType);
 	C3_User_Interface::Instance->Update_Notification_Panel(newNote.NotifyText, newNote.bgColor, newNote.fgColor);
 }
@@ -381,8 +426,8 @@ int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed)
 	//assemble fields
 	System::String^ TimeField = 
 		System::String::Concat( TimeStamp.ToShortDateString(),
-								" ",
-								TimeStamp.ToShortTimeString());
+		" ",
+		TimeStamp.ToShortTimeString());
 	System::String^ DtiField = fDTI.ToString();
 	System::String^ PassField;
 	if (bPassed) { PassField = "PASS"; }
@@ -413,20 +458,20 @@ int CDisplayManager::Update_Rover_Acquired_Indicator(int nRoverAcqStatus)
 int CDisplayManager::Update_Calibration_Reply(int nAlertID) {
 	switch(nAlertID) 
 	{
-		case C3_Alert_Types::CALIBRATION_FAILED:
-			{
-				Update_Notification_Panel(4);
-				break;
-			}
-		case C3_Alert_Types::CALIBRATION_SUCCESS:
-			{
-				Update_Notification_Panel(5);
-				break;
-			}
-		default:
-			{
-				break;
-			}
+	case C3_Alert_Types::CALIBRATION_FAILED:
+		{
+			Update_Notification_Panel(4);
+			break;
+		}
+	case C3_Alert_Types::CALIBRATION_SUCCESS:
+		{
+			Update_Notification_Panel(5);
+			break;
+		}
+	default:
+		{
+			break;
+		}
 	}
 	C3_User_Interface::Instance->Update_Calibration_Button((C3_Alert_Types)nAlertID);
 	return 0;
