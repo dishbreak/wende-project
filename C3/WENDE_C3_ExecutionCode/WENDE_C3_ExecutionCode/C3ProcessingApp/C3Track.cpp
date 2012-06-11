@@ -44,6 +44,17 @@ C3_TRACK_POINT_DOUBLE C3Track::getPredictionPoint() const
 {
 	return m_predictionPoint;
 }
+/*
+// find out what the tracks positions is estimated to be at time time
+C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(time)
+{
+	C3_TRACK_POINT_DOUBLE pointAtThisTime.X=1;
+
+	//TODO FIX
+	return pointAtTimeTime;
+}
+
+*/
 
 // Filter and predict next location....
 C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,

@@ -59,6 +59,8 @@ class C3Tracker
 
 	public:
 		void UpdateTracks(const vector<C3_TRACK_POINT> cameraRoverPositions, const double time);
+		double C3Tracker::distanceFromTo(C3_TRACK_POINT_DOUBLE meas1,C3_TRACK_POINT_DOUBLE meas2);
+
 
 	private:
 		// determine if a point has already been assigned to the tracker 

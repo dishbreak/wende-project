@@ -55,6 +55,7 @@ class C3Track
 		C3_TRACK_POINT_DOUBLE UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
 										  const C3_TRACK_POINT_DOUBLE cameraLaserPosition,
 										  const double time);
+		C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(/*time*/);
 
 	public:
 		// returns the number of points contained in the history array
