@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ConnectionSettings">
+    <Position X="10" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAQAAAAAAAAAAAAAAAAAAAgAAAAgAAAAAAA=</HashCode>
+      <FileName>ConnectionSettings.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSocketComm" Collapsed="true">
+    <Position X="2.25" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>YAAQAQAAOAAIEgiMAHgAEBCYRigAQRCgAIAEgAAAQgI=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\SocketComm.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSocketManager">
+    <Position X="2.25" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAgAAACAECgAAAAAAAAARACgAAAAIAAECA=</HashCode>
+      <FileName>TCPIP\SocketManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNetworkArbiterApp">
+    <Position X="10" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAQAQAAAAAAAAAA=</HashCode>
+      <FileName>NetworkArbiter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CArbiterSharedMemoryManager">
+    <Position X="11.75" Y="3.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAACEAAAwQgQAAAAwAAAUACAgAgAAgI=</HashCode>
+      <FileName>ArbiterSharedMemoryManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C3Configuration">
+    <Position X="11.75" Y="8" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAEBAAAAAASIgEAAAEAAAIBEYBAIAAEAQIGCAwAEAA=</HashCode>
+      <FileName>C3Configuration.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSharedStruct&lt;StructType&gt;">
+    <Position X="17.75" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ARAAAEACgAAEgAAEAgABCAAIQQBAEACAQEAkQZAAQAE=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\CSharedStruct.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNetworkArbiterDlg">
+    <Position X="15" Y="3.75" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="CNetworkArbiterDlg::__unnamed_0207_1">
+        <TypeIdentifier>
+          <NewMemberFileName>NetworkArbiterDlg.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EECQAAkQAKQ8AAAAABAECgAAAGAAACUIREDQAAAQEAA=</HashCode>
+      <FileName>NetworkArbiterDlg.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="cameraMsgs::cameraStatus" Collapsed="true">
+    <Position X="20.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQQxAASABAANECJJAYAAAYYJgkUBAAMoQCQBJBJ2QiI=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\cameraMsgs.pb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="cameraMsgs::track" Collapsed="true">
+    <Position X="20.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAQsECJIA4AAAQYIAAUBAAIkQQBgRHJAWAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\cameraMsgs.pb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="cameraMsgs::cameraTracks" Collapsed="true">
+    <Position X="20.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQSxAAAAAgAOECLpIYAAAYYJA0UBAMMAQCAAJBpyZiA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\cameraMsgs.pb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="cameraMsgs::cameraImage" Collapsed="true">
+    <Position X="20.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DEAtAAIAAAEsEDJJoagAAcoKAiUBAAIAQEAQFBJwwEE=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\cameraMsgs.pb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="laserMsgs::laserStatus" Collapsed="true">
+    <Position X="20.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQxAASABAANECJJAYAAAYYIAkUDAAIoQCQBBBJ0QgA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\laserMsgs.pb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="laserMsgs::pose" Collapsed="true">
+    <Position X="20.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AhAAAABAAAAMECZIE4gAARIIAEUBAAIARAAADBJoQQA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\laserMsgs.pb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="laserMsgs::laserPose" Collapsed="true">
+    <Position X="20.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQAhAAggIgAOECJpIYAQAYIJAAUBAAMAwAAANBJyRiA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\laserMsgs.pb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="SockAddrIn" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADAAAAAAAAAAgAACAwCAAwAAAgAAAAAJAABCEABAByE=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\SocketComm.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="stMessageProxy">
+    <Position X="10" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\SocketComm.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_0110_1">
+    <Position X="2.25" Y="8.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_0110_2">
+    <Position X="4.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_0110_3">
+    <Position X="10" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAMEAAAAAAAAAAAAgAAAAAAAFAAAQAAAAAAAAQA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_0110_5">
+    <Position X="8.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAMEgEAAAAAAAAAAgAgAAAAAEAAEAAAAAAAAAQA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_0110_6">
+    <Position X="8.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAMEgEAAAAAAAAAAgAgAAAAAEAAEAAAAAAAAAQA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_0110_7">
+    <Position X="4.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAIAAAAAAAAAgAAAAAAAAAAAEAAAAAAAAAAAAQA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_0110_10">
+    <Position X="6.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAMEAAAAAAAAAAAAAAAAAAAAFAAAQAAAAAAAAQA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="CSockAddrList" Collapsed="true">
+    <Position X="0.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\SocketComm.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="C3PacketType" Collapsed="true">
+    <Position X="6.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TCPIP\SocketManager.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SHM_INFO_STRUCT" Collapsed="true">
+    <Position X="2.25" Y="8" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="C3SIZE" Collapsed="true">
+    <Position X="4.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CAMERA_STATUS_MSG_SHM" Collapsed="true">
+    <Position X="10" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="C3_TRACK_POINT" Collapsed="true">
+    <Position X="0.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CAMERA_TRACK_MSG_SHM" Collapsed="true">
+    <Position X="8.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CAMERA_IMAGE_MSG_SHM" Collapsed="true">
+    <Position X="4.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LASER_POINT_DIRECTION_SHM" Collapsed="true">
+    <Position X="4.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="UPixel" Collapsed="true">
+    <Position X="0.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LASER_STATUS_MSG_SHM" Collapsed="true">
+    <Position X="6.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\ShmStructs.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="__unnamed_0201_1">
+    <Position X="6.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAIAABEAACAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>TCPIP\SocketManager.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="cameraMsgs::systemStatus">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIABAAAABAIAAAACAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\cameraMsgs.pb.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="laserMsgs::systemStatus">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAQAAAAAQCAAAABAACAAAAAAAAAA=</HashCode>
+      <FileName>d:\WENDE\C3\WENDE_C3_ExecutionCode\WENDE_C3_ExecutionCode\SharedSource\laserMsgs.pb.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.4" />
+</ClassDiagram>
