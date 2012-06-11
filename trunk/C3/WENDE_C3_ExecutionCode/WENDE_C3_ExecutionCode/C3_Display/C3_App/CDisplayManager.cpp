@@ -182,11 +182,14 @@ int CDisplayManager::Update_Overall_Status(void)
 		int nCameraSubsystemStatus = Get_Camera_Status();
 		int nLaserComStatus        = Get_Laser_Com_Status();
 		int nCameraComStatus       = Get_Camera_Com_Status();
+		int nCalibrationStatus	   = Get_Calibrated_Status();
+
 
 		// Set status to ONLINE if camera and laser are OK
 		if((nLaserSubsystemStatus == 1) && 
 			(nCameraSubsystemStatus == 1) && 
 			(nLaserComStatus == 1) && 
+			(nCalibrationStatus == 1) &&
 			(nCameraComStatus == 1))
 		{
 			if (m_OverStatus != 1)
@@ -253,6 +256,17 @@ int CDisplayManager::Get_Laser_Com_Status(void)
 	return m_nLaserComStatus;
 }
 
+void CDisplayManager::Set_Calibrated_Status(int nCalibratedStatus)
+{
+	m_CalibratedStatus = nCalibratedStatus;
+}
+
+int CDisplayManager::Get_Calibrated_Status(void)
+{
+	return m_CalibratedStatus;
+}
+
+
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -313,7 +327,7 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 			}
 			if (Get_Laser_Status() != -1)
 			{
-				C3_User_Interface::Instance->Update_Laser_Comm_Indicator(
+				C3_User_Interface::Instance->Update_Laser_Subsystem_Indicator(
 					C3_User_Interface::Instance->UnknownInd);
 			}
 			Set_Laser_Com_Status(0);
@@ -461,11 +475,13 @@ int CDisplayManager::Update_Calibration_Reply(int nAlertID) {
 	case C3_Alert_Types::CALIBRATION_FAILED:
 		{
 			Update_Notification_Panel(4);
+			Set_Calibrated_Status(-1);
 			break;
 		}
 	case C3_Alert_Types::CALIBRATION_SUCCESS:
 		{
 			Update_Notification_Panel(5);
+			Set_Calibrated_Status(1);
 			break;
 		}
 	default:
