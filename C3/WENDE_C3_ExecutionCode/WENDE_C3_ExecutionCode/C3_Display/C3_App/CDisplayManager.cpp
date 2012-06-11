@@ -61,7 +61,7 @@ int CDisplayManager::Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoor
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL,"Update_Rover_PPI_Position","error",MB_OKCANCEL);
+		;//MessageBoxA(NULL,"Update_Rover_PPI_Position","error",MB_OKCANCEL);
 	} 	
 	return 0;
 }
@@ -99,7 +99,7 @@ int CDisplayManager::Update_Camera_Subsystem_Indicator(int nCameraStatus)
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL,"Update_Camera_Subsystem_Indicator","error",MB_OKCANCEL);
+		;//MessageBoxA(NULL,"Update_Camera_Subsystem_Indicator","error",MB_OKCANCEL);
 	} 	
 	return 0;
 }
@@ -135,7 +135,7 @@ int CDisplayManager::Update_Laser_Subsystem_Indicator(int nLaserStatus)
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL,"Update_Laser_Subsystem_Indicator","error",MB_OKCANCEL);
+		;//MessageBoxA(NULL,"Update_Laser_Subsystem_Indicator","error",MB_OKCANCEL);
 	} 	
 	return 0;
 }
@@ -165,7 +165,7 @@ int CDisplayManager::Update_Laser_Activity_Indicator(int nLaserActivityStatus)
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL,"Update_Laser_Activity_Indicator","error",MB_OKCANCEL);
+		;//MessageBoxA(NULL,"Update_Laser_Activity_Indicator","error",MB_OKCANCEL);
 	} 	
 	return 0;
 }
@@ -211,7 +211,7 @@ int CDisplayManager::Update_Overall_Status(void)
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL,"Update_Overall_Status","error",MB_OKCANCEL);
+		;//MessageBoxA(NULL,"Update_Overall_Status","error",MB_OKCANCEL);
 	} 	
 	return 0;
 }
@@ -286,13 +286,14 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 			{
 				C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
 					C3_User_Interface::Instance->OfflineInd);
+				Set_Camera_Com_Status(0);
 			}
 			if (Get_Camera_Status() != -1)
 			{
 				C3_User_Interface::Instance->Update_Camera_Subsystem_Indicator(
 					C3_User_Interface::Instance->UnknownInd);
 			}
-			Set_Camera_Com_Status(0);
+			//Set_Camera_Com_Status(0);
 			Set_Camera_Status(-1);
 		}
 		// Status is ONLINE
@@ -308,7 +309,7 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL,"Update_Camera_Communication_Indicator","error",MB_OKCANCEL);
+		;//MessageBoxA(NULL,"Update_Camera_Communication_Indicator","error",MB_OKCANCEL);
 	} 	
 	return 0;
 }
@@ -324,6 +325,7 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 			{
 				C3_User_Interface::Instance->Update_Laser_Comm_Indicator( 
 					C3_User_Interface::Instance->OfflineInd);
+
 			}
 			if (Get_Laser_Status() != -1)
 			{
@@ -346,7 +348,7 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL,"Update_Laser_Communication_Indicator","error",MB_OKCANCEL);
+		;//MessageBoxA(NULL,"Update_Laser_Communication_Indicator","error",MB_OKCANCEL);
 	} 	
 	return 0;
 }
@@ -360,7 +362,7 @@ int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath, __int64 nStartT
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL,"Update_Live_Video_Feed","error",MB_OKCANCEL);
+		;//MessageBoxA(NULL,"Update_Live_Video_Feed","error",MB_OKCANCEL);
 	} 	
 	return 0;
 }
