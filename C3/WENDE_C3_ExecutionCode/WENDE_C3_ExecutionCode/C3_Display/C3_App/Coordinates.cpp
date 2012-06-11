@@ -4,8 +4,8 @@
 //Make sure pointer starts as NULL
 //Coordinates ^ Coordinates::coordsObj = nullptr;
 CoordinatePair::CoordinatePair() {
-	x = 0;
-	y = 0;
+	x = -100000; //Assumption: Contact 10km away from world center will not be  
+	y = -100000; //            visible via the camera at initial state.
 	IsOutOfBounds = false;
 }
 
