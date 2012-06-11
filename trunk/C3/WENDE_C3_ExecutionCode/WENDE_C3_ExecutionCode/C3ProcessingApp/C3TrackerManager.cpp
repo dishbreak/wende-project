@@ -63,33 +63,44 @@ void C3Tracker::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struc
 											const vector<C3_TRACK_POINT> cameraRoverPositions, 
 											const double time)
 {
-	// loop over all the positions
+	// loop over all the track positions
 	for (unsigned int ii = 0; ii < cameraRoverPositions.size(); ii++)
 	{
 		C3_CORRELATE_struct correlate;
 		double minValue    = numeric_limits<double>::max();
 		
-		// loop over all the points
+		// loop over all the camera measurements
 		for (unsigned int jj = 0; jj < m_tracks.size(); ii++)
 		{
-			// if there is not enough history then only use the last position...
-			if ( m_tracks[jj]->getNumHistoryPoints() <= 3 )
-			{
-				//correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getLastHistoryPoint());
-			}
-			// ok... we have the history points needed so lets coorelate using the 
-			// prediction point (assumes velocity)
-			else
-			{
-				//correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getPredictionPoint());
-			}
+			// first check if the measurement is in the vicinity of the track, use 3 sigma around projected point //fc start
+			//C3_TRACK_POINT_DOUBLE projectedPoint = cameraRoverPositions[ii].getPointPropogatedToTime(time);
+			//double sigma = max(sqrt(cameraRoverPositions[ii].m_filter.P[1][1]),sqrt(cameraRoverPositions[ii].m_filter.P[1][1]));
+			//if(min(3*sigma,5)>distanceFromTo(projectedPoint,m_tracks{jj]))//min(3*max(sqrt(track.P[1][1]),sqrt(track.P[2][2])),one foot)> sqrt(pow(xest-xmeas,2)+pow(yest-ymeas,2)))
+			//{
+				// if there is not enough history then only use the last position...
+				if ( m_tracks[jj]->getNumHistoryPoints() <= 3 )
+				{
+					//correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getLastHistoryPoint());
+				}
+				// ok... we have the history points needed so lets coorelate using the 
+				// prediction point (assumes velocity)
+				else
+				{
+					//correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],m_tracks[jj]->getPredictionPoint());
+				}
 
-			// assign to the closest tracker if within max distance and not in mapping list
-			if (correlate.dist <= minValue && correlate.dist <= m_maxDistance && !isInMapping(position2track, jj))
-			{
-				correlate.assignTrackIndex = jj;				// ok so this is the tracker for the point
-				minValue				   = correlate.dist;	// new min value for this point...
-			}
+				// assign to the closest tracker if within max distance and not in mapping list
+				if (correlate.dist <= minValue && correlate.dist <= m_maxDistance && !isInMapping(position2track, jj))
+				{
+					correlate.assignTrackIndex = jj;				// ok so this is the tracker for the point
+					minValue				   = correlate.dist;	// new min value for this point...
+				}
+			//} //fc end
+			
+			// else // if rejected than that means it is a new track and we call AddTrack
+			
+			
+			
 			// if rejected due to mapping then what
 			// TODO ... determine which is better to use
 			//else if (correlate.dist <= minValue && correlate.dist <= m_maxDistance)
@@ -135,6 +146,14 @@ unsigned int C3Tracker::AddTrack(const C3_TRACK_POINT cameraRoverPosition, const
 	return m_tracks.size();
 }
 
+
+// we do this calculation alll the time... refactor to a method
+double C3Tracker::distanceFromTo(C3_TRACK_POINT_DOUBLE meas1,C3_TRACK_POINT_DOUBLE meas2)
+{
+
+	return sqrt(pow(meas2.X -meas1.X,2)+pow(meas2.Y-meas1.Y,2));
+
+}
 // determine if a point has already been assigned to the tracker 
 bool C3Tracker::isInMapping(const map<unsigned int, C3_CORRELATE_struct> *position2track, 
 							const unsigned int trackerNum)
