@@ -275,7 +275,7 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 			}
 			if (Get_Camera_Status() != -1)
 			{
-				C3_User_Interface::Instance->Update_Camera_Comm_Indicator(
+				C3_User_Interface::Instance->Update_Camera_Subsystem_Indicator(
 					C3_User_Interface::Instance->UnknownInd);
 			}
 			Set_Camera_Com_Status(0);
