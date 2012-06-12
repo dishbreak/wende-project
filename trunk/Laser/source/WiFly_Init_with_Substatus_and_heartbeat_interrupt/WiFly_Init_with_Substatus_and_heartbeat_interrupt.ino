@@ -33,8 +33,7 @@ int AZ_MAX_PWM = 4000;
 int EL_MIN_PWM = 2000;
 int EL_MAX_PWM = 4000;
 
-byte server[] = { 
-  192, 168, 1, 100 }; // WENDE Laser Test Tool PC
+byte server[] = { 192, 168, 1, 100 }; // WENDE Laser Test Tool PC
 
 Client client(server, 4440);
 
@@ -110,7 +109,7 @@ void process_config_message(char config_msg_data[CONFIG_MSG_LENGTH-1])
 
   // Heartbeat interval
   if (temp_heartbeat > 0)
-    heartbeatInterval = temp_heartbeat * 1000;
+    heartbeatInterval = (long)temp_heartbeat * 1000;
 
 
 
