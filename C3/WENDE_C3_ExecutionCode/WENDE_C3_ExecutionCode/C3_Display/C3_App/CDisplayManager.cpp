@@ -18,6 +18,7 @@ CDisplayManager::CDisplayManager() {
 	m_nLaserComStatus = 0;
 	m_nLaserStatus = 0;
 	m_OverStatus = 0;
+
 }
 ////////////////////////////////////////////////////////////////////////
 // Description: Returns a pointer to the CDisplayManager. If there is no
