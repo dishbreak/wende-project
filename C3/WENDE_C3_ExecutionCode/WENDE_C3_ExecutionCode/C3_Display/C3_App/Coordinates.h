@@ -31,7 +31,13 @@ public:
 	array<CoordinatePair^>^ GetNewCoordinatePair();
 	int GetValidTracks();
 	int GetTotalTracks();
+    CoordinatePair^ GetLaserPoint();
+    bool SetLaserPoint(CoordinatePair ^LaserPointUpdate);
+    bool LaserPointIsValid();
 private:
+    bool IsLaserValid;
+    CoordinatePair^ LaserWorldCoords;
+    CoordinatePair^ LaserPixelCoords;
 	bool SetNewCoordinatePair(CoordinatePair^ Input, CoordinatePair^ Current, CoordinatePair^ Prev);
 	Coordinates(int TrackNum);
 	~Coordinates();

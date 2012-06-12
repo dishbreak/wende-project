@@ -12,6 +12,7 @@ public:
     //function that gets the handle to the singleton CDisplayManager
     static CDisplayManager ^ getCDisplayManager();
     int Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoords, int NumValidTracks);
+    int Update_Laser_PPI_Position(CoordinatePair^ inputCoords);
     int Update_Camera_Subsystem_Indicator(int nCameraStatus);
     int Update_Camera_Communication_Indicator(int nCameraCommStatus);
     int Update_Laser_Subsystem_Indicator(int nLaserStatus);

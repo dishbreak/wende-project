@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Coordinates.h"
+#include <math.h>
 
 //Make sure pointer starts as NULL
 //Coordinates ^ Coordinates::coordsObj = nullptr;
@@ -33,6 +34,9 @@ Coordinates::Coordinates(int TrackNum) {
 	PixelBounds = gcnew CoordinatePair(300,300);
     WorldPxRatio = gcnew RatioPair();
     PixelShift = gcnew CoordinatePair();
+    IsLaserValid = false;
+    LaserPixelCoords = gcnew CoordinatePair();
+    LaserWorldCoords = gcnew CoordinatePair();
 	CurWorldCoords = MakeCoordinatePairArray();
 	OldWorldCoords = MakeCoordinatePairArray();
 	PixelCoords = MakeCoordinatePairArray();
@@ -110,7 +114,7 @@ CoordinatePair^ Coordinates::TranslateCoords(CoordinatePair^ WorldCoords) {
     newCoords->x = (int) (WorldPxRatio->x * WorldCoords->x) + PixelShift->x;
 	//Translate Y
     newCoords->y = (int) (WorldPxRatio->y * WorldCoords->y) + PixelShift->y;
-	if ((newCoords->x > PixelBounds->x) || (newCoords->y > PixelBounds->y)) {
+	if ((abs(newCoords->x) > PixelBounds->x) || (abs(newCoords->y) > PixelBounds->y)) {
 		newCoords->IsOutOfBounds = true;
 	}
 	return newCoords;
@@ -122,4 +126,27 @@ int Coordinates::GetValidTracks() {
 
 int Coordinates::GetTotalTracks() {
 	return TotalTracks;
+}
+
+CoordinatePair^ Coordinates::GetLaserPoint() {
+    return LaserPixelCoords;
+}
+
+bool Coordinates::SetLaserPoint(CoordinatePair ^LaserPointUpdate) {
+    bool IsNewPoint = false;
+    IsLaserValid = true;
+    if ((LaserPointUpdate->x != LaserWorldCoords->x) || (LaserPointUpdate->y != LaserWorldCoords->y)) {
+        IsNewPoint = true;    
+        LaserWorldCoords->x = LaserPointUpdate->x;
+        LaserWorldCoords->y = LaserPointUpdate->y;
+        LaserPixelCoords = TranslateCoords(LaserWorldCoords);
+        if ((abs(LaserPixelCoords->x) > PixelBounds->x) || (abs(LaserPixelCoords->y) > PixelBounds->y)) {
+            LaserPixelCoords->IsOutOfBounds = true;
+        }
+    }
+    return IsNewPoint;
+}
+
+bool Coordinates::LaserPointIsValid() {
+    return IsLaserValid;
 }

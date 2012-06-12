@@ -951,7 +951,7 @@ namespace C3_App {
 							}
 						case C3_Alert_Types::CALIBRATION_SUCCESS:
 							{
-								ButtonText = "Calbrated!";
+								ButtonText = "Cailbrated!";
 								C3_Alert_Types::C3_DISPLAY_STARTUP;
 							 break;
 							}
@@ -989,6 +989,7 @@ namespace C3_App {
 					 System::Drawing::Rectangle rect = Form::ClientRectangle;
 					 System::Drawing::Rectangle gFailureLine;
 					 System::Drawing::Rectangle gPlayingField;
+                     System::Drawing::Rectangle gLaserDot;
 
 					 // Draw Failure Line
 
@@ -1012,10 +1013,10 @@ namespace C3_App {
 					 bluePen->Width = 2;
 					 g->DrawEllipse(bluePen, gPlayingField);
 
+
 					 // Draw Contact (rover)
 					 Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
 					 array<CoordinatePair^>^ RoverContact = coordsObj->GetNewCoordinatePair();
-					 //System::Drawing::Image^ RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
 					 CoordinatePair^ offset = gcnew CoordinatePair();
 					 offset->x = (RoverSymbol->Width/2);
 					 offset->y = (RoverSymbol->Height/2);
@@ -1031,11 +1032,20 @@ namespace C3_App {
 						 }
 					 }
 
-					 //int x = pPPI->Width / 2 - (roverContact->Width / 2) - RoverContact.x;
-					 //int y = pPPI->Height / 2 - (roverContact->Height / 2) - RoverContact.y;
-					 ////int x = pPPI->Width / 2 - (roverContact->Width / 2) - roverContactX;
-					 ////int y = pPPI->Height / 2 - (roverContact->Height / 2) - roverContactY;
-					 //g->DrawImage(roverContact, x, y);
+                     // Draw Laser Dot
+                     if(coordsObj->LaserPointIsValid()) {
+                         CoordinatePair ^ LaserPoint = coordsObj->GetLaserPoint();
+                         if(LaserPoint->IsOutOfBounds) {
+                             g->DrawImage(UhOhSymbol, 10, 10);
+                         }
+                         else {
+                             gLaserDot.Width = 11;
+                             gLaserDot.Height = 11;
+                             gLaserDot.X = (Padding->x - (gLaserDot.Width/2)) + LaserPoint->x;
+                             gLaserDot.Y = (Padding->y - (gLaserDot.Height/2)) + LaserPoint->y;
+                             g->DrawEllipse(redPen, gLaserDot);
+                         }
+                     }
 				 }
 				 catch (...)
 				 {

@@ -66,6 +66,15 @@ int CDisplayManager::Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoor
 	return 0;
 }
 
+int CDisplayManager::Update_Laser_PPI_Position(CoordinatePair ^inputCoords) {
+    Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle(); 
+    //if any of the coordinates are different, invalidate the PPI display.
+    if(coordsObj->SetLaserPoint(inputCoords)) {
+        C3_User_Interface::Instance->pPPI->Invalidate();
+    }
+    return 0;
+}
+
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the Camera subsystem indicator following a call 
 //				to the static instance of the C3_User_Interface object					

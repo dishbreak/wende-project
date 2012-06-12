@@ -326,9 +326,12 @@ UINT WINAPI TrackThread (LPVOID pParam)
 					freshCoordinates[i]->y = sTrackMessage.Tracks[i].Y;
 				}
 
+                CoordinatePair ^ newLaserPoint = gcnew CoordinatePair(sTrackMessage.Lasers[0].X, sTrackMessage.Lasers[0].Y);
+
 				////get a handle to the CDisplayManager
 				CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
 				dispman->Update_Rover_PPI_Position(freshCoordinates, sTrackMessage.ValidTracks);
+                dispman->Update_Laser_PPI_Position(newLaserPoint);
 
 				if(sTrackMessage.ValidTracks >= 1)
 					dispman->Update_Rover_Acquired_Indicator(1);
