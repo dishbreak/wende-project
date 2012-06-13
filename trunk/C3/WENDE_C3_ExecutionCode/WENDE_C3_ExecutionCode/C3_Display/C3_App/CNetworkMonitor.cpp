@@ -6,6 +6,7 @@
 #include "CNetworkMonitor.h"
 #include "CDisplayManager.h"
 #include "C3Configuration.h"
+#include "C3ProcessingStates.h"
 #include "Coordinates.h"
 #include <fstream>
 #include <iostream>
@@ -25,8 +26,8 @@ CNetworkMonitor::CNetworkMonitor()
 {
 	functionArray[0] = TrackThread;
 	functionArray[1] = ImageThread,
-		functionArray[2] = LaserStatusThread,
-		functionArray[3] = CameraStatusThread;
+	functionArray[2] = LaserStatusThread,
+	functionArray[3] = CameraStatusThread;
 	functionArray[4] = ProcessingInterfaceReceiveThread;
 	functionArray[5] = ProcessingInterfaceTransmitThread;
 
@@ -51,7 +52,7 @@ void CNetworkMonitor::StopThreads()
 	/* Leave the critical section -- other threads can now EnterCriticalSection() */
 	LeaveCriticalSection(&cs);
 }
-void CNetworkMonitor::StartCalibration()
+void CNetworkMonitor::StartProcessing()
 {
 	int ii = C3_NETWORK_THREAD_COUNT - 1;
 
@@ -523,14 +524,33 @@ UINT WINAPI ProcessingInterfaceTransmitThread(LPVOID pParam)
 		C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT1,
 		C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2);
 
+	C3_Alert_Types eProcessingNotification;
+
 	int ii = C3_NETWORK_THREAD_COUNT - 1;
 
 	while(1)
 	{
 		if (m_ProcessingInterface.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 		{
-			// set the calibration flag
-			m_ProcessingInterface->AlertType = C3_Alert_Types::CALIBRATION_INIT;
+			eProcessingNotification = C3ProcessingStates::Instance().Get_Current_Alert();
+
+			if(eProcessingNotification == C3_Alert_Types::CALIBRATION_INIT)
+			{
+				// Ask Processing nicely to Init calibration
+				m_ProcessingInterface->AlertType = C3_Alert_Types::CALIBRATION_INIT;
+			}
+
+			if(eProcessingNotification == C3_Alert_Types::POC_STARTED)
+			{
+				// Ask Processing nicely to Start trial
+				m_ProcessingInterface->AlertType = C3_Alert_Types::POC_STARTED;
+			}
+
+			if(eProcessingNotification == C3_Alert_Types::POC_STARTED)
+			{
+				// Ask Processing nicely End trial
+				m_ProcessingInterface->AlertType = C3_Alert_Types::POC_FINISHED;
+			}
 
 			// Set the event
 			m_ProcessingInterface.SetEventClient();	
