@@ -49,7 +49,7 @@ CSocketManager::~CSocketManager()
 //////////////////////////////////////////////////////////////////////
 // Destructor
 //////////////////////////////////////////////////////////////////////
-void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom,__int64 startTime)
+void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom,__int64 startTime, BYTE type)
 {
 	// TODO FIX THIS
 	static char temp [1024];
@@ -151,7 +151,7 @@ void CSocketManager::SetPictureWindow(CPictureCtrl* picCtrl)
 // Function: AppendMessage
 //  purpose: Process the receive messages
 //////////////////////////////////////////////////////////////////////
-void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime)
+void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime, BYTE type)
 {
 	LPBYTE lpData = lpBuffer;
 	SockAddrIn origAddr;
@@ -172,7 +172,7 @@ void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64
 	}
 
 	// Display data to message list
-	DisplayData( lpData, dwCount, origAddr, startTime );
+	DisplayData( lpData, dwCount, origAddr, startTime, type );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

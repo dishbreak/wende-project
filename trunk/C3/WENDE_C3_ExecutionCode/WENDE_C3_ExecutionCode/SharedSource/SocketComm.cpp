@@ -219,7 +219,7 @@ void CSocketComm::AppendMessage(LPCTSTR strText)
 //              called every time new data is available.
 // PARAMETERS:
 ///////////////////////////////////////////////////////////////////////////////
-void CSocketComm::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime)
+void CSocketComm::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime, BYTE type)
 {
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -970,9 +970,11 @@ void CSocketComm::Run()
 	stMessageProxy stMsgProxy;
     DWORD   dwBytes1  = 0L;
 	DWORD   dwBytes2  = 0L;
+	DWORD   dwBytes3  = 0L;
     DWORD   dwTimeout = INFINITE;
     LPBYTE  lpData  = (LPBYTE)&stMsgProxy;
     DWORD   dwSize  = sizeof(stMsgProxy);
+	BYTE    type    = 0;
 
     bool bSmartAddressing = IsSmartAddressing();
     if ( !bSmartAddressing )
@@ -1020,8 +1022,14 @@ void CSocketComm::Run()
         dwBytes1 = ReadComm(lpData, sizeof(unsigned char)*4, dwTimeout);
 		DWORD readSize = CUtilities::BytesToInt(lpData);
 		readSize = ntohl(readSize);
-		//DWORD readSize = CUtilities::BytesToInt(lpData);
 		sprintf(temp,"Read Length = %d [%d,%d,%d,%d]\r\n",readSize,lpData[0],lpData[1],lpData[2],lpData[3]);
+		AppendMessage(temp);
+		
+		//Type
+		sprintf(temp,"Waiting To Read Type\r\n");
+		AppendMessage(temp);
+        dwBytes3 = ReadComm(type, sizeof(unsigned char), dwTimeout);
+		sprintf(temp,"Read Type = %d \r\n",type);
 		AppendMessage(temp);
 		
 		// Not Guarentee that all data comes in single read.
@@ -1068,7 +1076,7 @@ void CSocketComm::Run()
         {
 			LARGE_INTEGER start;
 			::QueryPerformanceCounter(&start);
-            OnDataReceived( lpData, index,(__int64)start.QuadPart);
+            OnDataReceived( lpData, index,(__int64)start.QuadPart,type);
         }
 
         //Sleep(0);

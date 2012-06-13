@@ -17,7 +17,7 @@
 using namespace laserMsgs;
 #endif
 
-using namespace cameraMsgs;
+using namespace cameraMsgs
 using std::string;
 
 #ifdef _DEBUG
@@ -927,7 +927,7 @@ void CServerSocketDlg::OnBnClickedBtnSendTrack2()
 	{
 		isStart = false;
 		m_CameraTrackButton.SetWindowTextA("Stop Send Camera Track");
-		BOOL success = ::CreateTimerQueueTimer( &m_timerHandleCameraStatus,
+		BOOL success = ::CreateTimerQueueTimer( &m_timerHandleCameraTrack,
 												NULL,
 												TimerProcCameraTrack,
 												this,
@@ -940,7 +940,7 @@ void CServerSocketDlg::OnBnClickedBtnSendTrack2()
 		isStart = true;
 		m_CameraTrackButton.SetWindowTextA("Send Camera Track (cont.)");
 		// destroy the timer
-		DeleteTimerQueueTimer(NULL, m_timerHandleCameraStatus, NULL);
+		DeleteTimerQueueTimer(NULL, m_timerHandleCameraTrack, NULL);
 		Sleep(5000);
 		CloseHandle (m_timerHandleCameraStatus);
 	}
@@ -973,7 +973,7 @@ void CServerSocketDlg::OnBnClickedBtnSendImage2()
 		m_CameraImageButton.SetWindowTextA("Send Camera Image (cont.)");
 		isStart = true;
 		// destroy the timer
-		DeleteTimerQueueTimer(NULL, m_timerHandleCameraStatus, NULL);
+		DeleteTimerQueueTimer(NULL, m_timerHandleCameraImage, NULL);
 		Sleep(5000);
 		CloseHandle (m_timerHandleCameraStatus);
 	}
@@ -992,7 +992,7 @@ void CServerSocketDlg::OnBnClickedBtnSendLaserStatus()
 	{
 		isStart = false;
 		m_LaserStatusButton.SetWindowTextA("Stop Send Laser Status");
-		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandleCameraImage,
+		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandleLaserStatus,
 												NULL,
 												TimerProcLaserStatus,
 												this,
@@ -1005,7 +1005,7 @@ void CServerSocketDlg::OnBnClickedBtnSendLaserStatus()
 		m_LaserStatusButton.SetWindowTextA("Send Laser Status (cont.)");
 		isStart = true;
 		// destroy the timer
-		DeleteTimerQueueTimer(NULL, m_timerHandleCameraStatus, NULL);
+		DeleteTimerQueueTimer(NULL, m_timerHandleLaserStatus, NULL);
 		Sleep(5000);
 		CloseHandle (m_timerHandleCameraStatus);
 	}

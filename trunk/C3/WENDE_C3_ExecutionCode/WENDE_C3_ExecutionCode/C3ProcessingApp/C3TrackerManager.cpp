@@ -75,7 +75,8 @@ void C3Tracker::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struc
 		// loop over all the camera measurements
 		for (unsigned int jj = 0; jj < m_tracks.size(); ii++)
 		{
-			// first check if the measurement is in the vicinity of the track, use 3 sigma around projected point //fc start
+			// first check if the measurement is in the vicinity of the track, 
+			// use 3 sigma around projected point //fc start
 			//C3_TRACK_POINT_DOUBLE projectedPoint = m_tracks.cameraRoverPositions[ii].getPointPropogatedToTime(time);
 			//double sigma = max(sqrt(cameraRoverPositions[ii].m_filter.P[1][1]),sqrt(cameraRoverPositions[ii].m_filter.P[1][1]));
 			//if(min(3*sigma,5)>distanceFromTo(projectedPoint,m_tracks{jj]))//min(3*max(sqrt(track.P[1][1]),sqrt(track.P[2][2])),one foot)> sqrt(pow(xest-xmeas,2)+pow(yest-ymeas,2)))
