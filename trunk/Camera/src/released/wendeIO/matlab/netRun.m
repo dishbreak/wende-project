@@ -1,9 +1,24 @@
-%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Camera Network Code
+% Run the first block to setup envronment and create the Java Objects. -
+% Need to run C3 Network Arbitor pointed to this computer's IP address for
+% network connection to work.
+
+% Run the second block to send messages to C3 - make changes to timing
+% messages etc.
+
+% run the 3rd Block to close the network connection from the Camera End. -
+% This part still needs a bit of work between Camera and C3.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 % Sets up the Environment
 clear; clc; close all;
 
-% Change this to be wherever you have the files at.
-cd c:\java\wendeIO\matlab;
+% Change this to be wherever you have this files at.
+% cd c:\java\wendeIO\matlab;
+cd 'C:\Documents and Settings\jford7\My Documents\ELDP\TDC\2011-2012\wende-project\Camera\src\released\wendeIO\matlab';
 javaaddpath ..\bin;
 
 % Create Java Class
@@ -21,7 +36,7 @@ net.initNet(2)
 % setTracks(long time,	CameraMsgs.systemStatus sysStat, int[][] targets, int[][] lasers, boolean laserOn)
 % setImage(long time, int channels, int sizeX, int sizeY, com.google.protobuf.ByteString serialImage)
 
-totalLoops = 100;
+totalLoops = 101;
 countImg = 0;
 countTrk = 0;
 countStatus = 0;
@@ -38,13 +53,18 @@ height = 180;
 width = 300;
 tic
 for n = 1:1:totalLoops
-  image = imread('RoverNLaser.PNG');
-  scaledImage = imresize(image,[height,width]);
+  if(mod(n,2))
+      image = imread('RoverNLaser.PNG');
+  else
+      image = imread('CalibImg2.png');
+  end
+    scaledImage = imresize(image,[height,width]);
     
     [h,w,c] = size(scaledImage);
     m = 1;
     for i = 1:h
         for j = 1:w
+            %for k = c:-1:1
             for k = c:-1:1
                 serialArray(m) = scaledImage(i,j,k);
                 m = m + 1;
@@ -64,11 +84,7 @@ for n = 1:1:totalLoops
     end
     
     if(mod(n,imageEvery) == 0)
-        if(mod(n,2))
-            net.setImage(1012221, 3, 300, 180, serialArray);
-        else
-            net.setImage(1012221, 3, 300, 180, 255-serialArray);
-        end
+        net.setImage(1012221, 3, 300, 180, serialArray);
         countImg = countImg + net.sendImage;
     end
 pause(delay);    
@@ -80,7 +96,7 @@ fprintf('Sent %d Track  Messages at %.3f messages per second\n',countTrk, countT
 fprintf('Sent %d Image  Messages at %.3f messages per second\n',countImg, countImg/time);
 
 %%
-% close Network Connections - flaky still.
+% close Network Connections
 net.closeNet(0)
 net.closeNet(1)
 net.closeNet(2)
