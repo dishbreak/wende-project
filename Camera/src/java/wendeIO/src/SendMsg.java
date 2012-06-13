@@ -5,6 +5,7 @@
 //import ReadWriteTextFileWithEncoding;
 import java.io.*;
 import com.camera.*;
+
 import java.util.Properties;
 import java.util.Random;  // for generating graphic
 //import Queue;
@@ -19,9 +20,6 @@ public class SendMsg implements Runnable{
 	int IMAGE_DELAY = 1000;
 	static int MAIN_RUNTIME = 30000;
 	boolean VERBOSE = true;
-	int channels = 3;
-	int sizeX = 640;
-	int sizeY = 480;
 	
 	int type = -1;
 	static boolean running = true;
@@ -31,7 +29,7 @@ public class SendMsg implements Runnable{
 	static boolean imageMsgReady = false;
 	
 	CameraMsgs.cameraStatus.Builder statusBuilder = null;
-	CameraMsgs.cameraStatus status= null;
+	public CameraMsgs.cameraStatus status= null;
 	
 	CameraMsgs.cameraTracks.Builder tracksBuilder = null;
 	CameraMsgs.cameraTracks tracks = null;
@@ -40,6 +38,28 @@ public class SendMsg implements Runnable{
 	CameraMsgs.cameraImage image = null;
 	
 	CameraMsgs.systemStatus sysStatus = CameraMsgs.systemStatus.UNKNOWN;
+	
+	// Status Message Variables
+	//setStatus(long time,CameraMsgs.systemStatus sysStat, boolean laserOn, String text)
+	static long status_time = 0;
+	static CameraMsgs.systemStatus sysStat = CameraMsgs.systemStatus.UNKNOWN; // used for both status and tracks messages
+	static boolean laserOn = false;		// used for both status and tracks messages
+	static String status_text = "The Camera IPT Rocks!";
+	
+	// Tracks Message Variables
+//	setTracks(long time,	CameraMsgs.systemStatus sysStat, int[][] targets, int[][] lasers, boolean laserOn)
+	static long tracks_time = 0;
+	static int[][] targets = {{700,5},{0,0}};
+	static int[][] lasers = {{700,0}};
+	
+	// Image Message Variables
+//	setImage(long time, int channels, int sizeX, int sizeY, com.google.protobuf.ByteString serialImage)
+	static long image_time = 0;
+	static int channels = 3;
+	static int sizeX;
+	static int sizeY;
+	static byte[] serialImage = new byte[sizeX*sizeY*channels];
+//	static com.google.protobuf.ByteString serialImage = com.google.protobuf.ByteString.copyFrom(new byte[(channels * sizeX * sizeY)]);
 	
 	static netIO netStat = null;
 	static netIO netTracks = null;
@@ -58,6 +78,7 @@ public class SendMsg implements Runnable{
 		netStat = new netIO(0, STATUS);
 		netTracks = new netIO(0, TRACKS);
 		netImage = new netIO(0, IMAGE);
+		p("Leaving SendMsg Constructor");
 		return;
 	}
 	
@@ -146,12 +167,13 @@ public class SendMsg implements Runnable{
 			try{
 				if (statusMsgReady) {
 					statusMsgReady = !(sendStatus());
-					p("send Status");
+					//p("send Status");
 					Thread.sleep( STATUS_DELAY );
 				}
 				else {
-					statusMsgReady = setStatus(System.currentTimeMillis(),this.sysStatus.OPERATIONAL,false,"TEST-STRING");	// setup status message
-					p("setStatus");
+//					statusMsgReady = setStatus(System.currentTimeMillis(),this.sysStatus.OPERATIONAL,false,"TEST-STRING");	// setup status message
+					statusMsgReady = setStatus(this.status_time,this.sysStat,this.laserOn,this.status_text);	// setup status message
+					//p("setStatus");
 				}					
 			}
 			catch ( InterruptedException e) {
@@ -161,6 +183,7 @@ public class SendMsg implements Runnable{
 				e.printStackTrace();
 			}
 		} // end while loop
+		return;
 	}	// End statusRun method
 	
 	private void tracksRun() throws IOException
@@ -168,14 +191,15 @@ public class SendMsg implements Runnable{
 		while (running) {
 			try {
 				if (tracksMsgReady) {
-					p("ready to send Tracks");
+					//p("ready to send Tracks");
 					tracksMsgReady = !(sendTracks());
 					Thread.sleep( TRACKS_DELAY );
 				}
 				else {
 					int[][] targets = {{1,1},{0,0},{100,10}};
 					int[][] lasers = {{22,54}};
-					tracksMsgReady = setTracks(System.currentTimeMillis(),this.sysStatus.OPERATIONAL,targets,lasers,true);	// setup tracks message
+//					tracksMsgReady = setTracks(System.currentTimeMillis(),this.sysStatus.OPERATIONAL,targets,lasers,true);	// setup tracks message
+					tracksMsgReady = setTracks(this.tracks_time,this.sysStat,this.targets,this.lasers,this.laserOn);	// setup tracks message
 				}					
 			}
 			catch ( InterruptedException e) {
@@ -185,6 +209,7 @@ public class SendMsg implements Runnable{
 				e.printStackTrace();
 			}
 		} // end while loop
+		return;
 	}	// End tracksRun method
 	
 	private void imageRun()
@@ -196,18 +221,22 @@ public class SendMsg implements Runnable{
 					Thread.sleep( IMAGE_DELAY );					
 				}
 				else {
-					byte[] serialImage = new byte[(channels * sizeX * sizeY)];
+					if(serialImage.length != (channels * sizeX * sizeY))
+					{
+						serialImage = new byte[(channels * sizeX * sizeY)];						
+					} // else use already defined byte array
 					
 					Random generator = new Random();
 					int index = 0;
 					for (int i = 0; i<channels; i++) {
 						for (int j = 0; j<sizeY; j++) {
 							for (int k = 0; k<sizeX; k++) {
-								serialImage[index++] = (byte)generator.nextInt(128);	// Generate random number 0-127 MAX_SIZE for byte
+								serialImage[index++] = (byte)(generator.nextInt(128));	// Generate random number 0-127 MAX_SIZE for byte							
 							}
 						}
 					}
-					imageMsgReady = setImage(System.currentTimeMillis(),channels,sizeX,sizeY,com.google.protobuf.ByteString.copyFrom(serialImage));	// setup status message
+//					imageMsgReady = setImage(System.currentTimeMillis(),channels,sizeX,sizeY,com.google.protobuf.ByteString.copyFrom(serialImage));	// setup status message
+					imageMsgReady = setImage(this.image_time,this.channels,this.sizeX,this.sizeY,this.serialImage);	// setup status message
 				}
 			}
 			catch ( InterruptedException e) {
@@ -217,33 +246,46 @@ public class SendMsg implements Runnable{
 				e.printStackTrace();
 			}
 		} // end while loop
+		return;
 	}	// End tracksRun method
 	
 	
 	
-	public static void main(String... aArgs) throws IOException
+//	public static void main(String... aArgs) throws IOException
+//	{
+//		SendMsg mainMsg = new SendMsg();
+//		mainMsg.runProgram(aArgs);
+//		System.out.println("Out of Run Program");
+//		return;
+//	}
+	public void runProgram(String... aArgs) throws IOException
 	{
-		if (aArgs.length > 0) {
-			SendMsg msg = new SendMsg();
-		}
-		else {
+//		
+//		if (aArgs.length > 0) {
+//			if(Integer.parseInt(aArgs[0]) == 1) {
+//				p("In matlab Specific initialization");
+//			}
+//				
+//			SendMsg msg = new SendMsg();
+//		}
+//		else {
 			SendMsg mStatus = new SendMsg(0);  // Create object instance
 			SendMsg mTracks = new SendMsg(1);
 			SendMsg mImage = new SendMsg(2);
 			
-			Thread tStatus = new Thread(mStatus);
-			Thread tTracks = new Thread(mTracks);
-			Thread tImage = new Thread(mImage);
-
-			tStatus.start();
-			System.out.println("tStatus Started");
-			
-			tTracks.start();
-			System.out.println("tTracks Started");
-
-			tImage.start();
-			System.out.println("tImage Started");			
-		}
+//			Thread tStatus = new Thread(mStatus);
+//			Thread tTracks = new Thread(mTracks);
+//			Thread tImage = new Thread(mImage);
+//
+//			tStatus.start();
+//			System.out.println("tStatus Started");
+//			
+//			tTracks.start();
+//			System.out.println("tTracks Started");
+//
+//			tImage.start();
+//			System.out.println("tImage Started");			
+//		}
 		long time = System.currentTimeMillis();
 		long duration = MAIN_RUNTIME;
 		while (System.currentTimeMillis() < time+duration) {
@@ -256,35 +298,13 @@ public class SendMsg implements Runnable{
 			}
 		}
 		running	= false;	// stop threads
-		//
-//		for (int n=0; n<10; n++) {
-//
-//
-//
-//		
-//		statusMsgReady = msg.setStatus(System.currentTimeMillis(),msg.sysStatus.OPERATIONAL,false,"TEST-STRING");	// setup status message
-//		tracksMsgReady = msg.setTracks(System.currentTimeMillis(),msg.sysStatus.OPERATIONAL,targets,lasers,true);	// setup tracks message
-////		imageMsgReady = msg.setImage(System.currentTimeMillis(),image.length,image[0].length,image[0][0].length,com.google.protobuf.ByteString.copyFrom(serialImage));	// setup status message
-//		imageMsgReady = msg.setImage(System.currentTimeMillis(),channels,sizeX,sizeY,com.google.protobuf.ByteString.copyFrom(serialImage));	// setup status message
-//
-//		statusMsgReady = !(msg.sendStatus());
-//		System.out.println("Send Status");
-//				
-//		tracksMsgReady = !(msg.sendTracks(netTracks));
-//			System.out.println("Send Tracks");
-//
-//		imageMsgReady = !(msg.sendImage(netImage));
-//			System.out.println("Send Image");
-
-//		} // End For Loop		
 		// Close Network interfaces
-//		netImage.close();
-//		netTracks.close();
-//		netStat.close();
-		
-
-		//netImage.close();
-	}	// End Main Function
+		netImage.close();
+		netTracks.close();
+		netStat.close();
+		System.out.println("Ending Program");
+		return;
+	}	// End runProgram Method
 	
 	
 	public boolean setStatus(long time,CameraMsgs.systemStatus sysStat, boolean laserOn, String text) throws IOException
@@ -316,14 +336,14 @@ public class SendMsg implements Runnable{
 		return true;
 	}	// end setTracks method
 	
-	public boolean setImage(long time, int channels, int sizeX, int sizeY, com.google.protobuf.ByteString serialImage)
+	public boolean setImage(long time, int channels, int sizeX, int sizeY, byte[] serialImage)
 	{
 		imageBuilder = CameraMsgs.cameraImage.newBuilder();
 		image = imageBuilder.setTime(time)
 		.setChannels(channels)
 		.setSizeX(sizeX)
 		.setSizeY(sizeY)
-		.setImageData(serialImage)
+		.setImageData(com.google.protobuf.ByteString.copyFrom(serialImage))
 		.build();
 		return true;
 	}	// End setimage method
@@ -331,24 +351,24 @@ public class SendMsg implements Runnable{
 	public boolean sendStatus() throws IOException
 	{
 		if (status == null) {
-			p("status message not sent");
+			//p("status message not sent");
 			return true;
 		}
 		
 		netStat.server(status);
-		p("status out : " + System.currentTimeMillis());
+		//p("status out : " + System.currentTimeMillis());
 		return true;
 	}	// End sendStatus method
 	
 	public boolean sendTracks() throws IOException
 	{
 		if (tracks == null) {
-			p("track message not sent");
+			//p("track message not sent");
 			return true;
 		}
 		
 		netTracks.server(tracks);
-		p("Tracks Out : " + System.currentTimeMillis());
+		//p("Tracks Out : " + System.currentTimeMillis());
 		return true;
 	}	// End sendStatus method
 	
@@ -378,4 +398,194 @@ public class SendMsg implements Runnable{
 		this.sizeY = Integer.parseInt(configFile.getProperty("sizeY"));
 		this.channels = Integer.parseInt(configFile.getProperty("channels"));		
 	}
+	
+	public boolean initNet(int msg) throws IOException {
+		try {
+			
+		switch(msg) {
+		case 0:
+			netStat.serverInit();
+			break;
+		case 1:
+			netTracks.serverInit();
+			break;
+		case 2:
+			netImage.serverInit();
+			break;
+		}  // end Switch
+		}
+		catch(IOException e) {
+			p("Caught IOException");
+			return false;
+		}
+		catch(NullPointerException e) {
+			p("Caught NullPointerException");
+		}
+		return true;
+	}  // end InitNet
+	
+	public boolean closeNet(int msg) throws IOException {
+		try {
+		switch(msg) {
+		case 0:
+			netStat.close();
+			break;
+		case 1:
+			netTracks.close();
+			break;
+		case 2:
+			netImage.close();
+			break;
+		}  // end Switch
+		}
+		catch(IOException e) {
+			p("Caught IOException");
+			return false;
+		}
+		return true;
+	}  // end closeNet
+		
+//		// Image Message Variables
+////		setImage(long time, int channels, int sizeX, int sizeY, com.google.protobuf.ByteString serialImage)
+
+//		static byte[] serialImage = new byte[sizeX*sizeY*channels];
+////		static com.google.protobuf.ByteString serialImage = com.google.protobuf.ByteString.copyFrom(new byte[(channels * sizeX * sizeY)]);
+
+	public void setStatusTime(long time) {
+		this.status_time = time;
+		return;
+	}
+	public void setTracksTime(long time) {
+		this.tracks_time = time;
+		return;
+	}
+	public void setImageTime(long time) {
+		this.image_time = time;
+		return;
+	}
+	public void setLaserOn(boolean laserState) {
+		this.laserOn = laserState;
+		return;
+	}
+	public void setStatusText(String text) {
+		this.status_text = text;
+		return;
+	}
+	public void setChannels(int channels) {
+		this.channels = channels;
+		return;
+	}
+	public void setSize(int width, int height) {
+		this.sizeX = width;
+		this.sizeY = height;
+		return;
+	}
+	public void setTargets(int[][] targets) {
+		this.targets = targets;
+		return;
+	}
+	public void setLaser(int[][] lasers) {
+		this.lasers = lasers;
+		return;
+	}
+	public void setImage(byte[] inputSerial) {
+		if(this.serialImage.length != inputSerial.length) {
+			this.serialImage = new byte[inputSerial.length];
+			p("Image size adjusted to match incoming data");
+		}
+			this.serialImage = inputSerial;
+		return;
+	}
+	static public void setSystemStatus(int status) {
+		switch(status){
+		case 0:
+			SendMsg.sysStat = CameraMsgs.systemStatus.DOWN;
+			break;
+		case 1:
+			SendMsg.sysStat = CameraMsgs.systemStatus.ERROR;
+			break;
+		case 2:
+			SendMsg.sysStat = CameraMsgs.systemStatus.FAILED;
+			break;
+		case 3:
+			SendMsg.sysStat = CameraMsgs.systemStatus.OPERATIONAL;
+			break;
+		case 4:
+			SendMsg.sysStat = CameraMsgs.systemStatus.READY;
+			break;
+		case 5:
+			SendMsg.sysStat = CameraMsgs.systemStatus.UNKNOWN;
+			break;
+		default:
+			SendMsg.sysStat = CameraMsgs.systemStatus.UNKNOWN;
+		} // End Switch
+	} // End setSystemStatus Method
+	
+//	static boolean running = true;
+//	
+//	static boolean statusMsgReady = false;
+//	static boolean tracksMsgReady = false;
+//	static boolean imageMsgReady = false;
+	
+	public void setStatusReady(boolean statusReady) {
+		statusMsgReady = statusReady;
+		return;
+	}
+	public void setTracksReady(boolean tracksReady) {
+		tracksMsgReady = tracksReady;
+		return;
+	}
+	public void setImageReady(boolean imageReady) {
+		imageMsgReady = imageReady;
+		return;
+	}
+// All The GET Methods
+		public long getStatusTime() {
+			return status_time;
+		}
+		public long getTracksTime() {
+			return tracks_time;
+		}
+		public long getImageTime() {
+			return image_time;
+		}
+		public boolean getLaserOn() {
+			return laserOn;
+		}
+		public String getStatusText() {
+			return status_text;
+		}
+		public int getChannels() {
+			return channels;
+		}
+		public int getWidth() {
+			return sizeX;
+		}
+		public int getHeight() {
+			return sizeY;
+		}
+		public int[][] getTargets() {
+			return targets;
+		}
+		public int[][] getLaser() {
+			return lasers;
+		}
+		public byte[] getImage() {		
+			return serialImage;
+		}
+		public boolean getStatusReady() {
+			return statusMsgReady;
+		}	
+		public boolean getTracksReady() {
+			return tracksMsgReady;
+		}	
+		public boolean getImageReady() {
+			return imageMsgReady;
+		}	
+		public int getType() {
+			return type;
+		}
+		public CameraMsgs.systemStatus getSystemStatus() {
+			return sysStat;
+		}
 }	// End class SendMsg

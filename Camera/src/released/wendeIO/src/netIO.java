@@ -48,8 +48,8 @@ public class netIO{
 	Socket clientSocket = null;
 	
 	// Input and Output Stream handles - not used now?? - JF?
-	ObjectOutputStream serverOutStream = null;
-	ObjectInputStream serverInputStream = null;
+//	ObjectOutputStream serverOutStream = null;
+//	ObjectInputStream serverInputStream = null;
 	
 	CameraMsgs.cameraStatus.Builder sStatusBuilder = null;
 	CameraMsgs.cameraStatus sMsgStatus = null;
@@ -121,14 +121,16 @@ public class netIO{
 //		close();	// close sockets and IO channels
 	}
 
-	public void close() throws IOException
+
+	public boolean close() throws IOException
 	{
 		try {
 			if(role == 0)		// Server - Closes Server connections
 			{
-				serverOutStream.writeInt(-1);		// Write byte so client knows we are done
-				serverOutStream.close();
-				serverOutStream.close();
+				byte[] termByte = ByteBuffer.allocate(4).putInt(-1).array();		  
+				clientSocket.getOutputStream().write(termByte, 0, 4);
+				
+				//clientSocket.getOutputStream().writeInt(-1);		// Write byte so client knows we are done
 				clientSocket.close();
 				serverSocket.close();
 			}
@@ -140,13 +142,14 @@ public class netIO{
 				stdIn.close();
 				cSocket.close();
 			}
-			return;
+			return true;
 		}
 		catch (IOException e) {
 			System.out.println("Couldn't Close correctly");
+			return false;
 		}
 		finally {
-			return;
+			return true;
 		}
 		
 	}
@@ -183,7 +186,8 @@ public class netIO{
 		netIO msg = new netIO(role, type);			// create instance of this class
 		switch (role) {
 			case 0:
-				msg.server_old();
+				System.out.println("Need to do something here - used to be old_Server");
+//				msg.old_server();
 				break;
 			case 1:
 				msg.client();
@@ -207,14 +211,15 @@ public class netIO{
 		
 	// Server Initialization
 	// Sets up socket on specified port
-	public void serverInit() throws IOException {
+	public int serverInit() throws IOException {
 		System.out.println("SERVER INIT STARTED");			
 
 		try {
 			serverSocket = new ServerSocket(port);
 			} catch (IOException e) {
 				System.err.println("Could not listen on port: "+port);
-				System.exit(1);
+				return -1;
+				//System.exit(1);
 			}
 
 
@@ -224,12 +229,13 @@ public class netIO{
 			System.out.println("Client Accepted");
 			} catch (IOException e) {
 				System.err.println("Accept failed.");
-				System.exit(1);
+				return -1;
+				//System.exit(1);
 			}
 
 		// define server Streams
 		System.out.println("SERVER INIT COMPLETE");
-		return;
+		return 1;
 	}	// End Server init Method
 
 	// overloaded server function - one for each message type (status, tracks, image)
@@ -271,33 +277,7 @@ public class netIO{
 
 		count++;
 	} // End Server Method
-	
-	// Method to generates some test data - needs to be updated - only used by main() 5/15 - JF
-	public void server_old() throws IOException
-	{
-		count = 0;
-		long t= System.currentTimeMillis();
-		long end = t+10000;
-
-
-		while(System.currentTimeMillis() < end){
-
-			// create Builder
-			sStatusBuilder = CameraMsgs.cameraStatus.newBuilder();
-					
-			// Set initial conditions and create message object
-			sMsgStatus = sStatusBuilder.setTime(System.currentTimeMillis())
-				.setLaserOn(true)
-				.setText("Test ProtoBuf " + count + " " + testText)
-				.build();
-			serverOutStream.writeByte(sMsgStatus.getSerializedSize());
-			serverOutStream.writeByte(msgType);		// write type of message to stream
-			sMsgStatus.writeTo(serverOutStream);
-			count++;
-		}
-
-	} // End Server Method
-	
+		
 	// method to initialize Client Socket Connection
 	private void clientInit() throws IOException {
 

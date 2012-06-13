@@ -426,7 +426,6 @@ public class SendMsg implements Runnable{
 	
 	public boolean closeNet(int msg) throws IOException {
 		try {
-			
 		switch(msg) {
 		case 0:
 			netStat.close();
@@ -497,7 +496,7 @@ public class SendMsg implements Runnable{
 			this.serialImage = inputSerial;
 		return;
 	}
-	static public void setStatus(int status) {
+	static public void setSystemStatus(int status) {
 		switch(status){
 		case 0:
 			SendMsg.sysStat = CameraMsgs.systemStatus.DOWN;
@@ -520,7 +519,7 @@ public class SendMsg implements Runnable{
 		default:
 			SendMsg.sysStat = CameraMsgs.systemStatus.UNKNOWN;
 		} // End Switch
-	} // End setStatus Method
+	} // End setSystemStatus Method
 	
 //	static boolean running = true;
 //	
@@ -586,7 +585,7 @@ public class SendMsg implements Runnable{
 		public int getType() {
 			return type;
 		}
-		public CameraMsgs.systemStatus getStatus() {
+		public CameraMsgs.systemStatus getSystemStatus() {
 			return sysStat;
 		}
 }	// End class SendMsg

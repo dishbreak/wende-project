@@ -37,11 +37,11 @@ for i = 1:h
 end
     n=n+1;
 %setStatus(long time,CameraMsgs.systemStatus sysStat, boolean laserOn, String text)
-net.setStatus(100000, net.getStatus , 0, 'Camera IPT Rocks');
+net.setStatus(100000, net.getSystemStatus , 0, 'Camera IPT Rocks');
 net.sendStatus;
 
 %setTracks(long time,	CameraMsgs.systemStatus sysStat, int[][] targets, int[][] lasers, boolean laserOn)
-net.setTracks(1001, net.getStatus, [[0,12]], [[700,700]], 0);
+net.setTracks(1001, net.getSystemStatus, [[0,12]], [[700,700]], 0);
 net.sendTracks;
 pause(0.25);
 %setImage(long time, int channels, int sizeX, int sizeY, com.google.protobuf.ByteString serialImage)
@@ -77,11 +77,11 @@ net.initNet(1)
 net.initNet(2)
 
 %setStatus(long time,CameraMsgs.systemStatus sysStat, boolean laserOn, String text)
-net.setStatus(100000, net.getStatus , 0, 'Matlab Test');
+net.setStatus(100000, net.getSystemStatus , 0, 'Matlab Test');
 net.sendStatus;
 
 %setTracks(long time,	CameraMsgs.systemStatus sysStat, int[][] targets, int[][] lasers, boolean laserOn)
-net.setTracks(1001, net.getStatus, [[0,12],[2,200]], [[700,700]], 0);
+net.setTracks(1001, net.getSystemStatus, [[0,12],[2,200]], [[700,700]], 0);
 net.sendTracks;
 
 %setImage(long time, int channels, int sizeX, int sizeY, com.google.protobuf.ByteString serialImage)
@@ -91,16 +91,16 @@ net.sendImage;
 
 for i = 1:10:1000
     pause(0.5);
-net.setTracks(1000+i, net.getStatus, [[i,2*i],[3*i,4*i]] , [[i + 2, 1],[i-12, -200]], mod(i,2));
+net.setTracks(1000+i, net.getSystemStatus, [[i,2*i],[3*i,4*i]] , [[i + 2, 1],[i-12, -200]], mod(i,2));
 net.sendTracks;
 end
 
 %setStatus(long time,CameraMsgs.systemStatus sysStat, boolean laserOn, String text)
-net.setStatus(100000, net.getStatus , 0, 'Matlab Test');
+net.setStatus(100000, net.getSystemStatus , 0, 'Matlab Test');
 net.sendStatus;
 
 %setTracks(long time,	CameraMsgs.systemStatus sysStat, int[][] targets, int[][] lasers, boolean laserOn)
-net.setTracks(1001, net.getStatus, [[0,12],[2,200]], [[700,700]], 0);
+net.setTracks(1001, net.getSystemStatus, [[0,12],[2,200]], [[700,700]], 0);
 net.sendTracks;
 %%
 
