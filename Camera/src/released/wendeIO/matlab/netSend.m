@@ -1,13 +1,14 @@
 %%
 % Sets up the Environment
 clear; clc; close all;
-cd c:\java\wendeIO\matlab;
+%cd c:\java\wendeIO\matlab;
+cd 'C:\Documents and Settings\jford7\My Documents\ELDP\TDC\2011-2012\wende-project\Camera\src\released\wendeIO\matlab';
 javaaddpath ..\bin;
 
-net = SendMsg
-net.initNet(0)
-net.initNet(1)
-net.initNet(2)
+net = SendMsg;
+net.initNet(0);
+net.initNet(1);
+net.initNet(2);
 
 
 %%
