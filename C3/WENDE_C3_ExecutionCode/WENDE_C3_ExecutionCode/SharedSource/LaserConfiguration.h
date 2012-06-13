@@ -2,24 +2,29 @@
 
 typedef struct
 {
-	int					PWM_AZ;
-	int					PWM_EL;
-	BYTE				isLaserOn;
+	int MIN;
+	int MAX;
+}LASER_LIMITS;
+typedef struct
+{
+	LASER_LIMITS		PWM_AZ;
+	LASER_LIMITS		PWM_EL;
+	BYTE				Frequency;
 } LASER_COMMAND_STRUCT;
 
-class CLaserCommand
+class CLaserConfiguration
 {
 	public:
 		// default constructor
-		CLaserCommand(void);
+		CLaserConfiguration(void);
 		// same as the StatusToBytes function (overide destructor)
-		CLaserCommand( BYTE *bytes);
+		CLaserConfiguration( BYTE *bytes);
 		// destructor
-		~CLaserCommand(void);
+		~CLaserConfiguration(void);
 
 	public:
 		// data
-		LASER_COMMAND_STRUCT c;
+		LASER_COMMAND_STRUCT LaserConfiguration;
 		// This function is used by the c3 team to send
 		// command to the laser
 		void  BytesToStatus( BYTE *bytes);
