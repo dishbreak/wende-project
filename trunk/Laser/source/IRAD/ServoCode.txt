@@ -1,0 +1,54 @@
+// Controlling a servo position using a potentiometer (variable resistor) 
+// by Michal Rinott <http://people.interaction-ivrea.it/m.rinott> 
+
+#include <Servo.h> 
+ 
+Servo myservo;  // create servo object to control a servo 
+ 
+int potpin = 0;  // analog pin used to connect the potentiometer
+int val = 2;    // variable to read the value from the analog pin 
+int temp = 3000;
+int temp1 = 500;
+ 
+void setup() 
+{ 
+  myservo.attach(5);  // attaches the servo on pin 9 to the servo object 
+} 
+ 
+void loop() 
+{ 
+  //val = analogRead(potpin);            // reads the value of the potentiometer (value between 0 and 1023) 
+  //val = map(val, 0, 1023, 0, 179);     // scale it to use it with the servo (value between 0 and 180)
+ myservo.write(90);  
+  delay(temp1);   
+  myservo.write(91);                  // sets the servo position according to the scaled value 
+  delay(temp1);                           // waits for the servo to get there 
+  myservo.write(92);                  // sets the servo position according to the scaled value 
+  delay(temp1);  
+  myservo.write(93);  
+  delay(temp1);  
+  myservo.write(94);  
+  delay(temp1);  
+  myservo.write(95);  
+  delay(temp1);  
+  myservo.write(96);  
+  delay(temp1);  
+  myservo.write(97);  
+  delay(temp1);  
+  myservo.write(98);  
+  delay(temp1);  
+  myservo.write(99);  
+  delay(temp1);  
+  myservo.write(100);  
+  delay(temp1);  
+  myservo.write(101);  
+  delay(temp1);  
+  myservo.write(102);  
+  delay(temp1);  
+  myservo.write(103);  
+  delay(temp1);  
+  myservo.write(104);  
+  delay(temp1);  
+  myservo.write(105);  
+  delay(temp1);  
+}
