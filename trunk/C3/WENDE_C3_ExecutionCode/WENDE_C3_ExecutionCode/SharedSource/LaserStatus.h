@@ -15,6 +15,7 @@ typedef struct
 	int					PWM_AZ;
 	int					PWM_EL;
 	LASER_SYSTEM_STATUS status;
+	BYTE				errorStatus;
 } LASER_STATUS_STRUCT;
 
 class CLaserStatus

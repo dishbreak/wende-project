@@ -23,6 +23,8 @@ void CLaserStatus::BytesToStatus( BYTE *bytes)
 	LaserStatus.PWM_EL = CUtilities::BytesToInt(&bytes[currLoc]);
 	currLoc += SIZE_OF_INT;
 	LaserStatus.status = (LASER_SYSTEM_STATUS)CUtilities::BytesToInt(&bytes[currLoc]);
+	currLoc += SIZE_OF_INT;
+	LaserStatus.errorStatus = bytes[currLoc];
 }
 
 BYTE* CLaserStatus::StatusToBytes()
@@ -33,5 +35,7 @@ BYTE* CLaserStatus::StatusToBytes()
 	CUtilities::IntToBytes(&msgBytes[currLoc],LaserStatus.PWM_EL);
 	currLoc += SIZE_OF_INT;
 	CUtilities::IntToBytes(&msgBytes[currLoc],(int)LaserStatus.status);
+	currLoc += SIZE_OF_INT;
+	msgBytes[currLoc] = LaserStatus.Frequency;
 	return msgBytes;
 }
