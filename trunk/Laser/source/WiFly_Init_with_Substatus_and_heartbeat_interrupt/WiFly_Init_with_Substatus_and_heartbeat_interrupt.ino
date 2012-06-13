@@ -20,12 +20,17 @@
 #define EL_SERVO_PIN 9
 
 // Message Types
-#define CONTROL_MSG 1
+#define COMMAND_MSG 1
 #define CONFIG_MSG 2
 
 // Lengths
-#define CONTROL_MSG_LENGTH 6
-#define CONFIG_MSG_LENGTH 7
+#define COMMAND_MSG_LENGTH 9
+#define CONFIG_MSG_LENGTH 17
+
+// Error types
+#define AZ_ERROR 0b00000001
+#define EL_ERROR 0b00000010
+#define LASER_ERROR 0b00000100
 
 // Min/Max PWM (in ticks)
 int AZ_MIN_PWM = 2000;
@@ -43,6 +48,9 @@ int blinkDelay = 500;
 // Heartbeat ready to send
 bool heartbeatReady = false;
 
+// Error flag
+char return_error = 0;
+
 // Interval between heartbeats (in microseconds)
 // Use Timer1.setPeriod(period) to update this value
 long heartbeatInterval = 5000000;
@@ -57,27 +65,37 @@ void setHeartbeatStatus()
   heartbeatReady = true;
 } 
 
-// Process control message
-void process_control_message(char control_msg_data[CONTROL_MSG_LENGTH-1])
+// Process command message
+void process_command_message(char command_msg_data[COMMAND_MSG_LENGTH])
 {
   int laser_control;
   int az_control;
   int el_control;
 
-  // Process laser control
-  laser_control = control_msg_data[0];
-
   // Process AZ value
-  az_control = (control_msg_data[1] * 256) + control_msg_data[2];
+  az_control = ((int)command_msg_data[2] * 256) + command_msg_data[3];
 
   // Process EL value
-  el_control = (control_msg_data[3] * 256) + control_msg_data[4];
+  el_control = ((int)command_msg_data[6] * 256) + command_msg_data[7];
 
-  // Write values
-  digitalWrite( LASER_PIN, laser_control);
-  az_servo.writeTicks( az_control );
-  el_servo.writeTicks( el_control );
-
+  // Process laser control
+  laser_control = command_msg_data[8]; 
+  
+  // Check calues are valid and write them if they are
+  if ((az_control >= AZ_MIN_PWM) && (az_control <= AZ_MAX_PWM))
+	az_servo.writeTicks( az_control );
+  else
+	return_error = return_error | AZ_ERROR;
+	
+  if ((el_control >= EL_MIN_PWM) && (el_control <= EL_MAX_PWM))
+	el_servo.writeTicks( el_control );
+  else
+	return_error = return_error | EL_ERROR;
+	
+  if ((laser_control == 0) || (laser_control == 1))
+	digitalWrite( LASER_PIN, laser_control);
+  else
+	return_error = return_error | LASER_ERROR;
 }
 
 // Process config message
@@ -85,33 +103,26 @@ void process_config_message(char config_msg_data[CONFIG_MSG_LENGTH-1])
 {
 
   int temp_heartbeat;
+  int temp_min_az;
+  int temp_min_el;
+  int temp_max_az;
+  int temp_max_el;
   
   // Check if value is greater than 0, indicating it should be updated
 
-  // Min AZ PWM
-  if (config_msg_data[0] > 0)
-    AZ_MIN_PWM = config_msg_data[0];
+  // Get temp values
+    temp_min_az = ((int)config_msg_data[2] * 256) + config_msg_data[3];
+    temp_min_az = ((int)config_msg_data[6] * 256) + config_msg_data[7];
+    temp_min_az = ((int)config_msg_data[10] * 256) + config_msg_data[11];
+    temp_min_az = ((int)config_msg_data[14] * 256) + config_msg_data[15];
+    temp_heartbeat = config_msg_data[16];
 
-  // Max AZ PWM
-  if (config_msg_data[1] > 0)
-    AZ_MAX_PWM = config_msg_data[1];
-
-  // Min EL PWM
-  if (config_msg_data[2] > 0)
-    EL_MIN_PWM = config_msg_data[2];
-
-  // Max EL PWM
-  if (config_msg_data[3] > 0)
-    EL_MAX_PWM = config_msg_data[3];
-
-  // Get new heartbeat interval
-  temp_heartbeat = (config_msg_data[4] * 256) + config_msg_data[5];
-
-  // Heartbeat interval
-  if (temp_heartbeat > 0)
-    heartbeatInterval = (long)temp_heartbeat * 1000;
-
-
+  // Set values
+    AZ_MIN_PWM = temp_min_az;
+	AZ_MAX_PWM = temp_max_az;
+	EL_MIN_PWM = temp_min_el;
+	EL_MAX_PWM = temp_max_el;
+    heartbeatInterval = (long)temp_heartbeat * 1000000;
 
 }
 
@@ -175,41 +186,19 @@ void setup()
   az_servo.attach( AZ_SERVO_PIN );
 }
 
-//Assume the data in is 5 characters
-//First character is Error Flag
-//Second character is Laser On/Off
-//Third character is Az PWM
-//Fourth character is Az PWM
-//Fifth character is El PWM
-//Sixth character is El PWM
-
 void loop()
 {
-  //Counter for heartbeat message
-  static int hb_counter = 0;
 
   //Index for receiving data
   int index;
 
   //From C3
   char message_type;
-  char data[5] = {
-    0  };
-  static char laser_flag = 0;
-  static char az_pwm[2] = {
-    0  };
-  static char el_pwm[2] = {
-    0  };
-  char control_message_data[CONTROL_MSG_LENGTH-1] = {
-    0  };
-  char config_message_data[CONFIG_MSG_LENGTH-1] = {
-    0  };
+  char command_message_data[COMMAND_MSG_LENGTH] = {0};
+  char config_message_data[CONFIG_MSG_LENGTH] = {0};
 
   //To C3
-  char return_string[6] = {
-    0  };
-  char return_error = 0;
-  char return_laser = 0;
+  char return_string[17] = {0};
 
   while (true)
   {
@@ -217,84 +206,89 @@ void loop()
     if (client.available())
     {
       Serial.println("Data available!!!");
-
-      //laser_flag = client.read();
-      //Serial.println(laser_flag);
-      //az_pwm[0] = client.read();
-      //Serial.println(az_pwm[0]);
-      //az_pwm[1] = client.read();
-      //Serial.println(az_pwm[1]);
-      //el_pwm[0] = client.read();
-      //Serial.println(el_pwm[0]);
-      //el_pwm[1] = client.read();
-      //Serial.println(el_pwm[1]);
-
+	  
+	  // Discard message size
+	  client.read();
+	  client.read();
+	  client.read();
+	  client.read();
+	  
       message_type = client.read();
 
       switch (message_type)
       {
-      case CONTROL_MSG:
-        for (index=0;index < CONTROL_MSG_LENGTH;index++)
+      case COMMAND_MSG:
+        for (index=0;index < COMMAND_MSG_LENGTH;index++)
         {
-          control_message_data[index] = client.read();
+          command_message_data[index] = client.read();
+		  //Serial.println(command_message_data[index],DEC);
         }
-        process_control_message(control_message_data);
+        process_command_message(command_message_data);
         break;
       case CONFIG_MSG:
         for (index=0;index < CONFIG_MSG_LENGTH;index++)
         {
           config_message_data[index] = client.read();
+		  //Serial.println(command_message_data[index],DEC);
         }
         process_config_message(config_message_data);
         break;
       default:
         Serial.print("Invalid Message Type: ");
-        Serial.println(message_type);
+        Serial.println(message_type,DEC);
         break;
       }
-
-
     }
     else
     {
       Serial.println("Data not available");
     }
-
+	
     //Send heartbeat every heartbeatInterval
     if (heartbeatReady)
     {
-      //Send laser status back to C3
-      return_laser = digitalRead(LASER_PIN);
-      if (check_error_flag())
-      {
-        return_error = 1;
-      }
-
       //Create return message
-      return_string[0] = return_error;
-      return_string[1] = return_laser;
-      return_string[2] = az_pwm[0];
-      return_string[3] = az_pwm[1];
-      return_string[4] = el_pwm[0];
-      return_string[5] = el_pwm[1];
+	  // Size
+	  return_string[0] = 0;
+	  return_string[1] = 0;
+	  return_string[2] = 0;
+	  return_string[3] = 17;
+	  
+	  // Type - TBD STILL
+	  return_string[4] = 4;
+	  
+	  // Azimuth value
+	  return_string[5] = 0;
+	  return_string[6] = 0;
+	  return_string[7] = (char)(digitalRead(AZ_SERVO_PIN) >> 8);
+	  return_string[8] = (char)(digitalRead(AZ_SERVO_PIN) & 0x00FF);
+	  
+	  // Elevation value
+	  return_string[9] = 0;
+	  return_string[10] = 0;
+	  return_string[11] = (char)(digitalRead(EL_SERVO_PIN) >> 8);
+	  return_string[12] = (char)(digitalRead(EL_SERVO_PIN) & 0x00FF);
+	  
+	  // Laser status
+	  return_string[13] = 0;
+	  return_string[14] = (char)(digitalRead(LASER_PIN));
+	  
+	  // Error status
+	  return_string[15] = 0;
+	  return_string[16] = return_error;
 
       //Send the message back to C3
       client.write(return_string);
 
       //Reset heartbeat counter 
       heartbeatReady = false;
+	  
+	  //Reset error status
+	  return_error = 0;
     }
 
   }
 }
-
-bool check_error_flag()
-{
-  //This is where you check for error flag conditions.
-  //Currently, it's always returning false.
-  return false;
-}
-
 
 
 
