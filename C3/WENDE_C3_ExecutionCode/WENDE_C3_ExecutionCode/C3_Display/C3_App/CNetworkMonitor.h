@@ -25,7 +25,7 @@ class CNetworkMonitor
 
 		void InitializeThread();
 		void StopThreads();
-		void StartCalibration();
+		void StartProcessing();
 
 	public:
 		bool _isRunning;

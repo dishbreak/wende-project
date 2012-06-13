@@ -4,6 +4,8 @@
 #include "Coordinates.h"
 #include "CNetworkMonitor.h"
 #include "C3AlertStates.h"
+#include "C3ProcessingStates.h"
+
 namespace C3_App {
 
 	using namespace System;
@@ -32,8 +34,11 @@ namespace C3_App {
 		typedef System::Windows::Forms::Form base;
 		static C3_User_Interface^ instance;
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
-	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^  trialControlButton;
+
 			 CNetworkMonitor *m_monitor;
+				
+
 
 		// DELEGATE STUFF
 		// Called from "Update_Table", delegates responsibility to "Worker_Update_Table"
@@ -97,13 +102,6 @@ namespace C3_App {
 		}
 	private: System::Windows::Forms::FlowLayoutPanel^  pPPIPanel;
 	protected: 
-		//~C3_User_Interface()
-		//{
-		//	if (components)
-		//	{
-		//		delete components;
-		//	}
-		//}
 
 	protected: 
 	private: System::Windows::Forms::GroupBox^  groupBox1;
@@ -224,6 +222,7 @@ namespace C3_App {
 			this->pbCameraStatus = (gcnew System::Windows::Forms::PictureBox());
 			this->pbCameraComms = (gcnew System::Windows::Forms::PictureBox());
 			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->trialControlButton = (gcnew System::Windows::Forms::Button());
 			this->label8 = (gcnew System::Windows::Forms::Label());
 			this->CalibrateButton = (gcnew System::Windows::Forms::Button());
 			this->label7 = (gcnew System::Windows::Forms::Label());
@@ -239,7 +238,6 @@ namespace C3_App {
 			this->pbLaserComms = (gcnew System::Windows::Forms::PictureBox());
 			this->gbAlerts = (gcnew System::Windows::Forms::GroupBox());
 			this->tbAlertsPanel = (gcnew System::Windows::Forms::TextBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->pPPIPanel->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -448,7 +446,7 @@ namespace C3_App {
 			// 
 			// groupBox5
 			// 
-			this->groupBox5->Controls->Add(this->button1);
+			this->groupBox5->Controls->Add(this->trialControlButton);
 			this->groupBox5->Controls->Add(this->label8);
 			this->groupBox5->Controls->Add(this->CalibrateButton);
 			this->groupBox5->Controls->Add(this->label7);
@@ -463,6 +461,16 @@ namespace C3_App {
 			this->groupBox5->TabIndex = 2;
 			this->groupBox5->TabStop = false;
 			this->groupBox5->Text = L"Demo State";
+			// 
+			// trialControlButton
+			// 
+			this->trialControlButton->Location = System::Drawing::Point(227, 232);
+			this->trialControlButton->Name = L"trialControlButton";
+			this->trialControlButton->Size = System::Drawing::Size(115, 29);
+			this->trialControlButton->TabIndex = 10;
+			this->trialControlButton->Text = L"Start Trial";
+			this->trialControlButton->UseVisualStyleBackColor = true;
+			this->trialControlButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::button1_Click);
 			// 
 			// label8
 			// 
@@ -612,16 +620,6 @@ namespace C3_App {
 			this->tbAlertsPanel->Size = System::Drawing::Size(1283, 34);
 			this->tbAlertsPanel->TabIndex = 0;
 			this->tbAlertsPanel->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(227, 232);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(122, 29);
-			this->button1->TabIndex = 10;
-			this->button1->Text = L"Start Trial";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &C3_User_Interface::button1_Click);
 			// 
 			// C3_User_Interface
 			// 
@@ -1152,8 +1150,10 @@ namespace C3_App {
 					 {
 						 this->CalibrateButton->Text = "Calibrating...";
 						 this->CalibrateButton->Enabled = false;
-						 m_monitor->StartCalibration();
 						 operationalState  = C3_Alert_Types::CALIBRATION_INIT;
+						 C3ProcessingStates::Instance().Set_Current_Alert(operationalState);
+						 m_monitor->StartProcessing();
+						 
 					 }
 				 }
 				 catch (...)
@@ -1172,7 +1172,18 @@ namespace C3_App {
 			 }
 private: System::Void dgvDtiLog_CellContentClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
 		 }
-private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+				 try
+				 {
+					operationalState = C3_Alert_Types::POC_STARTED;
+					C3ProcessingStates::Instance().Set_Current_Alert(operationalState);
+					this->trialControlButton->Text = "Stop";
+					m_monitor->StartProcessing();
+				 }
+				 catch(...)
+				 {
+					 MessageBoxA(NULL,"calibrateButton_Click","error",MB_OKCANCEL);
+				 }
 		 }
 };
 }

@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\C3ProcessingStates.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Calibrator.h"
 				>
 			</File>
@@ -350,6 +354,10 @@
 			</File>
 			<File
 				RelativePath="..\..\SharedSource\C3Configuration.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\C3ProcessingStates.cpp"
 				>
 			</File>
 			<File
