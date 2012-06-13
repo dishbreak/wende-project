@@ -5,6 +5,7 @@ typedef struct
 	int MIN;
 	int MAX;
 }LASER_LIMITS;
+
 typedef struct
 {
 	LASER_LIMITS		PWM_AZ;

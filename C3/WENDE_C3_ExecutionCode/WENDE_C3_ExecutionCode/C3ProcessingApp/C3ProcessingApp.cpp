@@ -188,6 +188,10 @@ int _tmain(int argc, _TCHAR* argv[])
 						testPoints[calIndex].Y = inData.Lasers[0].Y;
 						calIndex++;
 
+						// TODO ADD LOGIC TO CHECK THE LASER POINT ACTUALLY MOVED
+						// ...
+						// ...
+						// ...
 						if (C3NotificationHandler::Instance().Get_Alert_Type() == C3_Alert_Types::CALIBRATION_IN_PROGRESS_5)
 						{	
 							// do calibration

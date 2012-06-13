@@ -94,7 +94,7 @@ public:
     bool ConnectTo(LPCTSTR strDestination, LPCTSTR strServiceName, int nProtocol, int nType);
 
 // Event function - override to get data
-    virtual void OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime);
+    virtual void OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime, BYTE type);
     virtual void OnEvent(UINT uEvent, LPVOID lpvData);
 	virtual void AppendMessage(LPCTSTR strText);
 // Run function - override to implement a new behaviour
