@@ -28,12 +28,12 @@
 #define SETTLING_CYCLES  100  //capacitors removed
 #define SETTLING_TIME  2      //2ms to settle...sigh
 
-#define DETECTION_LOW           80 //was 60
+#define DETECTION_LOW           200 //was 60
 #define DETECTION_HIGH          500 //was 500
-#define AMBIENT_LIGHT_LIMIT_POS 100  //False alarms all the way down to 40
-#define AMBIENT_LIGHT_LIMIT_NEG 100  //False alarms all the way down to 40
+#define AMBIENT_LIGHT_LIMIT_POS 75  //False alarms all the way down to 40
+#define AMBIENT_LIGHT_LIMIT_NEG 75  //False alarms all the way down to 40
 #define AMBIENT_DETECTION_LIMIT_NEG 20  //False alarms all the way down to 20
-#define HIT_TIME                5  //was 10
+#define HIT_TIME                3  //was 10
   
 boolean DetectionProcessing(void);
 int adjust_to_light_change(int photodetectorVal);
