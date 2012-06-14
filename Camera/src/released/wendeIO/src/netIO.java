@@ -250,6 +250,7 @@ public class netIO{
 		byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
 		byte[] bytesMsg = sMsg.toByteArray(); 						  
 		clientSocket.getOutputStream().write(bytesLength, 0, 4);
+		clientSocket.getOutputStream().write(0);	// Write a 0 for Status Message Type.
 		clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
 		count++;
 	} // End Server Method
@@ -261,6 +262,7 @@ public class netIO{
 		byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
 		byte[] bytesMsg = sMsg.toByteArray(); 						  
 		clientSocket.getOutputStream().write(bytesLength, 0, 4);
+		clientSocket.getOutputStream().write(1);	// Write a 1 for Track Message Type.
 		clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
 		count++;
 	} // End Server Method
@@ -270,9 +272,10 @@ public class netIO{
 	{
 		System.out.println("Send Image");
 		byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
-		p("Msg Length: "+sMsg.getSerializedSize());
+		//p("Msg Length: "+sMsg.getSerializedSize());
 		byte[] bytesMsg = sMsg.toByteArray(); 						  
 		clientSocket.getOutputStream().write(bytesLength, 0, 4);
+		clientSocket.getOutputStream().write(2);	// Write a 2 for Track Message Type.
 		clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
 
 		count++;
