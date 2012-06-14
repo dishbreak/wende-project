@@ -465,7 +465,7 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 				nAlertType   = m_ProcessingInterface->AlertType;		// 1..n for different conditions: end of trial etc..
 				nDTIValue    = m_ProcessingInterface->DTI;				// Actual DTI value
 				nTrialResult = m_ProcessingInterface->POCResult;		// Pass / fail
-                dispman->Store_Latest_DTI(nDTIValue, nTrialResult);
+                //dispman->Store_Latest_DTI(nDTIValue, nTrialResult);
 
 				// Only call if the alert is relevant
 				if(nAlertType != 0)

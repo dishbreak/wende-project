@@ -17,5 +17,6 @@ typedef enum {
 	DTI_UPDATE,
 	POC_STARTED,
 	POC_ENTERED,
+    POC_FINISHED,
 	NUM_ALERTS_TYPES
 }C3_Alert_Types; 
