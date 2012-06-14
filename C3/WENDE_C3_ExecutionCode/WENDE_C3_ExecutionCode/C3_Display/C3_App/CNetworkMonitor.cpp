@@ -549,7 +549,7 @@ UINT WINAPI ProcessingInterfaceTransmitThread(LPVOID pParam)
 			if(eProcessingNotification == C3_Alert_Types::POC_STARTED)
 			{
 				// Ask Processing nicely End trial
-				m_ProcessingInterface->AlertType = C3_Alert_Types::POC_FINISHED;
+				//m_ProcessingInterface->AlertType = C3_Alert_Types::POC_FINISHED;
 			}
 
 			// Set the event

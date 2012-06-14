@@ -322,11 +322,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\SharedSource\laserMsgs.pb.cc"
+				RelativePath="..\SharedSource\LaserConfiguration.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\SharedSource\laserMsgs.pb.h"
+				RelativePath="..\SharedSource\LaserConfiguration.h"
 				>
 			</File>
 			<File

@@ -424,6 +424,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\SharedSource\LaserConfiguration.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\SharedSource\LaserConfiguration.h"
+				>
+			</File>
+			<File
 				RelativePath="..\SharedSource\laserMsgs.pb.h"
 				>
 			</File>

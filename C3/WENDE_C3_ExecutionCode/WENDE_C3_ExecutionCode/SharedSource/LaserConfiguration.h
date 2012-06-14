@@ -10,8 +10,8 @@ typedef struct
 {
 	LASER_LIMITS		PWM_AZ;
 	LASER_LIMITS		PWM_EL;
-	BYTE				Frequency;
-} LASER_COMMAND_STRUCT;
+	int  				Frequency;
+} LASER_CONFIG_STRUCT;
 
 class CLaserConfiguration
 {
@@ -25,7 +25,7 @@ class CLaserConfiguration
 
 	public:
 		// data
-		LASER_COMMAND_STRUCT LaserConfiguration;
+		LASER_CONFIG_STRUCT LaserConfiguration;
 		// This function is used by the c3 team to send
 		// command to the laser
 		void  BytesToStatus( BYTE *bytes);
@@ -34,5 +34,5 @@ class CLaserConfiguration
 		BYTE* StatusToBytes();
 	
 	private:
-		BYTE msgBytes[sizeof(LASER_COMMAND_STRUCT)]; 
+		BYTE msgBytes[sizeof(LASER_CONFIG_STRUCT)]; 
 };

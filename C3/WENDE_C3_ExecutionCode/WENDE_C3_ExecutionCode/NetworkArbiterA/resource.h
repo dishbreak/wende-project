@@ -19,6 +19,12 @@
 #define IDC_PWM_EL                      1010
 #define IDC_C3_LASER_STATUS             1011
 #define IDC_LASER_ON_OFF                1012
+#define IDC_C3_LASER_STATUS2            1013
+#define IDC_C3_LASER_STATUS3            1014
+#define IDC_PWM_MIN                     1015
+#define IDC_PWM_MAX                     1016
+#define IDC_PWM_MAX2                    1017
+#define IDC_FREQ                        1017
 
 // Next default values for new objects
 // 

@@ -9,15 +9,10 @@
 #include "cameraMsgs.pb.h"
 #include "C3Configuration.h"
 
-#ifndef LASER_USE_PROTOBUF
 #include "LaserStatus.h"
 #include "Utilties.h"
-#else
-#include "laserMsgs.pb.h"
-using namespace laserMsgs;
-#endif
 
-using namespace cameraMsgs
+using namespace cameraMsgs;
 using std::string;
 
 #ifdef _DEBUG
@@ -83,11 +78,7 @@ END_MESSAGE_MAP()
 CServerSocketDlg::CServerSocketDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CServerSocketDlg::IDD, pParent)
 	, m_CameraStatus(cameraMsgs::systemStatus::UNKNOWN)
-#ifndef LASER_USE_PROTOBUF
 	, m_LaserStatus(LASER_SYSTEM_STATUS::UNKNOWN)
-#else
-	, m_LaserStatus(laserMsgs::systemStatus::UNKNOWN)
-#endif
 	, m_imageName("")
 {
 	//{{AFX_DATA_INIT(CServerSocketDlg)
@@ -538,25 +529,11 @@ void CServerSocketDlg::OnBtnSendImage()
 
 void CServerSocketDlg::OnBnClickedBtnSendLasserStatus()
 {
-	#ifndef LASER_USE_PROTOBUF
 	CLaserStatus status;
 	status.LaserStatus.status = (LASER_SYSTEM_STATUS)m_LaserStatus;
 	status.LaserStatus.PWM_AZ = 1;
 	status.LaserStatus.PWM_EL = 2;
-	OnBtnSend((const char*)status.StatusToBytes(), 3, sizeof(LASER_STATUS_STRUCT),3);							// send the data
-	#else
-	CString lstatus;									// serilize the message
-	m_LaserStatusText.GetWindowTextA(lstatus);
-	// Get the current system time...
-	time_t osBinaryTime;		// C run-time time (defined in <time.h>)
-	time( &osBinaryTime ) ;		// Get the current time from the 
-								// operating system.
-	//Setup the camera message....
-	laserStatus status;
-	status.set_status((laserMsgs::systemStatus)m_LaserStatus);		// set camera status
-	string strText = status.SerializeAsString();
-	OnBtnSend(strText,3,strText.size(),3);							// send the data
-	#endif
+	OnBtnSend((const char*)status.StatusToBytes(), 3, sizeof(LASER_STATUS_STRUCT),4);							// send the data
 	m_SocketManager[3].AppendMessage("OnBtnSendStatus(Laser)\n");
 }
 
@@ -621,7 +598,9 @@ void CServerSocketDlg::OnBtnSend(const char* strText, int portOffset, int size, 
 		{			
 			unsigned char sizeArray[4];
 			CUtilities::IntToBytes(sizeArray,htonl(nLen));
+			unsigned char typeArray = type;
 			m_SocketManager[portOffset].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
+			m_SocketManager[portOffset].WriteComm(&typeArray, sizeof(unsigned char)*1, INFINITE);
 			m_SocketManager[portOffset].WriteComm(msgProxy.byData, nLen, INFINITE);
 		}
 	}	
@@ -835,56 +814,32 @@ void CServerSocketDlg::OnBnClickedBtnSelectCameraImage()
 }
 void CServerSocketDlg::OnBnClickedLaserStatusDown()
 {
-#ifndef LASER_USE_PROTOBUF
 	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_DOWN;
-#else
-	m_LaserStatus = laserMsgs::systemStatus::LASER_DOWN;
-#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusFailed()
 {
-#ifndef LASER_USE_PROTOBUF
 	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_FAILED;
-#else
-	m_LaserStatus = laserMsgs::systemStatus::LASER_FAILED;
-#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusError()
 {
-#ifndef LASER_USE_PROTOBUF
 	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_ERROR;
-#else
-	m_LaserStatus = laserMsgs::systemStatus::LASER_ERROR;
-#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusReady()
 {
-	#ifndef LASER_USE_PROTOBUF
 	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_READY;
-	#else
-	m_LaserStatus = laserMsgs::systemStatus::LASER_READY;
-	#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusUnkown()
 {
-	#ifndef LASER_USE_PROTOBUF
 	m_LaserStatus = LASER_SYSTEM_STATUS::UNKNOWN;
-	#else
-	m_LaserStatus = laserMsgs::systemStatus::UNKNOWN;
-	#endif
 }
 
 void CServerSocketDlg::OnBnClickedLaserStatusOperational()
 {
-	#ifndef LASER_USE_PROTOBUF
 	m_LaserStatus = LASER_SYSTEM_STATUS::LASER_OPERATIONAL;
-	#else
-	m_LaserStatus = laserMsgs::systemStatus::LASER_OPERATIONAL;
-	#endif
 }
 
 void CServerSocketDlg::OnBnClickedBtnSendStatusCont()
@@ -942,7 +897,7 @@ void CServerSocketDlg::OnBnClickedBtnSendTrack2()
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleCameraTrack, NULL);
 		Sleep(5000);
-		CloseHandle (m_timerHandleCameraStatus);
+		CloseHandle (m_timerHandleCameraTrack);
 	}
 }
 void CALLBACK TimerProcCameraTrack(void* lpParametar, BOOLEAN TimerOrWaitFired)
@@ -975,7 +930,7 @@ void CServerSocketDlg::OnBnClickedBtnSendImage2()
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleCameraImage, NULL);
 		Sleep(5000);
-		CloseHandle (m_timerHandleCameraStatus);
+		CloseHandle (m_timerHandleCameraImage);
 	}
 }
 void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired)
@@ -1007,7 +962,7 @@ void CServerSocketDlg::OnBnClickedBtnSendLaserStatus()
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleLaserStatus, NULL);
 		Sleep(5000);
-		CloseHandle (m_timerHandleCameraStatus);
+		CloseHandle (m_timerHandleLaserStatus);
 	}
 }
 void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)

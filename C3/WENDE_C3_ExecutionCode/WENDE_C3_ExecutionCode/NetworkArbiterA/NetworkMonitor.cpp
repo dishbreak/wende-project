@@ -83,12 +83,14 @@ UINT WINAPI LaserCommandThread (LPVOID pParam)
 					// Get data
 					stMessageProxy msgProxy;
 					CLaserCommand pose;
-					pose.LaserStatus.PWM_AZ    = m_LaserCommand->PointLocation.AZ;
-					pose.LaserStatus.PWM_EL    = m_LaserCommand->PointLocation.EL;
-					pose.LaserStatus.isLaserOn = m_LaserCommand->LaserOnOff;
+					pose.LaserCommand.PWM_AZ    = m_LaserCommand->PointLocation.AZ;
+					pose.LaserCommand.PWM_EL    = m_LaserCommand->PointLocation.EL;
+					pose.LaserCommand.IsLaserOn = m_LaserCommand->LaserOnOff;
 					int nLen = sizeof(LASER_COMMAND_STRUCT);
 					memcpy(msgProxy.byData, T2CA((char*)pose.StatusToBytes()), nLen);
 					unsigned char sizeArray[4];
+					unsigned char typeArray = (char)WENDE_MESSAGE_TYPE::LASER_COMMAND;
+
 					CUtilities::IntToBytes(sizeArray,htonl(nLen));
 
 					//end timing
@@ -103,6 +105,7 @@ UINT WINAPI LaserCommandThread (LPVOID pParam)
 					sprintf(f,"\r\n%12.12f\r\n",elapsed);
 					cNetworMonitor->m_SocketObjectServer->AppendMessage(f);
 					cNetworMonitor->m_SocketObjectServer->WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
+					cNetworMonitor->m_SocketObjectServer->WriteComm(&typeArray, sizeof(unsigned char)*1, INFINITE);
 					cNetworMonitor->m_SocketObjectServer->WriteComm(msgProxy.byData, nLen, INFINITE);
 				}
 				// Set the event

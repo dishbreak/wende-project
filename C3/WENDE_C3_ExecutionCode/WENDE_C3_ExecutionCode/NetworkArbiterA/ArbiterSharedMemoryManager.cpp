@@ -250,7 +250,7 @@ int CArbiterSharedMemoryManager::DecodeCameraImageMessage_DEBUG(cameraImage *im,
 string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 {
 	static int oo = 0;
-	oo = (oo<=2)?oo+1:0;
+	oo = (oo==0)?1:0;
 	// Current time
 	static char timeStr[FILENAME_MAX];
 	time_t messageTime;// = ss->time();
@@ -380,7 +380,6 @@ string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, c
 //  Purpose: This function decodes network traffic from laser
 //           specifically decodes the status message.
 ////////////////////////////////////////////////////////////////////////
-#ifndef LASER_USE_PROTOBUF
 int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(CLaserStatus *ss, char* temp)
 {
 	// variables
@@ -388,24 +387,12 @@ int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(CLaserStatus *ss
 	// debug string for display 
 	sprintf(temp, "+LASER STATUS MESSAGE(%d)\r\n", ++laserStatusMessageCount);
 	sprintf(temp, "%s|-->Status = %s   \r\n", temp,DecodeStatus((int)ss->LaserStatus.status).c_str());
+	sprintf(temp, "%s|-->AZ     = %d   \r\n", temp,(int)ss->LaserStatus.PWM_AZ);
+	sprintf(temp, "%s|-->EL     = %d   \r\n", temp,(int)ss->LaserStatus.PWM_EL);
 	sprintf(temp, "%s\r\n\r\n", temp);
 
 	return laserStatusMessageCount;
 }
-#else
-int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(laserStatus *ss, char* temp)
-{
-	// variables
-	static int  laserStatusMessageCount = 0;
-	// debug string for display 
-	sprintf(temp, "+LASER STATUS MESSAGE(%d)\r\n", ++laserStatusMessageCount);
-	sprintf(temp, "%s|-->Status = %d   \r\n", temp,ss->status());
-	sprintf(temp, "%s\r\n\r\n", temp);
-
-	return laserStatusMessageCount;
-
-}
-#endif
 ////////////////////////////////////////////////////////////////////////
 // Function: DecodeLaserStatusMessage
 //  Purpose: This function decodes network traffic from laser
@@ -414,20 +401,11 @@ int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(laserStatus *ss,
 void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char* temp,DWORD size,__int64 startTime)
 {
 	
-	#ifndef LASER_USE_PROTOBUF
 	//  message
 	CLaserStatus ss((BYTE*)strText);
 
 	// Prepare the debug print
 	int packetNumber = DecodeLaserStatusMessage_DEBUG(&ss,temp);
-	#else
-	// protobuf message
-	laserStatus ss;
-	// decode the message
-	ss.ParseFromArray(strText,size);
-	//Prepare the debug print
-	int packetNumber = DecodeLaserStatusMessage_DEBUG(&ss,temp);
-	#endif
 	
 	// aquire the mutex
 	if (C3LaserStatus.isCreated() &&  
@@ -447,11 +425,7 @@ void CArbiterSharedMemoryManager::DecodeLaserStatusMessage(LPCTSTR strText, char
 		double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
 		C3LaserStatus->startTime= startTime;
 
-		#ifndef LASER_USE_PROTOBUF
 		C3LaserStatus->Status		= ss.LaserStatus.status;
-		#else
-		C3LaserStatus->Status		= ss.status();
-		#endif
 		// loops through clients and sends events
 		int eventsToSend = C3LaserStatus->ShmInfo.Clients;
 		for (int pp = 0; pp < eventsToSend; pp++)

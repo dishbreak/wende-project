@@ -77,7 +77,7 @@ void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockA
 		case C3_CAMERA_IMAGE:  
 		{ 
 			CString loadName(CArbiterSharedMemoryManager::Instance().DecodeCameraImageMessage(inData,temp,dwCount,startTime).c_str()); 
-			m_picCtrl->Load(loadName);
+			//m_picCtrl->Load(loadName);
 			break; 
 		}
 		case C3_LASER_STATUS:

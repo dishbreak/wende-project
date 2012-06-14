@@ -7,6 +7,7 @@
 #include "ServerSocket.h"
 #include "SocketManager.h"
 #include "LaserCommand.h"
+#include "LaserConfiguration.h"
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -36,7 +37,7 @@ CSocketManager::~CSocketManager()
 }
 
 
-void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom,__int64 startTime)
+void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockAddrIn& sfrom,__int64 startTime, BYTE type)
 {
 	CString strData;
 #ifndef UNICODE
@@ -49,17 +50,35 @@ void CSocketManager::DisplayData(const LPBYTE lpData, DWORD dwCount, const SockA
 #endif
 	// variables
 	char temp[512];
-	static int  laserCommandMessageCount = 0;
+	
 
-	CLaserCommand command((BYTE*)A2CT((LPSTR)lpData));
 
-	// debug string for display 
-	sprintf(temp, "+LASER COMMAND MESSAGE(%d)\r\n", ++laserCommandMessageCount);
-	sprintf(temp, "%s|->isLaserOn = %d\r\n", temp,command.LaserStatus.isLaserOn);
-	sprintf(temp, "%s|->AZ        = %d\r\n", temp,command.LaserStatus.PWM_AZ);
-	sprintf(temp, "%s|->EL        = %d\r\n", temp,command.LaserStatus.PWM_EL);
-	sprintf(temp, "%s\r\n\r\n", temp);
-
+	if (type == 3)
+	{
+		static int  laserCommandMessageCount = 0;
+		static CLaserCommand command((BYTE*)A2CT((LPSTR)lpData));
+		command.BytesToStatus(((BYTE*)A2CT((LPSTR)lpData)));
+		// debug string for display 
+		sprintf(temp, "+LASER COMMAND MESSAGE(%d)\r\n", ++laserCommandMessageCount);
+		sprintf(temp, "%s|->isLaserOn = %d\r\n", temp,command.LaserCommand.IsLaserOn);
+		sprintf(temp, "%s|->AZ        = %d\r\n", temp,command.LaserCommand.PWM_AZ);
+		sprintf(temp, "%s|->EL        = %d\r\n", temp,command.LaserCommand.PWM_EL);
+		sprintf(temp, "%s\r\n\r\n", temp);
+	}
+	else
+	{
+		static int  laserConfigMessageCount = 0;
+		static CLaserConfiguration config;
+		config.BytesToStatus(((BYTE*)A2CT((LPSTR)lpData)));
+		// debug string for display 
+		sprintf(temp, "+LASER Configuration MESSAGE(%d)\r\n", ++laserConfigMessageCount);
+		sprintf(temp, "%s|->Frequency = %d\r\n", temp,config.LaserConfiguration.Frequency);
+		sprintf(temp, "%s|->AZ(min)   = %d\r\n", temp,config.LaserConfiguration.PWM_AZ.MIN);
+		sprintf(temp, "%s|->AZ(max)   = %d\r\n", temp,config.LaserConfiguration.PWM_AZ.MAX);
+		sprintf(temp, "%s|->EL(min)   = %d\r\n", temp,config.LaserConfiguration.PWM_EL.MIN);
+		sprintf(temp, "%s|->EL(max)   = %d\r\n", temp,config.LaserConfiguration.PWM_EL.MAX);
+		sprintf(temp, "%s\r\n\r\n", temp);
+	}
 
 	AppendMessage( temp );
 }
@@ -99,7 +118,7 @@ void CSocketManager::SetMessageWindow(CEdit* pMsgCtrl)
 }
 
 
-void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime)
+void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64 startTime, BYTE type)
 {
 	LPBYTE lpData = lpBuffer;
 	SockAddrIn origAddr;
@@ -120,7 +139,7 @@ void CSocketManager::OnDataReceived(const LPBYTE lpBuffer, DWORD dwCount,__int64
 	}
 
 	// Display data to message list
-	DisplayData( lpData, dwCount, origAddr, startTime );
+	DisplayData( lpData, dwCount, origAddr, startTime, type );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

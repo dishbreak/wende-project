@@ -7,13 +7,9 @@
 #include "NetworkArbiterDlg.h"
 #include "TinyXml\tinyxml.h"
 #include "process.h"
-#ifndef LASER_USE_PROTOBUF
 #include "LaserCommand.h"
+#include "LaserConfiguration.h"
 #include "Utilties.h"
-#else
-#include "laserMsgs.pb.h"
-using namespace laserMsgs;
-#endif
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -76,6 +72,10 @@ void CNetworkArbiterDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LASER_ON_OFF, m_LaserOnOff);
 	DDX_Control(pDX, IDC_PWM_AZ, m_LaserPWMAz);
 	DDX_Control(pDX, IDC_PWM_EL, m_LaserPWMEl);
+	DDX_Control(pDX, IDC_PWM_MIN, m_LaserPwmMin);
+	DDX_Control(pDX, IDC_PWM_MAX, m_LaserPwmMax);
+	DDX_Control(pDX, IDC_FREQ, m_LaserFreq);
+	DDX_Control(pDX, IDC_C3_LASER_STATUS3, m_sendCont);
 }
 
 BEGIN_MESSAGE_MAP(CNetworkArbiterDlg, CDialog)
@@ -92,6 +92,8 @@ BEGIN_MESSAGE_MAP(CNetworkArbiterDlg, CDialog)
 	ON_WM_DESTROY()
 	ON_WM_SIZE()
 	ON_REGISTERED_MESSAGE( WMU_NOTIFY_TASKBAR_ICON, OnNotifyTaskbarIcon )
+	ON_BN_CLICKED(IDC_C3_LASER_STATUS2, &CNetworkArbiterDlg::OnBnClickedC3LaserStatus2)
+	ON_BN_CLICKED(IDC_C3_LASER_STATUS3, &CNetworkArbiterDlg::OnBnClickedC3LaserStatus3)
 END_MESSAGE_MAP()
 
 
@@ -215,7 +217,6 @@ int CNetworkArbiterDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//text.Format(_T("%f"),100.0);
 	//m_LaserPWMAz.SetWindowTextA(text);
 	//m_LaserPWMEl.SetWindowTextA(text);
-
 	// start thread to bring up com scokets
 	RunThread();
 	return 0;
@@ -287,7 +288,7 @@ UINT WINAPI CNetworkArbiterDlg::SocketClientStartThreadProc(LPVOID pParam)
 			pThis->m_SocketObjectClients[ii].ConnectTo( C3Configuration::Instance().ConnectionArbiter.ip.c_str(), port, AF_INET, SOCK_STREAM); // TCP
 			if (!pThis->m_SocketObjectClients[ii].IsOpen())
 			{
-				Sleep(5);
+				Sleep(1000);
 			}
 		}
 		
@@ -418,45 +419,39 @@ void CNetworkArbiterDlg::OnEnChangePort()
 	m_PortCtrl.GetWindowTextA(m_AddressPort);
 	C3Configuration::Instance().ConnectionArbiter.port = atoi(m_AddressPort);
 }
-
-void CNetworkArbiterDlg::OnBnClickedC3LaserStatus()
+void CNetworkArbiterDlg::C3LaserStatus()
 {
 	if(m_SocketObjectServer[0].IsOpen() == true)
 	{
 		stMessageProxy msgProxy;
-		#ifndef LASER_USE_PROTOBUF
 		CLaserCommand pose;
-		CString cTemp;									// serilize the message
-		m_LaserPWMAz.GetWindowTextA(cTemp);
-		pose.LaserStatus.PWM_AZ = atoi(cTemp);
-		m_LaserPWMEl.GetWindowTextA(cTemp);
-		pose.LaserStatus.PWM_EL = atoi(cTemp);
-		pose.LaserStatus.isLaserOn = (m_LaserOnOff.GetCheck()==BST_CHECKED);
+		
+		CString cTempAZ;									// serilize the message
+		CString cTempEL;									// serilize the message
+
+		m_LaserPWMAz.GetWindowTextA(cTempAZ);
+		m_LaserPWMEl.GetWindowTextA(cTempEL);
+		
+		pose.LaserCommand.PWM_AZ = atoi(cTempAZ);
+		pose.LaserCommand.PWM_EL = atoi(cTempEL);
+		pose.LaserCommand.IsLaserOn = (m_LaserOnOff.GetCheck()==BST_CHECKED);
+
 		int nLen = sizeof(LASER_COMMAND_STRUCT);
 		memcpy(msgProxy.byData, T2CA((char*)pose.StatusToBytes()), nLen);
-		#else
-		// time
-		time_t seconds;
-		seconds = time (NULL);
-		laserPose pose;
-		pose.set_time((DWORD)seconds);
-		pose.set_laseron(m_LaserOnOff.GetCheck()==BST_CHECKED);
-		CString cTemp;									// serilize the message
-		m_LaserPWMAz.GetWindowTextA(cTemp);
-		pose.mutable_target()->set_pulseaz(atoi(cTemp));
-		m_LaserPWMEl.GetWindowTextA(cTemp);
-		pose.mutable_target()->set_pulseel(atoi(cTemp));
-		string strText = pose.SerializeAsString();
-		USES_CONVERSION;
-		int nLen = __min(sizeof(msgProxy.byData)-1, strText.size()+1);
-		memcpy(msgProxy.byData, T2CA(strText.c_str()), nLen);
-		#endif
-	
+		
 		unsigned char sizeArray[4];
 		CUtilities::IntToBytes(sizeArray,htonl(nLen));
-		m_SocketObjectServer[0].WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
+		unsigned char typeArray = (char)WENDE_MESSAGE_TYPE::LASER_COMMAND;
+
+		m_SocketObjectServer[0].WriteComm(sizeArray , sizeof(unsigned char)*4, INFINITE);
+		m_SocketObjectServer[0].WriteComm(&typeArray, sizeof(unsigned char)*1, INFINITE);
 		m_SocketObjectServer[0].WriteComm(msgProxy.byData, nLen, INFINITE);
 	}
+}
+void CNetworkArbiterDlg::OnBnClickedC3LaserStatus()
+{
+	C3LaserStatus();
+	
 }
 
 void CNetworkArbiterDlg::OnBnClickedLaserOnOff()
@@ -535,4 +530,69 @@ LRESULT CNetworkArbiterDlg::OnNotifyTaskbarIcon(  WPARAM wParam, LPARAM lParam )
       break;
    }
    return 0L;
+}
+void CNetworkArbiterDlg::OnBnClickedC3LaserStatus2()
+{
+	if(m_SocketObjectServer[0].IsOpen() == true)
+	{
+		stMessageProxy msgProxy;
+		CLaserConfiguration config;
+
+		CString cTempMIN;									// serilize the message
+		CString cTempMAX;									// serilize the message
+		CString cTempFREQ;									// serilize the message
+
+		m_LaserPwmMin.GetWindowTextA(cTempMIN);
+		m_LaserPwmMax.GetWindowTextA(cTempMAX);
+		m_LaserFreq.GetWindowTextA(cTempFREQ);
+			
+		config.LaserConfiguration.PWM_AZ.MIN = atoi(cTempMIN);
+		config.LaserConfiguration.PWM_AZ.MAX = atoi(cTempMAX);
+		config.LaserConfiguration.PWM_EL.MIN = atoi(cTempMIN);
+		config.LaserConfiguration.PWM_EL.MAX = atoi(cTempMAX);
+		config.LaserConfiguration.Frequency  = atoi(cTempFREQ);
+
+		int nLen = sizeof(LASER_CONFIG_STRUCT);
+		memcpy(msgProxy.byData, T2CA((char*)config.StatusToBytes()), nLen);
+		
+		unsigned char sizeArray[4];
+		CUtilities::IntToBytes(sizeArray,htonl(nLen));
+		unsigned char typeArray = (char)WENDE_MESSAGE_TYPE::LASER_CONFIG;
+
+		m_SocketObjectServer[0].WriteComm(sizeArray , sizeof(unsigned char)*4, INFINITE);
+		m_SocketObjectServer[0].WriteComm(&typeArray, sizeof(unsigned char)*1, INFINITE);
+		m_SocketObjectServer[0].WriteComm(msgProxy.byData, nLen, INFINITE);
+	}
+}
+void CALLBACK TimerProcLaserCommand(void* lpParametar, BOOLEAN TimerOrWaitFired)
+{
+	// This is used only to call QueueTimerHandler
+	// Typically, this function is static member of CTimersDlg
+	CNetworkArbiterDlg* obj = (CNetworkArbiterDlg*) lpParametar;
+	obj->C3LaserStatus();
+} 
+void CNetworkArbiterDlg::OnBnClickedC3LaserStatus3()
+{
+	static bool isStart = true;
+	if (isStart == true)
+	{
+		isStart = false;
+		m_sendCont.SetWindowTextA("Stop Send Command");
+		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandleLaserCommand,
+												NULL,
+												TimerProcLaserCommand,
+												this,
+												0,
+												250,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		m_sendCont.SetWindowTextA("Send Laser Command (cont.)");
+		isStart = true;
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleLaserCommand, NULL);
+		Sleep(5000);
+		CloseHandle (m_timerHandleLaserCommand);
+	}
 }

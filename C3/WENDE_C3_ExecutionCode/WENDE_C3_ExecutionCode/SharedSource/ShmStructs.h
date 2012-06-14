@@ -42,6 +42,12 @@ typedef double              DOUBLE;
 // Max image size
 #define SHM_MAX_IMAGE_SIZE		SHM_MAX_IMAGE_WIDTH*SHM_MAX_IMAGE_HEIGHT*SHM_MAX_IAMGE_CHANNELS	
 
+typedef enum 
+{
+	LASER_COMMAND = 3,
+	LASER_STATUS  = 4,
+	LASER_CONFIG  = 5
+}WENDE_MESSAGE_TYPE;
 /////////////////////////////////////////////////////////////////////////////////
 // Struct: C3Size
 //
