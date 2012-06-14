@@ -22,7 +22,7 @@ void RoverProcessingRoutines()
       digitalWrite(ROVER_LED_PIN,bSuccess);
       //init rover here
       //Testing****
-      //if(RoverUIRoutines())
+      if(RoverUIRoutines())
       {
         roverState = ROVER_READY_STATE;
         //Testing****
@@ -30,7 +30,23 @@ void RoverProcessingRoutines()
         //roverMode = INPUT_FAST_MODE;
         //roverMode = INPUT_SPIRAL_MODE;
         //roverMode = INPUT_PASS_THROUGH_MODE;
-        roverMode = INPUT_CRAWL_AND_STOP_MODE;
+        //roverMode = INPUT_CRAWL_AND_STOP_MODE;
+        roverMode = readRoverMode();
+        /* UI Debug
+        if (digitalRead(INPUT_MODE_BIT0))
+        {
+          Serial.println("BIT 0");
+        }
+        if (digitalRead(INPUT_MODE_BIT1))
+        {
+          Serial.println("BIT 1");
+        }
+        if (digitalRead(INPUT_MODE_BIT2))
+        {
+          Serial.println("BIT 2");
+        }
+        Serial.println(roverMode);
+        */
       }
       break;
       

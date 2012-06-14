@@ -35,6 +35,11 @@ void setupInterfaces()
   //set interrupt pull up resistors for consistancy
   digitalWrite(MOTOR_R_EN, HIGH);
   digitalWrite(MOTOR_L_EN, HIGH);
+
+  //set interrupt pull dow resistors for consistancy
+  digitalWrite(INPUT_MODE_BIT0, LOW);
+  digitalWrite(INPUT_MODE_BIT1, LOW);
+  digitalWrite(INPUT_MODE_BIT2, LOW);
   
   //motor directions...
   digitalWrite(MOTOR_R_DIR, REVERSE);
@@ -52,6 +57,8 @@ void setupInterfaces()
   attachInterrupt(1,              //timer1
                   incRightMotor,  //ISR reference
                   FALLING);       //Falling edge
+
+
 }
 
 /**

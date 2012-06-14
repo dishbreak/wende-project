@@ -21,7 +21,6 @@
 //input pins
 #define PHOTO_DETECTOR_PIN    A0
 #define AMBIENT_LIGHTING_PIN  A1
-#define ROVER_LED_PIN         13
 #define ENCODER_L_PIN         2
 #define ENCODER_R_PIN         3
 #define INPUT_MODE_BIT0       10
@@ -35,6 +34,7 @@
 #define MOTOR_L_DIR           4
 #define MOTOR_R_EN            6
 #define MOTOR_L_EN            5
+#define ROVER_LED_PIN         13
 #define FORWARD   LOW
 #define REVERSE   HIGH
 
@@ -47,7 +47,7 @@
 #define INPUT_CRAWL_AND_STOP_MODE  5
 
 //rover delay...
-#define INIT_DELAY_CYCLES    200
+#define INIT_DELAY_CYCLES    10
 
 //setup inputs/outputs for the rover
 //link interrupt routines for encoders
