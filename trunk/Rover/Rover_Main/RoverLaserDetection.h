@@ -30,8 +30,8 @@
 
 #define DETECTION_LOW           80 //was 60
 #define DETECTION_HIGH          500 //was 500
-#define AMBIENT_LIGHT_LIMIT_POS 50  //False alarms all the way down to 40
-#define AMBIENT_LIGHT_LIMIT_NEG 50  //False alarms all the way down to 40
+#define AMBIENT_LIGHT_LIMIT_POS 100  //False alarms all the way down to 40
+#define AMBIENT_LIGHT_LIMIT_NEG 100  //False alarms all the way down to 40
 #define AMBIENT_DETECTION_LIMIT_NEG 20  //False alarms all the way down to 20
 #define HIT_TIME                5  //was 10
   
