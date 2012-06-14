@@ -1028,7 +1028,8 @@ void CSocketComm::Run()
 		//Type
 		sprintf(temp,"Waiting To Read Type\r\n");
 		AppendMessage(temp);
-        dwBytes3 = ReadComm(type, sizeof(unsigned char), dwTimeout);
+        dwBytes3 = ReadComm(lpData, sizeof(unsigned char), dwTimeout);
+		type = lpData[0];
 		sprintf(temp,"Read Type = %d \r\n",type);
 		AppendMessage(temp);
 		

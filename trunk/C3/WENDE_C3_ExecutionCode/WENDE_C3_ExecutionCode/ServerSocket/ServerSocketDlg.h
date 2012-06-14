@@ -15,12 +15,7 @@
 #include "PictureCtrl.h"
 #include "ShmStructs.h"
 #include <string>
-#ifndef LASER_USE_PROTOBUF
 #include "LaserStatus.h"
-#else
-#include "laserMsgs.pb.h"
-using namespace laserMsgs;
-#endif
 
 using std::string;
 using namespace cameraMsgs;
@@ -80,11 +75,7 @@ protected:
 public:
 	CButton m_statusLaserOnCtrl;
 	cameraMsgs::systemStatus m_CameraStatus;
-#ifndef LASER_USE_PROTOBUF
 	LASER_SYSTEM_STATUS m_LaserStatus;
-#else
-	laserMsgs::systemStatus m_LaserStatus;
-#endif
 	afx_msg void OnBnClickedCameraStatusDown();
 	afx_msg void OnBnClickedCameraStatusReady();
 	afx_msg void OnBnClickedCameraStatusOperational();

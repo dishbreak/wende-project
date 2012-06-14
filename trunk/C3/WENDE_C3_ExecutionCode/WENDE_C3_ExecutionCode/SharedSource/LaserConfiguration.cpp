@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "LaserCommand.h"
+#include "LaserConfiguration.h"
 #include "Utilties.h"
 
 CLaserConfiguration::CLaserConfiguration(void)
@@ -18,28 +18,28 @@ CLaserConfiguration::~CLaserConfiguration(void)
 void CLaserConfiguration::BytesToStatus( BYTE *bytes)
 {
 	int currLoc = 0;
-	LaserConfiguration.PWM_AZ.MIN = CUtilities::BytesToInt(&bytes[currLoc]);
+	LaserConfiguration.PWM_AZ.MIN = ntohl(CUtilities::BytesToInt(&bytes[currLoc]));
 	currLoc += SIZE_OF_INT;
-	LaserConfiguration.PWM_AZ.MIX = CUtilities::BytesToInt(&bytes[currLoc]);
+	LaserConfiguration.PWM_AZ.MAX = ntohl(CUtilities::BytesToInt(&bytes[currLoc]));
 	currLoc += SIZE_OF_INT;
-	LaserConfiguration.PWM_EL.MIN = CUtilities::BytesToInt(&bytes[currLoc]);
+	LaserConfiguration.PWM_EL.MIN = ntohl(CUtilities::BytesToInt(&bytes[currLoc]));
 	currLoc += SIZE_OF_INT;
-	LaserConfiguration.PWM_EL.MIX = CUtilities::BytesToInt(&bytes[currLoc]);
+	LaserConfiguration.PWM_EL.MAX = ntohl(CUtilities::BytesToInt(&bytes[currLoc]));
 	currLoc += SIZE_OF_INT;
-	LaserConfiguration.Frequency = bytes[currLoc];
+	LaserConfiguration.Frequency  = ntohl(CUtilities::BytesToInt(&bytes[currLoc]));
 }
 
 BYTE* CLaserConfiguration::StatusToBytes()
 {
 	int currLoc = 0;
-	CUtilities::IntToBytes(&msgBytes[currLoc],LaserConfiguration.PWM_AZ.MIN);
+	CUtilities::IntToBytes(&msgBytes[currLoc],htonl(LaserConfiguration.PWM_AZ.MIN));
 	currLoc += SIZE_OF_INT;
-	CUtilities::IntToBytes(&msgBytes[currLoc],LaserConfiguration.PWM_AZ.MAX);
+	CUtilities::IntToBytes(&msgBytes[currLoc],htonl(LaserConfiguration.PWM_AZ.MAX));
 	currLoc += SIZE_OF_INT;
-	CUtilities::IntToBytes(&msgBytes[currLoc],LaserConfiguration.PWM_EL.MIN);
+	CUtilities::IntToBytes(&msgBytes[currLoc],htonl(LaserConfiguration.PWM_EL.MIN));
 	currLoc += SIZE_OF_INT;
-	CUtilities::IntToBytes(&msgBytes[currLoc],LaserConfiguration.PWM_EL.MAX);
+	CUtilities::IntToBytes(&msgBytes[currLoc],htonl(LaserConfiguration.PWM_EL.MAX));
 	currLoc += SIZE_OF_INT;
-	msgBytes[currLoc] = LaserConfiguration.Frequency;
+	CUtilities::IntToBytes(&msgBytes[currLoc],htonl(LaserConfiguration.Frequency));
 	return msgBytes;
 }

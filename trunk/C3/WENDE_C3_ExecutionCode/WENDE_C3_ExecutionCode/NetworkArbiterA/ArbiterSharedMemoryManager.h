@@ -17,12 +17,7 @@
 
 #include <string>
 
-#ifndef LASER_USE_PROTOBUF
 #include "LaserStatus.h"
-#else
-#include "laserMsgs.pb.h"
-using namespace laserMsgs;
-#endif
 ///////////////////////////////////////////////////
 // google protobuf namespace
 ///////////////////////////////////////////////////
@@ -77,11 +72,7 @@ private:
 	// recreates the image so that it can be consumed by GUI
 	string RecreateImage(cameraImage *im);
 	// prepares the debug string
-	#ifndef LASER_USE_PROTOBUF
 	int DecodeLaserStatusMessage_DEBUG(CLaserStatus *ss, char* temp);
-	#else
-	int DecodeLaserStatusMessage_DEBUG(laserStatus *ss, char* temp);
-	#endif
 	//DECODE THE STATUS
 	string DecodeStatus(int status);
 	// get start time 

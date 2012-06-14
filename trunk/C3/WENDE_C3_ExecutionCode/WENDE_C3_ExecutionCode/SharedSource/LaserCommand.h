@@ -4,7 +4,7 @@ typedef struct
 {
 	int					PWM_AZ;
 	int					PWM_EL;
-	BYTE				isLaserOn;
+	int  				IsLaserOn;
 } LASER_COMMAND_STRUCT;
 
 class CLaserCommand
@@ -19,7 +19,7 @@ class CLaserCommand
 
 	public:
 		// data
-		LASER_COMMAND_STRUCT c;
+		LASER_COMMAND_STRUCT LaserCommand;
 		// This function is used by the c3 team to send
 		// command to the laser
 		void  BytesToStatus( BYTE *bytes);

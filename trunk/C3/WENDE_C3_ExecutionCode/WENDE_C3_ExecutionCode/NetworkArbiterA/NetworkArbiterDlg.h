@@ -67,6 +67,7 @@ public:
 	CPictureCtrl m_picCtrl;
 
 	afx_msg void OnBnClickedC3LaserStatus();
+	void C3LaserStatus();
 	afx_msg void OnBnClickedLaserOnOff();
 	CButton m_LaserOnOff;
 	CEdit m_LaserPWMAz;
@@ -75,4 +76,11 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	CNetworkMonitor m_cNetworkMonitor;
+	afx_msg void OnBnClickedC3LaserStatus2();
+	CEdit m_LaserPwmMin;
+	CEdit m_LaserPwmMax;
+	CEdit m_LaserFreq;
+	afx_msg void OnBnClickedC3LaserStatus3();
+	HANDLE m_timerHandleLaserCommand;
+	CButton m_sendCont;
 };
