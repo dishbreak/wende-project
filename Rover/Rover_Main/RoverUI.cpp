@@ -16,9 +16,7 @@ boolean RoverUIRoutines()
   switch(uiState)
   {
     case UI_INIT_STATE:
-      //read the rover mode
-      roverMode = readRoverMode();
-      
+
       //reset wait
       RoverWait(true);
       uiState = UI_WAIT_STATE;
@@ -36,7 +34,8 @@ boolean RoverUIRoutines()
       
       //in case arduino does not properly handle a reset
       //with static variables...
-      
+      //read the rover mode
+      roverMode = readRoverMode();      
       
       break;
   }
@@ -61,6 +60,7 @@ boolean RoverWait(boolean reset)
   else if(waitCounter > 0)
   {
     waitCounter--;
+    delay(1);
   }
   return (waitCounter == 0);
 }

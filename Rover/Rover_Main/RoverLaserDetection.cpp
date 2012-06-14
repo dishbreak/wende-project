@@ -149,7 +149,8 @@ boolean DetectionProcessing()
         {
           
           //Serial.println("--READJUST HIGH--");
-          /*Serial.print("Values (Lighting Diff - Detection Diff): ");
+          /*
+          Serial.print("Values (Lighting Diff - Detection Diff): ");
           Serial.print(lighting_difference);
           Serial.print(" - ");
           Serial.print(curr_detector_value - historic_detector_value);
@@ -158,6 +159,7 @@ boolean DetectionProcessing()
           Serial.print(" - ");
           Serial.println(curr_detector_value);
           */
+          
           historic_light_value = curr_light_value;
           historic_detector_value = curr_detector_value;
         }
