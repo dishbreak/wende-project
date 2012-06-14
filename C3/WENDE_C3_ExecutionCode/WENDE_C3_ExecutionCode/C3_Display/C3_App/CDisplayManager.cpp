@@ -18,7 +18,6 @@ CDisplayManager::CDisplayManager() {
 	m_nLaserComStatus = 0;
 	m_nLaserStatus = 0;
 	m_OverStatus = 0;
-
 }
 ////////////////////////////////////////////////////////////////////////
 // Description: Returns a pointer to the CDisplayManager. If there is no
@@ -218,6 +217,7 @@ int CDisplayManager::Update_Overall_Status(void)
 			}
 			m_OverStatus = 0;
 		}
+		Update_Trial_Control_Button(m_OverStatus);
 	}
 	catch (...)
 	{
@@ -505,3 +505,17 @@ int CDisplayManager::Update_Calibration_Reply(int nAlertID) {
 	return 0;
 }
 
+int CDisplayManager::Update_Trial_Control_Button(int OverStatus) {
+	bool trialControlState;
+	switch(OverStatus)
+	{
+	case 0: //System offline
+		trialControlState = false;
+		break;
+	case 1: //System online
+		trialControlState = true;
+		break;
+	}
+	C3_User_Interface::Instance->Update_Trial_Control_Button(trialControlState);
+	return 0;
+}

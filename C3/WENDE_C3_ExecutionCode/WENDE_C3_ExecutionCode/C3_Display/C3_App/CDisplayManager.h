@@ -24,6 +24,7 @@ public:
 	int Update_Live_Video_Feed(String ^ sImagePath, __int64 nStartTime);
 	int Update_Calibration_Reply(int nAlertID);
 	void Update_Notification_Panel(int nAlertID);
+	int Update_Trial_Control_Button(int OverStatus);
 	void Disable_All_Controls(void);
 
 	// Accessor methods to determine overall status

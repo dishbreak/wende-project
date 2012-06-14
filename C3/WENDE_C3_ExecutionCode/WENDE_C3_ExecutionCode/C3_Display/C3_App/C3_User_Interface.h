@@ -53,6 +53,7 @@ namespace C3_App {
 		delegate void Delegate_Update_Laser_Activity_Indicator(System::Drawing::Image^ bmLaserActivity);
 		delegate void Delegate_Update_Rover_Acquired_Indicator(System::Drawing::Image^ bmRoverAcquired);
 		delegate void Delegate_Update_Calibration_Button(System::String ^ ButtonText, bool ButtonIsActive);
+		delegate void Delegate_Update_Trial_Control_Button(bool ButtonIsActive);
 
 
 	public:
@@ -65,6 +66,7 @@ namespace C3_App {
 			m_monitor = monitor;
 
 			operationalState  = C3_Alert_Types::C3_DISPLAY_STARTUP;
+			TrialControlButtonActive = false;
 			actionLiveVideo = gcnew Delegate_Update_Live_Feed_Panel(this, &C3_User_Interface::Worker_Update_Live_Feed_Panel);
 			//
 			//TODO: Add the constructor code here
@@ -162,6 +164,7 @@ namespace C3_App {
 	private: System::Windows::Forms::Label^  label8;
 	private: System::Windows::Forms::Button^  CalibrateButton;
 	private: C3_Alert_Types operationalState; 
+			 bool TrialControlButtonActive;
 
 			 //private: System::Windows::Forms::SaveFileDialog^  dlgExportDTI; //new this on button click.
 
@@ -203,7 +206,7 @@ namespace C3_App {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->pPPIPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->pPPI = (gcnew System::Windows::Forms::Panel());
@@ -358,16 +361,16 @@ namespace C3_App {
 				this->Column3});
 			this->dgvDtiLog->Location = System::Drawing::Point(3, 3);
 			this->dgvDtiLog->Name = L"dgvDtiLog";
-			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle2->NullValue = L"1";
-			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dgvDtiLog->RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle1->NullValue = L"1";
+			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvDtiLog->RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this->dgvDtiLog->RowTemplate->Height = 24;
 			this->dgvDtiLog->ShowEditingIcon = false;
 			this->dgvDtiLog->ShowRowErrors = false;
@@ -464,13 +467,14 @@ namespace C3_App {
 			// 
 			// trialControlButton
 			// 
+			this->trialControlButton->Enabled = false;
 			this->trialControlButton->Location = System::Drawing::Point(227, 232);
 			this->trialControlButton->Name = L"trialControlButton";
 			this->trialControlButton->Size = System::Drawing::Size(115, 29);
 			this->trialControlButton->TabIndex = 10;
 			this->trialControlButton->Text = L"Start Trial";
 			this->trialControlButton->UseVisualStyleBackColor = true;
-			this->trialControlButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::button1_Click);
+			this->trialControlButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::trialControlButton_Click);
 			// 
 			// label8
 			// 
@@ -1012,6 +1016,24 @@ namespace C3_App {
 				 }
 			 }
 
+	public: void Update_Trial_Control_Button(bool ButtonIsActive) {
+				Delegate_Update_Trial_Control_Button ^ action =
+					gcnew Delegate_Update_Trial_Control_Button(this, &C3_User_Interface::Worker_Update_Trial_Control_Button);
+				TrialControlButtonActive = ButtonIsActive;
+				//Find out current alert state
+				//If we're not in a trial, go ahead and touch the button.
+				if (operationalState == C3_Alert_Types::C3_DISPLAY_STARTUP || 
+					operationalState == C3_Alert_Types::POC_FINISHED)
+				{
+					this->BeginInvoke(action, ButtonIsActive);
+				}
+				//otherwise, don't touch the button. We'll check for TrialControlButtonActive when the trial ends.
+			}
+
+	private: void Worker_Update_Trial_Control_Button(bool ButtonIsActive) {
+				 this->trialControlButton->Enabled = ButtonIsActive;
+			 }
+
 	private: System::Void flowLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 				 try
 				 {
@@ -1172,19 +1194,33 @@ namespace C3_App {
 			 }
 private: System::Void dgvDtiLog_CellContentClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
 		 }
-	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void trialControlButton_Click(System::Object^  sender, System::EventArgs^  e) {
 				 try
 				 {
-					operationalState = C3_Alert_Types::POC_STARTED;
-					C3ProcessingStates::Instance().Set_Current_Alert(operationalState);
-					this->trialControlButton->Text = "Stop";
-					m_monitor->StartProcessing();
+					 if ((operationalState == C3_Alert_Types::POC_FINISHED) || 
+						 (operationalState == C3_Alert_Types::C3_DISPLAY_STARTUP)) 
+					 {
+						 operationalState = C3_Alert_Types::POC_STARTED;
+						 C3ProcessingStates::Instance().Set_Current_Alert(operationalState);
+						 this->CalibrateButton->Enabled = false;
+						 this->trialControlButton->Text = "Stop Trial";
+					 }
+					 else if (operationalState == C3_Alert_Types::POC_STARTED ||
+						 operationalState == C3_Alert_Types::POC_ENTERED)
+					 {
+						 operationalState = C3_Alert_Types::POC_FINISHED;
+						 C3ProcessingStates::Instance().Set_Current_Alert(operationalState);
+						 this->CalibrateButton->Enabled = true;
+						 this->trialControlButton->Text = "Start Trial";
+						 this->trialControlButton->Enabled = TrialControlButtonActive; //in case the sytem goes offline during a trial.
+					 }
+					 m_monitor->StartProcessing();
 				 }
 				 catch(...)
 				 {
 					 MessageBoxA(NULL,"calibrateButton_Click","error",MB_OKCANCEL);
 				 }
-		 }
+			 }
 };
 }
 
