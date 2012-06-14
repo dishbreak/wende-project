@@ -16,16 +16,17 @@
 #define SCK 13
 #define LED 4
 #define LASER_PIN 2
-#define AZ_SERVO_PIN 8
-#define EL_SERVO_PIN 9
+#define AZ_SERVO_PIN 5
+#define EL_SERVO_PIN 6
 
 // Message Types
-#define COMMAND_MSG 1
-#define CONFIG_MSG 2
+#define COMMAND_MSG 4
+#define HEARTBEAT_MSG 5
+#define CONFIG_MSG 6
 
 // Lengths
-#define COMMAND_MSG_LENGTH 9
-#define CONFIG_MSG_LENGTH 17
+#define COMMAND_MSG_LENGTH 12
+#define CONFIG_MSG_LENGTH 20
 
 // Error types
 #define AZ_ERROR 0b00000001
@@ -51,9 +52,9 @@ bool heartbeatReady = false;
 // Error flag
 char return_error = 0;
 
-// Interval between heartbeats (in microseconds)
+// Interval between heartbeats (in milliseconds)
 // Use Timer1.setPeriod(period) to update this value
-long heartbeatInterval = 5000000;
+int heartbeatInterval = 5000;
 
 // Servos
 Servo el_servo; 
@@ -79,7 +80,7 @@ void process_command_message(char command_msg_data[COMMAND_MSG_LENGTH])
   el_control = ((int)command_msg_data[6] * 256) + command_msg_data[7];
 
   // Process laser control
-  laser_control = command_msg_data[8]; 
+  laser_control = command_msg_data[11]; 
   
   // Check calues are valid and write them if they are
   if ((az_control >= AZ_MIN_PWM) && (az_control <= AZ_MAX_PWM))
@@ -115,14 +116,15 @@ void process_config_message(char config_msg_data[CONFIG_MSG_LENGTH-1])
     temp_min_az = ((int)config_msg_data[6] * 256) + config_msg_data[7];
     temp_min_az = ((int)config_msg_data[10] * 256) + config_msg_data[11];
     temp_min_az = ((int)config_msg_data[14] * 256) + config_msg_data[15];
-    temp_heartbeat = config_msg_data[16];
+    temp_heartbeat = ((int)config_msg_data[18] * 256) + config_msg_data[19];
 
   // Set values
     AZ_MIN_PWM = temp_min_az;
 	AZ_MAX_PWM = temp_max_az;
 	EL_MIN_PWM = temp_min_el;
 	EL_MAX_PWM = temp_max_el;
-    heartbeatInterval = (long)temp_heartbeat * 1000000;
+    heartbeatInterval = temp_heartbeat;
+	Timer1.setPeriod(heartbeatInterval * 1000);
 
 }
 
@@ -150,7 +152,7 @@ void setup()
   digitalWrite(CS,HIGH); //disable device 
 
   // Initialize timer1
-  Timer1.initialize(heartbeatInterval);
+  Timer1.initialize(heartbeatInterval*1000);
   Timer1.attachInterrupt(setHeartbeatStatus);
 
   // Define the LED pin as an output
@@ -254,8 +256,8 @@ void loop()
 	  return_string[2] = 0;
 	  return_string[3] = 17;
 	  
-	  // Type - TBD STILL
-	  return_string[4] = 4;
+	  // Type
+	  return_string[4] = HEARTBEAT_MSG;
 	  
 	  // Azimuth value
 	  return_string[5] = 0;
