@@ -41,9 +41,12 @@ typedef double              DOUBLE;
 #define SHM_MAX_IAMGE_CHANNELS	3			// Max image channels 
 // Max image size
 #define SHM_MAX_IMAGE_SIZE		SHM_MAX_IMAGE_WIDTH*SHM_MAX_IMAGE_HEIGHT*SHM_MAX_IAMGE_CHANNELS	
-
+//wende messages types
 typedef enum 
 {
+	CAMERA_STATUS = 0,
+	CAMERA_TRACK  = 1,
+	CAMERA_IMAGE  = 2,
 	LASER_COMMAND = 3,
 	LASER_STATUS  = 4,
 	LASER_CONFIG  = 5
@@ -111,7 +114,7 @@ typedef union
 /////////////////////////////////////////////////////////////////////////////////
 typedef union
 {
-	struct
+	struct 
 	{
 		DOUBLE		 X;			// X location (offset) 
 		DOUBLE		 Y;			// Y location (offset)
@@ -120,6 +123,11 @@ typedef union
 	{
 		DOUBLE		 AZ;		// AZ Location
 		DOUBLE		 EL;		// EL Location
+	};
+	struct
+	{
+		DOUBLE		 P1;		// P1 Location
+		DOUBLE		 P2;		// P2 Location
 	};
 } C3_TRACK_POINT_DOUBLE;
 /////////////////////////////////////////////////////////////////////////////////

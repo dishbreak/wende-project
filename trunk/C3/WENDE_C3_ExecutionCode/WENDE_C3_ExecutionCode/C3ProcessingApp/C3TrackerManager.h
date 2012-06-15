@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//          File: C3Tracker.h
+//          File: C3TrackerManager.h
 //    Created By: Benjamin K. Heiner
 // Creation Date: 3-18-2012
 //
@@ -28,20 +28,25 @@ using std::map;
 using std::pair;
 using std::vector;
 using std::numeric_limits;
+using std::make_pair;
+using std::min;
+using std::max;
 
 typedef struct C3_CORRELATE
 {
 	C3_CORRELATE()
 	{
-		dist		= 0.0; 
-		assignTrackIndex = -1;
+		dist			 = 0.0;	// initlize to 0 distance 
+		assignTrackIndex = -1;	// assign a tracker
+		isJustCreated    = true;// set to just created
 	}
 
-	double dist; 
-	int    assignTrackIndex;
+	double dist;				// the distance from the tracker point
+	int    assignTrackIndex;	// the assigned tracker location
+	bool   isJustCreated;		// flag for just created trackers
 } C3_CORRELATE_struct;
 
-class C3Tracker
+class C3TrackerManager
 {
 	private:
 		// Array of existing tracks
@@ -54,23 +59,24 @@ class C3Tracker
 		double			 m_maxDistance;							// (m)
 
 	public:
-		C3Tracker(void);
-		~C3Tracker(void);
+		C3TrackerManager(void);
+		~C3TrackerManager(void);
 
 	public:
-		void UpdateTracks(const vector<C3_TRACK_POINT> cameraRoverPositions, const double time);
-		double C3Tracker::distanceFromTo(C3_TRACK_POINT_DOUBLE meas1,C3_TRACK_POINT_DOUBLE meas2);
-
+		// update tracks with input points
+		void UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, C3_TRACK_POINT_DOUBLE cameraLaserPosition, const double time);
+		// clear the tracks
+		void ClearTracks();
 
 	private:
 		// determine if a point has already been assigned to the tracker 
 		bool isInMapping(const map<unsigned int, C3_CORRELATE_struct> *position2track, 
 			             const unsigned int trackerNum);
 		// Creates a new tracker
-		unsigned int AddTrack(const C3_TRACK_POINT cameraRoverPosition, 
-			                  const double time);
+		unsigned int AddTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
+			                  const int time);
 		// Correlates a point with a tracker
 		void correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
-			                             const vector<C3_TRACK_POINT> cameraRoverPositions, 
-										 const double time);
+			                             const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, 
+										 const int time);
 };

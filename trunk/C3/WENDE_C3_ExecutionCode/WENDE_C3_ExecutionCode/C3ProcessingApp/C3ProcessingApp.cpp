@@ -1,9 +1,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 // C3ProcessingApp.cpp : Defines the entry point for the console application.
 /////////////////////////////////////////////////////////////////////////////////
-
+/////////////////////////////////////////////////////////////////////////////////
+// Include directives
+/////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
-
 #include "CSharedStruct.h"
 #include "ShmStructs.h"
 #include <time.h>
@@ -13,18 +14,19 @@
 #include <process.h>
 #include "C3Configuration.h"
 #include "C3FilterClass.h"
-#include "C3Track.h"
+#include "C3TrackerManager.h"
 #include <vector>
 #include <conio.h>
 #include <stdio.h>
 #include "C3NotificationHandler.h"
-
+/////////////////////////////////////////////////////////////////////////////////
+// Using directives
+/////////////////////////////////////////////////////////////////////////////////
 using std::vector;
 using std::cout;
 using std::endl;
 using std::ifstream;
 using std::string;
-
 /////////////////////////////////////////////////////////////////////////////////
 // TEST functions
 /////////////////////////////////////////////////////////////////////////////////
@@ -38,6 +40,7 @@ C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE*);
 C3_TRACK_POINT_DOUBLE getCalibrationPointCommand();
 void updateCalibrationState();
 UINT WINAPI AlgorithmThread (LPVOID pParam);
+void WriteDataToScreen(CAMERA_TRACK_MSG_SHM	inData, int cameraTrackMessageCount);
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
 /////////////////////////////////////////////////////////////////////////////////
@@ -57,34 +60,38 @@ int _tmain(int argc, _TCHAR* argv[])
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup local variables
 	/////////////////////////////////////////////////////////////////////////////////
-	static char timeStr[256];								// Temporary time string
-	static int cameraTrackMessageCount = 0;					// static packet count...
 	bool readMessageSuccess = false;						// determines that the 
 															// message was recived 
 															// correctly
-	bool sendMessageSuccess = false;
-	C3_TRACK_POINT_DOUBLE commandOut;
-	C3_TRACK_POINT_DOUBLE laserOrigin;
-	C3_TRACK_POINT_DOUBLE testPoints[4];
-	int waitMessages = 0;
-	int calIndex = 0;
-	CAMERA_TRACK_MSG_SHM					 inData;		  // temporary holder of the current data 
+	bool sendMessageSuccess = false;						// determines if we send a message
+	static int cameraTrackMessageCount = 0;					// static packet count...
+	
+	int waitMessages = 0;									// the number of messages that we wait until using a measurment
+	int calIndex = 0;										// number of points
+	CAMERA_TRACK_MSG_SHM					 inData;		// temporary holder of the current data 
+	vector<C3_TRACK_POINT_DOUBLE>			 roverPoints;	// the rover points
+	C3_TRACK_POINT_DOUBLE					 testPoints[4];	// test points for calibration
+	C3_TRACK_POINT_DOUBLE					 commandOut;	// the gimbal command out
+	C3_TRACK_POINT_DOUBLE					 laserOrigin;	// the laser origion setup from the calibration
+	C3_TRACK_POINT_DOUBLE					 roverPoint;	// temp contain for rover points
+	C3_TRACK_POINT_DOUBLE					 laserPoint;	// temp contain for rover points
+	C3TrackerManager						 tm;			// the tracker manager
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup the shared memory
 	/////////////////////////////////////////////////////////////////////////////////
-	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;// shared memory data struct wrapper
-	m_CameraTracks.Acquire(C3Configuration::Instance().SHM_C3_CAMERA_TRACK,			// shared mem file name
-						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_MUTEX,		// shared mem mutex name
-						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_EVENT1,	// shared mem event name
-						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_EVENT2);	// shared mem event name
+	CSharedStruct<CAMERA_TRACK_MSG_SHM>		 m_CameraTracks;									// shared memory data struct wrapper
+	m_CameraTracks.Acquire(C3Configuration::Instance().SHM_C3_CAMERA_TRACK,						// shared mem file name
+						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_MUTEX,				// shared mem mutex name
+						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_EVENT1,				// shared mem event name
+						   C3Configuration::Instance().SHM_C3_CAMERA_TRACK_EVENT2);				// shared mem event name
 	if (m_CameraTracks.isServer()) m_CameraTracks->ShmInfo.Clients = 0;
 	else m_CameraTracks->ShmInfo.Clients++;
 	
 	CSharedStruct<LASER_POINT_DIRECTION_SHM> m_LaserCommand;
-	m_LaserCommand.Acquire(C3Configuration::Instance().SHM_C3_LASER_POINTING,			// shared mem file name
-						   C3Configuration::Instance().SHM_C3_LASER_POINTING_MUTEX,	// shared mem mutex name
-						   C3Configuration::Instance().SHM_C3_LASER_POINTING_EVENT1,	// shared mem event name
-						   C3Configuration::Instance().SHM_C3_LASER_POINTING_EVENT2);	// shared mem event name
+	m_LaserCommand.Acquire(C3Configuration::Instance().SHM_C3_LASER_POINTING,					// shared mem file name
+						   C3Configuration::Instance().SHM_C3_LASER_POINTING_MUTEX,				// shared mem mutex name
+						   C3Configuration::Instance().SHM_C3_LASER_POINTING_EVENT1,			// shared mem event name
+						   C3Configuration::Instance().SHM_C3_LASER_POINTING_EVENT2);			// shared mem event name
 	if (m_LaserCommand.isServer()) m_LaserCommand->ShmInfo.Clients = 0;
 	else m_LaserCommand->ShmInfo.Clients++;	
 
@@ -103,7 +110,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	hThread1 = (HANDLE)_beginthreadex(NULL,				      // Security attributes
 										0,					  // stack
 									  AlgorithmThread,		  // Thread proc
-									  &m_DisplayNotification,	  // Thread param
+									  &m_DisplayNotification, // Thread param
 									  CREATE_SUSPENDED,		  // creation mode
 									  &uiThreadId1);  	      // Thread ID
 
@@ -118,9 +125,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	while(1)
 	{
 		// reset the success flag
-		readMessageSuccess = false;
-		sendMessageSuccess = false;
-
+		readMessageSuccess = false;				// set the read flag to false
+		sendMessageSuccess = false;				// set the write flag to false
+		// Remove the previous points
+		roverPoints.clear();					// clear points
 		/////////////////////////////////////////////////////////////////////////////////
 		// Get Input messages
 		/////////////////////////////////////////////////////////////////////////////////
@@ -139,24 +147,17 @@ int _tmain(int argc, _TCHAR* argv[])
 				// release the mutex
 				m_CameraTracks.ReleaseMutex();
 
+				// write data to the screen
+				WriteDataToScreen(inData,cameraTrackMessageCount);
+
 				// Read the data
-				printf("+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
-				printf("|-->Laser  = %d   \r\n",inData.LaserOnOf);
-				time_t now = inData.Time;
-				strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
-				printf("|-->Time   = %s   \r\n",timeStr);
-				printf("|-->Status = %d   \r\n",inData.Status);
-				printf("|-->Tracks = %d   \r\n",inData.ValidTracks);
 				for (unsigned int ii = 0; ii < inData.ValidTracks; ii++)
 				{
-					printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Tracks[ii].X,inData.Tracks[ii].Y);
+					roverPoint.X = inData.Tracks[ii].X;
+					roverPoint.Y = inData.Tracks[ii].Y;
+					roverPoints.push_back(roverPoint);
 				}
-				printf("|-->Lasr = %d   \r\n",inData.ValidLasers);
-				for (unsigned int ii = 0; ii < inData.ValidLasers; ii++)
-				{
-					printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Lasers[ii].X,inData.Lasers[ii].Y);
-				}
-				printf("\r\n\r\n");
+				// set the read message to true
 				readMessageSuccess = true;
 			}
 			else{ /* unable to get mutex??? */}
@@ -236,19 +237,15 @@ int _tmain(int argc, _TCHAR* argv[])
 			////////////////////////
 			else
 			{
-				if (inData.ValidTracks !=0)
+				if (inData.ValidTracks != 0)
 				{
-					// TODO FIX THIS
-					C3FilterClass  kalman;
-					C3_TRACK_POINT_DOUBLE testPoint;
-
-					testPoint.X = inData.Tracks[0].X;
-					testPoint.Y = inData.Tracks[0].Y;
-					kalman.FilterInput(testPoint,0.250);
-					sendMessageSuccess = true;
+					tm.UpdateTracks(roverPoints, laserPoint, 0.250);
 				}
 			}
 
+			////////////////////////
+			// Send notifications
+			////////////////////////
 			if(m_DisplayNotification.isCreated() && 
 				m_DisplayNotification.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
@@ -269,13 +266,13 @@ int _tmain(int argc, _TCHAR* argv[])
 			m_LaserCommand.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 		{
 			// set the output data
-			m_LaserCommand->LaserOnOff   = false;
-			m_LaserCommand->PacketNumber = cameraTrackMessageCount;
-			m_LaserCommand->ProcessID    = m_LaserCommand.GetProcessID();
-			m_LaserCommand->Time		 = inData.Time;
-			m_LaserCommand->startTime    = m_CameraTracks->startTime;
-			m_LaserCommand->PointLocation.EL = commandOut.EL; //TODO FIX THIS VALUE TO ACTUAL
-			m_LaserCommand->PointLocation.AZ = commandOut.AZ; //TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->LaserOnOff   = false;							//TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->PacketNumber = cameraTrackMessageCount;			//TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->ProcessID    = m_LaserCommand.GetProcessID();	//TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->Time		 = inData.Time;						//TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->startTime    = m_CameraTracks->startTime;		//TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->PointLocation.EL = commandOut.EL;				//TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->PointLocation.AZ = commandOut.AZ;				//TODO FIX THIS VALUE TO ACTUAL
 
 			// Set the event to let client know
 			m_LaserCommand.SetEventServer();
@@ -401,6 +398,28 @@ UINT WINAPI AlgorithmThread (LPVOID pParam)
 	_endthreadex( 0 );
     
 	return 1L;
+}
+void WriteDataToScreen(CAMERA_TRACK_MSG_SHM	inData, int cameraTrackMessageCount)
+{
+	char timeStr[256];								// Temporary time string
+	// Read the data
+	printf("+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
+	printf("|-->Laser  = %d   \r\n",inData.LaserOnOf);
+	time_t now = inData.Time;
+	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
+	printf("|-->Time   = %s   \r\n",timeStr);
+	printf("|-->Status = %d   \r\n",inData.Status);
+	printf("|-->Tracks = %d   \r\n",inData.ValidTracks);
+	for (unsigned int ii = 0; ii < inData.ValidTracks; ii++)
+	{
+		printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Tracks[ii].X,inData.Tracks[ii].Y);
+	}
+	printf("|-->Lasr = %d   \r\n",inData.ValidLasers);
+	for (unsigned int ii = 0; ii < inData.ValidLasers; ii++)
+	{
+		printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Lasers[ii].X,inData.Lasers[ii].Y);
+	}
+	printf("\r\n\r\n");
 }
 /////////////////////////////////////////////////////////////////////////////////
 // TEST functions

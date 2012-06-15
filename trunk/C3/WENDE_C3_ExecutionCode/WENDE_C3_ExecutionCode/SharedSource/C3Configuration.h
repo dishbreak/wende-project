@@ -56,7 +56,7 @@ public:
 	string SHM_C3_CAMERA_IMAGE_EVENT1;
 	string SHM_C3_CAMERA_IMAGE_EVENT2;
 	//Process interface SHM
-	string SHM_C3_PROCESSING_STATUS;			// Processing IMAGE SHM File Name
+	string SHM_C3_PROCESSING_STATUS;				// Processing IMAGE SHM File Name
 	string SHM_C3_PROCESSING_STATUS_MUTEX;			// Processing IMAGE MUTEX File Name
 	string SHM_C3_PROCESSING_STATUS_EVENT1;			// Processing IMAGE Event1 File Name
 	string SHM_C3_PROCESSING_STATUS_EVENT2;			// Processing IMAGE Event2 File Name
@@ -72,7 +72,7 @@ public:
 	// DEBUG ITEMS
 	bool isShowDebugPannel;							// Flag to determine if we show
 	// DEBUG start apps
-	string driverStartPath;
+	string driverStartPath;				
 	string processingStartPath;
 	string arbiterStartPath;
 };
