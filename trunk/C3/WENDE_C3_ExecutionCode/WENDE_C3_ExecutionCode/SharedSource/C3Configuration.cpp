@@ -69,7 +69,7 @@ C3Configuration::C3Configuration(void)
 		processingStartPath		= "C3ProcessingApp.exe";
 		arbiterStartPath		= "NetworkArbiter.exe";
 		// laser height
-		LASER_HEIGHT				= 1.524;//meters
+		LASER_HEIGHT				= 1.5;//meters
 		WriteXMLFile();
 	}
 }
