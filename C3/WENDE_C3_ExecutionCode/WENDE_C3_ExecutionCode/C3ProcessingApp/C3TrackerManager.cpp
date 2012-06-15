@@ -36,7 +36,7 @@ void C3TrackerManager::ClearTracks()
 // Purpose: this function handles the updates of the various trackes given the input
 //          time and rover points
 ///////////////////////////////////////////////////////////////////////////////////////
-void C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, C3_TRACK_POINT_DOUBLE cameraLaserPosition, const double time)
+C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, C3_TRACK_POINT_DOUBLE cameraLaserPosition, const int time)
 {
 	// variable for mapping positions to tracks
 	map<unsigned int, C3_CORRELATE_struct> position2track;
@@ -63,6 +63,7 @@ void C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRo
 	// iterator
 	std::map<unsigned int, C3_CORRELATE_struct>::iterator iter;
     
+	vector<C3_TRACK_POINT_DOUBLE> commands;
 	// loop through all items in the map..
     for (iter = position2track.begin(); iter != position2track.end(); iter++) 
 	{
@@ -71,9 +72,27 @@ void C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRo
 		if ((*iter).second.isJustCreated == false)
 		{
 			//Filter the points
-			m_tracks[iter->second.assignTrackIndex]->UpdateTrack(cameraRoverPositions[iter->first],cameraLaserPosition,time);
+			// TODO -- store the commands in a vector
+			commands.push_back(m_tracks[iter->second.assignTrackIndex]->UpdateTrack(cameraRoverPositions[iter->first],cameraLaserPosition,time));
 		}
 	}
+	// find the command to send out
+	// TODO find a better way based on the age of the tracker
+	bool found = false;
+	C3_TRACK_POINT_DOUBLE result;
+	
+	result.AZ = 0;
+	result.EL = 0;
+
+	for (unsigned int yy=0; yy < commands.size() && !found; yy++)
+	{
+		if (commands[yy].AZ != 0 && commands[yy].EL != 0)
+		{
+			found = true;
+			result = commands[yy];
+		}
+	}
+	return result;
 }
 // Correlates a point with a tracker
 void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 

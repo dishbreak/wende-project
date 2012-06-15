@@ -65,7 +65,7 @@ int _tmain(int argc, _TCHAR* argv[])
 															// correctly
 	bool sendMessageSuccess = false;						// determines if we send a message
 	static int cameraTrackMessageCount = 0;					// static packet count...
-	
+	bool laserOnOff = false;
 	int waitMessages = 0;									// the number of messages that we wait until using a measurment
 	int calIndex = 0;										// number of points
 	CAMERA_TRACK_MSG_SHM					 inData;		// temporary holder of the current data 
@@ -239,7 +239,18 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				if (inData.ValidTracks != 0)
 				{
-					tm.UpdateTracks(roverPoints, laserPoint, 0.250);
+					if (inData.ValidLasers != 0)
+					{
+						commandOut = tm.UpdateTracks(roverPoints, laserPoint, inData.Time);
+						// TODO ITEM VERIFY THE LASER MACROS
+						laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
+						commandOut.AZ = DEGREES_TO_TICKS(commandOut.AZ);
+						commandOut.EL = DEGREES_TO_TICKS(commandOut.EL);
+					}
+					else
+					{
+						// todo move 1 degree towards camera
+					}
 				}
 			}
 
@@ -266,13 +277,13 @@ int _tmain(int argc, _TCHAR* argv[])
 			m_LaserCommand.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 		{
 			// set the output data
-			m_LaserCommand->LaserOnOff   = false;							//TODO FIX THIS VALUE TO ACTUAL
-			m_LaserCommand->PacketNumber = cameraTrackMessageCount;			//TODO FIX THIS VALUE TO ACTUAL
-			m_LaserCommand->ProcessID    = m_LaserCommand.GetProcessID();	//TODO FIX THIS VALUE TO ACTUAL
-			m_LaserCommand->Time		 = inData.Time;						//TODO FIX THIS VALUE TO ACTUAL
-			m_LaserCommand->startTime    = m_CameraTracks->startTime;		//TODO FIX THIS VALUE TO ACTUAL
-			m_LaserCommand->PointLocation.EL = commandOut.EL;				//TODO FIX THIS VALUE TO ACTUAL
-			m_LaserCommand->PointLocation.AZ = commandOut.AZ;				//TODO FIX THIS VALUE TO ACTUAL
+			m_LaserCommand->LaserOnOff   = laserOnOff;							
+			m_LaserCommand->PacketNumber = cameraTrackMessageCount;			
+			m_LaserCommand->ProcessID    = m_LaserCommand.GetProcessID();	
+			m_LaserCommand->Time		 = inData.Time;						
+			m_LaserCommand->startTime    = m_CameraTracks->startTime;	
+			m_LaserCommand->PointLocation.EL = commandOut.EL;			
+			m_LaserCommand->PointLocation.AZ = commandOut.AZ;			
 
 			// Set the event to let client know
 			m_LaserCommand.SetEventServer();

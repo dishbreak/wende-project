@@ -101,11 +101,6 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		// TODO find camera/laser origin... FIX ... calibration items
 		double laserOrigin11       = -2.0;
 		double laserOrigin12       =  3.0;
-		double cameraOrigin11      =  1.0;
-		double cameraOrigin12	    = -2.0;
-		double playingFieldOrigin11 =  0.0;
-		double playingFieldOrigin12 =  0.0;
-
 		// Find Camera to Laser Translation and Rotation Parameters
 		//double cameraTheta = atan2(playingFieldOrigin11-cameraOrigin11,playingFieldOrigin12-cameraOrigin12);
 		//double laserTheta  = atan2(playingFieldOrigin11-laserOrigin11 ,playingFieldOrigin12-laserOrigin12 );
