@@ -250,6 +250,12 @@ int _tmain(int argc, _TCHAR* argv[])
 					else
 					{
 						// todo move 1 degree towards camera
+						double theta = M_PI - atan2(laserOrigin.Y,laserOrigin.X); // yea I used a constant included by cmath that goes to 20 decimal places to 1up you so what..wanna fight about it?
+						double EL = -cos(theta);
+						double AZ = sin(theta);
+						// TODO ITEM VERIFY THE LASER MACROS
+						commandOut.AZ = DEGREES_TO_TICKS(AZ);
+						commandOut.EL = DEGREES_TO_TICKS(EL);
 					}
 				}
 			}
@@ -281,7 +287,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			m_LaserCommand->PacketNumber = cameraTrackMessageCount;			
 			m_LaserCommand->ProcessID    = m_LaserCommand.GetProcessID();	
 			m_LaserCommand->Time		 = inData.Time;						
-			m_LaserCommand->startTime    = m_CameraTracks->startTime;	
+			m_LaserCommand->startTime    = inData.startTime;	
 			m_LaserCommand->PointLocation.EL = commandOut.EL;			
 			m_LaserCommand->PointLocation.AZ = commandOut.AZ;			
 
