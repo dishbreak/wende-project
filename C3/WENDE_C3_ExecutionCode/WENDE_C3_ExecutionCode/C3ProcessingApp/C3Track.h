@@ -54,7 +54,8 @@ class C3Track
 		// Filter and predict next location....
 		C3_TRACK_POINT_DOUBLE UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
 										  const C3_TRACK_POINT_DOUBLE cameraLaserPosition,
-										  const double time);
+										  const double time,
+										  const C3_TRACK_POINT_DOUBLE laserOrigin);
 
 		C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(int time);
 

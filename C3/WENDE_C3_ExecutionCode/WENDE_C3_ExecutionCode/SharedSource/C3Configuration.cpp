@@ -68,7 +68,8 @@ C3Configuration::C3Configuration(void)
 		driverStartPath			= "ServerSocket.exe";
 		processingStartPath		= "C3ProcessingApp.exe";
 		arbiterStartPath		= "NetworkArbiter.exe";
-		// TODO Add logic to check if file already exists
+		// laser height
+		LASER_HEIGHT				= 5;
 		WriteXMLFile();
 	}
 }
@@ -188,6 +189,13 @@ void C3Configuration::ReadXMLFile()
 			{
 				// Read the 2-State Kalman parameters
 				PROCESS_NOISE                = atoi(pElem->Attribute("PROCESS_NOISE"));
+			}
+			else { /* ERROR ???? */ }
+			pElem=hRoot.FirstChild("LASER_PARAMS").Element();
+			if (pElem)
+			{
+				// Read the 2-State Kalman parameters
+				LASER_HEIGHT                = atoi(pElem->Attribute("PROCESS_NOISE"));
 			}
 			else { /* ERROR ???? */ }
 			pElem=hRoot.FirstChild("ENVIROMENT").Element();
@@ -331,6 +339,10 @@ void C3Configuration::WriteXMLFile()
 	stPaths->SetAttribute("Arbiter", arbiterStartPath.c_str());
 	stPaths->SetAttribute("Processing", processingStartPath.c_str());
 	stPaths->SetAttribute("Driver", driverStartPath.c_str());
+
+	TiXmlElement * lParams = new TiXmlElement( "LASER_PARAMS" );  
+	root->LinkEndChild( lParams );  
+	lParams->SetAttribute("height", LASER_HEIGHT); // floating point attrib
 
 	doc.SaveFile( CfgFile.c_str() ); 
 }

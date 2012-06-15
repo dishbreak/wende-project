@@ -36,7 +36,10 @@ void C3TrackerManager::ClearTracks()
 // Purpose: this function handles the updates of the various trackes given the input
 //          time and rover points
 ///////////////////////////////////////////////////////////////////////////////////////
-C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, C3_TRACK_POINT_DOUBLE cameraLaserPosition, const int time)
+C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, 
+													 C3_TRACK_POINT_DOUBLE cameraLaserPosition, 
+													 const int time,
+													 const C3_TRACK_POINT_DOUBLE laserOrigin)
 {
 	// variable for mapping positions to tracks
 	map<unsigned int, C3_CORRELATE_struct> position2track;
@@ -72,8 +75,7 @@ C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT
 		if ((*iter).second.isJustCreated == false)
 		{
 			//Filter the points
-			// TODO -- store the commands in a vector
-			commands.push_back(m_tracks[iter->second.assignTrackIndex]->UpdateTrack(cameraRoverPositions[iter->first],cameraLaserPosition,time));
+			commands.push_back(m_tracks[iter->second.assignTrackIndex]->UpdateTrack(cameraRoverPositions[iter->first],cameraLaserPosition,time,laserOrigin));
 		}
 	}
 	// find the command to send out

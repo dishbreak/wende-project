@@ -76,6 +76,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	C3_TRACK_POINT_DOUBLE					 roverPoint;	// temp contain for rover points
 	C3_TRACK_POINT_DOUBLE					 laserPoint;	// temp contain for rover points
 	C3TrackerManager						 tm;			// the tracker manager
+	double theta=0.0;
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup the shared memory
 	/////////////////////////////////////////////////////////////////////////////////
@@ -197,6 +198,8 @@ int _tmain(int argc, _TCHAR* argv[])
 						{	
 							// do calibration
 							laserOrigin = calibrate(testPoints);
+							theta = M_PI - atan2(laserOrigin.Y,laserOrigin.X); // yea I used a constant included by cmath that goes to 20 decimal places to 1up you so what..wanna fight about it?
+						
 							//rest index
 							calIndex    = 0;
 						}
@@ -241,7 +244,9 @@ int _tmain(int argc, _TCHAR* argv[])
 				{
 					if (inData.ValidLasers != 0)
 					{
-						commandOut = tm.UpdateTracks(roverPoints, laserPoint, inData.Time);
+						laserPoint.X = inData.Lasers[0].X;
+						laserPoint.Y = inData.Lasers[0].Y;
+						commandOut = tm.UpdateTracks(roverPoints, laserPoint, inData.Time,laserOrigin);
 						// TODO ITEM VERIFY THE LASER MACROS
 						laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
 						commandOut.AZ = DEGREES_TO_TICKS(commandOut.AZ);
@@ -249,11 +254,10 @@ int _tmain(int argc, _TCHAR* argv[])
 					}
 					else
 					{
-						// todo move 1 degree towards camera
-						double theta = M_PI - atan2(laserOrigin.Y,laserOrigin.X); // yea I used a constant included by cmath that goes to 20 decimal places to 1up you so what..wanna fight about it?
+						// todo move 1 degree towards camera!!!!!!!
 						double EL = -cos(theta);
 						double AZ = sin(theta);
-						// TODO ITEM VERIFY THE LASER MACROS
+						// TODO ITEM VERIFY THE LASER MACROS!!!!!!!
 						commandOut.AZ = DEGREES_TO_TICKS(AZ);
 						commandOut.EL = DEGREES_TO_TICKS(EL);
 					}
@@ -499,10 +503,13 @@ void TestTrackFilter()
 
 		// verify test output 1 (matlab move in x only)
 		ifstream myfile (files[jj].c_str());
+		C3_TRACK_POINT_DOUBLE laserOrigin;
+		laserOrigin.X = -2;
+		laserOrigin.Y =  3;
 		for (int ii = 0; myfile.is_open() && ii < 100; ii ++)
 		{
 			myfile >> roverPoint.X >> roverPoint.Y >> laserPoint.X >> laserPoint.Y >> time;
-			procResult = track.UpdateTrack(roverPoint,laserPoint,time);
+			procResult = track.UpdateTrack(roverPoint,laserPoint,time,laserOrigin);
 			myfile >> fileResult.AZ >> fileResult.EL;
 			/*assert(abs(fileResult.AZ-procResult.AZ) < MAX_ERROR && 
 				   abs(fileResult.EL-procResult.EL) < MAX_ERROR);*/
