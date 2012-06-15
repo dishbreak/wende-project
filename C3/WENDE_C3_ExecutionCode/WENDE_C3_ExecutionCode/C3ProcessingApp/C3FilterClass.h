@@ -28,10 +28,13 @@ typedef struct {
 
 class C3FilterClass
 {
+	public:
+		KalmanVariables m_kalman;
+
 	// Filter Internal variables
 	private:
 		bool			m_isInit;
-		KalmanVariables m_kalman;
+		
 
 	// Filter Cononical Functions
 	public:
@@ -43,6 +46,7 @@ class C3FilterClass
 	// Public Functions
 	public:
 		C3_TRACK_POINT_DOUBLE FilterInput(C3_TRACK_POINT_DOUBLE cameraRoverPositions, double updateTime);	
+		C3_TRACK_POINT_DOUBLE GetPredictedPoint(int time);
 	// Private Functions
 	private:
 		

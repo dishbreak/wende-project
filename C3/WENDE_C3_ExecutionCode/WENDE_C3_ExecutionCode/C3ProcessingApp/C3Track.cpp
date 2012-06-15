@@ -4,17 +4,28 @@
 #include "C3Configuration.h"
 #include <cmath>
 
+using std::max;
+using std::sqrt;
+
+//////////////////////////////////////////////////////////////////////////////
+// Funciton: C3Track
+// Programmer: Benjamin Kurt Heiner
+//
+// Purpose: default constructor
+//////////////////////////////////////////////////////////////////////////////
 C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
 				 const double time)
 				 : m_startTime(time),
-				   m_currTime(0),
+				   m_currTime(time),
 				   m_DTI(C3Utilities::EuclideanDistance(cameraRoverPosition)),
 				   m_TTI(0),
 				   m_passTime(0),
 				   m_travelRange(0)
 {
+	// THE PLAYING FIELD RADIUS
 	m_playingFieldRadius = C3Configuration::Instance().WENDE_PLAYING_FIELD_RADIUS;
 
+	// DETERMINE IF THE TRACK STARTS INSIDE OF THE PLAYING FIELD
 	if (m_playingFieldRadius < C3Utilities::EuclideanDistance(cameraRoverPosition))
 	{
 		m_isProsecuteTrack = true;
@@ -44,17 +55,12 @@ C3_TRACK_POINT_DOUBLE C3Track::getPredictionPoint() const
 {
 	return m_predictionPoint;
 }
-/*
+
 // find out what the tracks positions is estimated to be at time time
-C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(time)
-{
-	C3_TRACK_POINT_DOUBLE pointAtThisTime.X=1;
-
-	//TODO FIX
-	return pointAtTimeTime;
+C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(int time)
+{	
+	return m_filter.GetPredictedPoint(time);
 }
-
-*/
 
 // Filter and predict next location....
 C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
@@ -162,4 +168,12 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 double C3Track::getDTI() const
 {
 	return m_DTI;
+}
+//
+double C3Track::getSigma() const
+{
+	double p11sqrt = sqrt(m_filter.m_kalman.P(1,1));
+	double p22sqrt = sqrt(m_filter.m_kalman.P(2,2));
+	double sigma = max(p11sqrt,p22sqrt);
+	return sigma;
 }
