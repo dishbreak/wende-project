@@ -64,7 +64,7 @@ class C3TrackerManager
 
 	public:
 		// update tracks with input points
-		void UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, C3_TRACK_POINT_DOUBLE cameraLaserPosition, const double time);
+		C3_TRACK_POINT_DOUBLE UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, C3_TRACK_POINT_DOUBLE cameraLaserPosition, const int time);
 		// clear the tracks
 		void ClearTracks();
 

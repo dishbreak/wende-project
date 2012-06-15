@@ -124,11 +124,6 @@ typedef union
 		DOUBLE		 AZ;		// AZ Location
 		DOUBLE		 EL;		// EL Location
 	};
-	struct
-	{
-		DOUBLE		 P1;		// P1 Location
-		DOUBLE		 P2;		// P2 Location
-	};
 } C3_TRACK_POINT_DOUBLE;
 /////////////////////////////////////////////////////////////////////////////////
 // Struct: CAMERA_TRACK_MSG_SHM
