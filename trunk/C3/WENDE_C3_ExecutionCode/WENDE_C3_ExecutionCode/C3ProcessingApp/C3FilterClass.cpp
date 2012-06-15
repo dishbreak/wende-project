@@ -128,14 +128,12 @@ C3_TRACK_POINT_DOUBLE C3FilterClass::FilterInput(C3_TRACK_POINT_DOUBLE cameraRov
 	#endif
 
 	// Calculate Predicted Intercept Point PIP
-	// TODO --- DOES THIS CAST CAUSE A ISSUE????
 	// return the camera point
 	return  GetPredictedPoint(updateTime);
 }
 C3_TRACK_POINT_DOUBLE C3FilterClass::GetPredictedPoint(int time)
 {
 	// Calculate Predicted Intercept Point PIP
-	// TODO --- DOES THIS CAST CAUSE A ISSUE????
 	C3_TRACK_POINT_DOUBLE cameraPoint;
 	cameraPoint.X = m_kalman.xk(0,0)+ m_kalman.vk(0,0) * time;
 	cameraPoint.Y = m_kalman.xk(0,1)+ m_kalman.vk(0,1) * time;

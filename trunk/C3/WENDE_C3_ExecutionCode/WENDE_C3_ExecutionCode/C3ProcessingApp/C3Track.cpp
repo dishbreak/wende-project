@@ -65,7 +65,8 @@ C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(int time)
 // Filter and predict next location....
 C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
 										   const C3_TRACK_POINT_DOUBLE cameraLaserPosition,
-										   const double time)
+										   const double time,
+										   const C3_TRACK_POINT_DOUBLE laserOrigin)
 {
 	C3_TRACK_POINT_DOUBLE result;
 
@@ -98,9 +99,6 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		// Calculate the TTI
 		m_TTI		  = time - m_passTime;
 
-		// TODO find camera/laser origin... FIX ... calibration items
-		double laserOrigin11       = -2.0;
-		double laserOrigin12       =  3.0;
 		// Find Camera to Laser Translation and Rotation Parameters
 		//double cameraTheta = atan2(playingFieldOrigin11-cameraOrigin11,playingFieldOrigin12-cameraOrigin12);
 		//double laserTheta  = atan2(playingFieldOrigin11-laserOrigin11 ,playingFieldOrigin12-laserOrigin12 );
@@ -115,8 +113,8 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		//double cameraToLaserY = laserOriginCameraSpace12 - playingFieldOrigin12;
 
 		//Alternative translation method(USE THIS ONE)
-		double theta = M_PI - atan2(laserOrigin12,laserOrigin11); // yea I used a constant included by cmath that goes to 20 decimal places to 1up you so what..wanna fight about it?
-		double range = sqrt(pow(laserOrigin11,2) + pow(laserOrigin12,2));
+		double theta = M_PI - atan2(laserOrigin.Y,laserOrigin.X); // yea I used a constant included by cmath that goes to 20 decimal places to 1up you so what..wanna fight about it?
+		double range = sqrt(pow(laserOrigin.X,2) + pow(laserOrigin.Y,2));
 		double cameraToLaserX = -range*sin(theta);
 		double cameraToLaserY = -range*cos(theta);
 
@@ -136,8 +134,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		double localPipY   = relativePipX*sin(theta) + relativePipX*cos(theta);
 		double localPipR   = sqrt(relativePipX*relativePipX+relativePipY*relativePipY);
 
-		// TODO ... Configuration for local laser height... fix
-		double LaserHeight  = 5; //convert to meters
+		double LaserHeight  = C3Configuration::Instance().LASER_HEIGHT; //convert to meters
 
 		// transform local x/y into local az/el coordinate system
 		double localLaserAz = atan2(localLaserX,localLaserY)*180/M_PI;
@@ -149,9 +146,8 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		double dAz = localPipAz - localLaserAz;
 		double dEl = localPipEl - localLaserEl;
 
-		// Remove --- TODOD ---- FIX
-		result.AZ = dAz/updateRate;
-		result.EL = dEl/updateRate;		
+		result.AZ = dAz;
+		result.EL = dEl;		
 	}
 	
 	// Add to first history point
