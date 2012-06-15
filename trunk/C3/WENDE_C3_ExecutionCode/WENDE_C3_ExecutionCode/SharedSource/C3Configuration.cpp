@@ -69,7 +69,7 @@ C3Configuration::C3Configuration(void)
 		processingStartPath		= "C3ProcessingApp.exe";
 		arbiterStartPath		= "NetworkArbiter.exe";
 		// laser height
-		LASER_HEIGHT				= 5;
+		LASER_HEIGHT				= 1.524;//meters
 		WriteXMLFile();
 	}
 }
@@ -195,7 +195,7 @@ void C3Configuration::ReadXMLFile()
 			if (pElem)
 			{
 				// Read the 2-State Kalman parameters
-				LASER_HEIGHT                = atoi(pElem->Attribute("PROCESS_NOISE"));
+				LASER_HEIGHT                = atoi(pElem->Attribute("LASER_HEIGHT"));
 			}
 			else { /* ERROR ???? */ }
 			pElem=hRoot.FirstChild("ENVIROMENT").Element();
