@@ -994,7 +994,7 @@ namespace C3_App {
 						case C3_Alert_Types::CALIBRATION_SUCCESS:
 							{
 								ButtonText = "Calibrated!";
-								C3_Alert_Types::C3_DISPLAY_STARTUP;
+								operationalState = C3_Alert_Types::C3_DISPLAY_STARTUP;
 							 break;
 							}
 						default:
