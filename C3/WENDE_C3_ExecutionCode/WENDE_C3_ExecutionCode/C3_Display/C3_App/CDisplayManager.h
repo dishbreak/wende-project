@@ -34,12 +34,14 @@ public:
 	void Set_Camera_Com_Status(int nCameraComStatus);
 	void Set_Laser_Activity(int nLaserActivityStatus);
 	void Set_Calibrated_Status(int nCalibratedStatus);
+	void Set_Notification_Alert(int nNotificationAlert);
 	int Get_Camera_Status(void);
 	int Get_Laser_Status(void);
 	int Get_Laser_Com_Status(void);
 	int Get_Camera_Com_Status(void);
 	int Get_Laser_Activity(void);
 	int Get_Calibrated_Status(void);
+	int Get_Notification_Alert(void);
 
 //constructor made private to ensure this stays a singleton
 private:
@@ -53,6 +55,7 @@ private:
     int m_nLaserActivityStatus;
     int m_OverStatus;
 	int m_CalibratedStatus;
+	int m_nNotificationAlert;
     static CDisplayManager ^ displayMgr = nullptr;
 };
 

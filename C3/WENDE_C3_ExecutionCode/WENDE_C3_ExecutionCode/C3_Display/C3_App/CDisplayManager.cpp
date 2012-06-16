@@ -18,6 +18,7 @@ CDisplayManager::CDisplayManager() {
 	m_nLaserComStatus = 0;
 	m_nLaserStatus = 0;
 	m_OverStatus = 0;
+	m_nNotificationAlert = 0;
 }
 ////////////////////////////////////////////////////////////////////////
 // Description: Returns a pointer to the CDisplayManager. If there is no
@@ -42,17 +43,6 @@ int CDisplayManager::Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoor
 {
 	try
 	{
-		////for now, just dump everything to the globals.
-		//extern int roverContactX;
-		//extern int roverContactY;
-
-		////only act on the information if it's new
-		//if ((x != roverContactX) || (y != roverContactY))
-		//{
-		//	roverContactX = x;
-		//	roverContactY = y;
-		//	C3_User_Interface::Instance->pPPI->Invalidate();
-		//}
 		Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
 		//if any of the coordinates are different, invalidate the PPI display.
 		if(coordsObj->SetNewCoordinates(inputCoords, NumValidTracks)) {
@@ -249,6 +239,10 @@ void CDisplayManager::Set_Camera_Com_Status(int nCameraComStatus)
 {
 	m_nCameraComStatus = nCameraComStatus;
 }
+void CDisplayManager::Set_Notification_Alert(int nNotificationAlert)
+{
+	m_nNotificationAlert = nNotificationAlert;
+}
 int CDisplayManager::Get_Laser_Activity(void)
 {
 	return m_nLaserActivityStatus;
@@ -265,6 +259,11 @@ int CDisplayManager::Get_Laser_Com_Status(void)
 {
 	return m_nLaserComStatus;
 }
+int CDisplayManager::Get_Notification_Alert(void)
+{
+	return m_nNotificationAlert;
+}
+
 
 void CDisplayManager::Set_Calibrated_Status(int nCalibratedStatus)
 {
@@ -385,45 +384,46 @@ int CDisplayManager::Update_Live_Video_Feed(String ^ sImagePath, __int64 nStartT
 ////////////////////////////////////////////////////////////////////////
 void CDisplayManager::Update_Notification_Panel(int nAlertID)
 {
+
 	Notification::NotifyMesg mesgType;
 
 	switch(nAlertID)
 	{
-	case 1:
+		case 1:
 
-		// If alert status = 1 (Rover stopped before failure)			
-		mesgType = Notification::NotifyMesg::TrialSuccess;
-		break;
+			// If alert status = 1 (Rover stopped before failure)			
+			mesgType = Notification::NotifyMesg::TrialSuccess;
+			break;
 
-	case 2:
+		case 2:
 
-		// If alert status = 2 (Contact is > 0.7m away from centre)
-		mesgType = Notification::NotifyMesg::PatientLeftEvacArea;
-		break;
+			// If alert status = 2 (Contact is > 0.7m away from centre)
+			mesgType = Notification::NotifyMesg::PatientLeftEvacArea;
+			break;
 
-	case 3:
+		case 3:
 
-		// If alert status = 3 (Rover not stopped before failure line)
-		mesgType = Notification::NotifyMesg::TrialFailed;
-		break;
+			// If alert status = 3 (Rover not stopped before failure line)
+			mesgType = Notification::NotifyMesg::TrialFailed;
+			break;
 
-	case 4:
+		case 4:
 
-		// If alert status = 4 (calibration failed) or subsystems do not work
+			// If alert status = 4 (calibration failed) or subsystems do not work
 
-		mesgType = Notification::NotifyMesg::SystemNonOperational;
-		break;
-
-	case 5:
-
-		// If alert status = 5 (calibration success) & subsystems work
-
-		if(m_nCameraStatus == 1 && m_nLaserStatus ==1)
-			mesgType = Notification::NotifyMesg::SystemOperational;
-		else
 			mesgType = Notification::NotifyMesg::SystemNonOperational;
+			break;
 
-		break;
+		case 5:
+
+			// If alert status = 5 (calibration success) & subsystems work
+
+			if(m_nCameraStatus == 1 && m_nLaserStatus ==1)
+				mesgType = Notification::NotifyMesg::SystemOperational;
+			else
+				mesgType = Notification::NotifyMesg::SystemNonOperational;
+
+			break;
 	}
 
 	Notification newNote(mesgType);
@@ -486,14 +486,23 @@ int CDisplayManager::Update_Calibration_Reply(int nAlertID) {
 	{
 	case C3_Alert_Types::CALIBRATION_FAILED:
 		{
-			Update_Notification_Panel(4);
-			Set_Calibrated_Status(-1);
+			if(nAlertID != Get_Notification_Alert())
+			{
+				Set_Notification_Alert(4);
+				Update_Notification_Panel(4);
+				Set_Calibrated_Status(-1);
+			}
 			break;
 		}
 	case C3_Alert_Types::CALIBRATION_SUCCESS:
 		{
-			Update_Notification_Panel(5);
-			Set_Calibrated_Status(1);
+			if(nAlertID != Get_Notification_Alert())
+			{
+				// Alert type is 9, but message notification is 5 (operational)
+				Set_Notification_Alert(9);
+				Update_Notification_Panel(5);
+				Set_Calibrated_Status(1);
+			}
 			break;
 		}
 	default:

@@ -9,13 +9,10 @@
 #include <process.h>
 #include "CC3AppControl.h"
 
-
-
 using namespace C3_App;
 //globals--for now
 int roverContactX = 0;
 int roverContactY = 0;
-
 
 [STAThreadAttribute]
 int main(array<System::String ^> ^args)
@@ -52,9 +49,11 @@ int main(array<System::String ^> ^args)
 	CNetworkMonitor nm;
 	nm.InitializeThread();
 
+	// Turn off screensaver. 
+	SystemParametersInfo(SPI_SETSCREENSAVEACTIVE,FALSE,NULL,TRUE);
+
     Application::Run(gcnew C3_User_Interface(&nm));
 
-	
 	return 0;
 }
 

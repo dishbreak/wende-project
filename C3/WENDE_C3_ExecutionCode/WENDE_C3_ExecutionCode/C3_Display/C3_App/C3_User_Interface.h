@@ -206,7 +206,7 @@ namespace C3_App {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->pPPIPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->pPPI = (gcnew System::Windows::Forms::Panel());
@@ -361,16 +361,16 @@ namespace C3_App {
 				this->Column3});
 			this->dgvDtiLog->Location = System::Drawing::Point(3, 3);
 			this->dgvDtiLog->Name = L"dgvDtiLog";
-			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle1->NullValue = L"1";
-			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dgvDtiLog->RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle3->NullValue = L"1";
+			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvDtiLog->RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this->dgvDtiLog->RowTemplate->Height = 24;
 			this->dgvDtiLog->ShowEditingIcon = false;
 			this->dgvDtiLog->ShowRowErrors = false;
@@ -380,7 +380,7 @@ namespace C3_App {
 			// 
 			// Column1
 			// 
-			this->Column1->HeaderText = L"Date/Time";
+			this->Column1->HeaderText = L"Timestamp";
 			this->Column1->Name = L"Column1";
 			this->Column1->ReadOnly = true;
 			// 
@@ -614,6 +614,7 @@ namespace C3_App {
 			// tbAlertsPanel
 			// 
 			this->tbAlertsPanel->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->tbAlertsPanel->Cursor = System::Windows::Forms::Cursors::Arrow;
 			this->tbAlertsPanel->Font = (gcnew System::Drawing::Font(L"Courier New", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->tbAlertsPanel->ForeColor = System::Drawing::Color::Red;
@@ -624,6 +625,7 @@ namespace C3_App {
 			this->tbAlertsPanel->Size = System::Drawing::Size(1283, 34);
 			this->tbAlertsPanel->TabIndex = 0;
 			this->tbAlertsPanel->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->tbAlertsPanel->Click += gcnew System::EventHandler(this, &C3_User_Interface::tbAlertsPanel_Click);
 			// 
 			// C3_User_Interface
 			// 
@@ -713,6 +715,7 @@ namespace C3_App {
 			 {
 				 try
 				 {
+					 C3_User_Interface::tbAlertsPanel->Enabled = true;
 					 C3_User_Interface::tbAlertsPanel->Text = sNotification;
 					 C3_User_Interface::tbAlertsPanel->BackColor = tBgColor;
 					 C3_User_Interface::tbAlertsPanel->ForeColor = tFgColor;
@@ -984,13 +987,13 @@ namespace C3_App {
 							}
 						case C3_Alert_Types::CALIBRATION_FAILED:
 							{
-								ButtonText = "Calibration Failed!";
+								ButtonText = "Calibration Failed";
 								ButtonIsActive = true;
 								break;
 							}
 						case C3_Alert_Types::CALIBRATION_SUCCESS:
 							{
-								ButtonText = "Cailbrated!";
+								ButtonText = "Calibrated!";
 								C3_Alert_Types::C3_DISPLAY_STARTUP;
 							 break;
 							}
@@ -1105,63 +1108,70 @@ namespace C3_App {
 				 {
 					 MessageBoxA(NULL,"flowLayoutPanel1_Paint","error",MB_OKCANCEL);
 				 } 
-			 }	  
+			 }
 
-	private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs^  e) {
-				 try
-				 {
-					 //dlgExportDTI->ShowDialog();
-					 //create a stream we can use to write to
-					 System::IO::FileStream^ srmOutput;
-					 //create strings as needed
-					 String^ rowEntry = "";
-					 //create an encoder we can use for writing
-					 System::Text::UnicodeEncoding uniEncoding;
-					 //create a new SaveFileDialog
-					 SaveFileDialog^ dlgExportDti = gcnew SaveFileDialog;
-					 //filter for CSV files, and set the filter to be the default one.
-					 dlgExportDti->Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
-					 dlgExportDti->FilterIndex = 1;
-					 //set the file dialog to My Documents
-					 dlgExportDti->InitialDirectory = Environment::GetFolderPath(Environment::SpecialFolder::MyDocuments);
-					 //call ShowDialog. This won't return until the user does something. If the user clicks OK...
-					 if ( dlgExportDti->ShowDialog() == System::Windows::Forms::DialogResult::OK )
-					 {
-						 //...open the file for writing, provided we can handle it.
-						 if ( (srmOutput = safe_cast<System::IO::FileStream^>(dlgExportDti->OpenFile())) != nullptr )
-						 {
-							 //Put in the first row for the CSV file
-							 String^ topRow = String::Concat(
-								 Column1->HeaderText, ",",
-								 Column2->HeaderText, ",",
-								 Column3->HeaderText, ",",
-								 "\n");
-							 //String^ topRow = "Trial Number,DTI (m),TTI (s),Pass/Fail,\n";
-							 srmOutput->Write( uniEncoding.GetBytes(topRow), 0, uniEncoding.GetByteCount(topRow));
-							 //loop through each row in the DtiLog
-							 for (int i = 0; i < (dgvDtiLog->RowCount - 1); i++)
-							 {
-								 int trialNum = i+1;
-								 //for each row, pull out the data
-								 rowEntry = String::Concat(
-									 trialNum.ToString(), ",",		//Trial Number
-									 dgvDtiLog[0,i]->Value, ",",	//Date/Time
-									 dgvDtiLog[1,i]->Value, ",",	//DTI (m)
-									 dgvDtiLog[2,i]->Value, ",",	//Pass/Fail
-									 "\n");							//Newline
-								 srmOutput->Write( uniEncoding.GetBytes(rowEntry), 0, uniEncoding.GetByteCount(rowEntry));
-							 }
-							 //close the file pointer when it's done
-							 srmOutput->Close();
-						 }
-					 }
-					 //TODO: Add set the bool for unexported data to FALSE
-					 delete dlgExportDti;
-				 }
-				 catch (...)
-				 {
-					 MessageBoxA(NULL,"cmdExport_Click","error",MB_OKCANCEL);
-				 } 
+			 private: void Export_DTI()
+					  {
+						  try
+						  {
+							  //dlgExportDTI->ShowDialog();
+							  //create a stream we can use to write to
+							  System::IO::FileStream^ srmOutput;
+							  //create strings as needed
+							  String^ rowEntry = "";
+							  //create an encoder we can use for writing
+							  System::Text::UnicodeEncoding uniEncoding;
+							  //create a new SaveFileDialog
+							  SaveFileDialog^ dlgExportDti = gcnew SaveFileDialog;
+							  //filter for CSV files, and set the filter to be the default one.
+							  dlgExportDti->Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+							  dlgExportDti->FilterIndex = 1;
+							  //set the file dialog to My Documents
+							  dlgExportDti->InitialDirectory = Environment::GetFolderPath(Environment::SpecialFolder::MyDocuments);
+							  //call ShowDialog. This won't return until the user does something. If the user clicks OK...
+							  if ( dlgExportDti->ShowDialog() == System::Windows::Forms::DialogResult::OK )
+							  {
+								  //...open the file for writing, provided we can handle it.
+								  if ( (srmOutput = safe_cast<System::IO::FileStream^>(dlgExportDti->OpenFile())) != nullptr )
+								  {
+									  //Put in the first row for the CSV file
+									  String^ topRow = String::Concat(
+										  Column1->HeaderText, ",",
+										  Column2->HeaderText, ",",
+										  Column3->HeaderText, ",",
+										  "\n");
+									  //String^ topRow = "Trial Number,DTI (m),TTI (s),Pass/Fail,\n";
+									  srmOutput->Write( uniEncoding.GetBytes(topRow), 0, uniEncoding.GetByteCount(topRow));
+									  //loop through each row in the DtiLog
+									  for (int i = 0; i < (dgvDtiLog->RowCount - 1); i++)
+									  {
+										  int trialNum = i+1;
+										  //for each row, pull out the data
+										  rowEntry = String::Concat(
+											  trialNum.ToString(), ",",		//Trial Number
+											  dgvDtiLog[0,i]->Value, ",",	//Date/Time
+											  dgvDtiLog[1,i]->Value, ",",	//DTI (m)
+											  dgvDtiLog[2,i]->Value, ",",	//Pass/Fail
+											  "\n");							//Newline
+										  srmOutput->Write( uniEncoding.GetBytes(rowEntry), 0, uniEncoding.GetByteCount(rowEntry));
+									  }
+									  //close the file pointer when it's done
+									  srmOutput->Close();
+								  }
+							  }
+							  //TODO: Add set the bool for unexported data to FALSE
+							  delete dlgExportDti;
+						  }
+						  catch (...)
+						  {
+							  MessageBoxA(NULL,"cmdExport_Click","error",MB_OKCANCEL);
+						  } 
+
+					  }
+
+	private: System::Void cmdExport_Click(System::Object^  sender, System::EventArgs^  e) 
+			 {
+				Export_DTI();
 			 }
 	private: System::Void calibrateButton_Click(System::Object^  sender, System::EventArgs^  e) {
 				 try
@@ -1184,6 +1194,9 @@ namespace C3_App {
 				 } 
 			 }
 	private: System::Void C3_User_Interface_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+				 
+				 Export_DTI();
+				 
 				 if (m_monitor != NULL)
 				 {
 					 m_monitor->StopThreads();
@@ -1221,6 +1234,11 @@ private: System::Void dgvDtiLog_CellContentClick(System::Object^  sender, System
 					 MessageBoxA(NULL,"calibrateButton_Click","error",MB_OKCANCEL);
 				 }
 			 }
+private: System::Void tbAlertsPanel_Click(System::Object^  sender, System::EventArgs^  e) {
+			 tbAlertsPanel->BackColor = System::Drawing::SystemColors::Control;
+			 tbAlertsPanel->Enabled = false;
+			 tbAlertsPanel->Text = " ";	 
+		 }
 };
 }
 
