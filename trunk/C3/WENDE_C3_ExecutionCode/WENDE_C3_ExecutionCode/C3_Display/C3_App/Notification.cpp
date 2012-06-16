@@ -21,7 +21,7 @@ Notification::Notification(Notification::NotifyMesg incoming)
 	//warning-type
 	case NotifyMesg::SystemNonOperational:
 		notifyType = NotifyType::Warning;
-		NotifyText = "WENDE SYSTEM NOT OPERATIONAL!";
+		NotifyText = "WENDE SYSTEM NOT OPERATIONAL";
 		Contradict = NotifyMesg::SystemOperational;
 		break;
 	//information-type
@@ -62,7 +62,7 @@ Notification::Notification(Notification::NotifyMesg incoming)
 		break;
 	case NotifyType::Information:
 		bgColor = System::Drawing::Color::DarkGreen;
-		fgColor = System::Drawing::Color::White;
+		fgColor = System::Drawing::Color::Black;
 		break;
 	default:
 		break;

@@ -339,9 +339,6 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				else
 					dispman->Update_Rover_Acquired_Indicator(0);
 
-				//This check is already built into DisplayManager
-				//if(x >= 1 || y >= 1) dispman->Update_Rover_Acquired_Indicator(1);
-
 				/* Leave the critical section -- other threads can now EnterCriticalSection() */
 				LeaveCriticalSection(&cNetworMonitor->statusLock);
 			}
@@ -495,7 +492,12 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 			EnterCriticalSection(&cNetworMonitor->statusLock);
 
 			/* loss of comm */
-			dispman->Update_Notification_Panel(4);
+			// Only update if new notification (allows dismissal)
+			if(4 != dispman->Get_Notification_Alert())
+			{
+				dispman->Set_Notification_Alert(4);
+				dispman->Update_Notification_Panel(4);
+			}
 
 			/* Leave the critical section -- other threads can now EnterCriticalSection() */
 			LeaveCriticalSection(&cNetworMonitor->statusLock);
