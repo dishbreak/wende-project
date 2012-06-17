@@ -252,6 +252,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Log.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Notification.h"
 				>
 			</File>

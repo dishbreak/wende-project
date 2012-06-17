@@ -6,6 +6,7 @@
 #include "Notifier.h"
 #include "Coordinates.h"
 #include "C3AlertStates.h"
+#include "Log.h"
 using namespace C3_App;
 using namespace std;
 
@@ -315,6 +316,12 @@ int CDisplayManager::Update_Camera_Communication_Indicator(int nCameraCommStatus
 			}
 			Set_Camera_Com_Status(1);
 		}
+
+		// DEBUG
+		FILE_LOG(logINFO) <<	"<<Class: CDisplayManager>> " <<
+								"<<Operation: Update_Camera_Communication_Indicator>>";
+		FILE_LOG(logDEBUG) <<	"Camera comm status = " << nCameraCommStatus << "\n\n";
+
 	}
 	catch (...)
 	{
@@ -354,6 +361,13 @@ int CDisplayManager::Update_Laser_Communication_Indicator(int nLaserCommStatus)
 			}
 			Set_Laser_Com_Status(1);
 		}
+
+		// DEBUG
+		FILE_LOG(logINFO) <<	"<<Class: CDisplayManager>> " <<
+								"<<Operation: Update_Laser_Communication_Indicator>>";
+		FILE_LOG(logDEBUG) <<	"Laser comm status = " << nLaserCommStatus << "\n\n";
+
+
 	}
 	catch (...)
 	{

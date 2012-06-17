@@ -14,7 +14,7 @@ public:
 		return singleton;
 	}
 	~C3ProcessingStates(void){};	
-	
+
 	void Set_Current_Alert(C3_Alert_Types eCurrentAlert);
 	C3_Alert_Types Get_Current_Alert();
 

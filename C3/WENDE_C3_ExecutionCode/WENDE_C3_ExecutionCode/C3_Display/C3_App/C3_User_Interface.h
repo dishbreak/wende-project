@@ -1195,6 +1195,7 @@ namespace C3_App {
 			 }
 	private: System::Void C3_User_Interface_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
 				 
+				 // TODO: Once pulling DTI data works, just do this when a row exists.
 				 Export_DTI();
 				 
 				 if (m_monitor != NULL)
@@ -1219,7 +1220,8 @@ private: System::Void dgvDtiLog_CellContentClick(System::Object^  sender, System
 						 this->trialControlButton->Text = "Stop Trial";
 					 }
 					 else if (operationalState == C3_Alert_Types::POC_STARTED ||
-						 operationalState == C3_Alert_Types::POC_ENTERED)
+						 operationalState == C3_Alert_Types::POC_ENTERED ||
+						 operationalState == C3_Alert_Types::TARGET_LEFT_PLAYING_FIELD)
 					 {
 						 operationalState = C3_Alert_Types::POC_FINISHED;
 						 C3ProcessingStates::Instance().Set_Current_Alert(operationalState);
