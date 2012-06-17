@@ -527,7 +527,7 @@ UINT WINAPI ProcessingInterfaceTransmitThread(LPVOID pParam)
 		C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2);
 
 	C3_Alert_Types eProcessingNotification;
-
+	
 	int ii = C3_NETWORK_THREAD_COUNT - 1;
 
 	while(1)
@@ -548,10 +548,10 @@ UINT WINAPI ProcessingInterfaceTransmitThread(LPVOID pParam)
 				m_ProcessingInterface->AlertType = C3_Alert_Types::POC_STARTED;
 			}
 
-			if(eProcessingNotification == C3_Alert_Types::POC_STARTED)
+			if(eProcessingNotification == C3_Alert_Types::POC_FINISHED)
 			{
 				// Ask Processing nicely End trial
-				//m_ProcessingInterface->AlertType = C3_Alert_Types::POC_FINISHED;
+				m_ProcessingInterface->AlertType = C3_Alert_Types::POC_FINISHED;
 			}
 
 			// Set the event
