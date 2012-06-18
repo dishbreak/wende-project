@@ -51,8 +51,9 @@ bool heartbeatReady = false;
 char return_error = 0;
 
 // Interval between heartbeats (in milliseconds)
-// Use Timer1.setPeriod(period) to update this value
-long heartbeatInterval = 5000000;
+int heartbeatInterval = 5000;
+int heartbeatTimer1 = 0;
+int heartbeatTimer2 = heartbeatInterval;
 
 // Servos
 Servo el_servo; 
@@ -147,7 +148,7 @@ void process_config_message(int config_msg_data[CONFIG_MSG_LENGTH+1])
   AZ_MAX_PWM = temp_max_az;
   EL_MIN_PWM = temp_min_el;
   EL_MAX_PWM = temp_max_el;
-  heartbeatInterval = (long)temp_heartbeat * 1000;
+  heartbeatInterval = temp_heartbeat;
   
   Serial.println(AZ_MIN_PWM);
   Serial.println(AZ_MAX_PWM);
@@ -159,7 +160,12 @@ void process_config_message(int config_msg_data[CONFIG_MSG_LENGTH+1])
 // Interrupt that sets the heartbeatReady to true, telling the loop to send the message
 void setHeartbeatStatus()
 {
-  heartbeatReady = true;
+  heartbeatTimer2 = millis();
+  if ((heartbeatTimer2 - heartbeatTimer1) >= heartbeatInterval)
+  {
+    heartbeatTimer1 = heartbeatTimer2;
+	heartbeatReady = true;
+  }
 } 
 
 void setup()
@@ -172,7 +178,7 @@ void setup()
   digitalWrite(CS,HIGH); //disable device 
   
   // Initialize timer1
-  Timer1.initialize(heartbeatInterval);
+  Timer1.initialize();
   Timer1.attachInterrupt(setHeartbeatStatus);
   
   // Define the LED pin as an output
@@ -349,7 +355,7 @@ void loop()
               
       //Reset heartbeat counter 
       heartbeatReady = false;
-  	  
+	  
       //Reset error status
       return_error = 0;
     }
