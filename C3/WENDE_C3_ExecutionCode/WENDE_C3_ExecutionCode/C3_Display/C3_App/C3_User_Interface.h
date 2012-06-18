@@ -206,7 +206,7 @@ namespace C3_App {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->pPPIPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->pPPI = (gcnew System::Windows::Forms::Panel());
@@ -274,7 +274,7 @@ namespace C3_App {
 			this->pPPIPanel->Location = System::Drawing::Point(0, 0);
 			this->pPPIPanel->Margin = System::Windows::Forms::Padding(3, 3, 0, 3);
 			this->pPPIPanel->Name = L"pPPIPanel";
-			this->pPPIPanel->Size = System::Drawing::Size(1325, 696);
+			this->pPPIPanel->Size = System::Drawing::Size(1343, 705);
 			this->pPPIPanel->TabIndex = 0;
 			// 
 			// groupBox1
@@ -361,16 +361,16 @@ namespace C3_App {
 				this->Column3});
 			this->dgvDtiLog->Location = System::Drawing::Point(3, 3);
 			this->dgvDtiLog->Name = L"dgvDtiLog";
-			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle3->NullValue = L"1";
-			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dgvDtiLog->RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle1->NullValue = L"1";
+			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvDtiLog->RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this->dgvDtiLog->RowTemplate->Height = 24;
 			this->dgvDtiLog->ShowEditingIcon = false;
 			this->dgvDtiLog->ShowRowErrors = false;
@@ -632,7 +632,7 @@ namespace C3_App {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoScroll = true;
-			this->ClientSize = System::Drawing::Size(1325, 696);
+			this->ClientSize = System::Drawing::Size(1343, 705);
 			this->Controls->Add(this->pPPIPanel);
 			this->Name = L"C3_User_Interface";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
