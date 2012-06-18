@@ -111,7 +111,7 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 		for (unsigned int jj = 0; jj < m_tracks.size(); ii++)
 		{
 			// first check if the measurement is in the vicinity of the track, 
-			// use 3 sigma around projected point //fc start
+			// use 3 sigma around projected point 
 			double sigma = m_tracks[jj]->getSigma();
 			double threshold = min(3.0*sigma,5.0);
 			C3_TRACK_POINT_DOUBLE predPoint = m_tracks[jj]->getPointPropogatedToTime(time);
@@ -126,7 +126,7 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 					correlate.isJustCreated    = false;				// 
 					minValue				   = correlate.dist;	// new min value for this point...
 				}
-			} //fc end
+			} 
 		}
 
 		// if there was no success then repeat

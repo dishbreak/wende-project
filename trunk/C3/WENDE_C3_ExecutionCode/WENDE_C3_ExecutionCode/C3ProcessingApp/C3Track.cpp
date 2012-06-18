@@ -113,7 +113,8 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		//double cameraToLaserY = laserOriginCameraSpace12 - playingFieldOrigin12;
 
 		//Alternative translation method(USE THIS ONE)
-		double theta = M_PI - atan2(laserOrigin.Y,laserOrigin.X); // yea I used a constant included by cmath that goes to 20 decimal places to 1up you so what..wanna fight about it?
+		double bearing = atan2(laserOrigin.Y,laserOrigin.X);
+		double theta = bearing- M_PI; // Revered order so the sign is correct. Clockwise positive, camera at 180.
 		double range = sqrt(pow(laserOrigin.X,2) + pow(laserOrigin.Y,2));
 		double cameraToLaserX = -range*sin(theta);
 		double cameraToLaserY = -range*cos(theta);
