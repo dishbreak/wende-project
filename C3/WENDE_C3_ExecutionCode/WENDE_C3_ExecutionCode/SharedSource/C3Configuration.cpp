@@ -195,7 +195,7 @@ void C3Configuration::ReadXMLFile()
 			if (pElem)
 			{
 				// Read the 2-State Kalman parameters
-				LASER_HEIGHT                = atoi(pElem->Attribute("LASER_HEIGHT"));
+				LASER_HEIGHT                = atoi(pElem->Attribute("height"));
 			}
 			else { /* ERROR ???? */ }
 			pElem=hRoot.FirstChild("ENVIROMENT").Element();
