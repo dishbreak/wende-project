@@ -64,19 +64,22 @@ class C3TrackerManager
 
 	public:
 		// update tracks with input points
-		C3_TRACK_POINT_DOUBLE UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, C3_TRACK_POINT_DOUBLE cameraLaserPosition, const int time,const C3_TRACK_POINT_DOUBLE laserOrigin);
+		C3_TRACK_POINT_DOUBLE UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions,
+											C3_TRACK_POINT_DOUBLE cameraLaserPosition, 
+											const double time,
+											const C3_TRACK_POINT_DOUBLE laserOrigin);
 		// clear the tracks
 		void ClearTracks();
-
+		C3_TRACK_POINT_DOUBLE getPredictedPoint() const;
 	private:
 		// determine if a point has already been assigned to the tracker 
 		bool isInMapping(const map<unsigned int, C3_CORRELATE_struct> *position2track, 
 			             const unsigned int trackerNum);
 		// Creates a new tracker
 		unsigned int AddTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
-			                  const int time);
+			                  const double time);
 		// Correlates a point with a tracker
 		void correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
 			                             const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, 
-										 const int time);
+										 const double time);
 };

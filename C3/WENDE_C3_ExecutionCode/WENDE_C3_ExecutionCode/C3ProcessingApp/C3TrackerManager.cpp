@@ -38,7 +38,7 @@ void C3TrackerManager::ClearTracks()
 ///////////////////////////////////////////////////////////////////////////////////////
 C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, 
 													 C3_TRACK_POINT_DOUBLE cameraLaserPosition, 
-													 const int time,
+													 const double time,
 													 const C3_TRACK_POINT_DOUBLE laserOrigin)
 {
 	// variable for mapping positions to tracks
@@ -99,7 +99,7 @@ C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT
 // Correlates a point with a tracker
 void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
 											       const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, 
-											       const int time)
+											       const double time)
 {
 	// loop over all the track positions
 	for (unsigned int ii = 0; ii < cameraRoverPositions.size(); ii++)
@@ -146,7 +146,7 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 // 
 // Purpose: this function creates a new track given a input rover location and time
 ////////////////////////////////////////////////////////////////////////////////////////
-unsigned int C3TrackerManager::AddTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, const int time)
+unsigned int C3TrackerManager::AddTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, const double time)
 {
 	// Create the new Track
 	C3Track *track = NULL;
@@ -181,4 +181,8 @@ bool C3TrackerManager::isInMapping(const map<unsigned int, C3_CORRELATE_struct> 
 
 	// returns if the tracker has already been used
 	return found;
+}
+C3_TRACK_POINT_DOUBLE C3TrackerManager::getPredictedPoint() const
+{
+	return this->m_tracks[0]->getPredictedPoint();
 }

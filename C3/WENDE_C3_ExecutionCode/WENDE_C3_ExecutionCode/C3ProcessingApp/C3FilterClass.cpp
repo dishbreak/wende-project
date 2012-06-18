@@ -131,7 +131,7 @@ C3_TRACK_POINT_DOUBLE C3FilterClass::FilterInput(C3_TRACK_POINT_DOUBLE cameraRov
 	// return the camera point
 	return  GetPredictedPoint(updateTime);
 }
-C3_TRACK_POINT_DOUBLE C3FilterClass::GetPredictedPoint(int time)
+C3_TRACK_POINT_DOUBLE C3FilterClass::GetPredictedPoint(double time)
 {
 	// Calculate Predicted Intercept Point PIP
 	C3_TRACK_POINT_DOUBLE cameraPoint;

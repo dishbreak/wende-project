@@ -57,7 +57,7 @@ C3_TRACK_POINT_DOUBLE C3Track::getPredictionPoint() const
 }
 
 // find out what the tracks positions is estimated to be at time time
-C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(int time)
+C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(double time)
 {	
 	return m_filter.GetPredictedPoint(time);
 }
@@ -168,4 +168,8 @@ double C3Track::getSigma() const
 	double p22sqrt = sqrt(m_filter.m_kalman.P(2,2));
 	double sigma = max(p11sqrt,p22sqrt);
 	return sigma;
+}
+C3_TRACK_POINT_DOUBLE C3Track::getPredictedPoint() const
+{
+	return this->m_predictionPoint;
 }

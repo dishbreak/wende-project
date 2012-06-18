@@ -41,6 +41,8 @@ C3_TRACK_POINT_DOUBLE getCalibrationPointCommand();
 void updateCalibrationState();
 UINT WINAPI AlgorithmThread (LPVOID pParam);
 void WriteDataToScreen(CAMERA_TRACK_MSG_SHM	inData, int cameraTrackMessageCount);
+void TestNoMovement();
+void TestXMovement();
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
 /////////////////////////////////////////////////////////////////////////////////
@@ -55,8 +57,11 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	HANDLE hconsole = GetStdHandle (STD_OUTPUT_HANDLE);
 	//TestKalmanFilter();
-	TestTrackFilter();
+	//TestTrackFilter();
 	//TestCalibration(hconsole);
+	//TestNoMovement();
+	TestXMovement();
+	return 0;	
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup local variables
 	/////////////////////////////////////////////////////////////////////////////////
@@ -477,6 +482,59 @@ void TestKalmanFilter()
 			printf("Iteration (%d)::Difference [X,Y]= [%f,%f]\n", ii,abs(fileResult.X-procResult.X),abs(fileResult.Y-procResult.Y));
 		}
 		myfile.close();
+	}
+}
+void TestNoMovement()
+{
+	C3_TRACK_POINT_DOUBLE roverPoint;
+	roverPoint.X = 0.0;
+	roverPoint.Y = 0.0;
+	C3_TRACK_POINT_DOUBLE laserPoint;
+	laserPoint.X = 0.0;
+	laserPoint.Y = 0.0;
+	C3_TRACK_POINT_DOUBLE laserOrigin;
+	laserOrigin.X = -2.0;
+	laserOrigin.Y =  3.0;
+
+	C3Track  track(roverPoint,0.0);
+	
+	C3_TRACK_POINT_DOUBLE procResult;
+	int            time			= 0.0;
+	double         MAX_ERROR    = 0.0000005;
+
+	for (int ii = 0; ii < 100; ii++)
+	{
+		procResult = track.UpdateTrack(roverPoint,laserPoint,time,laserOrigin);
+		time += 250;	
+		assert(procResult.AZ == 0 && procResult.EL == 0);
+		printf("Iteration (%d)::Difference [X,Y]= [%f,%f]\n", ii,procResult.X,procResult.Y);
+	}
+}
+void TestXMovement()
+{
+	C3_TRACK_POINT_DOUBLE roverPoint;
+	roverPoint.X = 0.0;
+	roverPoint.Y = 0.0;
+	C3_TRACK_POINT_DOUBLE laserPoint;
+	laserPoint.X = 0.0;
+	laserPoint.Y = 0.0;
+	C3_TRACK_POINT_DOUBLE laserOrigin;
+	laserOrigin.X = -2.0;
+	laserOrigin.Y =  3.0;
+
+	C3Track  track(roverPoint,0.0);
+	
+	C3_TRACK_POINT_DOUBLE procResult;
+	double         time			= 0.0;
+	int			   MOVEMENT     = 21;
+
+	for (int ii = 0; ii < 1000; ii++)
+	{
+		procResult = track.UpdateTrack(roverPoint,laserPoint,time,laserOrigin);
+		time += 250.0/1000.0;	
+		roverPoint.X += 0.05;
+		printf("Iteration (%d)::in [X,Y]= [%f,%f] out = [%f,%f]\n", ii,roverPoint.X,roverPoint.Y,
+			track.getPredictedPoint().X,track.getPredictedPoint().Y);
 	}
 }
 void TestTrackFilter()
