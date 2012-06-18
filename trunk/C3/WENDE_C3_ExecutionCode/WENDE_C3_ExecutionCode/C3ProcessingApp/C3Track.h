@@ -49,7 +49,7 @@ class C3Track
 		// Cononical Functions
 		C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, const double time);
 		~C3Track(void);
-
+		C3_TRACK_POINT_DOUBLE getPredictedPoint() const;
 	public:
 		// Filter and predict next location....
 		C3_TRACK_POINT_DOUBLE UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
@@ -57,7 +57,7 @@ class C3Track
 										  const double time,
 										  const C3_TRACK_POINT_DOUBLE laserOrigin);
 
-		C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(int time);
+		C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(double time);
 
 	public:
 		// returns the number of points contained in the history array

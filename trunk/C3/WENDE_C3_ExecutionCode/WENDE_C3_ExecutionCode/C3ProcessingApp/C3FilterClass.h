@@ -46,7 +46,7 @@ class C3FilterClass
 	// Public Functions
 	public:
 		C3_TRACK_POINT_DOUBLE FilterInput(C3_TRACK_POINT_DOUBLE cameraRoverPositions, double updateTime);	
-		C3_TRACK_POINT_DOUBLE GetPredictedPoint(int time);
+		C3_TRACK_POINT_DOUBLE GetPredictedPoint(double time);
 	// Private Functions
 	private:
 		
