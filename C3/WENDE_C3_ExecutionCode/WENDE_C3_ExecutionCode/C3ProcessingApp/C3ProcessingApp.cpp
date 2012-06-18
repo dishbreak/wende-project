@@ -198,8 +198,9 @@ int _tmain(int argc, _TCHAR* argv[])
 						{	
 							// do calibration
 							laserOrigin = calibrate(testPoints);
-							theta = M_PI - atan2(laserOrigin.Y,laserOrigin.X); // yea I used a constant included by cmath that goes to 20 decimal places to 1up you so what..wanna fight about it?
-						
+							double bearing = atan2(laserOrigin.Y,laserOrigin.X); 
+							theta = bearing - M_PI; 
+
 							//rest index
 							calIndex    = 0;
 						}
