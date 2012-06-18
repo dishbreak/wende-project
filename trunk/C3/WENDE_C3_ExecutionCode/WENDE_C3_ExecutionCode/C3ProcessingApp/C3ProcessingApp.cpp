@@ -257,7 +257,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					{
 						// todo move 1 degree towards camera!!!!!!!
 						double EL = -cos(theta);
-						double AZ = sin(theta);
+						double AZ = -sin(theta);
 						// TODO ITEM VERIFY THE LASER MACROS!!!!!!!
 						commandOut.AZ = DEGREES_TO_TICKS(AZ);
 						commandOut.EL = DEGREES_TO_TICKS(EL);
