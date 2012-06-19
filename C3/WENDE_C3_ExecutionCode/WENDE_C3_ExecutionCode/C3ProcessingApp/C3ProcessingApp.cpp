@@ -501,12 +501,35 @@ void updateCalibrationState()
 C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points){
 
 	C3_TRACK_POINT_DOUBLE laserPosition;
-	double m1 = ((points[1].Y-points[0].Y) / (points[1].X - points[0].X));
-	double m2 = ((points[3].Y-points[2].Y) / (points[3].X - points[2].X));	 
+	double m1;
+	if ((points[1].X - points[0].X) != 0)
+	{
+		m1 = ((points[1].Y-points[0].Y) / (points[1].X - points[0].X));
+	}
+	else
+	{
+		m1 = 0.0;
+	}
+	double m2;
+	if ((points[3].X - points[2].X) != 0)
+	{
+		m2 = ((points[3].Y-points[2].Y) / (points[3].X - points[2].X));	 
+	}
+	else
+	{
+		m2 = 0.0;
+	}
 	double b1 = points[0].Y-m1*points[0].X; 
 	double b2 = points[3].Y-m2*points[3].X;
 	 
-	laserPosition.X = (b2-b1) / (m1-m2); 
+	if ((m1-m2) != 0)
+	{
+		laserPosition.X = (b2-b1) / (m1-m2); 
+	}
+	else
+	{
+		laserPosition.X = 0.0; 
+	}
 	laserPosition.Y = laserPosition.X*m1+b1;
 		
 	return laserPosition;

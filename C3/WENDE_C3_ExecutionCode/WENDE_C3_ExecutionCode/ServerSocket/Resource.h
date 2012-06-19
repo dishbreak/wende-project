@@ -64,6 +64,12 @@
 #define IDC_LASER_STATUS_FAILED         1055
 #define IDC_LASER_STATUS_UNKOWN         1056
 #define IDC_LASER_STATUS_TEXT           1057
+#define IDC_BTN_SEND_STOP_AND_CRAWL     1058
+#define IDC_BTN_SEND_SLOW               1059
+#define IDC_BTN_SEND_FAST               1060
+#define IDC_BTN_SEND_SPIRAL             1061
+#define IDC_BTN_SEND_SPIRAL2            1062
+#define IDC_BTN_SEND_FAIL               1062
 
 // Next default values for new objects
 // 

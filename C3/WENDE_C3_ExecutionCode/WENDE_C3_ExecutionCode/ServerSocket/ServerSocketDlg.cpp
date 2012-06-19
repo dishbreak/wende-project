@@ -13,7 +13,7 @@
 #include "Utilties.h"
 
 using namespace cameraMsgs;
-using std::string;
+using std::ios;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,6 +30,8 @@ void CALLBACK TimerProcCameraStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
 void CALLBACK TimerProcCameraTrack(void* lpParametar, BOOLEAN TimerOrWaitFired);
 void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired);
 void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired);
+void CALLBACK TimerProcTrial(void* lpParametar, BOOLEAN TimerOrWaitFired);
+
 class CAboutDlg : public CDialog
 {
 public:
@@ -130,6 +132,11 @@ void CServerSocketDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_SEND_TRACK2, m_CameraTrackButton);
 	DDX_Control(pDX, IDC_BTN_SEND_IMAGE2, m_CameraImageButton);
 	DDX_Control(pDX, IDC_BTN_SEND_IMAGE4, m_LaserStatusButton);
+	DDX_Control(pDX, IDC_BTN_SEND_STOP_AND_CRAWL, m_StopCrawl);
+	DDX_Control(pDX, IDC_BTN_SEND_SLOW, m_TrialSlow);
+	DDX_Control(pDX, IDC_BTN_SEND_FAST, m_TrialFast);
+	DDX_Control(pDX, IDC_BTN_SEND_SPIRAL, m_TrialSpiral);
+	DDX_Control(pDX, IDC_BTN_SEND_FAIL, m_TrialFail);
 }
 
 BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
@@ -170,6 +177,11 @@ BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_SEND_TRACK2, &CServerSocketDlg::OnBnClickedBtnSendTrack2)
 	ON_BN_CLICKED(IDC_BTN_SEND_IMAGE2, &CServerSocketDlg::OnBnClickedBtnSendImage2)
 	ON_BN_CLICKED(IDC_BTN_SEND_IMAGE4, &CServerSocketDlg::OnBnClickedBtnSendLaserStatus)
+	ON_BN_CLICKED(IDC_BTN_SEND_STOP_AND_CRAWL, &CServerSocketDlg::OnBnClickedBtnSendStopAndCrawl)
+	ON_BN_CLICKED(IDC_BTN_SEND_SLOW, &CServerSocketDlg::OnBnClickedBtnSendSlow)
+	ON_BN_CLICKED(IDC_BTN_SEND_FAST, &CServerSocketDlg::OnBnClickedBtnSendFast)
+	ON_BN_CLICKED(IDC_BTN_SEND_SPIRAL, &CServerSocketDlg::OnBnClickedBtnSendSpiral)
+	ON_BN_CLICKED(IDC_BTN_SEND_FAIL, &CServerSocketDlg::OnBnClickedBtnSendFail)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -863,8 +875,6 @@ void CServerSocketDlg::OnBnClickedBtnSendStatusCont()
 		m_CameraStatusButton.SetWindowTextA("Send Camera Status (cont.)");
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleCameraStatus, NULL);
-//		Sleep(5000);
-//		CloseHandle (m_timerHandleCameraStatus);
 	}
 }
 void CALLBACK TimerProcCameraStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
@@ -896,8 +906,6 @@ void CServerSocketDlg::OnBnClickedBtnSendTrack2()
 		m_CameraTrackButton.SetWindowTextA("Send Camera Track (cont.)");
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleCameraTrack, NULL);
-//		Sleep(5000);
-		//CloseHandle (m_timerHandleCameraTrack);
 	}
 }
 void CALLBACK TimerProcCameraTrack(void* lpParametar, BOOLEAN TimerOrWaitFired)
@@ -929,8 +937,6 @@ void CServerSocketDlg::OnBnClickedBtnSendImage2()
 		isStart = true;
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleCameraImage, NULL);
-		//Sleep(5000);
-		//CloseHandle (m_timerHandleCameraImage);
 	}
 }
 void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired)
@@ -961,8 +967,6 @@ void CServerSocketDlg::OnBnClickedBtnSendLaserStatus()
 		isStart = true;
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleLaserStatus, NULL);
-//		Sleep(5000);
-//		CloseHandle (m_timerHandleLaserStatus);
 	}
 }
 void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
@@ -972,3 +976,185 @@ void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
 	CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
 	obj->OnBnClickedBtnSendLasserStatus();
 } 
+void CServerSocketDlg::OnBnClickedBtnSendStopAndCrawl()
+{
+	static bool isStart = true;
+	if (isStart == true)
+	{
+		myfile.open("Test_stopCrawl.txt");
+		myfile.seekg (0, ios::beg);
+		isStart = false;
+		m_StopCrawl.SetWindowTextA("Stop \"Stop And Crawl\"");
+		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandleSlowCrawl,
+												NULL,
+												TimerProcTrial,
+												this,
+												0,
+												250,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		m_StopCrawl.SetWindowTextA("Send \"Stop And Crawl\"");
+		isStart = true;
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleSlowCrawl, NULL);
+		// close the file
+		myfile.close();
+	}
+}
+void CALLBACK TimerProcTrial(void* lpParametar, BOOLEAN TimerOrWaitFired)
+{
+	// This is used only to call QueueTimerHandler
+	// Typically, this function is static member of CTimersDlg
+	CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
+	obj->SendFile();
+}
+void CServerSocketDlg::SendFile()
+{	
+	static double in1=0, in2=0, in3=0, in4=0, in5=0;
+	// make sure the file is not already open
+	if (myfile.is_open())
+	{
+		if (!myfile.eof())
+		{
+			myfile >> in1 >> in2 >> in3 >> in4 >> in5;
+		}
+		else
+		{
+			// close the file
+			myfile.close();
+		}
+	}	
+	cameraTracks track;
+	track.set_time(in5);										// set the operational time
+	
+	track.set_laseron(true);								// set laser status
+	
+	track.set_status(cameraMsgs::systemStatus::CAMERA_READY);	// set camera status
+
+	AddTrack(&m_trackEnable0,&m_trackXEditBox0,&m_trackYEditBox0, &track);
+
+	::cameraMsgs::track *cTrack = track.add_target();
+	cTrack->set_x(in1*1000);
+	cTrack->set_y(in2*1000);
+
+	::cameraMsgs::track *cLaser = track.add_laser();
+	cLaser->set_x(in3*1000);
+	cLaser->set_y(in4*1000);
+	
+	string strText = track.SerializeAsString();
+	OnBtnSend(strText.c_str(),1,strText.size(),1);												// send the data
+	m_SocketManager[1].AppendMessage("OnBtnSendTrack(CAMERA)\n");
+}
+void CServerSocketDlg::OnBnClickedBtnSendSlow()
+{
+	static bool isStart = true;
+	if (isStart == true)
+	{
+		myfile.open("Test_slow.txt");
+		myfile.seekg (0, ios::beg);
+		isStart = false;
+		m_TrialSlow.SetWindowTextA("Stop \"Slow\"");
+		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandleSlow,
+												NULL,
+												TimerProcTrial,
+												this,
+												0,
+												250,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		m_TrialSlow.SetWindowTextA("Send \"Slow\"");
+		isStart = true;
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleSlow, NULL);
+		// close the file
+		myfile.close();
+	}
+}
+
+void CServerSocketDlg::OnBnClickedBtnSendFast()
+{
+static bool isStart = true;
+	if (isStart == true)
+	{
+		myfile.open("Test_fast.txt");
+		myfile.seekg (0, ios::beg);
+		isStart = false;
+		m_TrialFast.SetWindowTextA("Stop \"Fast\"");
+		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandleFast,
+												NULL,
+												TimerProcTrial,
+												this,
+												0,
+												250,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		m_TrialFast.SetWindowTextA("Send \"Fast\"");
+		isStart = true;
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleFast, NULL);
+		// close the file
+		myfile.close();
+	}
+}
+
+void CServerSocketDlg::OnBnClickedBtnSendSpiral()
+{
+static bool isStart = true;
+	if (isStart == true)
+	{
+		myfile.open("Test_spiral.txt");
+		myfile.seekg (0, ios::beg);
+		isStart = false;
+		m_TrialSpiral.SetWindowTextA("Stop \"Spiral\"");
+		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandleSpiral,
+												NULL,
+												TimerProcTrial,
+												this,
+												0,
+												250,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		m_TrialSpiral.SetWindowTextA("Send \"Spiral\"");
+		isStart = true;
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleSpiral, NULL);
+		// close the file
+		myfile.close();
+	}
+}
+
+void CServerSocketDlg::OnBnClickedBtnSendFail()
+{
+	static bool isStart = true;
+	if (isStart == true)
+	{
+		myfile.open("Test_fail.txt");
+		myfile.seekg (0, ios::beg);
+		isStart = false;
+		m_TrialFail.SetWindowTextA("Stop \"Fail\"");
+		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandleFail,
+												NULL,
+												TimerProcTrial,
+												this,
+												0,
+												250,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		m_TrialFail.SetWindowTextA("Send \"Fail\"");
+		isStart = true;
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandleFail, NULL);
+		// close the file
+		myfile.close();
+	}
+}

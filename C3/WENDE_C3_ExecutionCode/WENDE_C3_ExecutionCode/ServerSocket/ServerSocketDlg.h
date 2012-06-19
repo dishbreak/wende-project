@@ -16,7 +16,12 @@
 #include "ShmStructs.h"
 #include <string>
 #include "LaserStatus.h"
+#include <iostream>
+#include <fstream>
 
+
+using std::string;
+using std::ifstream;
 using std::string;
 using namespace cameraMsgs;
 
@@ -73,9 +78,6 @@ protected:
 	afx_msg LRESULT OnUpdateConnection(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 public:
-	CButton m_statusLaserOnCtrl;
-	cameraMsgs::systemStatus m_CameraStatus;
-	LASER_SYSTEM_STATUS m_LaserStatus;
 	afx_msg void OnBnClickedCameraStatusDown();
 	afx_msg void OnBnClickedCameraStatusReady();
 	afx_msg void OnBnClickedCameraStatusOperational();
@@ -85,15 +87,28 @@ public:
 	afx_msg void OnBtnSendStatus();
 	afx_msg void OnBtnSendImage();
 	afx_msg void OnBtnSendTrack();
-
-	CButton m_CameraUnkownStatus;
+	afx_msg void OnBnClickedLaserEnable6();
+	afx_msg void OnBnClickedBtnSelectCameraImage();
+	afx_msg void OnBnClickedBtnSendStopAndCrawl();
+	afx_msg void OnBnClickedTrackEnable0();
+	afx_msg void OnBnClickedTrackEnable1();
+	afx_msg void OnBnClickedTrackEnable2();
+	afx_msg void OnBnClickedTrackEnable3();
+	afx_msg void OnBnClickedTrackEnable4();
+	afx_msg void OnBnClickedTrackEnable5();
+	afx_msg void OnBnClickedBtnSendLasserStatus();
+	afx_msg void OnBnClickedLaserStatusDown();
+	afx_msg void OnBnClickedLaserStatusFailed();
+	afx_msg void OnBnClickedLaserStatusError();
+	afx_msg void OnBnClickedLaserStatusReady();
+	afx_msg void OnBnClickedLaserStatusUnkown();
+	afx_msg void OnBnClickedLaserStatusOperational();
+	afx_msg void OnBnClickedBtnSendStatusCont();
+	afx_msg void OnBnClickedBtnSendTrack2();
+	afx_msg void OnBnClickedBtnSendImage2();
+	afx_msg void OnBnClickedBtnSendLaserStatus();
+	
 	CEdit m_CameraStatusTextCtrl;
-	CButton m_trackEnable0;
-	CButton m_trackEnable1;
-	CButton m_trackEnable2;
-	CButton m_trackEnable3;
-	CButton m_trackEnable4;
-	CButton m_trackEnable5;
 	CEdit m_trackXEditBox0;
 	CEdit m_trackXEditBox1;
 	CEdit m_trackXEditBox2;
@@ -106,17 +121,9 @@ public:
 	CEdit m_trackYEditBox3;
 	CEdit m_trackYEditBox4;
 	CEdit m_trackYEditBox5;
-	afx_msg void OnBnClickedTrackEnable0();
-	afx_msg void OnBnClickedTrackEnable1();
-	afx_msg void OnBnClickedTrackEnable2();
-	afx_msg void OnBnClickedTrackEnable3();
-	afx_msg void OnBnClickedTrackEnable4();
-	afx_msg void OnBnClickedTrackEnable5();
-	CButton m_laserEnable0;
+	
 	CEdit m_laserXEditBox0;
 	CEdit m_laserYEditBox0;
-	afx_msg void OnBnClickedLaserEnable6();
-	afx_msg void OnBnClickedBtnSelectCameraImage();
 	CString m_imageName;
 	unsigned char bytes[SHM_MAX_IMAGE_SIZE];
 	CPictureCtrl m_picCtrl;
@@ -124,30 +131,42 @@ public:
 	SIZE    tImageSize;
 	void AddTrack(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
 	void AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
-	afx_msg void OnBnClickedBtnSendLasserStatus();
+	void SendFile();
 	CEdit m_LaserStatusText;
-	afx_msg void OnBnClickedLaserStatusDown();
-	afx_msg void OnBnClickedLaserStatusFailed();
-	afx_msg void OnBnClickedLaserStatusError();
-	afx_msg void OnBnClickedLaserStatusReady();
-	afx_msg void OnBnClickedLaserStatusUnkown();
-	afx_msg void OnBnClickedLaserStatusOperational();
-	afx_msg void OnBnClickedBtnSendStatusCont();
+	cameraMsgs::systemStatus m_CameraStatus;
+	LASER_SYSTEM_STATUS m_LaserStatus;
 	HANDLE m_timerHandleCameraStatus;
 	HANDLE m_timerHandleCameraTrack;
 	HANDLE m_timerHandleCameraImage;
 	HANDLE m_timerHandleLaserStatus;
-	/*void CALLBACK TimerProcCameraStatus(void* lpParametar,BOOLEAN TimerOrWaitFired);
-	void CALLBACK TimerProcCameraTrack(void* lpParametar,BOOLEAN TimerOrWaitFired);
-	void CALLBACK TimerProcCameraImage(void* lpParametar,BOOLEAN TimerOrWaitFired);
-	void CALLBACK TimerProcLaserStatus(void* lpParametar,BOOLEAN TimerOrWaitFired);*/
-	afx_msg void OnBnClickedBtnSendTrack2();
-	afx_msg void OnBnClickedBtnSendImage2();
-	afx_msg void OnBnClickedBtnSendLaserStatus();
+	HANDLE m_timerHandleSlowCrawl;
+	HANDLE m_timerHandleSlow;
+	HANDLE m_timerHandleFast;
+	HANDLE m_timerHandleSpiral;
+	HANDLE m_timerHandleFail;
+	CButton m_laserEnable0;
 	CButton m_CameraStatusButton;
 	CButton m_CameraTrackButton;
 	CButton m_CameraImageButton;
 	CButton m_LaserStatusButton;
+	CButton m_trackEnable0;
+	CButton m_trackEnable1;
+	CButton m_trackEnable2;
+	CButton m_trackEnable3;
+	CButton m_trackEnable4;
+	CButton m_trackEnable5;
+	CButton m_CameraUnkownStatus;
+	CButton m_statusLaserOnCtrl;	
+	CButton m_StopCrawl;
+	ifstream myfile;
+	afx_msg void OnBnClickedBtnSendSlow();
+	CButton m_TrialSlow;
+	afx_msg void OnBnClickedBtnSendFast();
+	CButton m_TrialFast;
+	afx_msg void OnBnClickedBtnSendSpiral();
+	CButton m_TrialSpiral;
+	afx_msg void OnBnClickedBtnSendFail();
+	CButton m_TrialFail;
 };
 
 //{{AFX_INSERT_LOCATION}}
