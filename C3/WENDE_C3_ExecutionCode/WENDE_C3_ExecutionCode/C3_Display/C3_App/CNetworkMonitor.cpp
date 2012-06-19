@@ -469,13 +469,30 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 				// Only call if the alert is relevant
 				if(nAlertType != 0)
 				{
-					// Update the Calibration button
-					dispman->Update_Calibration_Reply(nAlertType);
+					if((C3_Alert_Types)nAlertType == C3_Alert_Types::CALIBRATION_FAILED ||
+						(C3_Alert_Types)nAlertType == C3_Alert_Types::CALIBRATION_SUCCESS )
+					{
+						// Update the Calibration button
+						dispman->Update_Calibration_Reply(nAlertType);
+					}
+
+					if((C3_Alert_Types)nAlertType == C3_Alert_Types::TARGET_LEFT_PLAYING_FIELD )
+					{
+						// Patient left evac area
+						dispman->Update_Notification_Panel(2);
+					}
 
 					// Call notification panel... trigger other events
 					if((C3_Alert_Types)nAlertType == C3_Alert_Types::POC_FINISHED )
 					{
 						dispman->Store_Latest_DTI(nDTIValue, nTrialResult); 
+
+						if(nTrialResult == 1)
+							// Trial Success
+							dispman->Update_Notification_Panel(1);
+						else
+							// Trial failure
+							dispman->Update_Notification_Panel(3);
 					}
 				}			
 				// release the mutex
