@@ -70,12 +70,7 @@ bool SendNotification(CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *notification);
 int _tmain(int argc, _TCHAR* argv[])
 {
 	HANDLE hconsole = GetStdHandle (STD_OUTPUT_HANDLE);
-	//TestKalmanFilter();
-	//TestTrackFilter();
-	//TestCalibration(hconsole);
-	//TestNoMovement();
-	//TestXMovement();
-	//return 0;	
+	
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup local variables
 	/////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +91,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	C3TrackerManager						 tm;			// the tracker manager
 	double theta=0.0;
 	C3_Alert_Types							 state;
+
+	memset((void*)&testPoints,0,sizeof(C3_TRACK_POINT_DOUBLE)*4);
+	memset((void*)&commandOut,0,sizeof(C3_TRACK_POINT_DOUBLE));
+	memset((void*)&laserOrigin,0,sizeof(C3_TRACK_POINT_DOUBLE));
+	memset((void*)&laserPoint,0,sizeof(C3_TRACK_POINT_DOUBLE));
+	//TestKalmanFilter();
+	//TestTrackFilter();
+	//TestCalibration(hconsole);
+	//TestNoMovement();
+	//TestXMovement();
+	//return 0;	
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup the shared memory
 	/////////////////////////////////////////////////////////////////////////////////
@@ -625,15 +631,17 @@ void TestXMovement()
 	laserOrigin.X = -2.0;
 	laserOrigin.Y =  3.0;
 
-	C3Track  track(roverPoint,0.0);
+	C3TrackerManager  track;
 	
 	C3_TRACK_POINT_DOUBLE procResult;
 	double         time			= 0.0;
 	int			   MOVEMENT     = 21;
-
+	vector<C3_TRACK_POINT_DOUBLE> t;
 	for (int ii = 0; ii < 1000; ii++)
 	{
-		procResult = track.UpdateTrack(roverPoint,laserPoint,time,laserOrigin);
+		t.clear();
+		t.push_back(roverPoint);
+		procResult = track.UpdateTracks(t,laserPoint,time,laserOrigin);
 		time += 250.0/1000.0;	
 		roverPoint.X += 0.05;
 		printf("Iteration (%d)::in [X,Y]= [%f,%f] out = [%f,%f]\n", ii,roverPoint.X,roverPoint.Y,

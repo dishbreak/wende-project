@@ -22,6 +22,8 @@ C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
 				   m_passTime(0),
 				   m_travelRange(0)
 {
+	m_filter = new C3FilterClass();
+
 	// set updated to false
 	m_isUpdate = false;
 	// Add to first history point
@@ -43,6 +45,11 @@ C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
 
 C3Track::~C3Track(void)
 {
+	if (m_filter != NULL)
+	{
+		delete m_filter;
+		m_filter = NULL;
+	}
 }
 
 C3_TRACK_POINT_DOUBLE C3Track::getLastHistoryPoint() const
@@ -60,7 +67,7 @@ C3_TRACK_POINT_DOUBLE C3Track::getPredictionPoint() const
 // find out what the tracks positions is estimated to be at time time
 C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(double time)
 {	
-	return m_filter.GetPredictedPoint(time);
+	return m_filter->GetPredictedPoint(time);
 }
 
 // Filter and predict next location....
@@ -78,7 +85,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 	double updateRate = time - m_currTime;
 
 	// Calculate Predicted Intercept Point (PIP)
-	m_predictionPoint = m_filter.FilterInput(cameraRoverPosition,updateRate);
+	m_predictionPoint = m_filter->FilterInput(cameraRoverPosition,updateRate);
 
 	// Update to the next time value using input
 	m_currTime = time;
@@ -169,8 +176,8 @@ double C3Track::getDTI() const
 //
 double C3Track::getSigma() const
 {
-	double p11sqrt = sqrt(m_filter.m_kalman.P(1,1));
-	double p22sqrt = sqrt(m_filter.m_kalman.P(2,2));
+	double p11sqrt = sqrt(m_filter->P(1,1));
+	double p22sqrt = sqrt(m_filter->P(2,2));
 	double sigma = max(p11sqrt,p22sqrt);
 	return sigma;
 }

@@ -24,7 +24,7 @@ class C3Track
 {
 	private:
 		// Filter for tracking purposes
-		C3FilterClass			m_filter;
+		C3FilterClass			*m_filter;
 		// Last predicted point
 		C3_TRACK_POINT_DOUBLE	m_predictionPoint;
 		// History of points for prosecution

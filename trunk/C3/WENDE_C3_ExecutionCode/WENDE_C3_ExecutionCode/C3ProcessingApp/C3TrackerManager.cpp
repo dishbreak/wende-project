@@ -2,6 +2,7 @@
 #include "C3TrackerManager.h"
 #include "C3Utilities.h"
 #include "C3Configuration.h"
+#include "C3FilterClass.h"
 #include <algorithm>
 #include <cmath>
 
@@ -160,7 +161,7 @@ unsigned int C3TrackerManager::AddTrack(const C3_TRACK_POINT_DOUBLE cameraRoverP
 	// Create the new Track
 	C3Track *track = NULL;
 
-	// CREATE A NEW TRACK TO PUT INTO THE TRACKER MANAGER
+	// CREATE A NEW TRACK TO PUT INTO THE TRACKER MANAGER	
 	track = new C3Track(cameraRoverPosition,time);
 
 	// add the track to the array of tracks
