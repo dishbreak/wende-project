@@ -22,6 +22,11 @@ C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
 				   m_passTime(0),
 				   m_travelRange(0)
 {
+	// set updated to false
+	m_isUpdate = false;
+	// Add to first history point
+	m_lastUpdatePoint = cameraRoverPosition;
+
 	// THE PLAYING FIELD RADIUS
 	m_playingFieldRadius = C3Configuration::Instance().WENDE_PLAYING_FIELD_RADIUS;
 
@@ -43,13 +48,9 @@ C3Track::~C3Track(void)
 C3_TRACK_POINT_DOUBLE C3Track::getLastHistoryPoint() const
 {
 	//TODO FIX
-	return C3_TRACK_POINT_DOUBLE();//m_historyPoints.getLastHistoryPoint();
+	return m_lastUpdatePoint;
 }
 
-unsigned int C3Track::getNumHistoryPoints() const
-{
-	return m_historyPoints.getNumHistoryPoints();
-}
 
 C3_TRACK_POINT_DOUBLE C3Track::getPredictionPoint() const
 {
@@ -69,6 +70,9 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 										   const C3_TRACK_POINT_DOUBLE laserOrigin)
 {
 	C3_TRACK_POINT_DOUBLE result;
+
+	// set updated to false
+	m_isUpdate = true;
 
 	// Get the update rate
 	double updateRate = time - m_currTime;
@@ -94,7 +98,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 	{
 		// Total travel range
 		// THIS CAN BE REMOVED --- IF NEEDED
-		m_travelRange = m_travelRange + C3Utilities::EuclideanDistance(cameraRoverPosition,this->m_historyPoints.getLastHistoryPoint());
+		m_travelRange = m_travelRange + C3Utilities::EuclideanDistance(cameraRoverPosition,m_lastUpdatePoint);
 
 		// Calculate the TTI
 		m_TTI		  = time - m_passTime;
@@ -152,9 +156,9 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 	}
 	
 	// Add to first history point
-	this->m_historyPoints.addPosition(cameraRoverPosition);
+	m_lastUpdatePoint = cameraRoverPosition;
 
-	return m_predictionPoint;
+	return result;
 }
 // Return the track current DTI
 double C3Track::getDTI() const

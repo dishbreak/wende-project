@@ -28,7 +28,7 @@ class C3Track
 		// Last predicted point
 		C3_TRACK_POINT_DOUBLE	m_predictionPoint;
 		// History of points for prosecution
-		C3CircularHistory		m_historyPoints;
+		C3_TRACK_POINT_DOUBLE	m_lastUpdatePoint;
 		// Flag to determine if laser commands are used
 		bool					m_isProsecuteTrack;
 		// The starting time of the track
@@ -45,7 +45,10 @@ class C3Track
 		double					m_playingFieldRadius;
 		// store the total travel range
 		double					m_travelRange;
+				
 	public:
+		// is updated 
+		bool					m_isUpdate;
 		// Cononical Functions
 		C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, const double time);
 		~C3Track(void);
@@ -60,8 +63,6 @@ class C3Track
 		C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(double time);
 
 	public:
-		// returns the number of points contained in the history array
-		unsigned int getNumHistoryPoints() const;
 		// returns the last saved point containd in the history array
 		C3_TRACK_POINT_DOUBLE getLastHistoryPoint() const;
 		// returns the last prediction from the kalman filter

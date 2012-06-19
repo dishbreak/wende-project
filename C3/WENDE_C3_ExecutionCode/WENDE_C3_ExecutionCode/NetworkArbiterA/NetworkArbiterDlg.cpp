@@ -592,7 +592,7 @@ void CNetworkArbiterDlg::OnBnClickedC3LaserStatus3()
 		isStart = true;
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleLaserCommand, NULL);
-		Sleep(5000);
-		CloseHandle (m_timerHandleLaserCommand);
+	//	Sleep(5000);
+	//	CloseHandle (m_timerHandleLaserCommand);
 	}
 }

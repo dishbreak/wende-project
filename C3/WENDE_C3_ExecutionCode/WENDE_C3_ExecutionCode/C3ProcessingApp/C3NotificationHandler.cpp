@@ -8,7 +8,6 @@ C3NotificationHandler::C3NotificationHandler()
 	m_nResult = 0;
 	/* Initialize the critical section before entering multi-threaded context. */
 	InitializeCriticalSection(&cs);
-
 };
 
 C3NotificationHandler::~C3NotificationHandler()
@@ -36,32 +35,75 @@ bool C3NotificationHandler::Get_IsCalibration()
 	//return result
 	return result;
 }
-void C3NotificationHandler::Set_Alert_Type(C3_Alert_Types nAlertType)
+void C3NotificationHandler::Set_Process_State(C3_Alert_Types nAlertType)
 {
-	m_nAlertType = nAlertType;
+	/* Enter the critical section -- other threads are locked out */
+	EnterCriticalSection(&cs);		
+	/* Do some thread-safe processing! */
+
+	if (nAlertType == C3_Alert_Types::CALIBRATION_INIT ||
+		nAlertType == C3_Alert_Types::CALIBRATION_FAILED)
+	{
+		Set_IsCalibration(true);
+		m_nAlertType = C3_Alert_Types::CALIBRATION_IN_PROGRESS_1;
+	}
+	else
+	{
+		m_nAlertType = nAlertType;
+	}
+	/* Leave the critical section -- other threads can now EnterCriticalSection() */
+	LeaveCriticalSection(&cs);
 };
 
 void C3NotificationHandler::Set_DTI_Value(int nDTIValue)
 {
+	/* Enter the critical section -- other threads are locked out */
+	EnterCriticalSection(&cs);		
+	/* Do some thread-safe processing! */
 	m_nDTIValue = nDTIValue;
+	/* Leave the critical section -- other threads can now EnterCriticalSection() */
+	LeaveCriticalSection(&cs);
 };
 
 void C3NotificationHandler::Set_Trial_Result(int nResult)
 {
+	/* Enter the critical section -- other threads are locked out */
+	EnterCriticalSection(&cs);		
+	/* Do some thread-safe processing! */
 	m_nResult = nResult;
+	/* Leave the critical section -- other threads can now EnterCriticalSection() */
+	LeaveCriticalSection(&cs);
 };
 
-C3_Alert_Types C3NotificationHandler::Get_Alert_Type()
+C3_Alert_Types C3NotificationHandler::Get_Process_State()
 {
-	return m_nAlertType;
+	/* Enter the critical section -- other threads are locked out */
+	EnterCriticalSection(&cs);		
+	/* Do some thread-safe processing! */
+	C3_Alert_Types result = m_nAlertType;
+	/* Leave the critical section -- other threads can now EnterCriticalSection() */
+	LeaveCriticalSection(&cs);
+	return result;
 };
 
 int C3NotificationHandler::Get_DTI_Value()
 {
-	return m_nDTIValue;	
+	/* Enter the critical section -- other threads are locked out */
+	EnterCriticalSection(&cs);		
+	/* Do some thread-safe processing! */
+	int result = m_nDTIValue;
+	/* Leave the critical section -- other threads can now EnterCriticalSection() */
+	LeaveCriticalSection(&cs);
+	return result;	
 };
 
 int C3NotificationHandler::Get_Trial_Result()
 {
-	return m_nResult;	
+	/* Enter the critical section -- other threads are locked out */
+	EnterCriticalSection(&cs);		
+	/* Do some thread-safe processing! */
+	int result = m_nResult;
+	/* Leave the critical section -- other threads can now EnterCriticalSection() */
+	LeaveCriticalSection(&cs);
+	return result;	
 };

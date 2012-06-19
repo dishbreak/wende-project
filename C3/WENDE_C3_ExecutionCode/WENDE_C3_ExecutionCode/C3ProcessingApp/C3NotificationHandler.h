@@ -15,12 +15,12 @@ public:
 	}	
 
 	// Public access to modifiers
-	void Set_Alert_Type(C3_Alert_Types nAlertType);
+	void Set_Process_State(C3_Alert_Types nAlertType);
 	void Set_DTI_Value(int nDTIValue);
 	void Set_Trial_Result(int nResult);
 	void Set_IsCalibration(bool isCalibration);
 
-	C3_Alert_Types Get_Alert_Type();
+	C3_Alert_Types Get_Process_State();
 	int Get_DTI_Value();
 	int Get_Trial_Result();
 	bool Get_IsCalibration();

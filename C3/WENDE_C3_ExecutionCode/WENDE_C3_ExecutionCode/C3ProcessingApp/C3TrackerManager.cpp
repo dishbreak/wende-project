@@ -108,13 +108,23 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 		double minValue    = numeric_limits<double>::max();
 		
 		// loop over all the camera measurements
-		for (unsigned int jj = 0; jj < m_tracks.size(); ii++)
+		for (unsigned int jj = 0; jj < m_tracks.size(); jj++)
 		{
 			// first check if the measurement is in the vicinity of the track, 
 			// use 3 sigma around projected point 
-			double sigma = m_tracks[jj]->getSigma();
+			double sigma;
+			C3_TRACK_POINT_DOUBLE predPoint;
+			if (!m_tracks[jj]->m_isUpdate)
+			{
+				predPoint = m_tracks[jj]->getLastHistoryPoint();
+				sigma = 5.0;
+			}
+			else
+			{
+				predPoint = m_tracks[jj]->getPointPropogatedToTime(time);
+				sigma = m_tracks[jj]->getSigma();
+			}
 			double threshold = min(3.0*sigma,5.0);
-			C3_TRACK_POINT_DOUBLE predPoint = m_tracks[jj]->getPointPropogatedToTime(time);
 			correlate.dist = C3Utilities::EuclideanDistance(cameraRoverPositions[ii],predPoint);
 			// make this a configuration item...
 			if(threshold>correlate.dist)
@@ -185,4 +195,17 @@ bool C3TrackerManager::isInMapping(const map<unsigned int, C3_CORRELATE_struct> 
 C3_TRACK_POINT_DOUBLE C3TrackerManager::getPredictedPoint() const
 {
 	return this->m_tracks[0]->getPredictedPoint();
+}
+int	C3TrackerManager::GetDTI()const
+{
+	// todo add better logic
+	double minValue    = numeric_limits<double>::max();
+	for (int ii = 0; ii < m_tracks.size(); ii++)
+	{
+		if (C3Utilities::EuclideanDistance(m_tracks[ii]->getLastHistoryPoint())<minValue) 
+		{
+			minValue = C3Utilities::EuclideanDistance(m_tracks[ii]->getLastHistoryPoint());
+		}
+	}
+	return minValue;
 }
