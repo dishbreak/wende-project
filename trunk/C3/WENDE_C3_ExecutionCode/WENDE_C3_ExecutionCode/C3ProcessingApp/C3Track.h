@@ -61,7 +61,7 @@ class C3Track
 										  const C3_TRACK_POINT_DOUBLE laserOrigin);
 
 		C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(double time);
-
+		bool isProsecute()const;
 	public:
 		// returns the last saved point containd in the history array
 		C3_TRACK_POINT_DOUBLE getLastHistoryPoint() const;

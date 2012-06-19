@@ -460,7 +460,7 @@ int CDisplayManager::Store_Latest_DTI(int nDTI, bool bPassed)
 	System::DateTime TimeStamp(0, System::DateTimeKind::Local);
 	TimeStamp = System::DateTime::Now;
 	//convert to meters
-	float fDTI = (float) nDTI;// / 1000;
+	float fDTI = (float) nDTI / 1000;
 	//Pass/Fail?
 
 	//assemble fields

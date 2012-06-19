@@ -18,13 +18,12 @@ C3TrackerManager::~C3TrackerManager(void)
 void C3TrackerManager::ClearTracks()
 {
 	// free the trackers
-	for(int ii = m_tracks.size(); ii >=0; ii--)
+	for(int ii = 0; ii <m_tracks.size(); ii++)
 	{
-		C3Track *track = m_tracks[ii];
-
+		C3Track *track = m_tracks.back();
+		m_tracks.pop_back();
+		
 		delete track;
-
-		m_tracks[ii] = NULL;
 	}
 	// clear the tracks vector
 	m_tracks.clear();
@@ -196,15 +195,17 @@ C3_TRACK_POINT_DOUBLE C3TrackerManager::getPredictedPoint() const
 {
 	return this->m_tracks[0]->getPredictedPoint();
 }
-int	C3TrackerManager::GetDTI()const
+double C3TrackerManager::GetDTI()const
 {
 	// todo add better logic
 	double minValue    = numeric_limits<double>::max();
+	double temp        = 0;
 	for (int ii = 0; ii < m_tracks.size(); ii++)
 	{
-		if (C3Utilities::EuclideanDistance(m_tracks[ii]->getLastHistoryPoint())<minValue) 
+		temp = C3Utilities::EuclideanDistance(m_tracks[ii]->getLastHistoryPoint());
+		if (temp < minValue && m_tracks[ii]->isProsecute()) 
 		{
-			minValue = C3Utilities::EuclideanDistance(m_tracks[ii]->getLastHistoryPoint());
+			minValue = temp;
 		}
 	}
 	return minValue;
