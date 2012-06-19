@@ -462,7 +462,6 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 				nAlertType   = m_ProcessingInterface->AlertType;		// 1..n for different conditions: end of trial etc..
 				nDTIValue    = m_ProcessingInterface->DTI;				// Actual DTI value
 				nTrialResult = m_ProcessingInterface->POCResult;		// Pass / fail
-                //dispman->Store_Latest_DTI(nDTIValue, nTrialResult);
 
 				// Only call if the alert is relevant
 				if(nAlertType != 0)
@@ -470,9 +469,8 @@ UINT WINAPI ProcessingInterfaceReceiveThread (LPVOID pParam)
 					// Update the Calibration button
 					dispman->Update_Calibration_Reply(nAlertType);
 
-
 					// Call notification panel... trigger other events
-					if(nDTIValue > 0)
+					if((C3_Alert_Types)nAlertType == C3_Alert_Types::POC_FINISHED )
 					{
 						dispman->Store_Latest_DTI(nDTIValue, nTrialResult); 
 					}
