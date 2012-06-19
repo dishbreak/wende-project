@@ -61,8 +61,9 @@ bool SendNotification(CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *notification);
 #define TICK_OFFSET      1086
 #define TICKS_PER_DEGREE 20.6
 #define DEGREES_TO_TICKS(DEG)(TICK_OFFSET+DEG*TICKS_PER_DEGREE)
-#define MM_TO_M(x)(x/1000)
-#define MS_TO_S(x)(x/1000)
+#define MM_TO_M(x)(x/1000.0)
+#define M_TO_MM(x)(x*1000.0)
+#define MS_TO_S(x)(x/1000.0)
 /////////////////////////////////////////////////////////////////////////////////
 // Declare main functions
 /////////////////////////////////////////////////////////////////////////////////
@@ -259,13 +260,19 @@ int _tmain(int argc, _TCHAR* argv[])
 					{
 						sendMessageSuccess = false;
 					}
+					if (tm.GetDTI() > C3Configuration::Instance().WENDE_PLAYING_FIELD_RADIUS)
+					{
+						C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::TARGET_LEFT_PLAYING_FIELD);
+					}
 				}
 				else if (state == C3_Alert_Types::POC_FINISHED)
 				{
 					sendMessageSuccess == false;
-					C3NotificationHandler::Instance().Set_DTI_Value(tm.GetDTI());
+					double value = tm.GetDTI();
+					value = M_TO_MM(value);
+					C3NotificationHandler::Instance().Set_DTI_Value((int)value);
 					
-					if (tm.GetDTI() <= tm.GetDTI())
+					if (tm.GetDTI() <= C3Configuration::Instance().WENDE_FAILURE_LINE_RADIUS)
 					{
 						C3NotificationHandler::Instance().Set_Trial_Result(true);
 					}
@@ -277,12 +284,10 @@ int _tmain(int argc, _TCHAR* argv[])
 					SendNotification(&m_DisplayNotification);
 					Sleep(4000);
 					C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_SUCCESS);
+					tm.ClearTracks();
 				}
 			}
-			if (tm.GetDTI() > C3Configuration::Instance().WENDE_PLAYING_FIELD_RADIUS)
-			{
-				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::TARGET_LEFT_PLAYING_FIELD);
-			}
+			
 			////////////////////////
 			// Send notifications
 			////////////////////////

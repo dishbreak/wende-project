@@ -31,7 +31,7 @@ C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
 	m_playingFieldRadius = C3Configuration::Instance().WENDE_PLAYING_FIELD_RADIUS;
 
 	// DETERMINE IF THE TRACK STARTS INSIDE OF THE PLAYING FIELD
-	if (m_playingFieldRadius < C3Utilities::EuclideanDistance(cameraRoverPosition))
+	if (m_playingFieldRadius > C3Utilities::EuclideanDistance(cameraRoverPosition))
 	{
 		m_isProsecuteTrack = true;
 	}
@@ -176,4 +176,8 @@ double C3Track::getSigma() const
 C3_TRACK_POINT_DOUBLE C3Track::getPredictedPoint() const
 {
 	return this->m_predictionPoint;
+}
+bool C3Track::isProsecute()const
+{
+	return this->m_isProsecuteTrack;
 }
