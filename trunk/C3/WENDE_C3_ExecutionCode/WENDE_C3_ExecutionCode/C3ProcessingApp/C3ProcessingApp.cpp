@@ -33,6 +33,8 @@ using std::string;
 void TestKalmanFilter();
 void TestTrackFilter();
 void TestCalibration(HANDLE hconsole);
+void TestNoMovement();
+void TestXMovement();
 /////////////////////////////////////////////////////////////////////////////////
 // NON TEST FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////
@@ -41,8 +43,17 @@ C3_TRACK_POINT_DOUBLE getCalibrationPointCommand();
 void updateCalibrationState();
 UINT WINAPI AlgorithmThread (LPVOID pParam);
 void WriteDataToScreen(CAMERA_TRACK_MSG_SHM	inData, int cameraTrackMessageCount);
-void TestNoMovement();
-void TestXMovement();
+bool ReadInputMessage(CSharedStruct<CAMERA_TRACK_MSG_SHM> *shm,
+					  CAMERA_TRACK_MSG_SHM                *trk,
+					  int								  &cameraTrackMessageCount,
+					  vector<C3_TRACK_POINT_DOUBLE>	      *roverPoints);
+bool SendOutputMessage(bool										sendMessageSuccess,
+					   bool										laserOnOff,
+					   CAMERA_TRACK_MSG_SHM						inData,
+					   C3_TRACK_POINT_DOUBLE					commandOut,
+					   CSharedStruct<LASER_POINT_DIRECTION_SHM> *lCommand,
+					   int										cameraTrackMessageCount);
+bool SendNotification(CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *notification);
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
 /////////////////////////////////////////////////////////////////////////////////
@@ -60,8 +71,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	//TestTrackFilter();
 	//TestCalibration(hconsole);
 	//TestNoMovement();
-	TestXMovement();
-	return 0;	
+	//TestXMovement();
+	//return 0;	
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup local variables
 	/////////////////////////////////////////////////////////////////////////////////
@@ -78,10 +89,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	C3_TRACK_POINT_DOUBLE					 testPoints[4];	// test points for calibration
 	C3_TRACK_POINT_DOUBLE					 commandOut;	// the gimbal command out
 	C3_TRACK_POINT_DOUBLE					 laserOrigin;	// the laser origion setup from the calibration
-	C3_TRACK_POINT_DOUBLE					 roverPoint;	// temp contain for rover points
 	C3_TRACK_POINT_DOUBLE					 laserPoint;	// temp contain for rover points
 	C3TrackerManager						 tm;			// the tracker manager
 	double theta=0.0;
+	C3_Alert_Types							 state;
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup the shared memory
 	/////////////////////////////////////////////////////////////////////////////////
@@ -131,45 +142,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	while(1)
 	{
 		// reset the success flag
-		readMessageSuccess = false;				// set the read flag to false
 		sendMessageSuccess = false;				// set the write flag to false
 		// Remove the previous points
 		roverPoints.clear();					// clear points
-		/////////////////////////////////////////////////////////////////////////////////
-		// Get Input messages
-		/////////////////////////////////////////////////////////////////////////////////
-		// Verify that the shm is setup and wait for event
-		if (m_CameraTracks.isCreated() && m_CameraTracks.WaitForCommunicationEventServer() == WAIT_OBJECT_0)
-		{
-			// aquire the mutex ---> just for coding standard not really needed in our setup
-			if (m_CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
-			{
-				// store the data in current struct
-				inData = *m_CameraTracks.GetStruct();
-				
-				// Set the event to let server know (not needed in our setup)
-				m_CameraTracks.SetEventClient();
-				
-				// release the mutex
-				m_CameraTracks.ReleaseMutex();
-
-				// write data to the screen
-				WriteDataToScreen(inData,cameraTrackMessageCount);
-
-				// Read the data
-				for (unsigned int ii = 0; ii < inData.ValidTracks; ii++)
-				{
-					roverPoint.X = inData.Tracks[ii].X;
-					roverPoint.Y = inData.Tracks[ii].Y;
-					roverPoints.push_back(roverPoint);
-				}
-				// set the read message to true
-				readMessageSuccess = true;
-			}
-			else{ /* unable to get mutex??? */}
-		}
-		else{ /* loss of comm*/	}
-
+		// send the points out
+		readMessageSuccess =  ReadInputMessage(&m_CameraTracks,
+			                                   &inData,
+											   cameraTrackMessageCount,
+											   &roverPoints);
 		/////////////////////////////////////////////////////////////////////////////////
 		// DO PROCESSING !!!!
 		/////////////////////////////////////////////////////////////////////////////////
@@ -199,7 +179,7 @@ int _tmain(int argc, _TCHAR* argv[])
 						// ...
 						// ...
 						// ...
-						if (C3NotificationHandler::Instance().Get_Alert_Type() == C3_Alert_Types::CALIBRATION_IN_PROGRESS_5)
+						if (C3NotificationHandler::Instance().Get_Process_State() == C3_Alert_Types::CALIBRATION_IN_PROGRESS_5)
 						{	
 							// do calibration
 							laserOrigin = calibrate(testPoints);
@@ -220,7 +200,7 @@ int _tmain(int argc, _TCHAR* argv[])
 						//rest index
 						calIndex    = 0;
 						// set to success
-						C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_FAILED);	
+						C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
 						C3NotificationHandler::Instance().Set_IsCalibration(false);	
 					}
 					waitMessages = 0;
@@ -232,7 +212,7 @@ int _tmain(int argc, _TCHAR* argv[])
 						//rest index
 						calIndex    = 0;
 						// set to success
-						C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_FAILED);	
+						C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
 						C3NotificationHandler::Instance().Set_IsCalibration(false);	
 					}
 					// just send the same command since we have what we need.
@@ -246,76 +226,173 @@ int _tmain(int argc, _TCHAR* argv[])
 			////////////////////////
 			else
 			{
-				if (inData.ValidTracks != 0)
+				state = C3NotificationHandler::Instance().Get_Process_State();
+				if (state ==  C3_Alert_Types::POC_STARTED)
 				{
-					if (inData.ValidLasers != 0)
+					if (inData.ValidTracks != 0)
 					{
-						laserPoint.X = inData.Lasers[0].X;
-						laserPoint.Y = inData.Lasers[0].Y;
-						commandOut = tm.UpdateTracks(roverPoints, laserPoint, inData.Time,laserOrigin);
-						// TODO ITEM VERIFY THE LASER MACROS
-						laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
-						commandOut.AZ = DEGREES_TO_TICKS(commandOut.AZ);
-						commandOut.EL = DEGREES_TO_TICKS(commandOut.EL);
+						if (inData.ValidLasers != 0)
+						{
+							laserPoint.X = inData.Lasers[0].X;
+							laserPoint.Y = inData.Lasers[0].Y;
+							commandOut = tm.UpdateTracks(roverPoints, laserPoint, inData.Time,laserOrigin);
+							// TODO ITEM VERIFY THE LASER MACROS
+							laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
+							commandOut.AZ = DEGREES_TO_TICKS(commandOut.AZ);
+							commandOut.EL = DEGREES_TO_TICKS(commandOut.EL);
+							sendMessageSuccess = true;
+						}
+						else
+						{
+							// todo move 1 degree towards camera!!!!!!!
+							double EL = -cos(theta);
+							double AZ = -sin(theta);
+							// TODO ITEM VERIFY THE LASER MACROS!!!!!!!
+							commandOut.AZ = DEGREES_TO_TICKS(AZ);
+							commandOut.EL = DEGREES_TO_TICKS(EL);
+							sendMessageSuccess = true;
+						}
 					}
 					else
 					{
-						// todo move 1 degree towards camera!!!!!!!
-						double EL = -cos(theta);
-						double AZ = -sin(theta);
-						// TODO ITEM VERIFY THE LASER MACROS!!!!!!!
-						commandOut.AZ = DEGREES_TO_TICKS(AZ);
-						commandOut.EL = DEGREES_TO_TICKS(EL);
+						sendMessageSuccess = false;
 					}
+				}
+				else if (state == C3_Alert_Types::POC_FINISHED)
+				{
+					sendMessageSuccess == false;
+					C3NotificationHandler::Instance().Set_DTI_Value(1);
 				}
 			}
 
 			////////////////////////
 			// Send notifications
 			////////////////////////
-			if(m_DisplayNotification.isCreated() && 
-				m_DisplayNotification.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
-			{
-				m_DisplayNotification->AlertType = C3NotificationHandler::Instance().Get_Alert_Type();
-				m_DisplayNotification->DTI       = C3NotificationHandler::Instance().Get_DTI_Value();
-				m_DisplayNotification->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
-
-				m_DisplayNotification.SetEventServer();
-
-				m_DisplayNotification.ReleaseMutex();
-			}
+			SendNotification(&m_DisplayNotification);
 		}
-		/////////////////////////////////////////////////////////////////////////////////
-		// Send Output messages
-		/////////////////////////////////////////////////////////////////////////////////
-		// Verify that the shm is setup and aquire the mutex 
-		if (sendMessageSuccess == true && m_LaserCommand.isCreated() &&
-			m_LaserCommand.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
-		{
-			// set the output data
-			m_LaserCommand->LaserOnOff   = laserOnOff;							
-			m_LaserCommand->PacketNumber = cameraTrackMessageCount;			
-			m_LaserCommand->ProcessID    = m_LaserCommand.GetProcessID();	
-			m_LaserCommand->Time		 = inData.Time;						
-			m_LaserCommand->startTime    = inData.startTime;	
-			m_LaserCommand->PointLocation.EL = commandOut.EL;			
-			m_LaserCommand->PointLocation.AZ = commandOut.AZ;			
-
-			// Set the event to let client know
-			m_LaserCommand.SetEventServer();
-
-			// release the mutex
-			m_LaserCommand.ReleaseMutex();
-		}
-		else{ /* unable to get mutex??? */}
+		////////////////////////
+		// Send output message
+		////////////////////////
+		SendOutputMessage(sendMessageSuccess,
+						  laserOnOff,
+						  inData,
+					      commandOut,
+					      &m_LaserCommand,
+					      cameraTrackMessageCount);
 	}
 
 	return 1L;
 }
+bool SendNotification(CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *notification)
+{
+	bool result = false;
+	////////////////////////
+	// Send notifications
+	////////////////////////
+	if((*notification).isCreated() && 
+		(*notification).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+	{
+		(*notification)->AlertType = C3NotificationHandler::Instance().Get_Process_State();
+		(*notification)->DTI       = C3NotificationHandler::Instance().Get_DTI_Value();
+		(*notification)->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
+
+		(*notification).SetEventServer();
+
+		(*notification).ReleaseMutex();
+
+		result = true;
+	}
+	
+	return result;
+}
+bool SendOutputMessage(bool										sendMessageSuccess,
+					   bool										laserOnOff,
+					   CAMERA_TRACK_MSG_SHM						inData,
+					   C3_TRACK_POINT_DOUBLE					commandOut,
+					   CSharedStruct<LASER_POINT_DIRECTION_SHM> *lCommand,
+					   int										cameraTrackMessageCount)
+{
+	bool result = false;
+	/////////////////////////////////////////////////////////////////////////////////
+	// Send Output messages
+	/////////////////////////////////////////////////////////////////////////////////
+	// Verify that the shm is setup and aquire the mutex 
+	if (sendMessageSuccess == true && (*lCommand).isCreated() &&
+		(*lCommand).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+	{
+		// set the output data
+		(*lCommand)->LaserOnOff		  = laserOnOff;							
+		(*lCommand)->PacketNumber	  = cameraTrackMessageCount;			
+		(*lCommand)->ProcessID		  = (*lCommand).GetProcessID();	
+		(*lCommand)->Time			  = inData.Time;						
+		(*lCommand)->startTime		  = inData.startTime;	
+		(*lCommand)->PointLocation.EL = commandOut.EL;			
+		(*lCommand)->PointLocation.AZ = commandOut.AZ;			
+
+		// Set the event to let client know
+		(*lCommand).SetEventServer();
+
+		// release the mutex
+		(*lCommand).ReleaseMutex();
+
+		result = true;
+	}
+	else
+	{ 
+		/* unable to get mutex??? */
+		result = false;
+	}
+	return result;
+}
+bool ReadInputMessage(CSharedStruct<CAMERA_TRACK_MSG_SHM> *shm,
+					  CAMERA_TRACK_MSG_SHM                *trk,
+					  int                                 &cameraTrackMessageCount,
+					  vector<C3_TRACK_POINT_DOUBLE>	      *roverPoints)
+{
+	bool readMessageSuccess = false;
+	C3_TRACK_POINT_DOUBLE					 roverPoint;	// temp contain for rover points
+
+	/////////////////////////////////////////////////////////////////////////////////
+	// Get Input messages
+	/////////////////////////////////////////////////////////////////////////////////
+	// Verify that the shm is setup and wait for event
+	if ((*shm).isCreated() && (*shm).WaitForCommunicationEventServer() == WAIT_OBJECT_0)
+	{
+		// aquire the mutex ---> just for coding standard not really needed in our setup
+		if ((*shm).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+		{
+			// store the data in current struct
+			(*trk) = *(*shm).GetStruct();
+			
+			// Set the event to let server know (not needed in our setup)
+			(*shm).SetEventClient();
+			
+			// release the mutex
+			(*shm).ReleaseMutex();
+
+			// write data to the screen
+			WriteDataToScreen((*trk),cameraTrackMessageCount);
+
+			// Read the data
+			for (unsigned int ii = 0; ii < (*trk).ValidTracks; ii++)
+			{
+				roverPoint.X = (*trk).Tracks[ii].X;
+				roverPoint.Y = (*trk).Tracks[ii].Y;
+				roverPoints->push_back(roverPoint);
+			}
+			// set the read message to true
+			readMessageSuccess = true;
+		}
+		else{ /* unable to get mutex??? */}
+	}
+	else{ /* loss of comm*/	}
+
+	return readMessageSuccess; 
+}
 C3_TRACK_POINT_DOUBLE getCalibrationPointCommand()
 {
 	C3_TRACK_POINT_DOUBLE command;
-	switch(C3NotificationHandler::Instance().Get_Alert_Type())
+	switch(C3NotificationHandler::Instance().Get_Process_State())
 	{
 		case CALIBRATION_IN_PROGRESS_1:
 			{
@@ -352,32 +429,32 @@ C3_TRACK_POINT_DOUBLE getCalibrationPointCommand()
 };
 void updateCalibrationState()
 {
-	switch(C3NotificationHandler::Instance().Get_Alert_Type())
+	switch(C3NotificationHandler::Instance().Get_Process_State())
 	{
 		case CALIBRATION_IN_PROGRESS_1:
 			{
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_2);	
+				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_IN_PROGRESS_2);	
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_2:
 			{
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_3);	
+				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_IN_PROGRESS_3);	
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_3:
 			{
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_4);	
+				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_IN_PROGRESS_4);	
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_4:
 			{
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_5);	
+				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_IN_PROGRESS_5);	
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_5:
 			{
 				// set to success
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_SUCCESS);	
+				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_SUCCESS);	
 				C3NotificationHandler::Instance().Set_IsCalibration(false);	
 
 				break;
@@ -415,8 +492,7 @@ UINT WINAPI AlgorithmThread (LPVOID pParam)
 			if (m_DisplayNotification.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
 				// read state
-				C3NotificationHandler::Instance().Set_IsCalibration(m_DisplayNotification->AlertType == C3_Alert_Types::CALIBRATION_INIT);	
-				C3NotificationHandler::Instance().Set_Alert_Type(C3_Alert_Types::CALIBRATION_IN_PROGRESS_1);	
+				C3NotificationHandler::Instance().Set_Process_State((C3_Alert_Types)m_DisplayNotification->AlertType);	
 				// release mutex
 				m_DisplayNotification.ReleaseMutex();
 			}

@@ -863,8 +863,8 @@ void CServerSocketDlg::OnBnClickedBtnSendStatusCont()
 		m_CameraStatusButton.SetWindowTextA("Send Camera Status (cont.)");
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleCameraStatus, NULL);
-		Sleep(5000);
-		CloseHandle (m_timerHandleCameraStatus);
+//		Sleep(5000);
+//		CloseHandle (m_timerHandleCameraStatus);
 	}
 }
 void CALLBACK TimerProcCameraStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)
@@ -896,8 +896,8 @@ void CServerSocketDlg::OnBnClickedBtnSendTrack2()
 		m_CameraTrackButton.SetWindowTextA("Send Camera Track (cont.)");
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleCameraTrack, NULL);
-		Sleep(5000);
-		CloseHandle (m_timerHandleCameraTrack);
+//		Sleep(5000);
+		//CloseHandle (m_timerHandleCameraTrack);
 	}
 }
 void CALLBACK TimerProcCameraTrack(void* lpParametar, BOOLEAN TimerOrWaitFired)
@@ -929,8 +929,8 @@ void CServerSocketDlg::OnBnClickedBtnSendImage2()
 		isStart = true;
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleCameraImage, NULL);
-		Sleep(5000);
-		CloseHandle (m_timerHandleCameraImage);
+		//Sleep(5000);
+		//CloseHandle (m_timerHandleCameraImage);
 	}
 }
 void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired)
@@ -961,8 +961,8 @@ void CServerSocketDlg::OnBnClickedBtnSendLaserStatus()
 		isStart = true;
 		// destroy the timer
 		DeleteTimerQueueTimer(NULL, m_timerHandleLaserStatus, NULL);
-		Sleep(5000);
-		CloseHandle (m_timerHandleLaserStatus);
+//		Sleep(5000);
+//		CloseHandle (m_timerHandleLaserStatus);
 	}
 }
 void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired)

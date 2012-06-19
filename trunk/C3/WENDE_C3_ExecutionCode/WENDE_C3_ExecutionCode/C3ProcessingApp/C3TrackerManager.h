@@ -71,6 +71,7 @@ class C3TrackerManager
 		// clear the tracks
 		void ClearTracks();
 		C3_TRACK_POINT_DOUBLE getPredictedPoint() const;
+		int	GetDTI()const;
 	private:
 		// determine if a point has already been assigned to the tracker 
 		bool isInMapping(const map<unsigned int, C3_CORRELATE_struct> *position2track, 
