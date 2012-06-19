@@ -117,11 +117,12 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		//double cameraToLaserY = laserOriginCameraSpace12 - playingFieldOrigin12;
 
 		//Alternative translation method(USE THIS ONE)
-		double bearing = atan2(laserOrigin.Y,laserOrigin.X);
-		double theta = bearing- M_PI; // Revered order so the sign is correct. Clockwise positive, camera at 180.
+		//double bearing = atan2(laserOrigin.Y,laserOrigin.X);
+		//double theta = -bearing + M_PI; // Revered order so the sign is correct. Clockwise positive, camera at 180.
+		double theta =atan2(-laserOrigin.X,-laserOrigin.Y);
 		double range = sqrt(pow(laserOrigin.X,2) + pow(laserOrigin.Y,2));
-		double cameraToLaserX = -range*sin(theta);
-		double cameraToLaserY = -range*cos(theta);
+		double cameraToLaserX = laserOrigin.X;
+		double cameraToLaserY = laserOrigin.Y;
 
 
 		// Transform laser & rover postions into laser
@@ -135,11 +136,11 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		double localLaserX = relativeLaserX*cos(theta) - relativeLaserY*sin(theta);
 		double localLaserY = relativeLaserX*sin(theta) + relativeLaserY*cos(theta);
 		double localLaserR = sqrt(relativeLaserX*relativeLaserX+relativeLaserY*relativeLaserY);
-		double localPipX   = relativePipX*cos(theta) - relativePipX*sin(theta);
-		double localPipY   = relativePipX*sin(theta) + relativePipX*cos(theta);
+		double localPipX   = relativePipX*cos(theta) - relativePipY*sin(theta);
+		double localPipY   = relativePipX*sin(theta) + relativePipY*cos(theta);
 		double localPipR   = sqrt(relativePipX*relativePipX+relativePipY*relativePipY);
 
-		double LaserHeight  = C3Configuration::Instance().LASER_HEIGHT; //convert to meters
+		double LaserHeight  = 1.5;//C3Configuration::Instance().LASER_HEIGHT; //convert to meters
 
 		// transform local x/y into local az/el coordinate system
 		double localLaserAz = atan2(localLaserX,localLaserY)*180/M_PI;
@@ -154,7 +155,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		result.AZ = dAz;
 		result.EL = dEl;		
 	}
-	
+
 	// Add to first history point
 	m_lastUpdatePoint = cameraRoverPosition;
 
