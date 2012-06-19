@@ -61,6 +61,8 @@ bool SendNotification(CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *notification);
 #define TICK_OFFSET      1086
 #define TICKS_PER_DEGREE 20.6
 #define DEGREES_TO_TICKS(DEG)(TICK_OFFSET+DEG*TICKS_PER_DEGREE)
+#define MM_TO_M(x)(x/1000)
+#define MS_TO_S(x)(x/1000)
 /////////////////////////////////////////////////////////////////////////////////
 // Declare main functions
 /////////////////////////////////////////////////////////////////////////////////
@@ -261,10 +263,26 @@ int _tmain(int argc, _TCHAR* argv[])
 				else if (state == C3_Alert_Types::POC_FINISHED)
 				{
 					sendMessageSuccess == false;
-					C3NotificationHandler::Instance().Set_DTI_Value(1);
+					C3NotificationHandler::Instance().Set_DTI_Value(tm.GetDTI());
+					
+					if (tm.GetDTI() <= tm.GetDTI())
+					{
+						C3NotificationHandler::Instance().Set_Trial_Result(true);
+					}
+					else
+					{
+						C3NotificationHandler::Instance().Set_Trial_Result(false);
+					}
+
+					SendNotification(&m_DisplayNotification);
+					Sleep(4000);
+					C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_SUCCESS);
 				}
 			}
-
+			if (tm.GetDTI() > C3Configuration::Instance().WENDE_PLAYING_FIELD_RADIUS)
+			{
+				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::TARGET_LEFT_PLAYING_FIELD);
+			}
 			////////////////////////
 			// Send notifications
 			////////////////////////
@@ -376,10 +394,14 @@ bool ReadInputMessage(CSharedStruct<CAMERA_TRACK_MSG_SHM> *shm,
 			// Read the data
 			for (unsigned int ii = 0; ii < (*trk).ValidTracks; ii++)
 			{
-				roverPoint.X = (*trk).Tracks[ii].X;
-				roverPoint.Y = (*trk).Tracks[ii].Y;
+				roverPoint.X = MM_TO_M((*trk).Tracks[ii].X);
+				roverPoint.Y = MM_TO_M((*trk).Tracks[ii].Y);
 				roverPoints->push_back(roverPoint);
 			}
+
+			// time correct to second
+			(*trk).Time = MS_TO_S((*trk).Time);
+
 			// set the read message to true
 			readMessageSuccess = true;
 		}
