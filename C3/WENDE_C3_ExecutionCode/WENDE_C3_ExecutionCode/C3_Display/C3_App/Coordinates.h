@@ -32,13 +32,20 @@ public:
 	int GetValidTracks();
 	int GetTotalTracks();
     CoordinatePair^ GetLaserPoint();
-    bool SetLaserPoint(CoordinatePair ^LaserPointUpdate);
+    bool SetLaserPoint(CoordinatePair ^LaserPointUpdate, bool HasLaserPoint);
     bool LaserPointIsValid();
+	array<CoordinatePair^>^ GetPipCoordinates();
+	bool SetPipCoordinates(array<CoordinatePair^>^ PipCoordinateUpdate);
+	//bool LaserIsLocated();
+	CoordinatePair^ GetLaserLocation();
+	//bool SetLaserLocation(CoordinatePair^ LaserLocation, bool HasLaserLocation);
 private:
     bool IsLaserValid;
     CoordinatePair^ LaserWorldCoords;
     CoordinatePair^ LaserPixelCoords;
-	bool SetNewCoordinatePair(CoordinatePair^ Input, CoordinatePair^ Current, CoordinatePair^ Prev);
+	bool IsLaserLocated;
+	CoordinatePair^ LaserWorldLocation;
+	CoordinatePair^ LaserPixelLocation;
 	Coordinates(int TrackNum);
 	~Coordinates();
 	CoordinatePair^ TranslateCoords(CoordinatePair^);
@@ -46,6 +53,8 @@ private:
 	array<CoordinatePair^>^ CurWorldCoords;
 	array<CoordinatePair^>^ OldWorldCoords;
 	array<CoordinatePair^>^ PixelCoords;
+	array<CoordinatePair^>^ PipWorldCoords;
+	array<CoordinatePair^>^ PipPixelCoords;
 	CoordinatePair^ PixelBounds;
 	CoordinatePair^ WorldBounds;
     CoordinatePair^ PixelShift;

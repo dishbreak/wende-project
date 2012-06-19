@@ -40,6 +40,8 @@ Coordinates::Coordinates(int TrackNum) {
 	CurWorldCoords = MakeCoordinatePairArray();
 	OldWorldCoords = MakeCoordinatePairArray();
 	PixelCoords = MakeCoordinatePairArray();
+	PipWorldCoords = MakeCoordinatePairArray();
+	PipPixelCoords = MakeCoordinatePairArray();
 
     //calculate the ratio between world and pixels
     WorldPxRatio->x = (float) 0.5 * PixelBounds->x / WorldBounds->x;
@@ -84,16 +86,6 @@ bool Coordinates::SetNewCoordinates(array<CoordinatePair^>^ InputSet, int NumVal
 	return HasNewTrack;
 }
 
-bool Coordinates::SetNewCoordinatePair(CoordinatePair^ Input, CoordinatePair^ Current, CoordinatePair^ Prev) {
-	//Only update if the coordinates are new
-	bool IsNewTrack = false;
-	if ((Input->x != Current->x) || (Input->y != Current->y)) {
-		IsNewTrack = true;
-		//Prev = CoordinatePair(Current);
-		//Current = CoordinatePair(Input);
-	}
-	return IsNewTrack;
-}
 
 array<CoordinatePair^>^ Coordinates::GetNewCoordinatePair() {
 	return PixelCoords;
@@ -132,9 +124,9 @@ CoordinatePair^ Coordinates::GetLaserPoint() {
     return LaserPixelCoords;
 }
 
-bool Coordinates::SetLaserPoint(CoordinatePair ^LaserPointUpdate) {
+bool Coordinates::SetLaserPoint(CoordinatePair ^LaserPointUpdate, bool HasLaserPoint) {
     bool IsNewPoint = false;
-    IsLaserValid = true;
+    IsLaserValid = HasLaserPoint;
     if ((LaserPointUpdate->x != LaserWorldCoords->x) || (LaserPointUpdate->y != LaserWorldCoords->y)) {
         IsNewPoint = true;    
         LaserWorldCoords->x = LaserPointUpdate->x;
@@ -149,4 +141,28 @@ bool Coordinates::SetLaserPoint(CoordinatePair ^LaserPointUpdate) {
 
 bool Coordinates::LaserPointIsValid() {
     return IsLaserValid;
+}
+
+
+array<CoordinatePair^>^ Coordinates::GetPipCoordinates() {
+	return PipPixelCoords;
+}
+
+bool Coordinates::SetPipCoordinates(array<CoordinatePair^>^ PipCoordinateUpdates) {
+	bool HasNewPips = false;
+	for(int i = 0; i < TotalTracks; i++) {
+		if( PipWorldCoords[i]->x != PipCoordinateUpdates[i]->x ||
+			PipWorldCoords[i]->y != PipCoordinateUpdates[i]->y) {
+				HasNewPips = true;
+				PipWorldCoords[i]->x = PipCoordinateUpdates[i]->x;
+				PipWorldCoords[i]->y = PipCoordinateUpdates[i]->y;
+		}
+	}
+	PipPixelCoords = TranslateCoords(PipWorldCoords);
+	return HasNewPips;
+}
+
+
+CoordinatePair^ Coordinates::GetLaserLocation() {
+	return LaserPixelLocation;
 }
