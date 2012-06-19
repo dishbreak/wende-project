@@ -57,10 +57,10 @@ int CDisplayManager::Update_Rover_PPI_Position(array<CoordinatePair^>^ inputCoor
 	return 0;
 }
 
-int CDisplayManager::Update_Laser_PPI_Position(CoordinatePair ^inputCoords) {
+int CDisplayManager::Update_Laser_PPI_Position(CoordinatePair ^inputCoords, bool HasLaserPoint) {
     Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle(); 
     //if any of the coordinates are different, invalidate the PPI display.
-    if(coordsObj->SetLaserPoint(inputCoords)) {
+    if(coordsObj->SetLaserPoint(inputCoords, HasLaserPoint)) {
         C3_User_Interface::Instance->pPPI->Invalidate();
     }
     return 0;
