@@ -11,21 +11,23 @@ using std::cout;
 C3FilterClass::C3FilterClass(void) :
 			   m_isInit(false)
 {
-	this->m_kalman.processNoise = C3Configuration::Instance().PROCESS_NOISE;
-	m_kalman.I = MatrixXd::Identity(6,6);
-	m_kalman.F = MatrixXd::Identity(6,6);
-	m_kalman.H = MatrixXd::Identity(2,6);
-	m_kalman.P = MatrixXd::Ones(6,6)*m_kalman.processNoise;
-	m_kalman.X = MatrixXd::Zero(6,1);
-	m_kalman.R = MatrixXd::Identity(2,2)*m_kalman.processNoise;
+
+
+	this->processNoise = C3Configuration::Instance().PROCESS_NOISE;
+	I = MatrixXd::Identity(6,6);
+	F = MatrixXd::Identity(6,6);
+	H = MatrixXd::Identity(2,6);
+	P = MatrixXd::Ones(6,6)*processNoise;
+	X = MatrixXd::Zero(6,1);
+	R = MatrixXd::Identity(2,2)*processNoise;
 	#ifdef DEBUG_PRINT
 	cout << "***BEGIN INITILIZATION***" << endl;
 	cout << "Process Noise = " << C3ProcessingConfiguration::Instance().PROCESS_NOISE << endl;
-	cout << "--I Matrix--\n" << m_kalman.I << endl;
-	cout << "--P Matrix--\n" << m_kalman.P << endl;
-	cout << "--X Matrix--\n" << m_kalman.X << endl;
-	cout << "--R Matrix--\n" << m_kalman.R << endl;
-	cout << "--H Matrix--\n" << m_kalman.H << endl;
+	cout << "--I Matrix--\n" << I << endl;
+	cout << "--P Matrix--\n" << P << endl;
+	cout << "--X Matrix--\n" << X << endl;
+	cout << "--R Matrix--\n" << R << endl;
+	cout << "--H Matrix--\n" << H << endl;
 	cout << "***END INITILIZATION***"  << endl << endl;
 	#endif
 }
@@ -58,72 +60,72 @@ C3_TRACK_POINT_DOUBLE C3FilterClass::FilterInput(C3_TRACK_POINT_DOUBLE cameraRov
 	// If we have not Initilized the filter then init the filter state
 	if (this->m_isInit == false)
 	{
-		m_kalman.X(0,0) = crPos(0,0);
-		m_kalman.X(1,0) = crPos(0,1);
+		X(0,0) = crPos(0,0);
+		X(1,0) = crPos(0,1);
 		this->m_isInit  = true;
 	}
 
 	// setup the F matrix
-	for (int ii = 0; ii < m_kalman.F.cols()-2; ii++)
+	for (int ii = 0; ii < F.cols()-2; ii++)
 	{
-		m_kalman.F(ii,ii+2) = updateTime; 
+		F(ii,ii+2) = updateTime; 
 	}
 	
 	// prediction
-	m_kalman.X = m_kalman.F * m_kalman.X;
-	m_kalman.P = m_kalman.F * m_kalman.P * m_kalman.F.transpose() + m_kalman.I;
-	m_kalman.S = m_kalman.H * m_kalman.P.transpose() * m_kalman.H.transpose() + m_kalman.R;
-	m_kalman.B = m_kalman.H * m_kalman.P.transpose();
-	m_kalman.p(0,0) = sqrt(m_kalman.P(0,0));	
-	m_kalman.p(0,1) = sqrt(m_kalman.P(1,1));
+	X = F * X;
+	P = F * P * F.transpose() + I;
+	S = H * P.transpose() * H.transpose() + R;
+	B = H * P.transpose();
+	p(0,0) = sqrt(P(0,0));	
+	p(0,1) = sqrt(P(1,1));
 
 	#ifdef DEBUG_PRINT
 	cout << "***PREDICTION PROCESSING (" << ++processingIteration << ")***" << endl;
-	cout << "--X Matrix--\n" << m_kalman.X << endl;
-	cout << "--F Matrix--\n" << m_kalman.F << endl;
-	cout << "--S Matrix--\n" << m_kalman.S << endl;
-	cout << "--B Matrix--\n" << m_kalman.B << endl;
-	cout << "--p Matrix--\n" << m_kalman.p << endl;
+	cout << "--X Matrix--\n" << X << endl;
+	cout << "--F Matrix--\n" << F << endl;
+	cout << "--S Matrix--\n" << S << endl;
+	cout << "--B Matrix--\n" << B << endl;
+	cout << "--p Matrix--\n" << p << endl;
 	cout << endl;
 	#endif
 	// save the residuals
-	m_kalman.rk(0,0) = crPos(0,0) - m_kalman.X(0,0);
-	m_kalman.rk(0,1) = crPos(0,1) - m_kalman.X(1,0);
+	rk(0,0) = crPos(0,0) - X(0,0);
+	rk(0,1) = crPos(0,1) - X(1,0);
 	#ifdef DEBUG_PRINT
 	cout << "***Residuals PROCESSING (" << processingIteration << ")***" << endl;
-	cout << "--X Matrix--\n" << m_kalman.rk << endl;
+	cout << "--X Matrix--\n" << rk << endl;
 	cout << endl;
 	#endif
 
 	// Determine the Gain Matrix
-	m_kalman.K = (m_kalman.S.inverse()*m_kalman.B).transpose();
+	K = (S.inverse()*B).transpose();
 	#ifdef DEBUG_PRINT
 	cout << "***Gain PROCESSING (" << processingIteration << ")***" << endl;
-	cout << "--K Matrix--\n" << m_kalman.K << endl;
+	cout << "--K Matrix--\n" << K << endl;
 	cout << endl;
 	#endif
 
 	// Esitimated state and covariance
-	m_kalman.X = m_kalman.X + m_kalman.K * (crPos.transpose() - m_kalman.H * m_kalman.X);
-	m_kalman.P = m_kalman.P - m_kalman.K * m_kalman.H * m_kalman.P;
+	X = X + K * (crPos.transpose() - H * X);
+	P = P - K * H * P;
 	#ifdef DEBUG_PRINT
 	cout << "***Estimate State and Cov PROCESSING (" << processingIteration << ")***" << endl;
-	cout << "--P Matrix--\n" << m_kalman.P << endl;
-	cout << "--X Matrix--\n" << m_kalman.X << endl;
+	cout << "--P Matrix--\n" << P << endl;
+	cout << "--X Matrix--\n" << X << endl;
 	cout << endl;
 	#endif
 
 	// Compute the estimated measurement
-	m_kalman.y = m_kalman.H * m_kalman.X;
-	m_kalman.xk(0,0) = m_kalman.X(0,0);
-	m_kalman.xk(0,1) = m_kalman.X(1,0);
-	m_kalman.vk(0,0) = m_kalman.X(2,0);
-	m_kalman.vk(0,1) = m_kalman.X(3,0);
+	y = H * X;
+	xk(0,0) = X(0,0);
+	xk(0,1) = X(1,0);
+	vk(0,0) = X(2,0);
+	vk(0,1) = X(3,0);
 	#ifdef DEBUG_PRINT
 	cout << "***Estimate Measurement PROCESSING (" << processingIteration << ")***" << endl;
-	cout << "--y Matrix--\n" << m_kalman.y << endl;
-	cout << "--xk Matrix--\n" << m_kalman.xk << endl;
-	cout << "--vk Matrix--\n" << m_kalman.vk << endl;
+	cout << "--y Matrix--\n" << y << endl;
+	cout << "--xk Matrix--\n" << xk << endl;
+	cout << "--vk Matrix--\n" << vk << endl;
 	cout << endl;
 	#endif
 
@@ -135,8 +137,8 @@ C3_TRACK_POINT_DOUBLE C3FilterClass::GetPredictedPoint(double time)
 {
 	// Calculate Predicted Intercept Point PIP
 	C3_TRACK_POINT_DOUBLE cameraPoint;
-	cameraPoint.X = m_kalman.xk(0,0)+ m_kalman.vk(0,0) * time;
-	cameraPoint.Y = m_kalman.xk(0,1)+ m_kalman.vk(0,1) * time;
+	cameraPoint.X = xk(0,0)+ vk(0,0) * time;
+	cameraPoint.Y = xk(0,1)+ vk(0,1) * time;
 	return cameraPoint;
 }
 
