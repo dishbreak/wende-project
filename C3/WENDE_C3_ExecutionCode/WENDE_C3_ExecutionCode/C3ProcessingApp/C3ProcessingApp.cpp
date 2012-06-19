@@ -244,6 +244,8 @@ int _tmain(int argc, _TCHAR* argv[])
 						{
 							laserPoint.X = inData.Lasers[0].X;
 							laserPoint.Y = inData.Lasers[0].Y;
+							laserOrigin.X = 0.0;
+							laserOrigin.Y = 0.0;
 							commandOut = tm.UpdateTracks(roverPoints, laserPoint, inData.Time,laserOrigin);
 							// TODO ITEM VERIFY THE LASER MACROS
 							laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
