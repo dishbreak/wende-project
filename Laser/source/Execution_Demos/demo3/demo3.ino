@@ -3,7 +3,6 @@
 #include <ParsedStream.h>
 #include <WiFly.h>
 #include <_Spi.h>
-#include <TimerOne.h>
 #include <Servo.h>
 
 #define ON 1
@@ -44,16 +43,12 @@ byte server[] = { 192, 168, 1, 100 };
 // Define client object
 Client client(server,4447);
 
-// Heartbeat ready to send
-bool heartbeatReady = false;
 
 // Error flag
 char return_error = 0;
 
 // Interval between heartbeats (in milliseconds)
 int heartbeatInterval = 5000;
-int heartbeatTimer1 = 0;
-int heartbeatTimer2 = heartbeatInterval;
 
 // Servos
 Servo el_servo; 
@@ -157,17 +152,6 @@ void process_config_message(int config_msg_data[CONFIG_MSG_LENGTH+1])
   Serial.println(heartbeatInterval);
 }
 
-// Interrupt that sets the heartbeatReady to true, telling the loop to send the message
-void setHeartbeatStatus()
-{
-  heartbeatTimer2 = millis();
-  if ((heartbeatTimer2 - heartbeatTimer1) >= heartbeatInterval)
-  {
-    heartbeatTimer1 = heartbeatTimer2;
-	heartbeatReady = true;
-  }
-} 
-
 void setup()
 {
   // Initialize SPI pins
@@ -176,10 +160,6 @@ void setup()
   pinMode(SCK,OUTPUT);
   pinMode(CS,OUTPUT);
   digitalWrite(CS,HIGH); //disable device 
-  
-  // Initialize timer1
-  Timer1.initialize();
-  Timer1.attachInterrupt(setHeartbeatStatus);
   
   // Define the LED pin as an output
   pinMode(LASER_PIN, OUTPUT);
@@ -212,6 +192,10 @@ void loop()
 {
   //Index for receiving data
   int index;
+  
+  // Heartbeat timers
+  int heartbeatTimer1 = 0;
+  int heartbeatTimer2 = 0;
 
   //From C3
   char message_type = 0;
@@ -313,8 +297,10 @@ void loop()
       //Serial.println("Data not available!!");
     }
     
+	heartbeatTimer2 = millis();
+	
     //Send heartbeat every heartbeatInterval
-    if (heartbeatReady)
+    if ((heartbeatTimer2 - heartbeatTimer1) >= heartbeatInterval)
     {
       //Serial.println("Sending heartbeat...");
       //Create return message
@@ -352,10 +338,9 @@ void loop()
       {
         client.write(return_string[lnI]);
       }
-              
-      //Reset heartbeat counter 
-      heartbeatReady = false;
 	  
+	  heartbeatTimer1 = heartbeatTimer2;
+             	  
       //Reset error status
       return_error = 0;
     }
