@@ -66,6 +66,22 @@ int CDisplayManager::Update_Laser_PPI_Position(CoordinatePair ^inputCoords, bool
     return 0;
 }
 
+int CDisplayManager::Update_Laser_Location(CoordinatePair ^LaserLocation, bool HasLaserLocation)
+{
+    Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
+    //if anything has changed, invalidate the PPI display.
+    if(coordsObj->SetLaserLocation(LaserLocation, HasLaserLocation)) {
+        C3_User_Interface::Instance->pPPI->Invalidate();
+    }
+    return 0;
+}
+
+int CDisplayManager::Update_Pip_PPI_Position(cli::array<CoordinatePair ^,1> ^PipCoordinateUpdate)
+{
+    //
+    return 0;
+}
+
 ////////////////////////////////////////////////////////////////////////
 // Description: Updates the Camera subsystem indicator following a call 
 //				to the static instance of the C3_User_Interface object					

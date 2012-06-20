@@ -12,7 +12,6 @@ public:
 	CoordinatePair();
 	CoordinatePair(int xInput, int yInput);
 	CoordinatePair(CoordinatePair ^Other);
-	//CoordinatePair^ operator->();
 };
 
 
@@ -36,9 +35,11 @@ public:
     bool LaserPointIsValid();
 	array<CoordinatePair^>^ GetPipCoordinates();
 	bool SetPipCoordinates(array<CoordinatePair^>^ PipCoordinateUpdate);
-	//bool LaserIsLocated();
+	bool LaserIsLocated();
 	CoordinatePair^ GetLaserLocation();
-	//bool SetLaserLocation(CoordinatePair^ LaserLocation, bool HasLaserLocation);
+	bool SetLaserLocation(CoordinatePair^ LaserLocation, bool HasLaserLocation);
+    CoordinatePair^ GetCameraLocation();
+
 private:
     bool IsLaserValid;
     CoordinatePair^ LaserWorldCoords;
@@ -46,6 +47,8 @@ private:
 	bool IsLaserLocated;
 	CoordinatePair^ LaserWorldLocation;
 	CoordinatePair^ LaserPixelLocation;
+    CoordinatePair^ CameraWorldLocation;
+    CoordinatePair^ CameraPixelLocation;
 	Coordinates(int TrackNum);
 	~Coordinates();
 	CoordinatePair^ TranslateCoords(CoordinatePair^);
