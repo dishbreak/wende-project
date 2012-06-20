@@ -20,6 +20,7 @@ UINT WINAPI LaserStatusThread (LPVOID pParam);
 UINT WINAPI CameraStatusThread(LPVOID pParam);
 UINT WINAPI ProcessingInterfaceReceiveThread(LPVOID pParam);
 UINT WINAPI ProcessingInterfaceTransmitThread(LPVOID pParam);
+UINT WINAPI PPIDebugThread(LPVOID pParam);
 
 CNetworkMonitor::CNetworkMonitor()
 :_isRunning(false)
@@ -30,6 +31,7 @@ CNetworkMonitor::CNetworkMonitor()
 	functionArray[3] = CameraStatusThread;
 	functionArray[4] = ProcessingInterfaceReceiveThread;
 	functionArray[5] = ProcessingInterfaceTransmitThread;
+	functionArray[6] = PPIDebugThread;
 
 	/* Initialize the critical section before entering multi-threaded context. */
 	InitializeCriticalSection(&cs);
@@ -583,6 +585,79 @@ UINT WINAPI ProcessingInterfaceTransmitThread(LPVOID pParam)
 				SuspendThread( cNetworMonitor->threads[ii].handle );
 			}
 		}
+	}
+
+	_endthreadex( 0 );
+
+	return 1L;
+}
+
+UINT WINAPI PPIDebugThread (LPVOID pParam)
+{
+	CNetworkMonitor* cNetworMonitor = (CNetworkMonitor*)pParam;
+	bool isRunningInternal = cNetworMonitor->_isRunning;
+	PPI_DEBUG_MSG_SHM sPPIMsg;
+	CSharedStruct<PPI_DEBUG_MSG_SHM> m_PPIMsg;
+	m_PPIMsg.Acquire(C3Configuration::Instance().SHM_C3_PROCESSING_DEBUG_STATUS,
+		C3Configuration::Instance().SHM_C3_PROCESSING_DEBUG_MUTEX,
+		C3Configuration::Instance().SHM_C3_PROCESSING_DEBUG_EVENT1,
+		C3Configuration::Instance().SHM_C3_PROCESSING_DEBUG_EVENT2);
+	if (m_PPIMsg.isServer()) m_PPIMsg->ShmInfo.Clients = 0;
+	else m_PPIMsg->ShmInfo.Clients++;
+
+	static char timeStr[512];
+	static char temp[512];
+	static int processingDebugMessageCount = 0;
+
+	////get a handle to the CDisplayManager
+	CDisplayManager ^dispman = CDisplayManager::getCDisplayManager();
+
+	C3_TRACK_POINT cRoverLocationsCur[SHM_MAX_TRACKS]; 
+	C3_TRACK_POINT cRoverLocationsPIP[SHM_MAX_TRACKS];
+	C3_TRACK_POINT cLaserOrigin;
+
+	while(isRunningInternal)
+	{
+		// aquire the mutex
+		if (m_PPIMsg.isCreated() && m_PPIMsg.WaitForCommunicationEventServer() == WAIT_OBJECT_0)
+		{
+			if (m_PPIMsg.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+			{
+				EnterCriticalSection(&cNetworMonitor->statusLock);		
+
+				sPPIMsg = *m_PPIMsg.GetStruct();
+
+				// Loop through list of valid tracks (determined by processing)
+				for(unsigned int i = 0; i < sPPIMsg.NumberValid ; i ++) 
+				{
+					cRoverLocationsCur[i].X = sPPIMsg.RoverLocationsCur[i].X;
+					cRoverLocationsCur[i].Y = sPPIMsg.RoverLocationsCur[i].Y;
+
+					cRoverLocationsPIP[i].X = sPPIMsg.RoverLocationsPIP[i].X;
+					cRoverLocationsPIP[i].Y = sPPIMsg.RoverLocationsPIP[i].Y;
+				}
+
+				cLaserOrigin = sPPIMsg.LaserOrigin;
+
+				// Dispman stuff here //
+
+				// Set the event
+				m_PPIMsg.SetEventClient();
+
+				// release the mutex
+				m_PPIMsg.ReleaseMutex();
+
+				/* Leave the critical section -- other threads can now EnterCriticalSection() */
+				LeaveCriticalSection(&cNetworMonitor->statusLock);
+			}
+			else { /* unable to get mutex??? */	}
+		}
+		/* Enter the critical section -- other threads are locked out */
+		EnterCriticalSection(&cNetworMonitor->cs);		
+		/* Do some thread-safe processing! */
+		isRunningInternal = cNetworMonitor->_isRunning;
+		/* Leave the critical section -- other threads can now EnterCriticalSection() */
+		LeaveCriticalSection(&cNetworMonitor->cs);
 	}
 
 	_endthreadex( 0 );
