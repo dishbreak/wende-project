@@ -194,6 +194,7 @@ int _tmain(int argc, _TCHAR* argv[])
 							laserOrigin = calibrate(testPoints);
 							double bearing = atan2(laserOrigin.Y,laserOrigin.X); 
 							theta = bearing - M_PI; 
+							tm.ClearTracks();
 
 							//rest index
 							calIndex    = 0;

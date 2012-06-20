@@ -136,6 +136,10 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 					correlate.isJustCreated    = false;				// 
 					minValue				   = correlate.dist;	// new min value for this point...
 				}
+				else
+				{
+					printf("Hello");
+				}
 			} 
 		}
 
