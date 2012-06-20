@@ -394,8 +394,8 @@ namespace C3_App {
             this->tlOverallView->Location = System::Drawing::Point(0, 0);
             this->tlOverallView->Name = L"tlOverallView";
             this->tlOverallView->RowCount = 3;
-            this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 45)));
-            this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 45)));
+            this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+            this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 40)));
             this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 10)));
             this->tlOverallView->Size = System::Drawing::Size(1264, 712);
             this->tlOverallView->TabIndex = 6;
@@ -418,7 +418,7 @@ namespace C3_App {
             this->tlDtiPpi->Name = L"tlDtiPpi";
             this->tlDtiPpi->RowCount = 1;
             this->tlDtiPpi->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-            this->tlDtiPpi->Size = System::Drawing::Size(1258, 314);
+            this->tlDtiPpi->Size = System::Drawing::Size(1258, 350);
             this->tlDtiPpi->TabIndex = 0;
             // 
             // groupBox3
@@ -430,7 +430,7 @@ namespace C3_App {
             this->groupBox3->Controls->Add(this->tlDtiLog);
             this->groupBox3->Location = System::Drawing::Point(883, 3);
             this->groupBox3->Name = L"groupBox3";
-            this->groupBox3->Size = System::Drawing::Size(372, 308);
+            this->groupBox3->Size = System::Drawing::Size(372, 344);
             this->groupBox3->TabIndex = 1;
             this->groupBox3->TabStop = false;
             this->groupBox3->Text = L"DTI Log";
@@ -449,7 +449,7 @@ namespace C3_App {
             this->tlDtiLog->RowCount = 2;
             this->tlDtiLog->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 85.97561F)));
             this->tlDtiLog->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 14.02439F)));
-            this->tlDtiLog->Size = System::Drawing::Size(366, 289);
+            this->tlDtiLog->Size = System::Drawing::Size(366, 325);
             this->tlDtiLog->TabIndex = 2;
             // 
             // cmdExport
@@ -457,9 +457,9 @@ namespace C3_App {
             this->cmdExport->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
                 | System::Windows::Forms::AnchorStyles::Left) 
                 | System::Windows::Forms::AnchorStyles::Right));
-            this->cmdExport->Location = System::Drawing::Point(3, 251);
+            this->cmdExport->Location = System::Drawing::Point(3, 282);
             this->cmdExport->Name = L"cmdExport";
-            this->cmdExport->Size = System::Drawing::Size(360, 35);
+            this->cmdExport->Size = System::Drawing::Size(360, 40);
             this->cmdExport->TabIndex = 1;
             this->cmdExport->Text = L"&Export";
             this->cmdExport->UseVisualStyleBackColor = true;
@@ -489,7 +489,7 @@ namespace C3_App {
             this->dgvDtiLog->RowTemplate->Height = 24;
             this->dgvDtiLog->ShowEditingIcon = false;
             this->dgvDtiLog->ShowRowErrors = false;
-            this->dgvDtiLog->Size = System::Drawing::Size(360, 242);
+            this->dgvDtiLog->Size = System::Drawing::Size(360, 273);
             this->dgvDtiLog->TabIndex = 0;
             // 
             // Column1
@@ -518,7 +518,7 @@ namespace C3_App {
             this->groupBox2->Controls->Add(this->pbLiveFeed);
             this->groupBox2->Location = System::Drawing::Point(380, 3);
             this->groupBox2->Name = L"groupBox2";
-            this->groupBox2->Size = System::Drawing::Size(497, 308);
+            this->groupBox2->Size = System::Drawing::Size(497, 344);
             this->groupBox2->TabIndex = 1;
             this->groupBox2->TabStop = false;
             this->groupBox2->Text = L"Live Image";
@@ -529,7 +529,7 @@ namespace C3_App {
             this->pbLiveFeed->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLiveFeed.Image")));
             this->pbLiveFeed->Location = System::Drawing::Point(3, 16);
             this->pbLiveFeed->Name = L"pbLiveFeed";
-            this->pbLiveFeed->Size = System::Drawing::Size(491, 289);
+            this->pbLiveFeed->Size = System::Drawing::Size(491, 325);
             this->pbLiveFeed->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
             this->pbLiveFeed->TabIndex = 0;
             this->pbLiveFeed->TabStop = false;
@@ -545,7 +545,7 @@ namespace C3_App {
             this->groupBox1->Location = System::Drawing::Point(3, 3);
             this->groupBox1->MinimumSize = System::Drawing::Size(300, 300);
             this->groupBox1->Name = L"groupBox1";
-            this->groupBox1->Size = System::Drawing::Size(371, 308);
+            this->groupBox1->Size = System::Drawing::Size(371, 344);
             this->groupBox1->TabIndex = 0;
             this->groupBox1->TabStop = false;
             this->groupBox1->Text = L"PPI Display";
@@ -558,7 +558,7 @@ namespace C3_App {
             this->pPPI->Location = System::Drawing::Point(3, 16);
             this->pPPI->MinimumSize = System::Drawing::Size(300, 300);
             this->pPPI->Name = L"pPPI";
-            this->pPPI->Size = System::Drawing::Size(365, 300);
+            this->pPPI->Size = System::Drawing::Size(365, 325);
             this->pPPI->TabIndex = 0;
             this->pPPI->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &C3_User_Interface::pPPI_Paint);
             this->pPPI->Resize += gcnew System::EventHandler(this, &C3_User_Interface::pPPI_Redraw);
@@ -611,11 +611,11 @@ namespace C3_App {
             this->tlIndicatorsPanel->Controls->Add(this->groupBox4, 0, 0);
             this->tlIndicatorsPanel->Controls->Add(this->groupBox6, 2, 0);
             this->tlIndicatorsPanel->Controls->Add(this->groupBox5, 1, 0);
-            this->tlIndicatorsPanel->Location = System::Drawing::Point(3, 323);
+            this->tlIndicatorsPanel->Location = System::Drawing::Point(3, 359);
             this->tlIndicatorsPanel->Name = L"tlIndicatorsPanel";
             this->tlIndicatorsPanel->RowCount = 1;
             this->tlIndicatorsPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-            this->tlIndicatorsPanel->Size = System::Drawing::Size(1258, 314);
+            this->tlIndicatorsPanel->Size = System::Drawing::Size(1258, 278);
             this->tlIndicatorsPanel->TabIndex = 1;
             // 
             // groupBox4
@@ -631,7 +631,7 @@ namespace C3_App {
             this->groupBox4->Controls->Add(this->pbCameraComms);
             this->groupBox4->Location = System::Drawing::Point(3, 3);
             this->groupBox4->Name = L"groupBox4";
-            this->groupBox4->Size = System::Drawing::Size(413, 308);
+            this->groupBox4->Size = System::Drawing::Size(413, 272);
             this->groupBox4->TabIndex = 1;
             this->groupBox4->TabStop = false;
             this->groupBox4->Text = L"Camera";
@@ -685,7 +685,7 @@ namespace C3_App {
             this->groupBox6->Dock = System::Windows::Forms::DockStyle::Fill;
             this->groupBox6->Location = System::Drawing::Point(841, 3);
             this->groupBox6->Name = L"groupBox6";
-            this->groupBox6->Size = System::Drawing::Size(414, 308);
+            this->groupBox6->Size = System::Drawing::Size(414, 272);
             this->groupBox6->TabIndex = 3;
             this->groupBox6->TabStop = false;
             this->groupBox6->Text = L"Laser";
@@ -746,7 +746,7 @@ namespace C3_App {
             this->groupBox5->Controls->Add(this->pbOverallStatus);
             this->groupBox5->Location = System::Drawing::Point(422, 3);
             this->groupBox5->Name = L"groupBox5";
-            this->groupBox5->Size = System::Drawing::Size(413, 308);
+            this->groupBox5->Size = System::Drawing::Size(413, 272);
             this->groupBox5->TabIndex = 2;
             this->groupBox5->TabStop = false;
             this->groupBox5->Text = L"Demo State";
