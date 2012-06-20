@@ -37,10 +37,10 @@ C3Configuration::C3Configuration(void)
 		SHM_C3_PROCESSING_STATUS_EVENT1  = "SHM_C3_PROCESSING_STATUS_EVENT1";			// Processing IMAGE Event1 File Name
 		SHM_C3_PROCESSING_STATUS_EVENT2  = "SHM_C3_PROCESSING_STATUS_EVENT2";			// Processing IMAGE Event2 File Name
 		//Process debug interface SHM
-		SHM_C3_PROCESSING_STATUS         = "SHM_C3_PROCESSING_DEBUG_STATUS";			// Processing IMAGE SHM File Name
-		SHM_C3_PROCESSING_STATUS_MUTEX   = "SHM_C3_PROCESSING_DEBUG_MUTEX"; 			// Processing IMAGE MUTEX File Name
-		SHM_C3_PROCESSING_STATUS_EVENT1  = "SHM_C3_PROCESSING_DEBUG_EVENT1";			// Processing IMAGE Event1 File Name
-		SHM_C3_PROCESSING_STATUS_EVENT2  = "SHM_C3_PROCESSING_DEBUG_EVENT2";			// Processing IMAGE Event2 File Name
+		SHM_C3_PROCESSING_DEBUG_STATUS  = "SHM_C3_PROCESSING_DEBUG_STATUS";			// Processing IMAGE SHM File Name
+		SHM_C3_PROCESSING_DEBUG_MUTEX   = "SHM_C3_PROCESSING_DEBUG_MUTEX"; 			// Processing IMAGE MUTEX File Name
+		SHM_C3_PROCESSING_DEBUG_EVENT1  = "SHM_C3_PROCESSING_DEBUG_EVENT1";			// Processing IMAGE Event1 File Name
+		SHM_C3_PROCESSING_DEBUG_EVENT2  = "SHM_C3_PROCESSING_DEBUG_EVENT2";			// Processing IMAGE Event2 File Name
 		// laser track shm strings
 		SHM_C3_LASER_POINTING			= "SHM_C3_LASER_POINTING";
 		SHM_C3_LASER_POINTING_MUTEX		= "SHM_C3_LASER_POINTING_MUTEX";
@@ -210,7 +210,7 @@ void C3Configuration::ReadXMLFile()
 			if (pElem)
 			{
 				// Read the 2-State Kalman parameters
-				LASER_HEIGHT                = atoi(pElem->Attribute("height"));
+				pElem->QueryDoubleAttribute("height",&LASER_HEIGHT);
 			}
 			else { /* ERROR ???? */ }
 			pElem=hRoot.FirstChild("ENVIROMENT").Element();
@@ -364,7 +364,7 @@ void C3Configuration::WriteXMLFile()
 
 	TiXmlElement * lParams = new TiXmlElement( "LASER_PARAMS" );  
 	root->LinkEndChild( lParams );  
-	lParams->SetAttribute("height", LASER_HEIGHT); // floating point attrib
+	lParams->SetDoubleAttribute("height", LASER_HEIGHT); // floating point attrib
 
 	doc.SaveFile( CfgFile.c_str() ); 
 }

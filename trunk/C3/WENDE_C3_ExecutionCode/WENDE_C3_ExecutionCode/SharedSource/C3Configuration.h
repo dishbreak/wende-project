@@ -81,5 +81,5 @@ public:
 	string driverStartPath;				
 	string processingStartPath;
 	string arbiterStartPath;
-	int   LASER_HEIGHT;
+	double   LASER_HEIGHT;
 };
