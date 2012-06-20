@@ -410,7 +410,7 @@ namespace C3_App {
             this->tlDtiPpi->ColumnCount = 3;
             this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 48.12834F)));
             this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 51.87166F)));
-            this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute, 441)));
+            this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute, 442)));
             this->tlDtiPpi->Controls->Add(this->groupBox3, 2, 0);
             this->tlDtiPpi->Controls->Add(this->groupBox2, 1, 0);
             this->tlDtiPpi->Controls->Add(this->groupBox1, 0, 0);
@@ -428,9 +428,9 @@ namespace C3_App {
                 | System::Windows::Forms::AnchorStyles::Right));
             this->groupBox3->AutoSize = true;
             this->groupBox3->Controls->Add(this->tlDtiLog);
-            this->groupBox3->Location = System::Drawing::Point(819, 3);
+            this->groupBox3->Location = System::Drawing::Point(818, 3);
             this->groupBox3->Name = L"groupBox3";
-            this->groupBox3->Size = System::Drawing::Size(436, 330);
+            this->groupBox3->Size = System::Drawing::Size(437, 330);
             this->groupBox3->TabIndex = 1;
             this->groupBox3->TabStop = false;
             this->groupBox3->Text = L"DTI Log";
@@ -449,7 +449,7 @@ namespace C3_App {
             this->tlDtiLog->RowCount = 2;
             this->tlDtiLog->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 85.97561F)));
             this->tlDtiLog->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 14.02439F)));
-            this->tlDtiLog->Size = System::Drawing::Size(430, 311);
+            this->tlDtiLog->Size = System::Drawing::Size(431, 311);
             this->tlDtiLog->TabIndex = 2;
             // 
             // cmdExport
@@ -459,10 +459,11 @@ namespace C3_App {
                 | System::Windows::Forms::AnchorStyles::Right));
             this->cmdExport->Location = System::Drawing::Point(3, 270);
             this->cmdExport->Name = L"cmdExport";
-            this->cmdExport->Size = System::Drawing::Size(424, 38);
+            this->cmdExport->Size = System::Drawing::Size(425, 38);
             this->cmdExport->TabIndex = 1;
             this->cmdExport->Text = L"&Export";
             this->cmdExport->UseVisualStyleBackColor = true;
+            this->cmdExport->Click += gcnew System::EventHandler(this, &C3_User_Interface::cmdExport_Click);
             // 
             // dgvDtiLog
             // 
@@ -488,7 +489,7 @@ namespace C3_App {
             this->dgvDtiLog->RowTemplate->Height = 24;
             this->dgvDtiLog->ShowEditingIcon = false;
             this->dgvDtiLog->ShowRowErrors = false;
-            this->dgvDtiLog->Size = System::Drawing::Size(424, 261);
+            this->dgvDtiLog->Size = System::Drawing::Size(425, 261);
             this->dgvDtiLog->TabIndex = 0;
             // 
             // Column1
@@ -515,7 +516,7 @@ namespace C3_App {
                 | System::Windows::Forms::AnchorStyles::Left) 
                 | System::Windows::Forms::AnchorStyles::Right));
             this->groupBox2->Controls->Add(this->pbLiveFeed);
-            this->groupBox2->Location = System::Drawing::Point(396, 3);
+            this->groupBox2->Location = System::Drawing::Point(395, 3);
             this->groupBox2->Name = L"groupBox2";
             this->groupBox2->Size = System::Drawing::Size(417, 330);
             this->groupBox2->TabIndex = 1;
@@ -544,7 +545,7 @@ namespace C3_App {
             this->groupBox1->Location = System::Drawing::Point(3, 3);
             this->groupBox1->MinimumSize = System::Drawing::Size(300, 300);
             this->groupBox1->Name = L"groupBox1";
-            this->groupBox1->Size = System::Drawing::Size(387, 330);
+            this->groupBox1->Size = System::Drawing::Size(386, 330);
             this->groupBox1->TabIndex = 0;
             this->groupBox1->TabStop = false;
             this->groupBox1->Text = L"PPI Display";
@@ -557,7 +558,7 @@ namespace C3_App {
             this->pPPI->Location = System::Drawing::Point(3, 16);
             this->pPPI->MinimumSize = System::Drawing::Size(300, 300);
             this->pPPI->Name = L"pPPI";
-            this->pPPI->Size = System::Drawing::Size(381, 311);
+            this->pPPI->Size = System::Drawing::Size(380, 311);
             this->pPPI->TabIndex = 0;
             this->pPPI->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &C3_User_Interface::pPPI_Paint);
             this->pPPI->Resize += gcnew System::EventHandler(this, &C3_User_Interface::pPPI_Redraw);
@@ -759,6 +760,7 @@ namespace C3_App {
             this->trialControlButton->TabIndex = 10;
             this->trialControlButton->Text = L"Start Trial";
             this->trialControlButton->UseVisualStyleBackColor = true;
+            this->trialControlButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::trialControlButton_Click);
             // 
             // label8
             // 
@@ -776,6 +778,7 @@ namespace C3_App {
             this->CalibrateButton->TabIndex = 8;
             this->CalibrateButton->Text = L"Ready to Calibrate";
             this->CalibrateButton->UseVisualStyleBackColor = true;
+            this->CalibrateButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::calibrateButton_Click);
             // 
             // label7
             // 
