@@ -104,7 +104,7 @@ public class netIO{
 		switch (role) {
 			case 0:
 //				serverInit();	//server must be initialized and started by calling method.
-				System.out.println("NetStart - SERVER FUNCTION CALLED");
+				p("NetStart - SERVER FUNCTION CALLED");
 //				server();
 				break;
 			case 1:
@@ -112,7 +112,7 @@ public class netIO{
 //				client();		// client must be started by calling method
 				break;
 			default:
-				System.out.println("Something went wrong, did not recieve correct role");
+				p("Something went wrong, did not recieve correct role");
 				System.err.println("Didn't choose server or client.");
 				System.exit(1);
 		}	// End Switch on 'role'
@@ -212,7 +212,7 @@ public class netIO{
 	// Server Initialization
 	// Sets up socket on specified port
 	public int serverInit() throws IOException {
-		System.out.println("SERVER INIT STARTED");			
+		p("SERVER INIT STARTED");			
 
 		try {
 			serverSocket = new ServerSocket(port);
@@ -234,7 +234,7 @@ public class netIO{
 			}
 
 		// define server Streams
-		System.out.println("SERVER INIT COMPLETE");
+		p("SERVER INIT COMPLETE");
 		return 1;
 	}	// End Server init Method
 
@@ -246,7 +246,7 @@ public class netIO{
 	// 	    the prepared message to the network
 	public void server(CameraMsgs.cameraStatus sMsg) throws IOException
 	{
-		System.out.println("Send Status");
+		p("Send Status");
 		byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
 		byte[] bytesMsg = sMsg.toByteArray(); 						  
 		clientSocket.getOutputStream().write(bytesLength, 0, 4);
@@ -258,7 +258,7 @@ public class netIO{
 	// overloaded server function - one for each message type
 	public void server(CameraMsgs.cameraTracks sMsg) throws IOException
 	{
-		System.out.println("Send Track");
+		p("Send Track");
 		byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
 		byte[] bytesMsg = sMsg.toByteArray(); 						  
 		clientSocket.getOutputStream().write(bytesLength, 0, 4);
@@ -270,7 +270,7 @@ public class netIO{
 	// overloaded server function - one for each message type
 	public void server(CameraMsgs.cameraImage sMsg) throws IOException
 	{
-		System.out.println("Send Image");
+		p("Send Image");
 		byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
 		//p("Msg Length: "+sMsg.getSerializedSize());
 		byte[] bytesMsg = sMsg.toByteArray(); 						  
@@ -297,7 +297,7 @@ public class netIO{
 			
 			try {
 				// Create network socket
-				System.out.println(tries + " -> Client connecting to "+host+" on port "+port);
+				p(tries + " -> Client connecting to "+host+" on port "+port);
 				cSocket = new Socket(host, port);		//Tries to connect to host on port - server needs to be responsive
 				
 				//Create Object Streams
@@ -325,7 +325,7 @@ public class netIO{
 		
 		// Input from user for text input - not used - Delete? - JF 5/16
 		stdIn = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Waiting for Server");
+		p("Waiting for Server");
 		return;
 	}	// End clientInit Method
 
@@ -389,7 +389,7 @@ public class netIO{
 					cImageIn = CameraMsgs.cameraImage.parseFrom(bytes);
 					break;
 				default:
-					System.out.println("message Type error " + msgType);
+					System.err.println("message Type error " + msgType);
 					break;
 			}
 			// The following code displays parts of the protobuf message.  - JF - implementation of this should be re-thought
@@ -444,7 +444,7 @@ public class netIO{
 				error = false;
 			}
 			if (error){
-				System.out.println("Server: error msg type = " + msgType);
+				System.err.println("Server: error msg type = " + msgType);
 			}
 			localProcTimeStop = System.currentTimeMillis();
 			//timeCalc(msgTime, localProcTimeStop - localProcTimeStart, msgType);
@@ -473,7 +473,7 @@ public class netIO{
 				delayTime = IMAGE_DELAY;
 				break;
 			default:
-				System.out.println("message Type error " + msgType);
+				System.err.println("message Type error " + msgType);
 				break;
 		}
 				
