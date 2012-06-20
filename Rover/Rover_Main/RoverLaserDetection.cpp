@@ -19,7 +19,7 @@ boolean DetectionProcessing()
     //0 - INIT
   //1 - SAMPLING/SATURATION ADJUSTMENTS, then detection
   static int adjusting = 0;
-  static unsigned int curr_state = 0;
+  static unsigned int curr_state = INIT_SENSORS;
   //Serial.println("testing...");
   //delay(100);
   //Serial.println("testing...start");
@@ -33,7 +33,7 @@ boolean DetectionProcessing()
   
   switch (curr_state)
   {
-    case 0:
+    case INIT_SENSORS:
       Serial.println("--init--");
       Adjust_Current_Sync(Sensor_Offset);
       //fill the moving buffer...
@@ -50,11 +50,11 @@ boolean DetectionProcessing()
       historic_detector_value = curr_detector_value;
       historic_light_value = curr_light_value;
       hit_cycles = 0;
-      curr_state = 1;
-      adjusting = HIT_TIME^2;
+      curr_state = LASER_DETECTION;
+      adjusting = SETTLING_TIME*SETTLING_TIME;
       break;
       
-    case 1:
+    case LASER_DETECTION:
     
       //sample
       //subtract off last value
@@ -89,9 +89,10 @@ boolean DetectionProcessing()
       }
     
       //check for saturation
-      if((curr_detector_value/10 < (200+offsetDirection) && Sensor_Offset != MAX_SENSOR_OFFSET) || (curr_detector_value/10 > (900+offsetDirection) && Sensor_Offset !=0 )) 
+      //division removed, slows the rover code down...
+      if((curr_detector_value < (2000+offsetDirection) && Sensor_Offset != MAX_SENSOR_OFFSET) || (curr_detector_value > (9000+offsetDirection) && Sensor_Offset !=0 )) 
       {
-        if(adjust_to_light_change(curr_detector_value/10) == 1)
+        if(adjust_to_light_change(curr_detector_value) == 1)
         {
           //go back to init since we had to adjust to saturation
           curr_state = 0;
@@ -99,11 +100,10 @@ boolean DetectionProcessing()
       }
       else
       {
-        //detection.
         //check which lighting change is bigger
         int lighting_difference = 0;
         lighting_difference = curr_light_value - historic_light_value;
-        /* We want to know if it is less, we should respond differently if it is lower shouldn't we
+        //We want to know if it is less, we should respond differently if it is lower shouldn't we
         if(curr_light_value > historic_light_value)
         {
           lighting_difference = curr_light_value - historic_light_value;
@@ -112,8 +112,9 @@ boolean DetectionProcessing()
         {
           lighting_difference = historic_light_value - curr_light_value;
         }
-        */
-        if(lighting_difference > AMBIENT_LIGHT_LIMIT_POS || (lighting_difference < 0 && abs(lighting_difference) > AMBIENT_LIGHT_LIMIT_NEG))
+        
+        //check if we need to readjust to lighting
+        if(lighting_difference > AMBIENT_LIGHT_LIMIT_POS)
         {
           
           /*Serial.println("--READJUST--");
@@ -132,7 +133,7 @@ boolean DetectionProcessing()
           historic_detector_value = curr_detector_value;
           //Not just reset, but re-initialize (lightign conditions have changed adjust)
           //curr_state = 0;
-          adjusting = HIT_TIME*100;
+          adjusting = SETTLING_TIME;
         }
         else if (adjusting > 1)
         {
@@ -145,24 +146,6 @@ boolean DetectionProcessing()
           historic_light_value = curr_light_value;
           historic_detector_value = curr_detector_value;
         }
-        else if ( historic_detector_value < curr_detector_value && (curr_detector_value - historic_detector_value) > AMBIENT_DETECTION_LIMIT_NEG )
-        {
-          
-          //Serial.println("--READJUST HIGH--");
-          /*
-          Serial.print("Values (Lighting Diff - Detection Diff): ");
-          Serial.print(lighting_difference);
-          Serial.print(" - ");
-          Serial.print(curr_detector_value - historic_detector_value);
-          Serial.print(" - ");
-          Serial.print(curr_light_value);
-          Serial.print(" - ");
-          Serial.println(curr_detector_value);
-          */
-          
-          historic_light_value = curr_light_value;
-          historic_detector_value = curr_detector_value;
-        }
         //check for detection
         else if(historic_detector_value >= curr_detector_value)
         {
@@ -171,7 +154,7 @@ boolean DetectionProcessing()
           if(detector_difference > DETECTION_LOW && detector_difference < DETECTION_HIGH)
           {
             hit_cycles++;
-            
+            Serial.println(detector_difference);
             if(hit_cycles > HIT_TIME)
             {
               Serial.println("---DETECTION---");
@@ -187,7 +170,7 @@ boolean DetectionProcessing()
               Serial.println(Sensor_Offset);
 
 
-              digitalWrite(ROVER_LED_PIN,HIGH);
+              //digitalWrite(ROVER_LED_PIN,HIGH);
               
               bDetected = true;
             }
@@ -197,13 +180,13 @@ boolean DetectionProcessing()
               //Serial.print("Detection in ");
               //Serial.print(diff);
               //Serial.println("cycles");
-              digitalWrite(ROVER_LED_PIN,LOW);
+              //digitalWrite(ROVER_LED_PIN,LOW);
             }
           }
           else
           {
             hit_cycles = 0;
-            digitalWrite(ROVER_LED_PIN,LOW);
+            //digitalWrite(ROVER_LED_PIN,LOW);
           }
         }
         else
@@ -226,29 +209,34 @@ int adjust_to_light_change(int photodetectorVal)
     //reset to initial circuit configuration
     Adjust_Current_Sync(0);
     //set the offset to 100
-    offsetDirection=100;
+    //Changed - Set to 1000 to remove division
+    offsetDirection=1000;
     return 1;
   }
 
   //if we are almost saturated with this voltage step
-  if (photodetectorVal > (900+offsetDirection) && Sensor_Offset != 0)
+  //changed 900 to 9000
+  if (photodetectorVal > (9000+offsetDirection) && Sensor_Offset != 0)
   {
     //move the step down one
     Sensor_Offset=Sensor_Offset-1;
     //turn on/off resistors
     Adjust_Current_Sync(Sensor_Offset);
-    offsetDirection=-100;
+    //changed 100 to 1000
+    offsetDirection=-1000;
     //still adjusting...
     return 1;
   }
   //if we are near the bottom of the scale with this voltage step
-  else if (photodetectorVal < (200+offsetDirection) && Sensor_Offset != MAX_SENSOR_OFFSET)
+  //changed 200 to 2000
+  else if (photodetectorVal < (2000+offsetDirection) && Sensor_Offset != MAX_SENSOR_OFFSET)
   {
     //move the step up one
     Sensor_Offset=Sensor_Offset+1;
     //tunr on/off resistors   
     Adjust_Current_Sync(Sensor_Offset);
-    offsetDirection=100;
+    //changed 100 to 1000
+    offsetDirection=1000;
     //still adjusting...
     return 1;
   }

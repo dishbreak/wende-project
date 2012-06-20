@@ -12,7 +12,9 @@
 #include "Arduino.h"
 
 //defines
-#define LOOP_TIME  100
+//loop time is far too slow...caused rover to waggle at 100
+//dropped to 25
+#define LOOP_TIME  25
 #define SPEED_MULTIPLIER  ((1000/(3*53))*(204/LOOP_TIME))
 
 
