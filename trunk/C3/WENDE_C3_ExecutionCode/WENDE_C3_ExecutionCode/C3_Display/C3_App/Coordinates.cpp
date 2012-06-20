@@ -35,8 +35,13 @@ Coordinates::Coordinates(int TrackNum) {
     WorldPxRatio = gcnew RatioPair();
     PixelShift = gcnew CoordinatePair();
     IsLaserValid = false;
+    IsLaserLocated = false;
     LaserPixelCoords = gcnew CoordinatePair();
     LaserWorldCoords = gcnew CoordinatePair();
+    LaserPixelLocation = gcnew CoordinatePair();
+    LaserWorldLocation = gcnew CoordinatePair();
+    CameraWorldLocation = gcnew CoordinatePair(0,-2000);
+    
 	CurWorldCoords = MakeCoordinatePairArray();
 	OldWorldCoords = MakeCoordinatePairArray();
 	PixelCoords = MakeCoordinatePairArray();
@@ -49,6 +54,7 @@ Coordinates::Coordinates(int TrackNum) {
     //calculate the shift between world and pixels
     PixelShift->x = PixelBounds->x / 2;
     PixelShift->y = PixelBounds->y / 2;
+    CameraPixelLocation = TranslateCoords(CameraWorldLocation);
 }
 
 Coordinates::~Coordinates() {
@@ -162,7 +168,28 @@ bool Coordinates::SetPipCoordinates(array<CoordinatePair^>^ PipCoordinateUpdates
 	return HasNewPips;
 }
 
+bool Coordinates::LaserIsLocated() {
+    return IsLaserLocated;
+}
 
 CoordinatePair^ Coordinates::GetLaserLocation() {
 	return LaserPixelLocation;
+}
+
+bool Coordinates::SetLaserLocation(CoordinatePair^ LaserLocation, bool HasLaserLocation) {
+    bool HaveNewLocation = false;
+    IsLaserLocated = HasLaserLocation;
+    if (LaserWorldLocation->x != LaserLocation->x || 
+        LaserWorldLocation->y != LaserLocation->y)
+    {
+        HaveNewLocation = true;
+        LaserWorldLocation->x = LaserLocation->x;
+        LaserWorldLocation->y = LaserLocation->y;
+    }
+    LaserPixelCoords = TranslateCoords(LaserWorldCoords);
+    return HaveNewLocation;
+}
+
+CoordinatePair^ Coordinates::GetCameraLocation() {
+    return CameraPixelLocation;
 }
