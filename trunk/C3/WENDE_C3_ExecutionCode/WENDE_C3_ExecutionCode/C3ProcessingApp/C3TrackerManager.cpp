@@ -102,6 +102,7 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 											       const vector<C3_TRACK_POINT_DOUBLE> cameraRoverPositions, 
 											       const double time)
 {
+	printf("time = %f\n",time);
 	// loop over all the track positions
 	for (unsigned int ii = 0; ii < cameraRoverPositions.size(); ii++)
 	{
@@ -138,6 +139,10 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 					minValue				   = correlate.dist;	// new min value for this point...
 				}
 			} 
+			else
+			{
+				printf("hello\n");
+			}
 		}
 
 		// if there was no success then repeat

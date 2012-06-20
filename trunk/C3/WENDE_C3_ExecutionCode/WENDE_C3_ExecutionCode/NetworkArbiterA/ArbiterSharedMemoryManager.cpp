@@ -91,7 +91,6 @@ void CArbiterSharedMemoryManager::DecodeCameraStatusMessage(LPCTSTR strText, cha
 	int packetNumber = DecodeCameraStatusMessage_DEBUG(&ss,temp);
 	time_t messageTime;// = ss->time();
 	time( &messageTime ) ;	
-	ss.set_time(messageTime);
 	// aquire the mutex
 	if (C3CameraStatus.isCreated() &&  
 		C3CameraStatus.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
@@ -135,15 +134,9 @@ int CArbiterSharedMemoryManager::DecodeCameraTrackMessage_DEBUG(cameraTracks *tr
 	// variables
 	static char timeStr[256];
 	static int cameraTrackMessageCount = 0;
-	// debug string for time
-	time_t messageTime;// = ss->time();
-	time( &messageTime ) ;	
-	tr->set_time(messageTime);
-	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
 	// debug string for display 
 	sprintf(temp, "+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
 	sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,tr->laseron());
-	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
 	sprintf(temp, "%s|-->Status = %s   \r\n", temp,DecodeStatus((int)tr->status()).c_str());
 	sprintf(temp, "%s|-->Tracks = %d   \r\n", temp,tr->target_size());
 	for (int ii = 0; ii < tr->target_size(); ii++)
@@ -172,9 +165,6 @@ void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char
 	tr.ParseFromArray(strText,size);
 	//Prepare the debug print
 	int packetNumebr = DecodeCameraTrackMessage_DEBUG(&tr,temp);
-	time_t messageTime;// = ss->time();
-	time( &messageTime ) ;	
-	tr.set_time(messageTime);
 	// aquire the mutex
 	if (C3CameraTracks.isCreated() &&  
 		C3CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
@@ -341,7 +331,6 @@ string CArbiterSharedMemoryManager::DecodeCameraImageMessage (LPCTSTR strText, c
 	string saveName  = RecreateImage(&im);
 	time_t messageTime;// = ss->time();
 	time( &messageTime ) ;	
-	im.set_time(messageTime);
 	// write data to shm
 	if (C3CameraImage.isCreated() &&  
 	    C3CameraImage.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)

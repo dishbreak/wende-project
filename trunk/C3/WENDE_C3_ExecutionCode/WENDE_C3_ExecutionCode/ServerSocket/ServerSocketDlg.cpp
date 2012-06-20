@@ -1027,7 +1027,7 @@ void CServerSocketDlg::SendFile()
 		}
 	}	
 	cameraTracks track;
-	track.set_time(in5);										// set the operational time
+	track.set_time(in5*1000);										// set the operational time
 	
 	track.set_laseron(true);								// set laser status
 	

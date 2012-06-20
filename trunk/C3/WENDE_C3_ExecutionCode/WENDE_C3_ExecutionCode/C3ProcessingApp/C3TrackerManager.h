@@ -57,7 +57,8 @@ class C3TrackerManager
 		double			 m_playingFieldRadius;					// (m)
 		// Max Distance a point can be before it is ignorded
 		double			 m_maxDistance;							// (m)
-
+		double			 m_time;
+		double			 m_resetTime;
 	public:
 		C3TrackerManager(void);
 		~C3TrackerManager(void);
