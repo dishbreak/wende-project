@@ -317,6 +317,28 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	return 1L;
 }
+//bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification)
+//{
+//	bool result = false;
+//	////////////////////////
+//	// Send notifications
+//	////////////////////////
+//	if((*notification).isCreated() && 
+//		(*notification).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+//	{
+//		(*notification)->RoverLocationsCur = C3NotificationHandler::Instance().Get_Process_State();
+//		(*notification)->DTI       = C3NotificationHandler::Instance().Get_DTI_Value();
+//		(*notification)->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
+//
+//		(*notification).SetEventServer();
+//
+//		(*notification).ReleaseMutex();
+//
+//		result = true;
+//	}
+//	
+//	return result;
+//}
 bool SendNotification(CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *notification)
 {
 	bool result = false;
