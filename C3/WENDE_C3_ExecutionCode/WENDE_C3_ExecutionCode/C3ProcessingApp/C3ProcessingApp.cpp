@@ -248,7 +248,8 @@ int _tmain(int argc, _TCHAR* argv[])
 						{
 							laserPoint.X = inData.Lasers[0].X;
 							laserPoint.Y = inData.Lasers[0].Y;
-							commandOut = tm.UpdateTracks(roverPoints, laserPoint, inData.Time,laserOrigin);
+							// time correct to second
+							commandOut = tm.UpdateTracks(roverPoints, laserPoint, MS_TO_S(inData.Time),laserOrigin);
 							// TODO ITEM VERIFY THE LASER MACROS
 							laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
 							commandOut.AZ = DEGREES_TO_TICKS(commandOut.AZ);
@@ -413,9 +414,6 @@ bool ReadInputMessage(CSharedStruct<CAMERA_TRACK_MSG_SHM> *shm,
 				roverPoint.Y = MM_TO_M((*trk).Tracks[ii].Y);
 				roverPoints->push_back(roverPoint);
 			}
-
-			// time correct to second
-			(*trk).Time = MS_TO_S((*trk).Time);
 
 			// set the read message to true
 			readMessageSuccess = true;
