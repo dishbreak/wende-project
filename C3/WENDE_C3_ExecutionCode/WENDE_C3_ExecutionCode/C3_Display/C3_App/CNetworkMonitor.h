@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include <windows.h>
 
-#define C3_NETWORK_THREAD_COUNT 6
+#define C3_NETWORK_THREAD_COUNT 7
 
 typedef struct{
 	HANDLE handle;
