@@ -54,6 +54,10 @@ bool SendOutputMessage(bool										sendMessageSuccess,
 					   CSharedStruct<LASER_POINT_DIRECTION_SHM> *lCommand,
 					   int										cameraTrackMessageCount);
 bool SendNotification(CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *notification);
+bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification,
+						 vector<C3_TRACK_POINT_DOUBLE>    *rPoints,
+						 vector<C3_TRACK_POINT_DOUBLE>    *rPipPoints,
+						 C3_TRACK_POINT_DOUBLE             laser);
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
 /////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +88,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	int calIndex = 0;										// number of points
 	CAMERA_TRACK_MSG_SHM					 inData;		// temporary holder of the current data 
 	vector<C3_TRACK_POINT_DOUBLE>			 roverPoints;	// the rover points
+	vector<C3_TRACK_POINT_DOUBLE>			 rPoints;
+	vector<C3_TRACK_POINT_DOUBLE>			 rPipPoints;
 	C3_TRACK_POINT_DOUBLE					 testPoints[4];	// test points for calibration
 	C3_TRACK_POINT_DOUBLE					 commandOut;	// the gimbal command out
 	C3_TRACK_POINT_DOUBLE					 laserOrigin;	// the laser origion setup from the calibration
@@ -95,14 +101,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	memset((void*)&testPoints,0,sizeof(C3_TRACK_POINT_DOUBLE)*4);
 	memset((void*)&commandOut,0,sizeof(C3_TRACK_POINT_DOUBLE));
 	memset((void*)&laserOrigin,0,sizeof(C3_TRACK_POINT_DOUBLE));
-	laserOrigin.X = -2;
-	laserOrigin.Y = -4;
+	laserOrigin.X = -3;
+	laserOrigin.Y = -3;
 	memset((void*)&laserPoint,0,sizeof(C3_TRACK_POINT_DOUBLE));
 	//TestKalmanFilter();
 	//TestTrackFilter();
 	//TestCalibration(hconsole);
 	//TestNoMovement();
-	TestXMovement();
+	//TestXMovement();
 	//return 0;	
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup the shared memory
@@ -130,6 +136,14 @@ int _tmain(int argc, _TCHAR* argv[])
 								  C3Configuration::Instance().SHM_C3_PROCESSING_STATUS_EVENT2);	// shared mem event name
 	if (m_DisplayNotification.isServer()) m_DisplayNotification->ShmInfo.Clients = 0;
 	else m_DisplayNotification->ShmInfo.Clients++;
+
+	CSharedStruct<PPI_DEBUG_MSG_SHM> m_PipNotification;
+	m_PipNotification.Acquire(C3Configuration::Instance().SHM_C3_PROCESSING_DEBUG_STATUS,			// shared mem file name
+						      C3Configuration::Instance().SHM_C3_PROCESSING_DEBUG_MUTEX,	// shared mem mutex name
+							  C3Configuration::Instance().SHM_C3_PROCESSING_DEBUG_EVENT1,	// shared mem event name
+						      C3Configuration::Instance().SHM_C3_PROCESSING_DEBUG_EVENT2);	// shared mem event name
+	if (m_PipNotification.isServer()) m_PipNotification->ShmInfo.Clients = 0;
+	else m_PipNotification->ShmInfo.Clients++;
 	/////////////////////////////////////////////////////////////////////////////////
 	// Thread
 	/////////////////////////////////////////////////////////////////////////////////
@@ -156,6 +170,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		sendMessageSuccess = false;				// set the write flag to false
 		// Remove the previous points
 		roverPoints.clear();					// clear points
+		rPoints.clear();
+		rPipPoints.clear();
 		// send the points out
 		readMessageSuccess =  ReadInputMessage(&m_CameraTracks,
 			                                   &inData,
@@ -193,13 +209,15 @@ int _tmain(int argc, _TCHAR* argv[])
 						if (C3NotificationHandler::Instance().Get_Process_State() == C3_Alert_Types::CALIBRATION_IN_PROGRESS_5)
 						{	
 							// do calibration
-							laserOrigin = calibrate(testPoints);
+							//laserOrigin = calibrate(testPoints);
 							double bearing = atan2(laserOrigin.Y,laserOrigin.X); 
 							theta = bearing - M_PI; 
 							tm.ClearTracks();
 
 							//rest index
 							calIndex    = 0;
+
+							SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
 						}
 						// walk the states
 						updateCalibrationState();
@@ -255,6 +273,10 @@ int _tmain(int argc, _TCHAR* argv[])
 							commandOut.AZ = DEGREES_TO_TICKS(commandOut.AZ);
 							commandOut.EL = DEGREES_TO_TICKS(commandOut.EL);
 							sendMessageSuccess = true;
+
+							tm.getPIP(&rPoints,&rPipPoints);
+							
+							SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
 						}
 						else
 						{
@@ -302,7 +324,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			////////////////////////
 			// Send notifications
 			////////////////////////
-			SendNotification(&m_DisplayNotification);
+				SendNotification(&m_DisplayNotification);
 		}
 		////////////////////////
 		// Send output message
@@ -317,28 +339,42 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	return 1L;
 }
-//bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification)
-//{
-//	bool result = false;
-//	////////////////////////
-//	// Send notifications
-//	////////////////////////
-//	if((*notification).isCreated() && 
-//		(*notification).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
-//	{
-//		(*notification)->RoverLocationsCur = C3NotificationHandler::Instance().Get_Process_State();
-//		(*notification)->DTI       = C3NotificationHandler::Instance().Get_DTI_Value();
-//		(*notification)->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
-//
-//		(*notification).SetEventServer();
-//
-//		(*notification).ReleaseMutex();
-//
-//		result = true;
-//	}
-//	
-//	return result;
-//}
+bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification,
+						 vector<C3_TRACK_POINT_DOUBLE>    *rPoints,
+						 vector<C3_TRACK_POINT_DOUBLE>    *rPipPoints,
+						 C3_TRACK_POINT_DOUBLE             laser)
+{
+	bool result = false;
+	////////////////////////
+	// Send notifications
+	////////////////////////
+	if((*notification).isCreated() && 
+		(*notification).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
+	{
+		for (unsigned int ii = 0; ii < rPoints->size(); ii++)
+		{
+			(*notification)->RoverLocationsCur[ii].X = M_TO_MM((*rPoints)[ii].X);
+			(*notification)->RoverLocationsCur[ii].Y = M_TO_MM((*rPoints)[ii].Y);
+			(*notification)->RoverLocationsPIP[ii].X = M_TO_MM((*rPipPoints)[ii].X);
+			(*notification)->RoverLocationsPIP[ii].Y = M_TO_MM((*rPipPoints)[ii].Y);
+		}
+
+		(*notification)->ProcessID  = (*notification).GetProcessID();
+
+		(*notification)->NumberValid  = rPoints->size();
+
+		(*notification)->LaserOrigin.X = M_TO_MM(laser.X);
+		(*notification)->LaserOrigin.Y = M_TO_MM(laser.Y);
+		
+		(*notification).SetEventServer();
+
+		(*notification).ReleaseMutex();
+
+		result = true;
+	}
+	
+	return result;
+}
 bool SendNotification(CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *notification)
 {
 	bool result = false;

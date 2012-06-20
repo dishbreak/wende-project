@@ -31,7 +31,7 @@ int main(array<System::String ^> ^args)
 	// Enabling Windows XP visual effects before any controls are created
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
-	Sleep(5000);
+	//Sleep(5000);
 	splash1.CloseSplash();
 
 	// Run up Controller and Processing

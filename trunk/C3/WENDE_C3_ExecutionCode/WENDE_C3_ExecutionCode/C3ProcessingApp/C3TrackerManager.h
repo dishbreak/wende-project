@@ -72,6 +72,7 @@ class C3TrackerManager
 		// clear the tracks
 		void ClearTracks();
 		C3_TRACK_POINT_DOUBLE getPredictedPoint() const;
+		void getPIP(vector<C3_TRACK_POINT_DOUBLE> *r,vector<C3_TRACK_POINT_DOUBLE> *p);
 		double GetDTI()const;
 	private:
 		// determine if a point has already been assigned to the tracker 

@@ -217,3 +217,11 @@ double C3TrackerManager::GetDTI()const
 	}
 	return minValue;
 }
+void C3TrackerManager::getPIP(vector<C3_TRACK_POINT_DOUBLE> *r,vector<C3_TRACK_POINT_DOUBLE> *p)
+{
+	for (int ii = 0; ii < m_tracks.size(); ii++)
+	{
+		r->push_back(m_tracks[ii]->getLastHistoryPoint());
+		p->push_back(m_tracks[ii]->getPredictionPoint());
+	}
+}

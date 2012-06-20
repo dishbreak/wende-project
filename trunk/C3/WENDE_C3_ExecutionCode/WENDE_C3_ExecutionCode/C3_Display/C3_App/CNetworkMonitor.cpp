@@ -30,9 +30,9 @@ CNetworkMonitor::CNetworkMonitor()
 	functionArray[2] = LaserStatusThread,
 	functionArray[3] = CameraStatusThread;
 	functionArray[4] = ProcessingInterfaceReceiveThread;
-	functionArray[5] = ProcessingInterfaceTransmitThread;
-	functionArray[6] = PPIDebugThread;
-
+	functionArray[5] = PPIDebugThread;
+	functionArray[6] = ProcessingInterfaceTransmitThread;
+	
 	/* Initialize the critical section before entering multi-threaded context. */
 	InitializeCriticalSection(&cs);
 	InitializeCriticalSection(&statusLock);
