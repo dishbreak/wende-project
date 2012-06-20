@@ -95,12 +95,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	memset((void*)&testPoints,0,sizeof(C3_TRACK_POINT_DOUBLE)*4);
 	memset((void*)&commandOut,0,sizeof(C3_TRACK_POINT_DOUBLE));
 	memset((void*)&laserOrigin,0,sizeof(C3_TRACK_POINT_DOUBLE));
+	laserOrigin.X = -2;
+	laserOrigin.Y = -4;
 	memset((void*)&laserPoint,0,sizeof(C3_TRACK_POINT_DOUBLE));
 	//TestKalmanFilter();
 	//TestTrackFilter();
 	//TestCalibration(hconsole);
 	//TestNoMovement();
-	//TestXMovement();
+	TestXMovement();
 	//return 0;	
 	/////////////////////////////////////////////////////////////////////////////////
 	// Setup the shared memory
@@ -237,7 +239,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			else
 			{
 				state = C3NotificationHandler::Instance().Get_Process_State();
-				if (state ==  C3_Alert_Types::POC_STARTED)
+				if (state == C3_Alert_Types::POC_STARTED || 
+					state == C3_Alert_Types::TARGET_LEFT_PLAYING_FIELD)
 				{
 					if (inData.ValidTracks != 0)
 					{
@@ -401,7 +404,7 @@ bool ReadInputMessage(CSharedStruct<CAMERA_TRACK_MSG_SHM> *shm,
 			(*shm).ReleaseMutex();
 
 			// write data to the screen
-			WriteDataToScreen((*trk),cameraTrackMessageCount);
+			//WriteDataToScreen((*trk),cameraTrackMessageCount);
 
 			// Read the data
 			for (unsigned int ii = 0; ii < (*trk).ValidTracks; ii++)
@@ -561,25 +564,25 @@ UINT WINAPI AlgorithmThread (LPVOID pParam)
 }
 void WriteDataToScreen(CAMERA_TRACK_MSG_SHM	inData, int cameraTrackMessageCount)
 {
-	char timeStr[256];								// Temporary time string
-	// Read the data
-	printf("+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
-	printf("|-->Laser  = %d   \r\n",inData.LaserOnOf);
-	time_t now = inData.Time;
-	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
-	printf("|-->Time   = %s   \r\n",timeStr);
-	printf("|-->Status = %d   \r\n",inData.Status);
-	printf("|-->Tracks = %d   \r\n",inData.ValidTracks);
-	for (unsigned int ii = 0; ii < inData.ValidTracks; ii++)
-	{
-		printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Tracks[ii].X,inData.Tracks[ii].Y);
-	}
-	printf("|-->Lasr = %d   \r\n",inData.ValidLasers);
-	for (unsigned int ii = 0; ii < inData.ValidLasers; ii++)
-	{
-		printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Lasers[ii].X,inData.Lasers[ii].Y);
-	}
-	printf("\r\n\r\n");
+	//char timeStr[256];								// Temporary time string
+	//// Read the data
+	//printf("+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
+	//printf("|-->Laser  = %d   \r\n",inData.LaserOnOf);
+	//time_t now = inData.Time;
+	//strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
+	//printf("|-->Time   = %s   \r\n",timeStr);
+	//printf("|-->Status = %d   \r\n",inData.Status);
+	//printf("|-->Tracks = %d   \r\n",inData.ValidTracks);
+	//for (unsigned int ii = 0; ii < inData.ValidTracks; ii++)
+	//{
+	//	printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Tracks[ii].X,inData.Tracks[ii].Y);
+	//}
+	//printf("|-->Lasr = %d   \r\n",inData.ValidLasers);
+	//for (unsigned int ii = 0; ii < inData.ValidLasers; ii++)
+	//{
+	//	printf("|-->Tack %d = [%d , %d]  \r\n",ii,inData.Lasers[ii].X,inData.Lasers[ii].Y);
+	//}
+	//printf("\r\n\r\n");
 }
 /////////////////////////////////////////////////////////////////////////////////
 // TEST functions
@@ -645,15 +648,12 @@ void TestNoMovement()
 }
 void TestXMovement()
 {
-	C3_TRACK_POINT_DOUBLE roverPoint;
-	roverPoint.X = 0.0;
-	roverPoint.Y = 0.0;
 	C3_TRACK_POINT_DOUBLE laserPoint;
 	laserPoint.X = 0.0;
 	laserPoint.Y = 0.0;
 	C3_TRACK_POINT_DOUBLE laserOrigin;
-	laserOrigin.X = -2.0;
-	laserOrigin.Y =  3.0;
+	laserOrigin.X = 0.0;
+	laserOrigin.Y =  0.0;
 
 	C3TrackerManager  track;
 	
@@ -661,14 +661,22 @@ void TestXMovement()
 	double         time			= 0.0;
 	int			   MOVEMENT     = 21;
 	vector<C3_TRACK_POINT_DOUBLE> t;
-	for (int ii = 0; ii < 1000; ii++)
+	C3_TRACK_POINT_DOUBLE testPoint;
+	
+	double         testUpdateRate = 0.250;
+	double         MAX_ERROR      = 0.0000005;
+
+	// verify test output 1 (matlab move in x only)
+	ifstream myfile ("TEST_5.txt");
+	for (int ii = 0; myfile.is_open() && ii < 100; ii ++)
 	{
+		myfile >> testPoint.X >> testPoint.Y >> procResult.X >> procResult.Y;
+		
 		t.clear();
-		t.push_back(roverPoint);
+		t.push_back(testPoint);
 		procResult = track.UpdateTracks(t,laserPoint,time,laserOrigin);
 		time += 250.0/1000.0;	
-		roverPoint.X += 0.05;
-		printf("Iteration (%d)::in [X,Y]= [%f,%f] out = [%f,%f]\n", ii,roverPoint.X,roverPoint.Y,
+		printf("Iteration (%d)::in [X,Y]= [%f,%f] out = [%f,%f]\n", ii,testPoint.X,testPoint.Y,
 			track.getPredictedPoint().X,track.getPredictedPoint().Y);
 	}
 }
