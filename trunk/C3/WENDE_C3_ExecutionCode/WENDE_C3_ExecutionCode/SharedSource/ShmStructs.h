@@ -248,3 +248,23 @@ typedef struct {
 
 	SHM_INFO_STRUCT		ShmInfo;
 }ALGORITHM_INTERFACE_MSG_SHM;
+
+/////////////////////////////////////////////////////////////////////////////////
+// Struct: PPI_DEBUG_MSG_SHM
+//
+// purpose: defines the structure for internal message passing of PPI PIP etc
+//          
+/////////////////////////////////////////////////////////////////////////////////
+typedef struct {
+	DWORD  ProcessID;
+	DWORD  Time;
+
+	C3_TRACK_POINT RoverLocationsCur[SHM_MAX_TRACKS];
+	C3_TRACK_POINT RoverLocationsPIP[SHM_MAX_TRACKS];
+	C3_TRACK_POINT LaserOrigin;
+	UINT32 NumberValid;
+
+	__int64 startTime;
+
+	SHM_INFO_STRUCT		ShmInfo;
+}PPI_DEBUG_MSG_SHM;
