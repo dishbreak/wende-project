@@ -19,7 +19,7 @@ C3TrackerManager::~C3TrackerManager(void)
 void C3TrackerManager::ClearTracks()
 {
 	// free the trackers
-	for(int ii = 0; ii <m_tracks.size(); ii++)
+	for(unsigned int ii = 0; ii <m_tracks.size(); ii++)
 	{
 		C3Track *track = m_tracks.back();
 		m_tracks.pop_back();
@@ -94,6 +94,7 @@ C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT
 			result = commands[yy];
 		}
 	}
+	printf("Time = %f     Tracks = %d\n",time,m_tracks.size());
 	return result;
 }
 // Correlates a point with a tracker
@@ -135,10 +136,6 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 					correlate.assignTrackIndex = jj;				// ok so this is the tracker for the point
 					correlate.isJustCreated    = false;				// 
 					minValue				   = correlate.dist;	// new min value for this point...
-				}
-				else
-				{
-					printf("Hello");
 				}
 			} 
 		}
@@ -205,7 +202,7 @@ double C3TrackerManager::GetDTI()const
 	// todo add better logic
 	double minValue    = numeric_limits<double>::max();
 	double temp        = 0;
-	for (int ii = 0; ii < m_tracks.size(); ii++)
+	for (unsigned int ii = 0; ii < m_tracks.size(); ii++)
 	{
 		temp = C3Utilities::EuclideanDistance(m_tracks[ii]->getLastHistoryPoint());
 		if (temp < minValue && m_tracks[ii]->isProsecute()) 
