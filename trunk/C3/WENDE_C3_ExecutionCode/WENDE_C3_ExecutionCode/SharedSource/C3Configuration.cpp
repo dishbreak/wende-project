@@ -36,6 +36,11 @@ C3Configuration::C3Configuration(void)
 		SHM_C3_PROCESSING_STATUS_MUTEX   = "SHM_C3_PROCESSING_STATUS_MUTEX"; 			// Processing IMAGE MUTEX File Name
 		SHM_C3_PROCESSING_STATUS_EVENT1  = "SHM_C3_PROCESSING_STATUS_EVENT1";			// Processing IMAGE Event1 File Name
 		SHM_C3_PROCESSING_STATUS_EVENT2  = "SHM_C3_PROCESSING_STATUS_EVENT2";			// Processing IMAGE Event2 File Name
+		//Process debug interface SHM
+		SHM_C3_PROCESSING_STATUS         = "SHM_C3_PROCESSING_DEBUG_STATUS";			// Processing IMAGE SHM File Name
+		SHM_C3_PROCESSING_STATUS_MUTEX   = "SHM_C3_PROCESSING_DEBUG_MUTEX"; 			// Processing IMAGE MUTEX File Name
+		SHM_C3_PROCESSING_STATUS_EVENT1  = "SHM_C3_PROCESSING_DEBUG_EVENT1";			// Processing IMAGE Event1 File Name
+		SHM_C3_PROCESSING_STATUS_EVENT2  = "SHM_C3_PROCESSING_DEBUG_EVENT2";			// Processing IMAGE Event2 File Name
 		// laser track shm strings
 		SHM_C3_LASER_POINTING			= "SHM_C3_LASER_POINTING";
 		SHM_C3_LASER_POINTING_MUTEX		= "SHM_C3_LASER_POINTING_MUTEX";
@@ -184,6 +189,16 @@ void C3Configuration::ReadXMLFile()
 				SHM_C3_PROCESSING_STATUS_EVENT2 = pElem->Attribute("EVENT_CLIENT");
 			}
 			else{ /* ERROR ???? */}
+			pElem=hRoot.FirstChild("SHM_FILE_PROCESSING_DEBUG_STATUS").Element();
+			if (pElem)
+			{
+				// Read the camera pointing directions
+				SHM_C3_PROCESSING_DEBUG_STATUS	= pElem->Attribute("FILE");
+				SHM_C3_PROCESSING_DEBUG_MUTEX	= pElem->Attribute("MUTEX");
+				SHM_C3_PROCESSING_DEBUG_EVENT1	= pElem->Attribute("EVENT_SERVER");
+				SHM_C3_PROCESSING_DEBUG_EVENT2	= pElem->Attribute("EVENT_CLIENT");
+			}
+			else{ /* ERROR ???? */}
 			pElem=hRoot.FirstChild("KALMAN_FILTER").Element();
 			if (pElem)
 			{
@@ -289,6 +304,13 @@ void C3Configuration::WriteXMLFile()
 	shmFileLaserTrack->SetAttribute("MUTEX",        SHM_C3_LASER_POINTING_MUTEX.c_str());
 	shmFileLaserTrack->SetAttribute("EVENT_SERVER", SHM_C3_LASER_POINTING_EVENT1.c_str());
 	shmFileLaserTrack->SetAttribute("EVENT_CLIENT", SHM_C3_LASER_POINTING_EVENT2.c_str());
+
+	TiXmlElement * shmProcessingDebug= new TiXmlElement( "SHM_C3_PROCESSING_DEBUG_STATUS" );  
+	root->LinkEndChild( shmProcessingDebug );  
+	shmProcessingDebug->SetAttribute("FILE",         SHM_C3_PROCESSING_DEBUG_STATUS.c_str());
+	shmProcessingDebug->SetAttribute("MUTEX",        SHM_C3_PROCESSING_DEBUG_MUTEX.c_str());
+	shmProcessingDebug->SetAttribute("EVENT_SERVER", SHM_C3_PROCESSING_DEBUG_EVENT1.c_str());
+	shmProcessingDebug->SetAttribute("EVENT_CLIENT", SHM_C3_PROCESSING_DEBUG_EVENT2.c_str());
 
 	TiXmlComment * comment5 = new TiXmlComment();
 	comment5->SetValue("Debug Configuration items" );  
