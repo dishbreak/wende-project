@@ -14,6 +14,7 @@ public:
 		// return reference to singleton
 		return singleton;
 	}
+
 	~C3Configuration(void);				// Defualt Destructor
 	
 	void WriteXMLFile();
@@ -60,6 +61,11 @@ public:
 	string SHM_C3_PROCESSING_STATUS_MUTEX;			// Processing IMAGE MUTEX File Name
 	string SHM_C3_PROCESSING_STATUS_EVENT1;			// Processing IMAGE Event1 File Name
 	string SHM_C3_PROCESSING_STATUS_EVENT2;			// Processing IMAGE Event2 File Name
+	//Process Debug SHM
+	string SHM_C3_PROCESSING_DEBUG_STATUS;				// Processing IMAGE SHM File Name
+	string SHM_C3_PROCESSING_DEBUG_MUTEX;			// Processing IMAGE MUTEX File Name
+	string SHM_C3_PROCESSING_DEBUG_EVENT1;			// Processing IMAGE Event1 File Name
+	string SHM_C3_PROCESSING_DEBUG_EVENT2;			// Processing IMAGE Event2 File Name
 	//network setup
 	ConnectionSettings ConnectionArbiter;
 	//driver setup
