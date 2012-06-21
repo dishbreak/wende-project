@@ -34,11 +34,12 @@ public:
     bool SetLaserPoint(CoordinatePair ^LaserPointUpdate, bool HasLaserPoint);
     bool LaserPointIsValid();
 	array<CoordinatePair^>^ GetPipCoordinates();
-	bool SetPipCoordinates(array<CoordinatePair^>^ PipCoordinateUpdate);
+	bool SetPipCoordinates(array<CoordinatePair^>^ PipCoordinateUpdate, int NumValidTracks);
 	bool LaserIsLocated();
 	CoordinatePair^ GetLaserLocation();
 	bool SetLaserLocation(CoordinatePair^ LaserLocation, bool HasLaserLocation);
     CoordinatePair^ GetCameraLocation();
+	void CleanUp();
 
 private:
     bool IsLaserValid;
@@ -63,6 +64,7 @@ private:
     CoordinatePair^ PixelShift;
     RatioPair^ WorldPxRatio;
 	int ValidTracks;
+	int ValidPips;
 	int TotalTracks;
 	static Coordinates ^ coordsObj = nullptr;
 };
