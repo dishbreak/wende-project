@@ -1036,8 +1036,6 @@ void CServerSocketDlg::SendFile()
 	
 	track.set_status(cameraMsgs::systemStatus::CAMERA_READY);	// set camera status
 
-	AddTrack(&m_trackEnable0,&m_trackXEditBox0,&m_trackYEditBox0, &track);
-
 	::cameraMsgs::track *cTrack = track.add_target();
 	cTrack->set_x(in1*1000);
 	cTrack->set_y(in2*1000);
@@ -1212,16 +1210,28 @@ void CServerSocketDlg::SendFilePass()
 	
 	track.set_status(cameraMsgs::systemStatus::CAMERA_READY);	// set camera status
 
-	AddTrack(&m_trackEnable0,&m_trackXEditBox0,&m_trackYEditBox0, &track);
+	static int ll = 0;
+	if (ll%2==0)
+	{
+		::cameraMsgs::track *cTrack1 = track.add_target();
+		cTrack1->set_x(in1*1000);
+		cTrack1->set_y(in2*1000);
 
-	::cameraMsgs::track *cTrack1 = track.add_target();
-	cTrack1->set_x(in1*1000);
-	cTrack1->set_y(in2*1000);
+		::cameraMsgs::track *cTrack2 = track.add_target();
+		cTrack2->set_x((in3+.1)*1000.0);
+		cTrack2->set_y((in4+.1)*1000.0);
+	}
+	else
+	{
+		::cameraMsgs::track *cTrack2 = track.add_target();
+		cTrack2->set_x((in3+.1)*1000.0);
+		cTrack2->set_y((in4+.1)*1000.0);
 
-	::cameraMsgs::track *cTrack2 = track.add_target();
-	cTrack2->set_x(in3*1000);
-	cTrack2->set_y(in4*1000);
-
+		::cameraMsgs::track *cTrack1 = track.add_target();
+		cTrack1->set_x(in1*1000);
+		cTrack1->set_y(in2*1000);
+	}
+	ll ++;
 	::cameraMsgs::track *cLaser = track.add_laser();
 	cLaser->set_x(in5*1000);
 	cLaser->set_y(in6*1000);
