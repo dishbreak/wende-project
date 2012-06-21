@@ -76,9 +76,13 @@ int CDisplayManager::Update_Laser_Location(CoordinatePair ^LaserLocation, bool H
     return 0;
 }
 
-int CDisplayManager::Update_Pip_PPI_Position(cli::array<CoordinatePair ^,1> ^PipCoordinateUpdate)
+int CDisplayManager::Update_Pip_PPI_Position(cli::array<CoordinatePair ^,1> ^PipCoordinateUpdate, int NumValidPips)
 {
-    //
+	Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
+	//if anything has changed, invalidate the PPI display.
+	if(coordsObj->SetPipCoordinates(PipCoordinateUpdate, NumValidPips)) {
+		C3_User_Interface::Instance->pPPI->Invalidate();
+	}
     return 0;
 }
 

@@ -28,25 +28,15 @@ RatioPair::RatioPair() {
 }
 
 Coordinates::Coordinates(int TrackNum) {
-	//initialize all coordinate pairs
+	//initialize all constants
 	TotalTracks = TrackNum;
 	WorldBounds = gcnew CoordinatePair(2000,2000);
 	PixelBounds = gcnew CoordinatePair(300,300);
     WorldPxRatio = gcnew RatioPair();
     PixelShift = gcnew CoordinatePair();
-    IsLaserValid = false;
-    IsLaserLocated = false;
-    LaserPixelCoords = gcnew CoordinatePair();
-    LaserWorldCoords = gcnew CoordinatePair();
-    LaserPixelLocation = gcnew CoordinatePair();
-    LaserWorldLocation = gcnew CoordinatePair();
-    CameraWorldLocation = gcnew CoordinatePair(0,-2000);
-    
-	CurWorldCoords = MakeCoordinatePairArray();
-	OldWorldCoords = MakeCoordinatePairArray();
-	PixelCoords = MakeCoordinatePairArray();
-	PipWorldCoords = MakeCoordinatePairArray();
-	PipPixelCoords = MakeCoordinatePairArray();
+
+	//set up coordinate pairs for a fresh run
+	CleanUp();
 
     //calculate the ratio between world and pixels
     WorldPxRatio->x = (float) 0.5 * PixelBounds->x / WorldBounds->x;
@@ -154,7 +144,8 @@ array<CoordinatePair^>^ Coordinates::GetPipCoordinates() {
 	return PipPixelCoords;
 }
 
-bool Coordinates::SetPipCoordinates(array<CoordinatePair^>^ PipCoordinateUpdates) {
+bool Coordinates::SetPipCoordinates(array<CoordinatePair^>^ PipCoordinateUpdates, int NumValidTracks) {
+	ValidPips = NumValidTracks;
 	bool HasNewPips = false;
 	for(int i = 0; i < TotalTracks; i++) {
 		if( PipWorldCoords[i]->x != PipCoordinateUpdates[i]->x ||
@@ -192,4 +183,21 @@ bool Coordinates::SetLaserLocation(CoordinatePair^ LaserLocation, bool HasLaserL
 
 CoordinatePair^ Coordinates::GetCameraLocation() {
     return CameraPixelLocation;
+}
+
+void Coordinates::CleanUp() {
+	//reset all internal values for a new trial
+	IsLaserValid = false;
+    IsLaserLocated = false;
+    LaserPixelCoords = gcnew CoordinatePair();
+    LaserWorldCoords = gcnew CoordinatePair();
+    LaserPixelLocation = gcnew CoordinatePair();
+    LaserWorldLocation = gcnew CoordinatePair();
+    CameraWorldLocation = gcnew CoordinatePair(0,-2000);
+    
+	CurWorldCoords = MakeCoordinatePairArray();
+	OldWorldCoords = MakeCoordinatePairArray();
+	PixelCoords = MakeCoordinatePairArray();
+	PipWorldCoords = MakeCoordinatePairArray();
+	PipPixelCoords = MakeCoordinatePairArray();
 }
