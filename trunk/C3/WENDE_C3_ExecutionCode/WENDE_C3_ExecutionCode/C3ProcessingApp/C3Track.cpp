@@ -65,9 +65,9 @@ C3_TRACK_POINT_DOUBLE C3Track::getPredictionPoint() const
 }
 
 // find out what the tracks positions is estimated to be at time time
-C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(double time)
+C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(double updateTime)
 {	
-	return m_filter->GetPredictedPoint(0.25);
+	return m_filter->GetPredictedPoint(updateTime);
 }
 
 // Filter and predict next location....
@@ -161,8 +161,8 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 
 		result.AZ = dAz;
 		result.EL = dEl;
-		result.X = m_predictionPoint.X;
-		result.Y = m_predictionPoint.Y;
+		//result.X = m_predictionPoint.X;
+		//result.Y = m_predictionPoint.Y;
 
 	}
 
