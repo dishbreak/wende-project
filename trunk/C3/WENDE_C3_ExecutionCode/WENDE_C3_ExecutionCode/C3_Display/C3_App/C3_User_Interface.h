@@ -303,7 +303,7 @@ namespace C3_App {
 			this->UhOhSymbol = System::Drawing::Image::FromFile("UhOh.png");
 			this->LaserSymbol = System::Drawing::Image::FromFile("laserPoint.png");
             this->LaserLocator = System::Drawing::Image::FromFile("laser.png");
-            this->CameraLocator = System::Drawing::Image::FromFile("camera.png");
+            this->CameraLocator = System::Drawing::Image::FromFile("assets\\camera.png");
 		}
 
         void NumberTable(void) {
