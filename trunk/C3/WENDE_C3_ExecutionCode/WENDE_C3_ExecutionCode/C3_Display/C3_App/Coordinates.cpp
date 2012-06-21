@@ -36,8 +36,25 @@ Coordinates::Coordinates(int TrackNum) {
     PixelShift = gcnew CoordinatePair();
 
 	//set up coordinate pairs for a fresh run
-	CleanUp();
+	//CleanUp();
+	IsLaserValid = false;
+    IsLaserLocated = false;
 
+	ValidTracks = 0;
+	ValidPips = 0;
+	TotalTracks = 0;
+    LaserPixelCoords = gcnew CoordinatePair();
+    LaserWorldCoords = gcnew CoordinatePair();
+    LaserPixelLocation = gcnew CoordinatePair();
+    LaserWorldLocation = gcnew CoordinatePair();
+    CameraWorldLocation = gcnew CoordinatePair(0,-2000);
+    
+	CurWorldCoords = MakeCoordinatePairArray();
+	OldWorldCoords = MakeCoordinatePairArray();
+	PixelCoords = MakeCoordinatePairArray();
+	PipWorldCoords = MakeCoordinatePairArray();
+	PipPixelCoords = MakeCoordinatePairArray();
+    
     //calculate the ratio between world and pixels
     WorldPxRatio->x = (float) 0.5 * PixelBounds->x / WorldBounds->x;
     WorldPxRatio->y = (float) -0.5 * PixelBounds->y / WorldBounds->y;
@@ -186,24 +203,7 @@ CoordinatePair^ Coordinates::GetCameraLocation() {
 }
 
 void Coordinates::CleanUp() {
-	//reset all internal values for a new trial
-	IsLaserValid = false;
-    IsLaserLocated = false;
-
-	ValidTracks = 0;
-	ValidPips = 0;
-	TotalTracks = 0;
-    LaserPixelCoords = gcnew CoordinatePair();
-    LaserWorldCoords = gcnew CoordinatePair();
-    LaserPixelLocation = gcnew CoordinatePair();
-    LaserWorldLocation = gcnew CoordinatePair();
-    CameraWorldLocation = gcnew CoordinatePair(0,-2000);
-    
-	CurWorldCoords = MakeCoordinatePairArray();
-	OldWorldCoords = MakeCoordinatePairArray();
-	PixelCoords = MakeCoordinatePairArray();
-	PipWorldCoords = MakeCoordinatePairArray();
-	PipPixelCoords = MakeCoordinatePairArray();
+    //
 }
 
 int Coordinates::GetValidPips() {
