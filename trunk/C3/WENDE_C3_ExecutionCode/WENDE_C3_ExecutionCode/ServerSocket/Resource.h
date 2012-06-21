@@ -68,8 +68,9 @@
 #define IDC_BTN_SEND_SLOW               1059
 #define IDC_BTN_SEND_FAST               1060
 #define IDC_BTN_SEND_SPIRAL             1061
-#define IDC_BTN_SEND_SPIRAL2            1062
 #define IDC_BTN_SEND_FAIL               1062
+#define IDC_BTN_SEND_FAIL2              1063
+#define IDC_BTN_SEND_PASSTHROUGH        1063
 
 // Next default values for new objects
 // 
