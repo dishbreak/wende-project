@@ -29,6 +29,7 @@ public:
 	bool SetNewCoordinates(array<CoordinatePair^>^ InputSet,int NumValidTracks);
 	array<CoordinatePair^>^ GetNewCoordinatePair();
 	int GetValidTracks();
+	int GetValidPips();
 	int GetTotalTracks();
     CoordinatePair^ GetLaserPoint();
     bool SetLaserPoint(CoordinatePair ^LaserPointUpdate, bool HasLaserPoint);

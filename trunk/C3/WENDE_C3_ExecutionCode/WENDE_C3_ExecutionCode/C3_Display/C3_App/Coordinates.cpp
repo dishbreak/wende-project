@@ -189,6 +189,10 @@ void Coordinates::CleanUp() {
 	//reset all internal values for a new trial
 	IsLaserValid = false;
     IsLaserLocated = false;
+
+	ValidTracks = 0;
+	ValidPips = 0;
+	TotalTracks = 0;
     LaserPixelCoords = gcnew CoordinatePair();
     LaserWorldCoords = gcnew CoordinatePair();
     LaserPixelLocation = gcnew CoordinatePair();
@@ -200,4 +204,8 @@ void Coordinates::CleanUp() {
 	PixelCoords = MakeCoordinatePairArray();
 	PipWorldCoords = MakeCoordinatePairArray();
 	PipPixelCoords = MakeCoordinatePairArray();
+}
+
+int Coordinates::GetValidPips() {
+	return ValidPips;
 }

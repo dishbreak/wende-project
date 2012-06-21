@@ -627,20 +627,28 @@ UINT WINAPI PPIDebugThread (LPVOID pParam)
 
 				sPPIMsg = *m_PPIMsg.GetStruct();
 
+				//Get a handle to the coordninates object
+				Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
+				//Make a coordinate pair array
+				array<CoordinatePair^>^ RoverPipCoords = coordsObj->MakeCoordinatePairArray();
+
 				// Loop through list of valid tracks (determined by processing)
 				for(unsigned int i = 0; i < sPPIMsg.NumberValid ; i ++) 
 				{
-					cRoverLocationsCur[i].X = sPPIMsg.RoverLocationsCur[i].X;
-					cRoverLocationsCur[i].Y = sPPIMsg.RoverLocationsCur[i].Y;
+					//cRoverLocationsCur[i].X = sPPIMsg.RoverLocationsCur[i].X;
+					//cRoverLocationsCur[i].Y = sPPIMsg.RoverLocationsCur[i].Y;
 
-					cRoverLocationsPIP[i].X = sPPIMsg.RoverLocationsPIP[i].X;
-					cRoverLocationsPIP[i].Y = sPPIMsg.RoverLocationsPIP[i].Y;
+					//cRoverLocationsPIP[i].X = sPPIMsg.RoverLocationsPIP[i].X;
+					//cRoverLocationsPIP[i].Y = sPPIMsg.RoverLocationsPIP[i].Y;
+					RoverPipCoords[i]->x = sPPIMsg.RoverLocationsPIP[i].X;
+					RoverPipCoords[i]->y = sPPIMsg.RoverLocationsPIP[i].Y;
 				}
 
 				cLaserOrigin = sPPIMsg.LaserOrigin;
 
 				// Dispman stuff here //
-
+				CDisplayManager ^dispman  = CDisplayManager::getCDisplayManager();
+				dispman->Update_Pip_PPI_Position(RoverPipCoords, sPPIMsg.NumberValid);
 				// Set the event
 				m_PPIMsg.SetEventClient();
 
