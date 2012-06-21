@@ -42,7 +42,7 @@ Coordinates::Coordinates(int TrackNum) {
 
 	ValidTracks = 0;
 	ValidPips = 0;
-	TotalTracks = 0;
+
     LaserPixelCoords = gcnew CoordinatePair();
     LaserWorldCoords = gcnew CoordinatePair();
     LaserPixelLocation = gcnew CoordinatePair();
