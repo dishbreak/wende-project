@@ -72,82 +72,15 @@ namespace C3_App {
     public: System::Windows::Forms::PictureBox^  pbLaserComms;
     public: System::Windows::Forms::GroupBox^  groupBox5;
     private: System::Windows::Forms::Button^  trialControlButton;
-    public: 
     private: System::Windows::Forms::Label^  label8;
     private: System::Windows::Forms::Button^  CalibrateButton;
     private: System::Windows::Forms::Label^  label7;
     private: System::Windows::Forms::Label^  label6;
     private: System::Windows::Forms::Label^  label5;
     public: System::Windows::Forms::PictureBox^  pbLaserActivity;
-    private: 
     public: System::Windows::Forms::PictureBox^  pbRoverAcq;
     public: System::Windows::Forms::PictureBox^  pbOverallStatus;
-
-
-
-
-
-    private: 
-
-
-    public: 
-
-
-
-
-    private: 
-
-    public: 
-
-    private: 
-
-    public: 
-
-    private: 
-
-    public: 
-
-
-
-
-    private: 
-
-
-    public: 
-
-
-
-    private: 
-
-
-
-    public: 
-
-
-
-
-
-
-    private: 
-
-
-
-    public: 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			 CNetworkMonitor *m_monitor;
+	public: CNetworkMonitor *m_monitor;
 				
 
 
@@ -274,6 +207,7 @@ namespace C3_App {
 			 System::Drawing::Image ^ UhOhSymbol;
              System::Drawing::Image ^ LaserLocator;
              System::Drawing::Image ^ CameraLocator;
+			 System::Drawing::Image ^ PipIcon;
 
 
 	private: C3_Alert_Types operationalState; 
@@ -292,18 +226,19 @@ namespace C3_App {
 		System::ComponentModel::Container ^components;
 
 		void LoadStatusInds(void) {
-			this->OnlineInd    = System::Drawing::Image::FromFile("Online.png");
-			this->OfflineInd   = System::Drawing::Image::FromFile("Offline.png");
-			this->UnknownInd   = System::Drawing::Image::FromFile("Unknown.png");
-			this->UnknownNsInd = System::Drawing::Image::FromFile("Unknown-NoShield.png");
-			this->InactiveInd  = System::Drawing::Image::FromFile("Inactive.png");
-			this->EnergizedInd = System::Drawing::Image::FromFile("Energized.png");
-			this->AcquiredInd  = System::Drawing::Image::FromFile("Acquired.png");
-			this->RoverSymbol = System::Drawing::Image::FromFile( "delta.png" );
-			this->UhOhSymbol = System::Drawing::Image::FromFile("UhOh.png");
-			this->LaserSymbol = System::Drawing::Image::FromFile("laserPoint.png");
-            this->LaserLocator = System::Drawing::Image::FromFile("laser.png");
+			this->OnlineInd    = System::Drawing::Image::FromFile("assets\\Online.png");
+			this->OfflineInd   = System::Drawing::Image::FromFile("assets\\Offline.png");
+			this->UnknownInd   = System::Drawing::Image::FromFile("assets\\Unknown.png");
+			this->UnknownNsInd = System::Drawing::Image::FromFile("assets\\Unknown-NoShield.png");
+			this->InactiveInd  = System::Drawing::Image::FromFile("assets\\Inactive.png");
+			this->EnergizedInd = System::Drawing::Image::FromFile("assets\\Energized.png");
+			this->AcquiredInd  = System::Drawing::Image::FromFile("assets\\Acquired.png");
+			this->RoverSymbol = System::Drawing::Image::FromFile( "assets\\delta.png" );
+			this->UhOhSymbol = System::Drawing::Image::FromFile("assets\\UhOh.png");
+			this->LaserSymbol = System::Drawing::Image::FromFile("assets\\laserPoint.png");
+            this->LaserLocator = System::Drawing::Image::FromFile("assets\\laser.png");
             this->CameraLocator = System::Drawing::Image::FromFile("assets\\camera.png");
+			this->PipIcon = System::Drawing::Image::FromFile("assets\\pipIcon.png");
 		}
 
         void NumberTable(void) {
@@ -1452,6 +1387,21 @@ private: System::Void pPPI_Paint(System::Object^  sender, System::Windows::Forms
                          g->DrawImage(LaserLocator, Padding->x - offset->x + LaserLocation->x,
                              Padding->y - offset->y + LaserLocation->y);
                      }
+
+					 //Draw PIPs
+					 array<CoordinatePair^>^ RoverPips = coordsObj->GetPipCoordinates();
+					 offset->x = (PipIcon->Width/2);
+					 offset->y = (PipIcon->Height/2);
+
+					 for(int i = 0; i < coordsObj->GetValidPips(); i++) {
+						 if(RoverPips[i]->IsOutOfBounds){
+							 g->DrawImage(UhOhSymbol, 10, 10);
+						 }
+						 else {
+							 g->DrawImage(PipIcon, Padding->x - offset->x + RoverPips[i]->x,
+								 Padding->y - offset->y + RoverPips[i]->y);
+						 }
+					 }
 
 					 // Draw Contact (rover)
 					 array<CoordinatePair^>^ RoverContact = coordsObj->GetNewCoordinatePair();

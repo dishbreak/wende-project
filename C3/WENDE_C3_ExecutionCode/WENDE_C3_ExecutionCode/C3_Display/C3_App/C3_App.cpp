@@ -22,7 +22,7 @@ int main(array<System::String ^> ^args)
     //  Display the splash screen using the overloaded construcutor
     //  =======================================================================
     //  Launch splash screen
-	CSplash splash1(TEXT(".\\C3_Splash.bmp"), RGB(255, 255, 255));
+	CSplash splash1(TEXT("assets\\C3_Splash.bmp"), RGB(255, 255, 255));
     splash1.ShowSplash();
 
 	//Fist call to configuration singleton
