@@ -31,6 +31,7 @@ void CALLBACK TimerProcCameraTrack(void* lpParametar, BOOLEAN TimerOrWaitFired);
 void CALLBACK TimerProcCameraImage(void* lpParametar, BOOLEAN TimerOrWaitFired);
 void CALLBACK TimerProcLaserStatus(void* lpParametar, BOOLEAN TimerOrWaitFired);
 void CALLBACK TimerProcTrial(void* lpParametar, BOOLEAN TimerOrWaitFired);
+void CALLBACK TimerProcPass(void* lpParametar, BOOLEAN TimerOrWaitFired);
 
 class CAboutDlg : public CDialog
 {
@@ -137,6 +138,7 @@ void CServerSocketDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_SEND_FAST, m_TrialFast);
 	DDX_Control(pDX, IDC_BTN_SEND_SPIRAL, m_TrialSpiral);
 	DDX_Control(pDX, IDC_BTN_SEND_FAIL, m_TrialFail);
+	DDX_Control(pDX, IDC_BTN_SEND_PASSTHROUGH, m_TrialPassthrough);
 }
 
 BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
@@ -182,6 +184,7 @@ BEGIN_MESSAGE_MAP(CServerSocketDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_SEND_FAST, &CServerSocketDlg::OnBnClickedBtnSendFast)
 	ON_BN_CLICKED(IDC_BTN_SEND_SPIRAL, &CServerSocketDlg::OnBnClickedBtnSendSpiral)
 	ON_BN_CLICKED(IDC_BTN_SEND_FAIL, &CServerSocketDlg::OnBnClickedBtnSendFail)
+	ON_BN_CLICKED(IDC_BTN_SEND_PASSTHROUGH, &CServerSocketDlg::OnBnClickedBtnSendPassthrough)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1157,4 +1160,80 @@ void CServerSocketDlg::OnBnClickedBtnSendFail()
 		// close the file
 		myfile.close();
 	}
+}
+
+void CServerSocketDlg::OnBnClickedBtnSendPassthrough()
+{
+	static bool isStart = true;
+	if (isStart == true)
+	{
+		myfile.open("Test_passThru.txt");
+		myfile.seekg (0, ios::beg);
+		isStart = false;
+		m_TrialPassthrough.SetWindowTextA("Stop \"Passthrough\"");
+		BOOL success = ::CreateTimerQueueTimer(	&m_timerHandlePass,
+												NULL,
+												TimerProcPass,
+												this,
+												0,
+												250,
+												WT_EXECUTEINTIMERTHREAD);
+	}
+	else
+	{
+		m_TrialPassthrough.SetWindowTextA("Send \"Passthrough\"");
+		isStart = true;
+		// destroy the timer
+		DeleteTimerQueueTimer(NULL, m_timerHandlePass, NULL);
+		// close the file
+		myfile.close();
+	}
+}
+void CServerSocketDlg::SendFilePass()
+{	
+	static double in1=0, in2=0, in3=0, in4=0, in5=0, in6=0, in7=0;
+	// make sure the file is not already open
+	if (myfile.is_open())
+	{
+		if (!myfile.eof())
+		{
+			myfile >> in1 >> in2 >> in3 >> in4 >> in5 >> in6 >> in7;
+		}
+		else
+		{
+			// close the file
+			myfile.close();
+		}
+	}	
+	cameraTracks track;
+	track.set_time(in7*1000);										// set the operational time
+	
+	track.set_laseron(true);								// set laser status
+	
+	track.set_status(cameraMsgs::systemStatus::CAMERA_READY);	// set camera status
+
+	AddTrack(&m_trackEnable0,&m_trackXEditBox0,&m_trackYEditBox0, &track);
+
+	::cameraMsgs::track *cTrack1 = track.add_target();
+	cTrack1->set_x(in1*1000);
+	cTrack1->set_y(in2*1000);
+
+	::cameraMsgs::track *cTrack2 = track.add_target();
+	cTrack2->set_x(in3*1000);
+	cTrack2->set_y(in4*1000);
+
+	::cameraMsgs::track *cLaser = track.add_laser();
+	cLaser->set_x(in5*1000);
+	cLaser->set_y(in6*1000);
+	
+	string strText = track.SerializeAsString();
+	OnBtnSend(strText.c_str(),1,strText.size(),1);												// send the data
+	m_SocketManager[1].AppendMessage("OnBtnSendTrack(CAMERA)\n");
+}
+void CALLBACK TimerProcPass(void* lpParametar, BOOLEAN TimerOrWaitFired)
+{
+	// This is used only to call QueueTimerHandler
+	// Typically, this function is static member of CTimersDlg
+	CServerSocketDlg* obj = (CServerSocketDlg*) lpParametar;
+	obj->SendFilePass();
 }

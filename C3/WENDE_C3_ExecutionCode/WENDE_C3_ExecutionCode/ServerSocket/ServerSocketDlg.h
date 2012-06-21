@@ -132,6 +132,7 @@ public:
 	void AddTrack(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
 	void AddLaser(CButton *buttom, CEdit *x, CEdit *y, cameraTracks *track);
 	void SendFile();
+	void SendFilePass();
 	CEdit m_LaserStatusText;
 	cameraMsgs::systemStatus m_CameraStatus;
 	LASER_SYSTEM_STATUS m_LaserStatus;
@@ -144,6 +145,7 @@ public:
 	HANDLE m_timerHandleFast;
 	HANDLE m_timerHandleSpiral;
 	HANDLE m_timerHandleFail;
+	HANDLE m_timerHandlePass;
 	CButton m_laserEnable0;
 	CButton m_CameraStatusButton;
 	CButton m_CameraTrackButton;
@@ -167,6 +169,8 @@ public:
 	CButton m_TrialSpiral;
 	afx_msg void OnBnClickedBtnSendFail();
 	CButton m_TrialFail;
+	afx_msg void OnBnClickedBtnSendPassthrough();
+	CButton m_TrialPassthrough;
 };
 
 //{{AFX_INSERT_LOCATION}}
