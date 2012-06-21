@@ -59,6 +59,8 @@ class C3TrackerManager
 		double			 m_maxDistance;							// (m)
 		double			 m_time;
 		double			 m_resetTime;
+		double			 lastTime;
+
 	public:
 		C3TrackerManager(void);
 		~C3TrackerManager(void);

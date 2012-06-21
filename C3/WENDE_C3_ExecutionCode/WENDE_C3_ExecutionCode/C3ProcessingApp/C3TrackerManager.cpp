@@ -7,7 +7,8 @@
 #include <cmath>
 
 C3TrackerManager::C3TrackerManager(void)
-	: m_maxDistance(5)
+	: m_maxDistance(5),
+	  lastTime(0.0)
 {
 }
 
@@ -123,7 +124,8 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 			}
 			else
 			{
-				predPoint = m_tracks[jj]->getPointPropogatedToTime(time);
+				predPoint = m_tracks[jj]->getPointPropogatedToTime(time-lastTime);
+				lastTime=time;
 				sigma = m_tracks[jj]->getSigma();
 			}
 			double threshold = min(3.0*sigma,5.0);
