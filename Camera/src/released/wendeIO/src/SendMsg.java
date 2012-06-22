@@ -330,13 +330,13 @@ public class SendMsg implements Runnable{
 		else if(!target1)
 		{
 			tracksBuilder = tracksBuilder.addTarget(CameraMsgs.track.newBuilder().setX(targets[0][0]).setY(targets[0][1]));
-			p("TCoordinate : ("+targets[0][0] + "," + targets[0][1]);
+			p("TCoordinate : ("+targets[0][0] + "," + targets[0][1] + ")");
 		}
 		else
 		{
 			for (int i=0; i<targets.length; i++) {
 				tracksBuilder = tracksBuilder.addTarget(CameraMsgs.track.newBuilder().setX(targets[i][0]).setY(targets[i][1]));
-				p("TCoordinate "+i+": ("+targets[i][0] + "," + targets[i][1]);
+				p("TCoordinate "+i+": ("+targets[i][0] + "," + targets[i][1] + ")");
 			}
 		}
 		if(laserOn)
@@ -344,7 +344,7 @@ public class SendMsg implements Runnable{
 			for (int i=0; i<lasers.length; i++) {
 				tracksBuilder.addLaser(CameraMsgs.track.newBuilder().setX(lasers[i][0])
 									   .setY(lasers[i][1]).build());
-				p("LCoordinate "+i+": ("+lasers[i][0] + "," + lasers[i][1]);
+				p("LCoordinate "+i+": ("+lasers[i][0] + "," + lasers[i][1] +")");
 			}			
 		}
 		else
