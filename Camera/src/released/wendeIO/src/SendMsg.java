@@ -199,7 +199,7 @@ public class SendMsg implements Runnable{
 					int[][] targets = {{1,1},{0,0},{100,10}};
 					int[][] lasers = {{22,54}};
 //					tracksMsgReady = setTracks(System.currentTimeMillis(),this.sysStatus.OPERATIONAL,targets,lasers,true);	// setup tracks message
-					tracksMsgReady = setTracks(this.tracks_time,this.sysStat,this.targets,this.lasers,this.laserOn);	// setup tracks message
+					tracksMsgReady = setTracks(this.tracks_time,this.sysStat,this.targets,this.lasers,this.laserOn,true,true);	// setup tracks message
 				}					
 			}
 			catch ( InterruptedException e) {
@@ -317,20 +317,38 @@ public class SendMsg implements Runnable{
 		.build();
 		return true;
 	}
-	public boolean setTracks(long time,	CameraMsgs.systemStatus sysStat, int[][] targets, int[][] lasers, boolean laserOn)
+	public boolean setTracks(long time,	CameraMsgs.systemStatus sysStat, int[][] targets, int[][] lasers, boolean laserOn, boolean target0, boolean target1)
 	{
 		tracksBuilder = CameraMsgs.cameraTracks.newBuilder();
 		tracksBuilder	= tracksBuilder.setTime(time)
 		.setStatus(sysStat);
 
-		for (int i=0; i<targets.length; i++) {
-			tracksBuilder = tracksBuilder.addTarget(CameraMsgs.track.newBuilder().setX(targets[i][0]).setY(targets[i][1]));
+		if(!target0)
+		{
+			p("No tracks to Send");
 		}
-		
-		for (int i=0; i<lasers.length; i++) {
-			tracksBuilder.addLaser(CameraMsgs.track.newBuilder().setX(lasers[i][0])
-								   .setY(lasers[i][1]).build());
+		else if(!target1)
+		{
+			tracksBuilder = tracksBuilder.addTarget(CameraMsgs.track.newBuilder().setX(targets[0][0]).setY(targets[0][1]));
 		}
+		else
+		{
+			for (int i=0; i<targets.length; i++) {
+				tracksBuilder = tracksBuilder.addTarget(CameraMsgs.track.newBuilder().setX(targets[i][0]).setY(targets[i][1]));
+				p("TCoordinate "+i+": ("+targets[i][0] + "," + targets[i][1]);
+			}
+		}
+		if(laserOn)
+		{
+			for (int i=0; i<lasers.length; i++) {
+				tracksBuilder.addLaser(CameraMsgs.track.newBuilder().setX(lasers[i][0])
+									   .setY(lasers[i][1]).build());
+				p("TCoordinate "+i+": ("+lasers[i][0] + "," + lasers[i][1]);
+			}			
+		}
+		else
+			p("No Laser Track");
+
 		tracks = tracksBuilder.setLaserOn(laserOn)
 		.build();
 		return true;
