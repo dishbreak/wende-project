@@ -1225,6 +1225,7 @@ namespace C3_App {
 								  {
 									  //Put in the first row for the CSV file
 									  String^ topRow = String::Concat(
+										  "Trial #", ",", 
 										  Column1->HeaderText, ",",
 										  Column2->HeaderText, ",",
 										  Column3->HeaderText, ",",
