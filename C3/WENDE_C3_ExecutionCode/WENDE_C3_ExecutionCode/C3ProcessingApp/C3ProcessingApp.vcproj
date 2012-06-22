@@ -253,6 +253,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Log.h"
+				>
+			</File>
+			<File
 				RelativePath="..\SharedSource\ShmStructs.h"
 				>
 			</File>
