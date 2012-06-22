@@ -15,6 +15,7 @@
 #include "C3Configuration.h"
 #include "C3FilterClass.h"
 #include "C3TrackerManager.h"
+#include "C3Utilities.h"
 #include <vector>
 #include <conio.h>
 #include <stdio.h>
@@ -102,8 +103,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	memset((void*)&testPoints,0,sizeof(C3_TRACK_POINT_DOUBLE)*4);
 	memset((void*)&commandOut,0,sizeof(C3_TRACK_POINT_DOUBLE));
 	memset((void*)&laserOrigin,0,sizeof(C3_TRACK_POINT_DOUBLE));
-	laserOrigin.X = -3;
-	laserOrigin.Y = -3;
+	laserOrigin.X = -2;
+	laserOrigin.Y = 0;
 	memset((void*)&laserPoint,0,sizeof(C3_TRACK_POINT_DOUBLE));
 	//TestKalmanFilter();
 	//TestTrackFilter();
@@ -358,13 +359,19 @@ bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification,
 	if((*notification).isCreated() && 
 		(*notification).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 	{
-		for (unsigned int ii = 0; ii < rPoints->size(); ii++)
+		std::cout << "Predictions diff = [";
+		for (unsigned int ii = 0; ii < min(rPoints->size(),SHM_MAX_TRACKS); ii++)
 		{
 			(*notification)->RoverLocationsCur[ii].X = M_TO_MM((*rPoints)[ii].X);
 			(*notification)->RoverLocationsCur[ii].Y = M_TO_MM((*rPoints)[ii].Y);
 			(*notification)->RoverLocationsPIP[ii].X = M_TO_MM((*rPipPoints)[ii].X);
 			(*notification)->RoverLocationsPIP[ii].Y = M_TO_MM((*rPipPoints)[ii].Y);
+			if (min(rPoints->size(),SHM_MAX_TRACKS)-1 != ii)
+			std::cout << C3Utilities::EuclideanDistance((*rPoints)[ii],(*rPipPoints)[ii]) << ", ";
+			else
+			std::cout << C3Utilities::EuclideanDistance((*rPoints)[ii],(*rPipPoints)[ii]);
 		}
+		std::cout << "]" << std::endl;
 
 		(*notification)->ProcessID  = (*notification).GetProcessID();
 

@@ -289,6 +289,7 @@
 				>
 				<File
 					RelativePath=".\Test_Driver.resx"
+					SubType="Designer"
 					>
 				</File>
 			</File>

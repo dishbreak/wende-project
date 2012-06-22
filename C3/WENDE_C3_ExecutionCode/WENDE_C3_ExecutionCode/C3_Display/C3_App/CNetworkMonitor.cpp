@@ -292,6 +292,12 @@ UINT WINAPI TrackThread (LPVOID pParam)
 			LeaveCriticalSection(&cNetworMonitor->statusLock);
 			if (m_CameraTracks.WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 			{
+				// Set the event
+				m_CameraTracks.SetEventClient();
+
+				// release the mutex
+				m_CameraTracks.ReleaseMutex();
+
 				/* Enter the critical section -- other threads are locked out */
 				EnterCriticalSection(&cNetworMonitor->statusLock);
 
@@ -314,12 +320,6 @@ UINT WINAPI TrackThread (LPVOID pParam)
 				::QueryPerformanceFrequency(&countsPerSecond);
 				start.QuadPart = m_CameraTracks->startTime;
 				double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
-
-				// Set the event
-				m_CameraTracks.SetEventClient();
-
-				// release the mutex
-				m_CameraTracks.ReleaseMutex();
 
 				// Will need to build this up to handle multiple tracks
 				Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
@@ -614,8 +614,7 @@ UINT WINAPI PPIDebugThread (LPVOID pParam)
 
 	C3_TRACK_POINT cRoverLocationsCur[SHM_MAX_TRACKS]; 
 	C3_TRACK_POINT cRoverLocationsPIP[SHM_MAX_TRACKS];
-	C3_TRACK_POINT cLaserOrigin;
-
+	
 	while(isRunningInternal)
 	{
 		// aquire the mutex
@@ -644,11 +643,15 @@ UINT WINAPI PPIDebugThread (LPVOID pParam)
 					RoverPipCoords[i]->y = sPPIMsg.RoverLocationsPIP[i].Y;
 				}
 
-				cLaserOrigin = sPPIMsg.LaserOrigin;
+				CoordinatePair^ cLaserOrigin = gcnew CoordinatePair();
+				cLaserOrigin->y = sPPIMsg.LaserOrigin.Y;
+				cLaserOrigin->x = sPPIMsg.LaserOrigin.X;
 
 				// Dispman stuff here //
 				CDisplayManager ^dispman  = CDisplayManager::getCDisplayManager();
 				dispman->Update_Pip_PPI_Position(RoverPipCoords, sPPIMsg.NumberValid);
+				dispman->Update_Laser_Location(cLaserOrigin,true);
+
 				// Set the event
 				m_PPIMsg.SetEventClient();
 

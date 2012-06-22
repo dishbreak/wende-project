@@ -199,6 +199,8 @@ void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char
 			C3CameraTracks->Lasers[ii].X = tr.laser(ii).x();
 			C3CameraTracks->Lasers[ii].Y = tr.laser(ii).y();
 		}
+		// release the mutex
+		C3CameraTracks.ReleaseMutex();
 		// loops through clients and sends events
 		int eventsToSend = C3CameraTracks->ShmInfo.Clients;
 		for (int pp = 0; pp < eventsToSend; pp++)
@@ -206,8 +208,7 @@ void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char
 			// Set the event (GUI,processing, etc...)
 			C3CameraTracks.SetEventServer();
 		}
-		// release the mutex
-		C3CameraTracks.ReleaseMutex();
+		
 	}
 }
 ////////////////////////////////////////////////////////////////////////

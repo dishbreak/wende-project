@@ -5,6 +5,7 @@
 #include "C3FilterClass.h"
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 C3TrackerManager::C3TrackerManager(void)
 	: m_maxDistance(5),
@@ -124,7 +125,9 @@ void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELAT
 			}
 			else
 			{
+				//std::cout << "\nTime =" << time << " LastTime ="<<lastTime<< " Track X=" <<m_tracks[jj]->getLastHistoryPoint().X<< " Track Y=" <<m_tracks[jj]->getLastHistoryPoint().Y;
 				predPoint = m_tracks[jj]->getPointPropogatedToTime(time-lastTime);
+				//std::cout << " predPoint X=" << predPoint.X <<" predPoint Y=" << predPoint.Y; 
 				lastTime=time;
 				sigma = m_tracks[jj]->getSigma();
 			}
