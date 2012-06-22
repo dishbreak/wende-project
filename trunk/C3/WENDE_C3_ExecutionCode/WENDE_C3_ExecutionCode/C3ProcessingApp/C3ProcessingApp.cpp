@@ -19,6 +19,7 @@
 #include <conio.h>
 #include <stdio.h>
 #include "C3NotificationHandler.h"
+#include "Log.h"
 /////////////////////////////////////////////////////////////////////////////////
 // Using directives
 /////////////////////////////////////////////////////////////////////////////////
@@ -277,6 +278,12 @@ int _tmain(int argc, _TCHAR* argv[])
 							tm.getPIP(&rPoints,&rPipPoints);
 							
 							SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
+
+							// Log laser commands for requirements sell-off
+							FILE_LOG(logINFO) <<	"<<Class: C3ProcessingApp>> " <<
+													"<<Operation: Main>>";
+							FILE_LOG(logDEBUG) <<	"Laser Command: Azimuth   = " << commandOut.AZ << "\n";
+							FILE_LOG(logDEBUG) <<	"Laser Command: Elevation = " << commandOut.EL << "\n\n";
 						}
 						else
 						{
