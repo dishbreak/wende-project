@@ -94,7 +94,7 @@ public:
 
 inline FILE*& Output2FILE::Stream()
 {
-    static FILE* pStream = fopen("Laser_Commands.txt", "a");//stderr;
+	static FILE* pStream = fopen("C:\\Laser_Commands.txt", "a");//stderr;
     return pStream;
 }
 
