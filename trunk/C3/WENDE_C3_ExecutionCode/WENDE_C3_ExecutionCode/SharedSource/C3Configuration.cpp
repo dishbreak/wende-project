@@ -63,10 +63,10 @@ C3Configuration::C3Configuration(void)
 		SHM_C3_CAMERA_IMAGE_EVENT2		= "SHM_C3_CAMERA_IMAGE_EVENT2";
 
 		// network
-		ConnectionArbiter.ip = "192.168.1.66";
+		ConnectionArbiter.ip = "129.204.215.39";
 		ConnectionArbiter.port= 4444;
 		//driver
-		ConnectionDriver.ip = "192.168.1.66";
+		ConnectionDriver.ip = "129.204.215.39";
 		ConnectionDriver.port = 4447;
 		// DEBUG ITEMS
 		isShowDebugPannel           = false;
@@ -189,7 +189,7 @@ void C3Configuration::ReadXMLFile()
 				SHM_C3_PROCESSING_STATUS_EVENT2 = pElem->Attribute("EVENT_CLIENT");
 			}
 			else{ /* ERROR ???? */}
-			pElem=hRoot.FirstChild("SHM_FILE_PROCESSING_DEBUG_STATUS").Element();
+			pElem=hRoot.FirstChild("SHM_C3_PROCESSING_DEBUG_STATUS").Element();
 			if (pElem)
 			{
 				// Read the camera pointing directions
