@@ -103,8 +103,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	memset((void*)&testPoints,0,sizeof(C3_TRACK_POINT_DOUBLE)*4);
 	memset((void*)&commandOut,0,sizeof(C3_TRACK_POINT_DOUBLE));
 	memset((void*)&laserOrigin,0,sizeof(C3_TRACK_POINT_DOUBLE));
-	laserOrigin.X = -2;
-	laserOrigin.Y = 0;
+	laserOrigin.X = C3Configuration::Instance().LaserOriginX;
+	laserOrigin.Y = C3Configuration::Instance().LaserOriginY;
 	memset((void*)&laserPoint,0,sizeof(C3_TRACK_POINT_DOUBLE));
 	//TestKalmanFilter();
 	//TestTrackFilter();
@@ -189,70 +189,79 @@ int _tmain(int argc, _TCHAR* argv[])
 			////////////////////////
 			if (C3NotificationHandler::Instance().Get_IsCalibration() == true)
 			{
-				commandOut = getCalibrationPointCommand();
-				laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
-				// wait until time passes...
-				if (waitMessages >= WAIT_MESSAGES)
+				if (C3Configuration::Instance().isSkipCalibration == false)
 				{
-					// make sure the camera saw the laser
-					if (inData.ValidLasers != 0)
+					commandOut = getCalibrationPointCommand();
+					laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
+					// wait until time passes...
+					if (waitMessages >= WAIT_MESSAGES)
 					{
-						// get next command
-						commandOut = getCalibrationPointCommand();
+						// make sure the camera saw the laser
+						if (inData.ValidLasers != 0)
+						{
+							// get next command
+							commandOut = getCalibrationPointCommand();
 
-						// save point (assumes single laser)
-						testPoints[calIndex].X = inData.Lasers[0].X;
-						testPoints[calIndex].Y = inData.Lasers[0].Y;
-						calIndex++;
+							// save point (assumes single laser)
+							testPoints[calIndex].X = inData.Lasers[0].X;
+							testPoints[calIndex].Y = inData.Lasers[0].Y;
+							calIndex++;
 
-						// TODO ADD LOGIC TO CHECK THE LASER POINT ACTUALLY MOVED
-						// ...
-						// ...
-						// ...
-						if (C3NotificationHandler::Instance().Get_Process_State() == C3_Alert_Types::CALIBRATION_IN_PROGRESS_5)
-						{	
-							// do calibration
-							// This is the line that has the calibration.
-							//laserOrigin = calibrate(testPoints);
-							double bearing = atan2(laserOrigin.Y,laserOrigin.X); 
-							theta = bearing - M_PI; 
-							tm.ClearTracks();
+							// TODO ADD LOGIC TO CHECK THE LASER POINT ACTUALLY MOVED
+							// ...
+							// ...
+							// ...
+							if (C3NotificationHandler::Instance().Get_Process_State() == C3_Alert_Types::CALIBRATION_IN_PROGRESS_5)
+							{	
+								// do calibration
+								// This is the line that has the calibration.
+								//laserOrigin = calibrate(testPoints);
+								double bearing = atan2(laserOrigin.Y,laserOrigin.X); 
+								theta = bearing - M_PI; 
+								tm.ClearTracks();
 
+								//rest index
+								calIndex    = 0;
+
+								SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
+							}
+							// walk the states
+							updateCalibrationState();
+
+							// set flag
+							sendMessageSuccess = true;
+						}
+						else
+						{
 							//rest index
 							calIndex    = 0;
-
-							SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
+							// set to success
+							C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
+							C3NotificationHandler::Instance().Set_IsCalibration(false);	
 						}
-						// walk the states
-						updateCalibrationState();
-
-						// set flag
-						sendMessageSuccess = true;
+						waitMessages = 0;
 					}
 					else
 					{
-						//rest index
-						calIndex    = 0;
-						// set to success
-						C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
-						C3NotificationHandler::Instance().Set_IsCalibration(false);	
+						if (inData.ValidLasers == 0)
+						{
+							//rest index
+							calIndex    = 0;
+							// set to success
+							C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
+							C3NotificationHandler::Instance().Set_IsCalibration(false);	
+						}
+						// just send the same command since we have what we need.
+						sendMessageSuccess = true;
+						// increment count
+						waitMessages++;
 					}
-					waitMessages = 0;
 				}
 				else
 				{
-					if (inData.ValidLasers == 0)
-					{
-						//rest index
-						calIndex    = 0;
-						// set to success
-						C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
-						C3NotificationHandler::Instance().Set_IsCalibration(false);	
-					}
-					// just send the same command since we have what we need.
-					sendMessageSuccess = true;
-					// increment count
-					waitMessages++;
+					C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_SUCCESS);	
+					C3NotificationHandler::Instance().Set_IsCalibration(false);	
+					SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
 				}
 			}
 			////////////////////////

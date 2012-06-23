@@ -63,10 +63,10 @@ C3Configuration::C3Configuration(void)
 		SHM_C3_CAMERA_IMAGE_EVENT2		= "SHM_C3_CAMERA_IMAGE_EVENT2";
 
 		// network
-		ConnectionArbiter.ip = "129.204.215.39";
+		ConnectionArbiter.ip = "192.168.1.66";
 		ConnectionArbiter.port= 4444;
 		//driver
-		ConnectionDriver.ip = "129.204.215.39";
+		ConnectionDriver.ip = "192.168.1.66";
 		ConnectionDriver.port = 4447;
 		// DEBUG ITEMS
 		isShowDebugPannel           = false;
@@ -75,6 +75,12 @@ C3Configuration::C3Configuration(void)
 		arbiterStartPath		= "NetworkArbiter.exe";
 		// laser height
 		LASER_HEIGHT				= 1.5;//meters
+		//
+		isSkipCalibration			= false;
+		//
+		LaserOriginX				= 0.0;
+		LaserOriginY				= 2.0;
+		//
 		WriteXMLFile();
 	}
 }
@@ -167,6 +173,14 @@ void C3Configuration::ReadXMLFile()
 				SHM_C3_LASER_STATUS_MUTEX  = pElem->Attribute("MUTEX");
 				SHM_C3_LASER_STATUS_EVENT1 = pElem->Attribute("EVENT_SERVER");
 				SHM_C3_LASER_STATUS_EVENT2 = pElem->Attribute("EVENT_CLIENT");
+			}
+			else{ /* ERROR ???? */}
+			pElem=hRoot.FirstChild("CALIBRATION").Element();
+			if (pElem)
+			{
+				pElem->QueryDoubleAttribute("LaserOriginX",&LaserOriginX);
+				pElem->QueryDoubleAttribute("LaserOriginY",&LaserOriginY);
+				pElem->QueryBoolAttribute("IsCalibration", &isSkipCalibration);
 			}
 			else{ /* ERROR ???? */}
 			pElem=hRoot.FirstChild("SHM_FILE_LASER_TRACK").Element();
@@ -366,5 +380,10 @@ void C3Configuration::WriteXMLFile()
 	root->LinkEndChild( lParams );  
 	lParams->SetDoubleAttribute("height", LASER_HEIGHT); // floating point attrib
 
+	TiXmlElement *calibration = new TiXmlElement("CALIBRATION");
+	root->LinkEndChild(calibration);
+	calibration->SetAttribute("IsCalibration", isSkipCalibration);
+	calibration->SetDoubleAttribute("LaserOriginX",LaserOriginX);
+	calibration->SetDoubleAttribute("LaserOriginY",LaserOriginY);
 	doc.SaveFile( CfgFile.c_str() ); 
 }

@@ -77,6 +77,10 @@ public:
 	int	   PROCESS_NOISE;							// ...
 	// DEBUG ITEMS
 	bool isShowDebugPannel;							// Flag to determine if we show
+	bool isSkipCalibration;							// Skip Calibration
+	//
+	double LaserOriginX;
+	double LaserOriginY;
 	// DEBUG start apps
 	string driverStartPath;				
 	string processingStartPath;
