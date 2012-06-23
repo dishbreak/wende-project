@@ -1389,20 +1389,6 @@ private: System::Void pPPI_Paint(System::Object^  sender, System::Windows::Forms
                              Padding->y - offset->y + LaserLocation->y);
                      }
 
-					 //Draw PIPs
-					 array<CoordinatePair^>^ RoverPips = coordsObj->GetPipCoordinates();
-					 offset->x = (PipIcon->Width/2);
-					 offset->y = (PipIcon->Height/2);
-
-					 for(int i = 0; i < coordsObj->GetValidPips(); i++) {
-						 if(RoverPips[i]->IsOutOfBounds){
-							 g->DrawImage(UhOhSymbol, 10, 10);
-						 }
-						 else {
-							 g->DrawImage(PipIcon, Padding->x - offset->x + RoverPips[i]->x,
-								 Padding->y - offset->y + RoverPips[i]->y);
-						 }
-					 }
 
 					 // Draw Contact (rover)
 					 array<CoordinatePair^>^ RoverContact = coordsObj->GetNewCoordinatePair();
@@ -1418,6 +1404,35 @@ private: System::Void pPPI_Paint(System::Object^  sender, System::Windows::Forms
 								 Padding->y - offset->y + RoverContact[i]->y);
 						 }
 					 }
+
+                     //Draw PIP lines
+					 array<CoordinatePair^>^ RoverPips = coordsObj->GetPipCoordinates();
+					 offset->x = (PipIcon->Width/2);
+					 offset->y = (PipIcon->Height/2);
+                     System::Drawing::Pen ^ grayPen = gcnew System::Drawing::Pen(Color::Gray, 3.5);
+                     //set limit to avoid out of range exception.
+                     int limit = 0;
+                     if (coordsObj->GetValidTracks() >= coordsObj->GetValidPips()) {
+                         limit = coordsObj->GetValidTracks();
+                     }
+                     else {
+                         limit = coordsObj->GetValidPips();
+                     }
+
+					 for(int i = 0; i < limit; i++) {
+						 if(RoverPips[i]->IsOutOfBounds){
+							 g->DrawImage(UhOhSymbol, 10, 10);
+						 }
+						 else {
+							 //g->DrawImage(PipIcon, Padding->x - offset->x + RoverPips[i]->x,
+							//	 Padding->y - offset->y + RoverPips[i]->y);
+                             g->DrawLine(grayPen, 
+                                 Padding->x + RoverPips[i]->x, Padding->y + RoverPips[i]->y,
+                                 Padding->x + RoverContact[i]->x, Padding->y + RoverContact[i]->y
+                                 );
+						 }
+					 }
+
 
                      // Draw Laser Dot (if we have it)
                      if(coordsObj->LaserPointIsValid()) {

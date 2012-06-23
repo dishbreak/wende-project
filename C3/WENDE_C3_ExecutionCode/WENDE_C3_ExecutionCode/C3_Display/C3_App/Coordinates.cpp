@@ -7,7 +7,7 @@
 CoordinatePair::CoordinatePair() {
 	x = -100000; //Assumption: Contact 10km away from world center will not be  
 	y = -100000; //            visible via the camera at initial state.
-	IsOutOfBounds = false;
+	IsOutOfBounds = true;
 }
 
 CoordinatePair::CoordinatePair(int xInput, int yInput){
