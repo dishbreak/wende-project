@@ -194,7 +194,7 @@ bool Coordinates::SetLaserLocation(CoordinatePair^ LaserLocation, bool HasLaserL
         LaserWorldLocation->x = LaserLocation->x;
         LaserWorldLocation->y = LaserLocation->y;
     }
-    LaserPixelCoords = TranslateCoords(LaserWorldCoords);
+    LaserPixelLocation = TranslateCoords(LaserWorldLocation);
     return HaveNewLocation;
 }
 
