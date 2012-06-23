@@ -190,6 +190,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			if (C3NotificationHandler::Instance().Get_IsCalibration() == true)
 			{
 				commandOut = getCalibrationPointCommand();
+				laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
 				// wait until time passes...
 				if (waitMessages >= WAIT_MESSAGES)
 				{
@@ -211,6 +212,7 @@ int _tmain(int argc, _TCHAR* argv[])
 						if (C3NotificationHandler::Instance().Get_Process_State() == C3_Alert_Types::CALIBRATION_IN_PROGRESS_5)
 						{	
 							// do calibration
+							// This is the line that has the calibration.
 							//laserOrigin = calibrate(testPoints);
 							double bearing = atan2(laserOrigin.Y,laserOrigin.X); 
 							theta = bearing - M_PI; 
