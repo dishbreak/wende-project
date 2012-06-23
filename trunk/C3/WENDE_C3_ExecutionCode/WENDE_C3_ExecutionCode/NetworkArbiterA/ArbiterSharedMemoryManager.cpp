@@ -207,8 +207,7 @@ void CArbiterSharedMemoryManager::DecodeCameraTrackMessage(LPCTSTR strText, char
 		{
 			// Set the event (GUI,processing, etc...)
 			C3CameraTracks.SetEventServer();
-		}
-		
+		}	
 	}
 }
 ////////////////////////////////////////////////////////////////////////
