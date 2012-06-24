@@ -5,9 +5,6 @@
 #include <_Spi.h>
 #include <Servo.h>
 
-#define ON 1
-#define OFF 0
-
 // Arduino SPI pins
 #define CS         10
 #define MOSI       11
@@ -25,11 +22,6 @@
 // Lengths
 #define COMMAND_MSG_LENGTH 12
 #define CONFIG_MSG_LENGTH 20
-
-// Error types
-#define AZ_ERROR 0b00000001
-#define EL_ERROR 0b00000010
-#define LASER_ERROR 0b00000100
 
 // Min/Max PWM (in ticks)
 int AZ_MIN_PWM = 2350;
@@ -60,9 +52,10 @@ Servo az_servo;
 // Process command message
 void process_command_message(int command_msg_data[CONFIG_MSG_LENGTH+1])
 {
-  int laser_control;
-  int az_control;
-  int el_control;
+  // Define local variables
+  int laser_control = 0;
+  int az_control = 0;
+  int el_control = 0;
 
   // Process AZ value
   az_control = (command_msg_data[1]<<24) + (command_msg_data[2]<<16) + (command_msg_data[3]<<8) + command_msg_data[4];
@@ -73,18 +66,15 @@ void process_command_message(int command_msg_data[CONFIG_MSG_LENGTH+1])
   // Process laser control
   laser_control = (command_msg_data[9]<<24) + (command_msg_data[10]<<16) + (command_msg_data[11]<<8) + command_msg_data[12];
 
-//  Serial.println("Cmd-Az:");
-//  Serial.print(az_control);
-//  Serial.println("Cmd-El:");
-//  Serial.print(el_control);
-//  Serial.println("Cmd-Lsr:");
-//  Serial.print(laser_control);
-
+  // Get the current time since we started running
   kppTime2 = millis();
+  
+  // Print the command message processing time to the Serial port
   Serial.print("KPP6-Processing Time: ");
   Serial.print(kppTime2-kppTime1, DEC);
   Serial.println("ms");
-  // Check calues are valid and write them if they are
+  
+  // Check if values are valid and write them if they are
   if( az_control < AZ_MIN_PWM )
   {
     az_servo.writeTicks(AZ_MIN_PWM);
@@ -100,6 +90,7 @@ void process_command_message(int command_msg_data[CONFIG_MSG_LENGTH+1])
     az_servo.writeTicks( az_control );
   }
 	
+  // Check if values are valid and write them if they are
   if( el_control < EL_MIN_PWM )
   {
     el_servo.writeTicks(EL_MIN_PWM);
@@ -114,7 +105,8 @@ void process_command_message(int command_msg_data[CONFIG_MSG_LENGTH+1])
   {
     el_servo.writeTicks( el_control );
   }
-	
+  
+  // Check if value is valid, and control the laser power if it is
   if ((laser_control == 0) || (laser_control == 1))
   {
     digitalWrite( LASER_PIN, laser_control);
@@ -128,11 +120,12 @@ void process_command_message(int command_msg_data[CONFIG_MSG_LENGTH+1])
 // Process config message
 void process_config_message(int config_msg_data[CONFIG_MSG_LENGTH+1])
 {
-  int temp_heartbeat;
-  int temp_min_az;
-  int temp_min_el;
-  int temp_max_az;
-  int temp_max_el;
+  // Define local variables
+  int temp_heartbeat = 0;
+  int temp_min_az = 0;
+  int temp_min_el = 0;
+  int temp_max_az = 0;
+  int temp_max_el= 0;
   
   // Get min/max AZ/EL Servo PWM values
   temp_min_az = (config_msg_data[1]<<24) + (config_msg_data[2]<<16) + (config_msg_data[3]<<8) + config_msg_data[4];
@@ -149,12 +142,6 @@ void process_config_message(int config_msg_data[CONFIG_MSG_LENGTH+1])
   EL_MIN_PWM = temp_min_el;
   EL_MAX_PWM = temp_max_el;
   heartbeatInterval = temp_heartbeat;
-  
-//  Serial.println(AZ_MIN_PWM);
-//  Serial.println(AZ_MAX_PWM);
-//  Serial.println(EL_MIN_PWM);
-//  Serial.println(EL_MAX_PWM);
-//  Serial.println(heartbeatInterval);
 }
 
 void setup()
@@ -171,23 +158,28 @@ void setup()
   pinMode( AZ_SERVO_PIN, OUTPUT );
   pinMode( EL_SERVO_PIN, OUTPUT );
 
+  // Attach the servo objects with their I/O pins
   el_servo.attach( EL_SERVO_PIN );
   az_servo.attach( AZ_SERVO_PIN );
 
-  // Init the Servo Positions
+  // Init the Servo Positions to near the center of the circle
   az_servo.writeTicks(3070);
   el_servo.writeTicks(3290);
   
+  // Begin the serial interfaces
   Serial.begin(9600);
   SpiSerial.begin();
 
+  // Add a 5 second delay so everything is set up before we try to connect
+  // to C3
   delay(5000);
 
+  // If we successfully connect to C3
   if (client.connect())
   {
     Serial.println("connected");
   }
-  else
+  else // The connection to C3 wasn't succesful
   {
     Serial.println("connection failed");
   }
@@ -195,7 +187,7 @@ void setup()
 
 void loop()
 {
-  // Heartbeat timers
+  // Heartbeat timer variables
   static long heartbeatTimer1 = 0;
   static long heartbeatTimer2 = 0;
   
@@ -204,112 +196,106 @@ void loop()
   kppTime2 = 0;
 
   //From C3
-  char message_type = 0;
   int msg_size = 0;
-  char command_message_data[COMMAND_MSG_LENGTH] = {0};
-  char config_message_data[CONFIG_MSG_LENGTH] = {0};
   int msg_in[CONFIG_MSG_LENGTH+1] = {0};
 
   //To C3
   static char return_string[17] = {0};
   
-//  while(true)
-//  {
-   
-    int data = 0;
-    if (client.available())
+  // If we have data available from C3
+  if (client.available())
+  {
+    // Get the current time since we started up so we can determine command message
+    // processing time, if needed.
+    kppTime1 = millis();
+      
+    // Get the message size
+    msg_size = (client.read()<<24) + (client.read()<<16) + (client.read()<<8) + client.read();
+
+    // Loop until we receive all of the incoming message
+    for(int lnInx = 0; lnInx<msg_size+1; lnInx++)
     {
-      kppTime1 = millis();
-      Serial.println("Data available");
-
-      // Discard message size
-      msg_size = (client.read()<<24) + (client.read()<<16) + (client.read()<<8) + client.read();
-//      Serial.println("MsgSize: ");
-//      Serial.println(msg_size,DEC);
-
-      for(int lnInx = 0; lnInx<msg_size+1; lnInx++)
-      {
-        while(!client.available()){}
-        msg_in[lnInx] = client.read();
-//        data = client.read();
-//        Serial.println(data,DEC);
-      }
-
-//    Serial.print("MsgTyp: ");
-//    Serial.println(msg_in[0], DEC);
-
-      switch (msg_in[0])
-      {
-        case COMMAND_MSG:
-          process_command_message(msg_in);
-          break;
-        case CONFIG_MSG:
-          process_config_message(msg_in);
-          break;
-        default:
-          Serial.print("Invalid Message Type: ");
-          Serial.println(msg_in[0],DEC);
-          break;
-        }
+      // Add an empty loop so that we don't try to read data if it's not available in the
+      // receive buffer
+      while(!client.available()){}
+      msg_in[lnInx] = client.read();
     }
-    else
+
+    // Check to see what type of message we received
+    switch (msg_in[0])
     {
-      //Serial.println("Data not available!!");
+      // We received a command message
+      case COMMAND_MSG:
+        // Process the command message
+        process_command_message(msg_in);
+        break;
+      // We received a config override message
+      case CONFIG_MSG:
+        // Process the config override message
+        process_config_message(msg_in);
+        break;
+      // Unknown message, or problem reading in the message
+      default:
+        // Print out some debug
+        Serial.print("Invalid Message Type: ");
+        Serial.println(msg_in[0],DEC);
+        break;
     }
+  }
     
-    heartbeatTimer2 = millis();
+  // Get the current time since we started to see if we need to send out a
+  // heartbeat/status message
+  heartbeatTimer2 = millis();
 	
-    //Send heartbeat every heartbeatInterval
-    if ((heartbeatTimer2 - heartbeatTimer1) >= heartbeatInterval)
-    {
-      //Serial.println("Sending heartbeat...");
-      //Create return message
-      return_string[0] = 0;
-      return_string[1] = 0;
-      return_string[2] = 0;
-      return_string[3] = 12;
+  //Send heartbeat every heartbeatInterval
+  if ((heartbeatTimer2 - heartbeatTimer1) >= heartbeatInterval)
+  {
+    //Create return message
+    return_string[0] = 0;
+    return_string[1] = 0;
+    return_string[2] = 0;
+    return_string[3] = 12;
   	  
-      // Type
-      return_string[4] = 4;
+    // Type
+    return_string[4] = STATUS_MSG;
 
-      int AzTicks = az_servo.readTicks();
-      // Azimuth value
-      return_string[5] = 0;
-      return_string[6] = 0;
-      return_string[7] = (AzTicks & 0x0000FF00) >> 8;
-      return_string[8] = AzTicks & 0x000000FF;
-
-      int ElTicks = el_servo.readTicks();
-      // Elevation value
-      return_string[9] = 0;
-      return_string[10] = 0;
-      return_string[11] = (ElTicks & 0x0000FF00) >> 8;
-      return_string[12] = ElTicks & 0x000000FF;
+    int AzTicks = az_servo.readTicks();
+    // Azimuth value
+    return_string[5] = 0;
+    return_string[6] = 0;
+    return_string[7] = (AzTicks & 0x0000FF00) >> 8;
+    return_string[8] = AzTicks & 0x000000FF;
+    int ElTicks = el_servo.readTicks();
+    // Elevation value
+    return_string[9] = 0;
+    return_string[10] = 0;
+    return_string[11] = (ElTicks & 0x0000FF00) >> 8;
+    return_string[12] = ElTicks & 0x000000FF;
   	  
-      // Laser status
-      return_string[13] = 0;
-      return_string[14] = 0;
-      return_string[15] = 0;
-      return_string[16] = return_error;
+    // Laser status
+    return_string[13] = 0;
+    return_string[14] = 0;
+    return_string[15] = 0;
+    return_string[16] = return_error;
   
-      //Send the message back to C3
-      //client.write(return_string);
-      for(int lnI = 0; lnI < 17; lnI++)
-      {
-        client.write(return_string[lnI]);
-      }
-	  
-      heartbeatTimer1 = heartbeatTimer2;
-             	  
-      //Reset error status
-      return_error = 2;
+    //Send the message back to C3
+    for(int lnI = 0; lnI < 17; lnI++)
+    {
+      client.write(return_string[lnI]);
     }
-  //}
+	  
+    // Overwrite the variable so we know when we sent out the last
+    // heartbeat/status message
+    heartbeatTimer1 = heartbeatTimer2;
+             	  
+    //Reset error status
+    return_error = 2;
+  }
 
+  // If we come up before C3, or become disconnected from C3, try to
+  // reconnect
   if(!client.connected())
   {
-    //client.stop();
     client.connect();
   }
 }
-
