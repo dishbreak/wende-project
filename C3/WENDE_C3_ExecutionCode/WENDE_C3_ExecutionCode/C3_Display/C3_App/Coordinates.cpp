@@ -7,7 +7,7 @@
 CoordinatePair::CoordinatePair() {
 	x = -100000; //Assumption: Contact 10km away from world center will not be  
 	y = -100000; //            visible via the camera at initial state.
-	IsOutOfBounds = true;
+	IsOutOfBounds = false;
 }
 
 CoordinatePair::CoordinatePair(int xInput, int yInput){
@@ -203,7 +203,8 @@ CoordinatePair^ Coordinates::GetCameraLocation() {
 }
 
 void Coordinates::CleanUp() {
-    //
+    //zero out validity checks
+    ValidPips = 0;
 }
 
 int Coordinates::GetValidPips() {

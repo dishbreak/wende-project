@@ -1319,6 +1319,9 @@ private: System::Void dgvDtiLog_CellContentClick(System::Object^  sender, System
 						 this->CalibrateButton->Enabled = true;
 						 this->trialControlButton->Text = "Start Trial";
 						 this->trialControlButton->Enabled = TrialControlButtonActive; //in case the sytem goes offline during a trial.
+                         Coordinates ^ coordsObj = Coordinates::GetCoordinatesHandle();
+                         coordsObj->CleanUp();
+                         pPPI->Invalidate();
 					 }
 					 m_monitor->StartProcessing();
 				 }
@@ -1406,14 +1409,15 @@ private: System::Void pPPI_Paint(System::Object^  sender, System::Windows::Forms
 						 }
 					 }
 
-                     //Draw PIP lines
+                     //Draw PIP box
 					 array<CoordinatePair^>^ RoverPips = coordsObj->GetPipCoordinates();
-					 offset->x = (PipIcon->Width/2);
-					 offset->y = (PipIcon->Height/2);
-                     System::Drawing::Pen ^ grayPen = gcnew System::Drawing::Pen(Color::Gray, 3.5);
+                     int boxSize = 20;
+					 offset->x = (boxSize/2);
+                     offset->y = (boxSize/2);
+                     System::Drawing::Pen ^ pipPen = gcnew System::Drawing::Pen(Color::Gray, 3.5);
                      //set limit to avoid out of range exception.
                      int limit = 0;
-                     if (coordsObj->GetValidTracks() >= coordsObj->GetValidPips()) {
+                     if (coordsObj->GetValidTracks() <= coordsObj->GetValidPips()) {
                          limit = coordsObj->GetValidTracks();
                      }
                      else {
@@ -1425,12 +1429,9 @@ private: System::Void pPPI_Paint(System::Object^  sender, System::Windows::Forms
 							 g->DrawImage(UhOhSymbol, 10, 10);
 						 }
 						 else {
-							 //g->DrawImage(PipIcon, Padding->x - offset->x + RoverPips[i]->x,
-							//	 Padding->y - offset->y + RoverPips[i]->y);
-                             g->DrawLine(grayPen, 
-                                 Padding->x + RoverPips[i]->x, Padding->y + RoverPips[i]->y,
-                                 Padding->x + RoverContact[i]->x, Padding->y + RoverContact[i]->y
-                                 );
+                             g->DrawRectangle(pipPen, Padding->x - offset->x + RoverPips[i]->x,
+								 Padding->y - offset->y + RoverPips[i]->y,
+                                 boxSize, boxSize);
 						 }
 					 }
 
