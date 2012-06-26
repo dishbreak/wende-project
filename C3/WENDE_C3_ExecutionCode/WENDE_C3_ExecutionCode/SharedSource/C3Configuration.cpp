@@ -63,10 +63,10 @@ C3Configuration::C3Configuration(void)
 		SHM_C3_CAMERA_IMAGE_EVENT2		= "SHM_C3_CAMERA_IMAGE_EVENT2";
 
 		// network
-		ConnectionArbiter.ip = "192.168.1.66";
+		ConnectionArbiter.ip = "192.168.1.105";
 		ConnectionArbiter.port= 4444;
 		//driver
-		ConnectionDriver.ip = "192.168.1.66";
+		ConnectionDriver.ip = "192.168.1.100";
 		ConnectionDriver.port = 4447;
 		// DEBUG ITEMS
 		isShowDebugPannel           = false;
