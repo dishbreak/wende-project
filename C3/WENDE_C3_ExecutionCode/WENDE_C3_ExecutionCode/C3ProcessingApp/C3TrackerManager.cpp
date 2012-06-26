@@ -96,6 +96,10 @@ C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT
 			result = commands[yy];
 		}
 	}
+	
+	result.AZ = result.AZ/10;
+	result.EL = result.EL/10;
+
 	printf("Time = %f     Tracks = %d\n",time,m_tracks.size());
 	return result;
 }
