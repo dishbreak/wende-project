@@ -63,7 +63,7 @@ bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification,
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
 /////////////////////////////////////////////////////////////////////////////////
-#define WAIT_MESSAGES    8
+#define WAIT_MESSAGES    100
 #define TICK_OFFSET      1086
 #define TICKS_PER_DEGREE 20.6
 #define DEGREES_TO_TICKS(DEG)(TICK_OFFSET+DEG*TICKS_PER_DEGREE)
@@ -92,6 +92,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	vector<C3_TRACK_POINT_DOUBLE>			 roverPoints;	// the rover points
 	vector<C3_TRACK_POINT_DOUBLE>			 rPoints;
 	vector<C3_TRACK_POINT_DOUBLE>			 rPipPoints;
+	vector<C3_TRACK_POINT_DOUBLE>			 avgPoints;
 	C3_TRACK_POINT_DOUBLE					 testPoints[4];	// test points for calibration
 	C3_TRACK_POINT_DOUBLE					 commandOut;	// the gimbal command out
 	C3_TRACK_POINT_DOUBLE					 laserOrigin;	// the laser origion setup from the calibration
@@ -163,6 +164,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		//SetThreadPriority(hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 		ResumeThread( hThread1 );
 	}
+	avgPoints.clear();
 	/////////////////////////////////////////////////////////////////////////////////
 	// Spin and process the input messages and send commands
 	/////////////////////////////////////////////////////////////////////////////////
@@ -192,19 +194,23 @@ int _tmain(int argc, _TCHAR* argv[])
 				if (C3Configuration::Instance().isSkipCalibration == false)
 				{
 					commandOut = getCalibrationPointCommand();
-					laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
+					laserOnOff = true;
 					// wait until time passes...
 					if (waitMessages >= WAIT_MESSAGES)
 					{
 						// make sure the camera saw the laser
 						if (inData.ValidLasers != 0)
 						{
+							testPoints[calIndex].X = inData.Lasers[0].X;
+							testPoints[calIndex].Y = inData.Lasers[0].Y;
+						// Log laser commands for requirements sell-off
+							FILE_LOG(logDEBUG) <<	"Laser Point: X = " << testPoints[calIndex].X << "\n";
+							FILE_LOG(logDEBUG) <<	"Laser Point: Y = " << testPoints[calIndex].Y << "\n\n";
 							// get next command
 							commandOut = getCalibrationPointCommand();
 
 							// save point (assumes single laser)
-							testPoints[calIndex].X = inData.Lasers[0].X;
-							testPoints[calIndex].Y = inData.Lasers[0].Y;
+							
 							calIndex++;
 
 							// TODO ADD LOGIC TO CHECK THE LASER POINT ACTUALLY MOVED
@@ -215,46 +221,57 @@ int _tmain(int argc, _TCHAR* argv[])
 							{	
 								// do calibration
 								// This is the line that has the calibration.
-								//laserOrigin = calibrate(testPoints);
-								double bearing = atan2(laserOrigin.Y,laserOrigin.X); 
-								theta = bearing - M_PI; 
+								laserOrigin = calibrate(testPoints);
+								laserOrigin.X = MM_TO_M(laserOrigin.X);
+								laserOrigin.Y = MM_TO_M(laserOrigin.Y);
 								tm.ClearTracks();
-
+								FILE_LOG(logDEBUG) <<	"Laser Origin: X   = " << laserOrigin.X << "\n";
+								FILE_LOG(logDEBUG) <<	"Laser Origin: Y = " << laserOrigin.Y << "\n\n";
 								//rest index
 								calIndex    = 0;
-
+								//2140 x
+								//-700 y
 								SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
+								printf("****************\n");
+								printf("****************\n");
+								printf("[%5.5f,%5.5f]\n",laserOrigin.X,laserOrigin.Y);
+								printf("****************\n");
+								printf("****************\n");
+								Sleep(4);
 							}
 							// walk the states
 							updateCalibrationState();
 
 							// set flag
 							sendMessageSuccess = true;
+
+							waitMessages = 0;
 						}
 						else
 						{
-							//rest index
-							calIndex    = 0;
-							// set to success
-							C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
-							C3NotificationHandler::Instance().Set_IsCalibration(false);	
+							FILE_LOG(logDEBUG) <<	"NO LASER!!!!\n";
+							// TODO ADD MAX COUNTER
+							//C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
 						}
-						waitMessages = 0;
 					}
 					else
-					{
+					{						
+						if (waitMessages ==  0)
+						{
+							// just send the same command since we have what we ne
+							sendMessageSuccess = true;	
+						}
 						if (inData.ValidLasers == 0)
 						{
-							//rest index
-							calIndex    = 0;
-							// set to success
-							C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
-							C3NotificationHandler::Instance().Set_IsCalibration(false);	
+							FILE_LOG(logDEBUG) <<	"NO LASER!!!!\n";
+							// TODO ADD MAX COUNTER
+							//C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_FAILED);	
 						}
-						// just send the same command since we have what we need.
-						sendMessageSuccess = true;
-						// increment count
-						waitMessages++;
+						else
+						{
+							// increment count
+							waitMessages++;
+						}
 					}
 				}
 				else
@@ -277,35 +294,31 @@ int _tmain(int argc, _TCHAR* argv[])
 					{
 						if (inData.ValidLasers != 0)
 						{
-							laserPoint.X = inData.Lasers[0].X;
-							laserPoint.Y = inData.Lasers[0].Y;
+							laserPoint.X = MM_TO_M(inData.Lasers[0].X);
+							laserPoint.Y = MM_TO_M(inData.Lasers[0].Y);
 							// time correct to second
-							commandOut = tm.UpdateTracks(roverPoints, laserPoint, MS_TO_S(inData.Time),laserOrigin);
+							C3_TRACK_POINT_DOUBLE temp;
+							temp = tm.UpdateTracks(roverPoints, laserPoint, MS_TO_S(inData.Time),laserOrigin);
 							// TODO ITEM VERIFY THE LASER MACROS
-							laserOnOff = (commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
-							commandOut.AZ = DEGREES_TO_TICKS(commandOut.AZ);
-							commandOut.EL = DEGREES_TO_TICKS(commandOut.EL);
-							sendMessageSuccess = true;
-
+							laserOnOff = true;//(commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
+							commandOut.AZ = (temp.AZ * TICKS_PER_DEGREE + commandOut.AZ);
+							commandOut.EL = (temp.EL * TICKS_PER_DEGREE + commandOut.EL);
+							if(abs(temp.AZ) >= 0.0001 && abs(temp.EL) >=0.001)
+							{
+								sendMessageSuccess = true;
+							}	
 							tm.getPIP(&rPoints,&rPipPoints);
 							
 							SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
 
 							// Log laser commands for requirements sell-off
-							FILE_LOG(logINFO) <<	"<<Class: C3ProcessingApp>> " <<
-													"<<Operation: Main>>";
 							FILE_LOG(logDEBUG) <<	"Laser Command: Azimuth   = " << commandOut.AZ << "\n";
 							FILE_LOG(logDEBUG) <<	"Laser Command: Elevation = " << commandOut.EL << "\n\n";
 						}
 						else
 						{
-							// todo move 1 degree towards camera!!!!!!!
-							double EL = cos(theta);
-							double AZ = sin(theta);
-							// TODO ITEM VERIFY THE LASER MACROS!!!!!!!
-							commandOut.AZ = DEGREES_TO_TICKS(AZ);
-							commandOut.EL = DEGREES_TO_TICKS(EL);
-							sendMessageSuccess = true;
+							FILE_LOG(logDEBUG) <<	"NO LASER!!!!\n";
+							//sendMessageSuccess = true;
 						}
 					}
 					else
@@ -319,7 +332,7 @@ int _tmain(int argc, _TCHAR* argv[])
 				}
 				else if (state == C3_Alert_Types::POC_FINISHED)
 				{
-					sendMessageSuccess == false;
+					sendMessageSuccess == true;
 					double value = tm.GetDTI();
 					value = M_TO_MM(value);
 					C3NotificationHandler::Instance().Set_DTI_Value((int)value);
@@ -337,6 +350,8 @@ int _tmain(int argc, _TCHAR* argv[])
 					Sleep(4000);
 					C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_SUCCESS);
 					tm.ClearTracks();
+					commandOut.AZ = DEGREES_TO_TICKS(90);
+					commandOut.EL = DEGREES_TO_TICKS(90);
 				}
 			}
 			
@@ -347,7 +362,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		////////////////////////
 		// Send output message
-		////////////////////////
+			////////////////////////
 		SendOutputMessage(sendMessageSuccess,
 						  laserOnOff,
 						  inData,
