@@ -226,6 +226,8 @@ public class netIO{
 		try {
 			System.out.println("Waiting on Client on port "+ port);
 			clientSocket = serverSocket.accept();		// waits for client to connect
+			System.out.println("SetTcpNoDelay on port " + port);
+			clientSocket.setTcpNoDelay(true);
 			System.out.println("Client Accepted");
 			} catch (IOException e) {
 				System.err.println("Accept failed.");
@@ -244,32 +246,64 @@ public class netIO{
 	// - The message type as a byte (status = 0, tracks = 1, image = 2)
 	// - Finally, the Protobuf writeTo() method is called which serializes and writes 
 	// 	    the prepared message to the network
-	public void server(CameraMsgs.cameraStatus sMsg) throws IOException
+	public boolean server(CameraMsgs.cameraStatus sMsg) throws IOException, InterruptedIOException
 	{
-		p("Send Status");
-		byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
-		byte[] bytesMsg = sMsg.toByteArray(); 						  
-		clientSocket.getOutputStream().write(bytesLength, 0, 4);
-		clientSocket.getOutputStream().write(0);	// Write a 0 for Status Message Type.
-		clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
-		count++;
+		try {
+			p("Send Status");
+			byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
+			byte[] bytesMsg = sMsg.toByteArray(); 						  
+			clientSocket.getOutputStream().write(bytesLength, 0, 4);
+			clientSocket.getOutputStream().write(0);	// Write a 0 for Status Message Type.
+			clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
+			clientSocket.getOutputStream().flush();
+			count++;
+			return true;
+		}
+		catch(InterruptedIOException e){
+			System.out.println("Caught InteruptedIOException" + e);
+			close();
+			return false;
+		}
+		catch(IOException e){
+			System.out.println("Caught IO Exception" + e);
+			System.out.println("Closing Connection");
+			close();
+			return false;
+		}
 	} // End Server Method
 
 	// overloaded server function - one for each message type
-	public void server(CameraMsgs.cameraTracks sMsg) throws IOException
+	public boolean server(CameraMsgs.cameraTracks sMsg) throws IOException, InterruptedIOException
 	{
+		try {
 		p("Send Track");
 		byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
 		byte[] bytesMsg = sMsg.toByteArray(); 						  
 		clientSocket.getOutputStream().write(bytesLength, 0, 4);
 		clientSocket.getOutputStream().write(1);	// Write a 1 for Track Message Type.
 		clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
+		clientSocket.getOutputStream().flush();
 		count++;
+		return true;
+		}
+		catch(InterruptedIOException e){
+			System.out.println("Caught InteruptedIOException" + e);
+			System.out.println("Closing Connection");
+			close();
+			return false;
+		}
+		catch(IOException e){
+			System.out.println("Caught IO Exception" + e);
+			System.out.println("Closing Connection");
+			close();
+			return false;
+		}
 	} // End Server Method
 
 	// overloaded server function - one for each message type
-	public void server(CameraMsgs.cameraImage sMsg) throws IOException
+	public boolean server(CameraMsgs.cameraImage sMsg) throws IOException, InterruptedIOException
 	{
+		try {
 		p("Send Image");
 		byte[] bytesLength = ByteBuffer.allocate(4).putInt(sMsg.getSerializedSize()).array();
 		//p("Msg Length: "+sMsg.getSerializedSize());
@@ -277,8 +311,22 @@ public class netIO{
 		clientSocket.getOutputStream().write(bytesLength, 0, 4);
 		clientSocket.getOutputStream().write(2);	// Write a 2 for Track Message Type.
 		clientSocket.getOutputStream().write(bytesMsg, 0, sMsg.getSerializedSize());
-
+		clientSocket.getOutputStream().flush();
 		count++;
+		return true;
+		}
+		catch(InterruptedIOException e){
+			System.out.println("Caught InteruptedIOException" + e);
+			System.out.println("Closing Connection");
+			close();
+			return false;
+		}
+		catch(IOException e){
+			System.out.println("Caught IO Exception" + e);
+			System.out.println("Closing Connection");
+			close();
+			return false;
+		}
 	} // End Server Method
 		
 	// method to initialize Client Socket Connection
