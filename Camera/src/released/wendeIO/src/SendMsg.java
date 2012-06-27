@@ -373,10 +373,7 @@ public class SendMsg implements Runnable{
 			//p("status message not sent");
 			return true;
 		}
-		
-		netStat.server(status);
-		//p("status out : " + System.currentTimeMillis());
-		return true;
+		return netStat.server(status);
 	}	// End sendStatus method
 	
 	public boolean sendTracks() throws IOException
@@ -386,9 +383,7 @@ public class SendMsg implements Runnable{
 			return true;
 		}
 		
-		netTracks.server(tracks);
-		//p("Tracks Out : " + System.currentTimeMillis());
-		return true;
+		return netTracks.server(tracks);
 	}	// End sendStatus method
 	
 	public boolean sendImage() throws IOException
@@ -397,10 +392,7 @@ public class SendMsg implements Runnable{
 			p("image message not sent");
 			return true;
 		}
-		
-		netImage.server(image);
-		p("Image Out : " + System.currentTimeMillis());
-		return true;
+		return netImage.server(image);
 	}	// End sendStatus method
 	
 	private void getConfig() throws IOException
