@@ -73,8 +73,8 @@ C3_TRACK_POINT_DOUBLE C3FilterClass::FilterInput(C3_TRACK_POINT_DOUBLE cameraRov
 	
 	//F(2,4) =0;
 	//F(3,5) =0;
-	F(4,4) =0;
-	F(5,5) =0;
+	//F(4,4) =0;
+	//F(5,5) =0;
 	// prediction
 	X = F * X;
 	P = F * P * F.transpose() + I;

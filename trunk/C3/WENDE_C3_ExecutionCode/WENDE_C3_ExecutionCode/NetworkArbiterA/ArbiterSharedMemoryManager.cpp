@@ -279,13 +279,7 @@ string CArbiterSharedMemoryManager::RecreateImage(cameraImage *im)
 			{
 				if (ll+2 < maxL)
 				{
-					//img.SetPixelRGB(col,row,st.at(ll+2),st.at(ll+1),st.at(ll+0));				
-					if (oo==1)
-						img.SetPixelRGB(col,row,0,st.at(ll+1),st.at(ll+0));				
-					else if (00==2)
-						img.SetPixelRGB(col,row,st.at(ll+2),0,st.at(ll+0));				
-					else
-						img.SetPixelRGB(col,row,st.at(ll+2),st.at(ll+1),0);				
+					img.SetPixelRGB(col,row,st.at(ll+2),st.at(ll+1),st.at(ll+0));									
 				}
 				else
 				{

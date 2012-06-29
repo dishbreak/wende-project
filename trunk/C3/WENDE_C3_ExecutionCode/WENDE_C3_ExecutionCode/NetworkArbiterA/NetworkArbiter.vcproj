@@ -359,6 +359,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\Log.h"
+			>
+		</File>
+		<File
 			RelativePath=".\NetworkArbiter.cd"
 			>
 		</File>

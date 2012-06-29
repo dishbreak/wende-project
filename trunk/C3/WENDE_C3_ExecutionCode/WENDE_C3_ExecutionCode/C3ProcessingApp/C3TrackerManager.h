@@ -77,6 +77,7 @@ class C3TrackerManager
 		void getPIP(vector<C3_TRACK_POINT_DOUBLE> *r,vector<C3_TRACK_POINT_DOUBLE> *p);
 		double GetDTI()const;
 	private:
+		double ClipCommandParam(double param);
 		// determine if a point has already been assigned to the tracker 
 		bool isInMapping(const map<unsigned int, C3_CORRELATE_struct> *position2track, 
 			             const unsigned int trackerNum);

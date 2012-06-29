@@ -63,7 +63,7 @@ bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification,
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
 /////////////////////////////////////////////////////////////////////////////////
-#define WAIT_MESSAGES    100
+#define WAIT_MESSAGES    2 //50
 #define TICK_OFFSET      1086
 #define TICKS_PER_DEGREE 20.6
 #define DEGREES_TO_TICKS(DEG)(TICK_OFFSET+DEG*TICKS_PER_DEGREE)
@@ -100,7 +100,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	C3TrackerManager						 tm;			// the tracker manager
 	double theta=0.0;
 	C3_Alert_Types							 state;
-
+	double timeStart = 0.0, timeDelta = 0.0;
 	memset((void*)&testPoints,0,sizeof(C3_TRACK_POINT_DOUBLE)*4);
 	memset((void*)&commandOut,0,sizeof(C3_TRACK_POINT_DOUBLE));
 	memset((void*)&laserOrigin,0,sizeof(C3_TRACK_POINT_DOUBLE));
@@ -167,9 +167,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	avgPoints.clear();
 	/////////////////////////////////////////////////////////////////////////////////
 	// Spin and process the input messages and send commands
-	/////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////;
+	int waitTime = 2000;
 	while(1)
 	{
+		Sleep(waitTime);
 		// reset the success flag
 		sendMessageSuccess = false;				// set the write flag to false
 		// Remove the previous points
@@ -186,6 +188,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		/////////////////////////////////////////////////////////////////////////////////
 		if (readMessageSuccess)
 		{
+			
+			
 			////////////////////////
 			// DO CALIBRATION!!!!!!
 			////////////////////////
@@ -204,8 +208,7 @@ int _tmain(int argc, _TCHAR* argv[])
 							testPoints[calIndex].X = inData.Lasers[0].X;
 							testPoints[calIndex].Y = inData.Lasers[0].Y;
 						// Log laser commands for requirements sell-off
-							FILE_LOG(logDEBUG) <<	"Laser Point: X = " << testPoints[calIndex].X << "\n";
-							FILE_LOG(logDEBUG) <<	"Laser Point: Y = " << testPoints[calIndex].Y << "\n\n";
+							FILE_LOG(logDEBUG) <<	"Laser Point: X/Y = " << testPoints[calIndex].X << "/" << testPoints[calIndex].Y << "\n";
 							// get next command
 							commandOut = getCalibrationPointCommand();
 
@@ -221,9 +224,9 @@ int _tmain(int argc, _TCHAR* argv[])
 							{	
 								// do calibration
 								// This is the line that has the calibration.
-								laserOrigin = calibrate(testPoints);
-								laserOrigin.X = MM_TO_M(laserOrigin.X);
-								laserOrigin.Y = MM_TO_M(laserOrigin.Y);
+							//	laserOrigin = calibrate(testPoints);
+							//	laserOrigin.X = MM_TO_M(laserOrigin.X);
+							//	laserOrigin.Y = MM_TO_M(laserOrigin.Y);
 								tm.ClearTracks();
 								FILE_LOG(logDEBUG) <<	"Laser Origin: X   = " << laserOrigin.X << "\n";
 								FILE_LOG(logDEBUG) <<	"Laser Origin: Y = " << laserOrigin.Y << "\n\n";
@@ -256,7 +259,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					}
 					else
 					{						
-						if (waitMessages ==  0)
+						if (waitMessages%10 ==  0)
 						{
 							// just send the same command since we have what we ne
 							sendMessageSuccess = true;	
@@ -279,6 +282,12 @@ int _tmain(int argc, _TCHAR* argv[])
 					C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_SUCCESS);	
 					C3NotificationHandler::Instance().Set_IsCalibration(false);	
 					SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
+					// Sleep(1000);
+					// set flag
+					laserOnOff = true;
+					commandOut.AZ = DEGREES_TO_TICKS(90);
+					commandOut.EL = DEGREES_TO_TICKS(90);
+					sendMessageSuccess = true;
 				}
 			}
 			////////////////////////
@@ -286,6 +295,12 @@ int _tmain(int argc, _TCHAR* argv[])
 			////////////////////////
 			else
 			{
+				//static double DESIRED_DELTA =4.00; // s
+				//timeDelta = inData.Time - timeStart;
+				//if (timeDelta >= DESIRED_DELTA)
+				//{
+				//	timeStart = inData.Time;
+				//}
 				state = C3NotificationHandler::Instance().Get_Process_State();
 				if (state == C3_Alert_Types::POC_STARTED || 
 					state == C3_Alert_Types::TARGET_LEFT_PLAYING_FIELD)
@@ -294,26 +309,32 @@ int _tmain(int argc, _TCHAR* argv[])
 					{
 						if (inData.ValidLasers != 0)
 						{
-							laserPoint.X = MM_TO_M(inData.Lasers[0].X);
-							laserPoint.Y = MM_TO_M(inData.Lasers[0].Y);
-							// time correct to second
-							C3_TRACK_POINT_DOUBLE temp;
-							temp = tm.UpdateTracks(roverPoints, laserPoint, MS_TO_S(inData.Time),laserOrigin);
-							// TODO ITEM VERIFY THE LASER MACROS
-							laserOnOff = true;//(commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
-							commandOut.AZ = (temp.AZ * TICKS_PER_DEGREE + commandOut.AZ);
-							commandOut.EL = (temp.EL * TICKS_PER_DEGREE + commandOut.EL);
-							if(abs(temp.AZ) >= 0.0001 && abs(temp.EL) >=0.001)
+							//if (timeStart == 0.0)
 							{
-								sendMessageSuccess = true;
-							}	
-							tm.getPIP(&rPoints,&rPipPoints);
-							
-							SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
+								laserPoint.X = MM_TO_M(inData.Lasers[0].X);
+								laserPoint.Y = MM_TO_M(inData.Lasers[0].Y);
+								// time correct to second
+								C3_TRACK_POINT_DOUBLE temp;
+								temp = tm.UpdateTracks(roverPoints, laserPoint, MS_TO_S(inData.Time),laserOrigin);
+								// TODO ITEM VERIFY THE LASER MACROS
+								laserOnOff = true;//(commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
+								if(abs(temp.AZ) >= 0.0001 && abs(temp.EL) >=0.001)
+								{
+									commandOut.AZ = (temp.AZ * TICKS_PER_DEGREE + commandOut.AZ);
+									commandOut.EL = (temp.EL * TICKS_PER_DEGREE + commandOut.EL);
+								
+									sendMessageSuccess = true;
+								}	
+								tm.getPIP(&rPoints,&rPipPoints);
+								
+								SendPPINotification(&m_PipNotification,&rPoints,&rPipPoints,laserOrigin);
 
-							// Log laser commands for requirements sell-off
-							FILE_LOG(logDEBUG) <<	"Laser Command: Azimuth   = " << commandOut.AZ << "\n";
-							FILE_LOG(logDEBUG) <<	"Laser Command: Elevation = " << commandOut.EL << "\n\n";
+								// Log laser commands for requirements sell-off
+								FILE_LOG(logDEBUG) <<   "Laser Command: PIP x/y    " << rPipPoints[0].X << "/" << rPipPoints[0].Y << "\n";
+								FILE_LOG(logDEBUG) <<	"Laser Command: [AZ/EL]   = PWM[" 
+												   << commandOut.AZ << "/" << commandOut.EL << "] Relative change["
+												   << temp.AZ << "/" << temp.EL << "]\n";
+							}
 						}
 						else
 						{

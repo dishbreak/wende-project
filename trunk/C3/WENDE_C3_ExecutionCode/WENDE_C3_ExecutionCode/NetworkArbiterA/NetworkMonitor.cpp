@@ -7,6 +7,7 @@
 #include "SocketComm.h"
 #include "LaserCommand.h"
 #include "Utilties.h"
+#include "Log.h"
 UINT WINAPI LaserCommandThread (LPVOID pParam);
 
 CNetworkMonitor::CNetworkMonitor()
@@ -101,12 +102,17 @@ UINT WINAPI LaserCommandThread (LPVOID pParam)
 					::QueryPerformanceFrequency(&countsPerSecond);
 					start.QuadPart = m_LaserCommand->startTime;
 					double elapsed = (double)(end.QuadPart - start.QuadPart) / countsPerSecond.QuadPart;
-					char f[256];
-					sprintf(f,"\r\n%12.12f\r\n",elapsed);
-					cNetworMonitor->m_SocketObjectServer->AppendMessage(f);
-					cNetworMonitor->m_SocketObjectServer->WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
-					cNetworMonitor->m_SocketObjectServer->WriteComm(&typeArray, sizeof(unsigned char)*1, INFINITE);
-					cNetworMonitor->m_SocketObjectServer->WriteComm(msgProxy.byData, nLen, INFINITE);
+					FILE_LOG(logDEBUG) <<	"Arbiter: Loop Time  = " << elapsed << "\n";
+					if (cNetworMonitor->m_SocketObjectServer->IsOpen())
+					{	// data size = 4bytes |+| type = 1 byte |+| data  = data size bytes
+						cNetworMonitor->m_SocketObjectServer->WriteComm(sizeArray, sizeof(unsigned char)*4, INFINITE);
+						cNetworMonitor->m_SocketObjectServer->WriteComm(&typeArray, sizeof(unsigned char)*1, INFINITE);
+						cNetworMonitor->m_SocketObjectServer->WriteComm(msgProxy.byData, nLen, INFINITE);
+					}
+					else
+					{
+						FILE_LOG(logDEBUG) <<	"Arbiter: connection LOSS!!!" << elapsed << "\n";
+					}
 				}
 				// Set the event
 				m_LaserCommand.SetEventClient();

@@ -31,7 +31,7 @@
 
 using std::string;
 
-#define SHM_TIME_OUT        5000L
+#define SHM_TIME_OUT        15000L
 
 template <class StructType>
 class CSharedStruct

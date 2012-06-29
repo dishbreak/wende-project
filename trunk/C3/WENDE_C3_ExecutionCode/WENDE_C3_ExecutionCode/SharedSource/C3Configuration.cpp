@@ -76,10 +76,10 @@ C3Configuration::C3Configuration(void)
 		// laser height
 		LASER_HEIGHT				= 1.5;//meters
 		//
-		isSkipCalibration			= false;
+		isSkipCalibration			= true;
 		//
-		LaserOriginX				= 0.0;
-		LaserOriginY				= 2.0;
+		LaserOriginX				= 1.85;
+		LaserOriginY				= 1.26;
 		//
 		WriteXMLFile();
 	}
