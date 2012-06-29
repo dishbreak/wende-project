@@ -3,7 +3,7 @@
 #include "C3Utilities.h"
 #include "C3Configuration.h"
 #include <cmath>
-
+#include  "log.h"
 using std::max;
 using std::sqrt;
 
@@ -86,7 +86,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 
 	// Calculate Predicted Intercept Point (PIP)
 	m_predictionPoint = m_filter->FilterInput(cameraRoverPosition,updateRate);
-
+m_predictionPoint = cameraRoverPosition;
 	// Update to the next time value using input
 	m_currTime = time;
 
@@ -130,8 +130,10 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		double range = sqrt(pow(laserOrigin.X,2) + pow(laserOrigin.Y,2));
 		double cameraToLaserX = laserOrigin.X;
 		double cameraToLaserY = laserOrigin.Y;
-
-
+		FILE_LOG(logDEBUG) <<   "Laser Command: Laser x/y    " << cameraLaserPosition.X << "/" << cameraLaserPosition.Y << "\n";
+		FILE_LOG(logDEBUG) <<   "Laser Command: theta x/y    " << theta << "\n";
+		FILE_LOG(logDEBUG) <<   "Laser Command: range x/y    " << range << "\n";
+		FILE_LOG(logDEBUG) <<   "Laser Command: camera to laser x/y    " << cameraToLaserX << "/" << cameraToLaserY << "\n\n\n";
 		// Transform laser & rover postions into laser
 		// translate camera x/y into relative X/Y coordinates system (relative to laser Origin)
 		double relativeLaserX = cameraLaserPosition.X - cameraToLaserX;

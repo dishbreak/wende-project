@@ -96,12 +96,47 @@ C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT
 			result = commands[yy];
 		}
 	}
-	
-	result.AZ = result.AZ/10;
-	result.EL = result.EL/10;
+	// if we are commanding the laser then make sure to clip for min and max steps
+	/*if (result.AZ != 0 && result.EL != 0 )
+	{
+		result.AZ = ClipCommandParam(result.AZ/7.5);
+		result.EL = ClipCommandParam(result.EL/7.5);
+	}*/
+
+	result.AZ = (result.AZ/2);
+	result.EL = (result.EL/2);
 
 	printf("Time = %f     Tracks = %d\n",time,m_tracks.size());
 	return result;
+}
+double C3TrackerManager::ClipCommandParam(double param)
+{
+	// moving max step is N(i.e. 5) degrees
+	static double clipSizeMax = 2.5;
+	// moving min step is N(i.e. 0.25) degrees
+	static double clipSizeMin = 0.25;
+
+	/*check for pos max step*/
+	if (param > clipSizeMax)
+	{
+		param = clipSizeMax;
+	}
+	/* check for neg max step*/
+	else if(abs(param) > clipSizeMax)
+	{
+		param = -clipSizeMax;
+	}
+	/*Check for pos min step*/
+	else if (param < clipSizeMin && param > 0.0)
+	{
+		param = clipSizeMin;
+	}
+	/*check for neg min step*/
+	else if (param > clipSizeMin && param < 0.0)
+	{
+		param = -clipSizeMin;
+	}
+	return param;
 }
 // Correlates a point with a tracker
 void C3TrackerManager::correlatePositions2Trackers(map<unsigned int, C3_CORRELATE_struct> *position2track, 
