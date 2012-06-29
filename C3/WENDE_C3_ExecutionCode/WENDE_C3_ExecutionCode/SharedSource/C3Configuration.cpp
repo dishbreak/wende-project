@@ -76,7 +76,7 @@ C3Configuration::C3Configuration(void)
 		// laser height
 		LASER_HEIGHT				= 1.5;//meters
 		//
-		isSkipCalibration			= true;
+		isSkipCalibration			= false;
 		//
 		LaserOriginX				= 1.85;
 		LaserOriginY				= 1.26;
