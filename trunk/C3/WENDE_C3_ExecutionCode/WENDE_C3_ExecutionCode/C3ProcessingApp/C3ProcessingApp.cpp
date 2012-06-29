@@ -63,7 +63,7 @@ bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification,
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
 /////////////////////////////////////////////////////////////////////////////////
-#define WAIT_MESSAGES    2 //50
+#define WAIT_MESSAGES    10
 #define TICK_OFFSET      1086
 #define TICKS_PER_DEGREE 20.6
 #define DEGREES_TO_TICKS(DEG)(TICK_OFFSET+DEG*TICKS_PER_DEGREE)
@@ -168,7 +168,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	/////////////////////////////////////////////////////////////////////////////////
 	// Spin and process the input messages and send commands
 	////////////////////////////////////////////////////////////////////////////////;
-	int waitTime = 2000;
+	int waitTime = 1500;
 	while(1)
 	{
 		Sleep(waitTime);
@@ -224,9 +224,9 @@ int _tmain(int argc, _TCHAR* argv[])
 							{	
 								// do calibration
 								// This is the line that has the calibration.
-							//	laserOrigin = calibrate(testPoints);
-							//	laserOrigin.X = MM_TO_M(laserOrigin.X);
-							//	laserOrigin.Y = MM_TO_M(laserOrigin.Y);
+								laserOrigin = calibrate(testPoints);
+								laserOrigin.X = MM_TO_M(laserOrigin.X);
+								laserOrigin.Y = MM_TO_M(laserOrigin.Y);
 								tm.ClearTracks();
 								FILE_LOG(logDEBUG) <<	"Laser Origin: X   = " << laserOrigin.X << "\n";
 								FILE_LOG(logDEBUG) <<	"Laser Origin: Y = " << laserOrigin.Y << "\n\n";
