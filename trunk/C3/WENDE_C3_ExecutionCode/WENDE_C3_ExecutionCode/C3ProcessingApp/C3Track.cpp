@@ -16,18 +16,18 @@ using std::sqrt;
 C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition, 
 				 const double time)
 				 : m_startTime(time),
-				   m_currTime(time),
-				   m_DTI(C3Utilities::EuclideanDistance(cameraRoverPosition)),
-				   m_TTI(0),
-				   m_passTime(0),
-				   m_travelRange(0)
+				 m_currTime(time),
+				 m_DTI(C3Utilities::EuclideanDistance(cameraRoverPosition)),
+				 m_TTI(0),
+				 m_passTime(0),
+				 m_travelRange(0)
 {
 	m_filter = new C3FilterClass();
 
 	// set updated to false
 	m_isUpdate = false;
 	// Add to first history point
-	m_lastUpdatePoint = cameraRoverPosition;
+	m_prevRoverLocation = cameraRoverPosition;
 
 	// THE PLAYING FIELD RADIUS
 	m_playingFieldRadius = C3Configuration::Instance().WENDE_PLAYING_FIELD_RADIUS;
@@ -55,7 +55,7 @@ C3Track::~C3Track(void)
 C3_TRACK_POINT_DOUBLE C3Track::getLastHistoryPoint() const
 {
 	//TODO FIX
-	return m_lastUpdatePoint;
+	return m_prevRoverLocation;
 }
 
 
@@ -76,7 +76,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 										   const double time,
 										   const C3_TRACK_POINT_DOUBLE laserOrigin)
 {
-	C3_TRACK_POINT_DOUBLE result;
+	C3_TRACK_POINT_DOUBLE result, tResult1,tResult2;
 
 	// set updated to false
 	m_isUpdate = true;
@@ -86,7 +86,7 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 
 	// Calculate Predicted Intercept Point (PIP)
 	m_predictionPoint = m_filter->FilterInput(cameraRoverPosition,updateRate);
-m_predictionPoint = cameraRoverPosition;
+	m_predictionPoint = cameraRoverPosition;
 	// Update to the next time value using input
 	m_currTime = time;
 
@@ -105,72 +105,80 @@ m_predictionPoint = cameraRoverPosition;
 	{
 		// Total travel range
 		// THIS CAN BE REMOVED --- IF NEEDED
-		m_travelRange = m_travelRange + C3Utilities::EuclideanDistance(cameraRoverPosition,m_lastUpdatePoint);
+		m_travelRange = m_travelRange + C3Utilities::EuclideanDistance(cameraRoverPosition,m_prevRoverLocation);
 
 		// Calculate the TTI
 		m_TTI		  = time - m_passTime;
-
-		// Find Camera to Laser Translation and Rotation Parameters
-		//double cameraTheta = atan2(playingFieldOrigin11-cameraOrigin11,playingFieldOrigin12-cameraOrigin12);
-		//double laserTheta  = atan2(playingFieldOrigin11-laserOrigin11 ,playingFieldOrigin12-laserOrigin12 );
-		//double theta       = laserTheta - cameraTheta;
-
-		// Find Laser Origin in camera space
-		//double laserOriginCameraSpace11 = laserOrigin11*cos(cameraTheta) - laserOrigin12*sin(cameraTheta);
-		//double laserOriginCameraSpace12 = laserOrigin11*sin(cameraTheta) + laserOrigin12*cos(cameraTheta); 
-		
-		// camera to laser translation vector (Camera Coordinate system has Origin in playing field)
-		//double cameraToLaserX = laserOriginCameraSpace11 - playingFieldOrigin11;
-		//double cameraToLaserY = laserOriginCameraSpace12 - playingFieldOrigin12;
-
-		//Alternative translation method(USE THIS ONE)
-		//double bearing = atan2(laserOrigin.Y,laserOrigin.X);
-		//double theta = -bearing + M_PI; // Revered order so the sign is correct. Clockwise positive, camera at 180.
-		double theta =atan2(-laserOrigin.X,-laserOrigin.Y);
-		double range = sqrt(pow(laserOrigin.X,2) + pow(laserOrigin.Y,2));
-		double cameraToLaserX = laserOrigin.X;
-		double cameraToLaserY = laserOrigin.Y;
-		FILE_LOG(logDEBUG) <<   "Laser Command: Laser x/y    " << cameraLaserPosition.X << "/" << cameraLaserPosition.Y << "\n";
-		FILE_LOG(logDEBUG) <<   "Laser Command: theta x/y    " << theta << "\n";
-		FILE_LOG(logDEBUG) <<   "Laser Command: range x/y    " << range << "\n";
-		FILE_LOG(logDEBUG) <<   "Laser Command: camera to laser x/y    " << cameraToLaserX << "/" << cameraToLaserY << "\n\n\n";
-		// Transform laser & rover postions into laser
-		// translate camera x/y into relative X/Y coordinates system (relative to laser Origin)
-		double relativeLaserX = cameraLaserPosition.X - cameraToLaserX;
-		double relativeLaserY = cameraLaserPosition.Y - cameraToLaserY;
-		double relativePipX   = m_predictionPoint.X - cameraToLaserX;
-		double relativePipY   = m_predictionPoint.Y - cameraToLaserY;
-		
-		//Rotate relative x/y into local x/y coordinate system (Y axis goes from laser origin to playing field)
-		double localLaserX = relativeLaserX*cos(theta) - relativeLaserY*sin(theta);
-		double localLaserY = relativeLaserX*sin(theta) + relativeLaserY*cos(theta);
-		double localLaserR = sqrt(relativeLaserX*relativeLaserX+relativeLaserY*relativeLaserY);
-		double localPipX   = relativePipX*cos(theta) - relativePipY*sin(theta);
-		double localPipY   = relativePipX*sin(theta) + relativePipY*cos(theta);
-		double localPipR   = sqrt(relativePipX*relativePipX+relativePipY*relativePipY);
-
-		double LaserHeight  = 1.5;//C3Configuration::Instance().LASER_HEIGHT; //convert to meters
-
-		// transform local x/y into local az/el coordinate system
-		double localLaserAz = atan2(localLaserX,localLaserY)*180/M_PI;
-		double localLaserEl = atan2(localLaserR,LaserHeight)*180/M_PI;
-		double localPipAz = atan2(localPipX,localPipY)*180/M_PI;
-		double localPipEl = atan2(localPipR,LaserHeight)*180/M_PI;
-
-		// calculate az/el
-		double dAz = localPipAz - localLaserAz;
-		double dEl = localPipEl - localLaserEl;
-
-		result.AZ = dAz;
-		result.EL = dEl;
-		//result.X = m_predictionPoint.X;
-		//result.Y = m_predictionPoint.Y;
-
+		// Desired Command
+		tResult1 =  DoTransform(cameraRoverPosition, cameraLaserPosition, laserOrigin);
+		// actual move since last command
+		tResult2 =  DoTransform(cameraLaserPosition, m_prevLaserLocation, laserOrigin);
+		// correction = new move - (prev move - acutal move);
+		result.AZ = tResult1.AZ - (m_prevResultCommand.AZ - tResult2.AZ);
+		result.EL = tResult1.EL - (m_prevResultCommand.EL - tResult2.EL);
 	}
 
 	// Add to first history point
-	m_lastUpdatePoint = cameraRoverPosition;
-	
+	m_prevRoverLocation = cameraRoverPosition;
+	m_prevLaserLocation = cameraLaserPosition;
+	m_prevResultCommand = result;
+	return result;
+}
+C3_TRACK_POINT_DOUBLE C3Track::DoTransform(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
+										   const C3_TRACK_POINT_DOUBLE cameraLaserPosition,
+										   const C3_TRACK_POINT_DOUBLE laserOrigin)
+{
+	C3_TRACK_POINT_DOUBLE result;
+
+	// Find Camera to Laser Translation and Rotation Parameters
+	//double cameraTheta = atan2(playingFieldOrigin11-cameraOrigin11,playingFieldOrigin12-cameraOrigin12);
+	//double laserTheta  = atan2(playingFieldOrigin11-laserOrigin11 ,playingFieldOrigin12-laserOrigin12 );
+	//double theta       = laserTheta - cameraTheta;
+
+	// Find Laser Origin in camera space
+	//double laserOriginCameraSpace11 = laserOrigin11*cos(cameraTheta) - laserOrigin12*sin(cameraTheta);
+	//double laserOriginCameraSpace12 = laserOrigin11*sin(cameraTheta) + laserOrigin12*cos(cameraTheta); 
+
+	// camera to laser translation vector (Camera Coordinate system has Origin in playing field)
+	//double cameraToLaserX = laserOriginCameraSpace11 - playingFieldOrigin11;
+	//double cameraToLaserY = laserOriginCameraSpace12 - playingFieldOrigin12;
+
+	//Alternative translation method(USE THIS ONE)
+	//double bearing = atan2(laserOrigin.Y,laserOrigin.X);
+	//double theta = -bearing + M_PI; // Revered order so the sign is correct. Clockwise positive, camera at 180.
+	double theta =atan2(-laserOrigin.X,-laserOrigin.Y);
+	double range = sqrt(pow(laserOrigin.X,2) + pow(laserOrigin.Y,2));
+	double cameraToLaserX = laserOrigin.X;
+	double cameraToLaserY = laserOrigin.Y;
+	// Transform laser & rover postions into laser
+	// translate camera x/y into relative X/Y coordinates system (relative to laser Origin)
+	double relativeLaserX = cameraLaserPosition.X - cameraToLaserX;
+	double relativeLaserY = cameraLaserPosition.Y - cameraToLaserY;
+	double relativePipX   = m_predictionPoint.X - cameraToLaserX;
+	double relativePipY   = m_predictionPoint.Y - cameraToLaserY;
+
+	//Rotate relative x/y into local x/y coordinate system (Y axis goes from laser origin to playing field)
+	double localLaserX = relativeLaserX*cos(theta) - relativeLaserY*sin(theta);
+	double localLaserY = relativeLaserX*sin(theta) + relativeLaserY*cos(theta);
+	double localLaserR = sqrt(relativeLaserX*relativeLaserX+relativeLaserY*relativeLaserY);
+	double localPipX   = relativePipX*cos(theta) - relativePipY*sin(theta);
+	double localPipY   = relativePipX*sin(theta) + relativePipY*cos(theta);
+	double localPipR   = sqrt(relativePipX*relativePipX+relativePipY*relativePipY);
+
+	double LaserHeight  = 1.5;//C3Configuration::Instance().LASER_HEIGHT; //convert to meters
+
+	// transform local x/y into local az/el coordinate system
+	double localLaserAz = atan2(localLaserX,localLaserY)*180/M_PI;
+	double localLaserEl = atan2(localLaserR,LaserHeight)*180/M_PI;
+	double localPipAz = atan2(localPipX,localPipY)*180/M_PI;
+	double localPipEl = atan2(localPipR,LaserHeight)*180/M_PI;
+
+	// calculate az/el
+	double dAz = localPipAz - localLaserAz;
+	double dEl = localPipEl - localLaserEl;
+
+	result.AZ = dAz;
+	result.EL = dEl;
 	return result;
 }
 // Return the track current DTI

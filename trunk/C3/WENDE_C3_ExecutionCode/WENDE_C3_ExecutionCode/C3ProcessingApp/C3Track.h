@@ -28,7 +28,9 @@ class C3Track
 		// Last predicted point
 		C3_TRACK_POINT_DOUBLE	m_predictionPoint;
 		// History of points for prosecution
-		C3_TRACK_POINT_DOUBLE	m_lastUpdatePoint;
+		C3_TRACK_POINT_DOUBLE	m_prevRoverLocation;
+		C3_TRACK_POINT_DOUBLE	m_prevLaserLocation;
+		C3_TRACK_POINT_DOUBLE	m_prevResultCommand;
 		// Flag to determine if laser commands are used
 		bool					m_isProsecuteTrack;
 		// The starting time of the track
@@ -73,4 +75,8 @@ class C3Track
 		double getTTI() const;
 		//
 		double getSigma() const;
+
+		C3_TRACK_POINT_DOUBLE DoTransform(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
+										   const C3_TRACK_POINT_DOUBLE cameraLaserPosition,
+										   const C3_TRACK_POINT_DOUBLE laserOrigin);
 };
