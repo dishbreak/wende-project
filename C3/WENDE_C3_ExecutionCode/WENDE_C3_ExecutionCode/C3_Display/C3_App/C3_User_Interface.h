@@ -53,7 +53,7 @@ namespace C3_App {
     private: 
     private: System::Windows::Forms::GroupBox^  gbAlerts;
     public: 
-    public: System::Windows::Forms::TextBox^  tbAlertsPanel;
+
     private: 
     private: System::Windows::Forms::TableLayoutPanel^  tlIndicatorsPanel;
     public: 
@@ -80,6 +80,10 @@ namespace C3_App {
     public: System::Windows::Forms::PictureBox^  pbLaserActivity;
     public: System::Windows::Forms::PictureBox^  pbRoverAcq;
     public: System::Windows::Forms::PictureBox^  pbOverallStatus;
+	private: System::Windows::Forms::Label^  alertsLabel;
+	public: 
+
+	public: 
 	public: CNetworkMonitor *m_monitor;
 				
 
@@ -255,570 +259,565 @@ namespace C3_App {
 
 		void InitializeComponent(void)
 		{
-            System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-            System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
-            this->tlOverallView = (gcnew System::Windows::Forms::TableLayoutPanel());
-            this->tlDtiPpi = (gcnew System::Windows::Forms::TableLayoutPanel());
-            this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
-            this->tlDtiLog = (gcnew System::Windows::Forms::TableLayoutPanel());
-            this->cmdExport = (gcnew System::Windows::Forms::Button());
-            this->dgvDtiLog = (gcnew System::Windows::Forms::DataGridView());
-            this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-            this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-            this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-            this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
-            this->pbLiveFeed = (gcnew System::Windows::Forms::PictureBox());
-            this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-            this->pPPI = (gcnew System::Windows::Forms::Panel());
-            this->gbAlerts = (gcnew System::Windows::Forms::GroupBox());
-            this->tbAlertsPanel = (gcnew System::Windows::Forms::TextBox());
-            this->tlIndicatorsPanel = (gcnew System::Windows::Forms::TableLayoutPanel());
-            this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
-            this->label2 = (gcnew System::Windows::Forms::Label());
-            this->label1 = (gcnew System::Windows::Forms::Label());
-            this->pbCameraStatus = (gcnew System::Windows::Forms::PictureBox());
-            this->pbCameraComms = (gcnew System::Windows::Forms::PictureBox());
-            this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
-            this->label3 = (gcnew System::Windows::Forms::Label());
-            this->label4 = (gcnew System::Windows::Forms::Label());
-            this->pbLaserStatus = (gcnew System::Windows::Forms::PictureBox());
-            this->pbLaserComms = (gcnew System::Windows::Forms::PictureBox());
-            this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
-            this->trialControlButton = (gcnew System::Windows::Forms::Button());
-            this->label8 = (gcnew System::Windows::Forms::Label());
-            this->CalibrateButton = (gcnew System::Windows::Forms::Button());
-            this->label7 = (gcnew System::Windows::Forms::Label());
-            this->label6 = (gcnew System::Windows::Forms::Label());
-            this->label5 = (gcnew System::Windows::Forms::Label());
-            this->pbLaserActivity = (gcnew System::Windows::Forms::PictureBox());
-            this->pbRoverAcq = (gcnew System::Windows::Forms::PictureBox());
-            this->pbOverallStatus = (gcnew System::Windows::Forms::PictureBox());
-            this->tlOverallView->SuspendLayout();
-            this->tlDtiPpi->SuspendLayout();
-            this->groupBox3->SuspendLayout();
-            this->tlDtiLog->SuspendLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvDtiLog))->BeginInit();
-            this->groupBox2->SuspendLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLiveFeed))->BeginInit();
-            this->groupBox1->SuspendLayout();
-            this->gbAlerts->SuspendLayout();
-            this->tlIndicatorsPanel->SuspendLayout();
-            this->groupBox4->SuspendLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbCameraStatus))->BeginInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbCameraComms))->BeginInit();
-            this->groupBox6->SuspendLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserStatus))->BeginInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserComms))->BeginInit();
-            this->groupBox5->SuspendLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserActivity))->BeginInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbRoverAcq))->BeginInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbOverallStatus))->BeginInit();
-            this->SuspendLayout();
-            // 
-            // tlOverallView
-            // 
-            this->tlOverallView->AutoSize = true;
-            this->tlOverallView->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->tlOverallView->ColumnCount = 1;
-            this->tlOverallView->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
-                100)));
-            this->tlOverallView->Controls->Add(this->tlDtiPpi, 0, 0);
-            this->tlOverallView->Controls->Add(this->gbAlerts, 0, 2);
-            this->tlOverallView->Controls->Add(this->tlIndicatorsPanel, 0, 1);
-            this->tlOverallView->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->tlOverallView->Location = System::Drawing::Point(0, 0);
-            this->tlOverallView->Name = L"tlOverallView";
-            this->tlOverallView->RowCount = 3;
-            this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
-            this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 40)));
-            this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 10)));
-            this->tlOverallView->Size = System::Drawing::Size(1264, 712);
-            this->tlOverallView->TabIndex = 6;
-            // 
-            // tlDtiPpi
-            // 
-            this->tlDtiPpi->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->tlDtiPpi->AutoSize = true;
-            this->tlDtiPpi->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->tlDtiPpi->ColumnCount = 3;
-            this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 30)));
-            this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 40)));
-            this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 30)));
-            this->tlDtiPpi->Controls->Add(this->groupBox3, 2, 0);
-            this->tlDtiPpi->Controls->Add(this->groupBox2, 1, 0);
-            this->tlDtiPpi->Controls->Add(this->groupBox1, 0, 0);
-            this->tlDtiPpi->Location = System::Drawing::Point(3, 3);
-            this->tlDtiPpi->Name = L"tlDtiPpi";
-            this->tlDtiPpi->RowCount = 1;
-            this->tlDtiPpi->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-            this->tlDtiPpi->Size = System::Drawing::Size(1258, 350);
-            this->tlDtiPpi->TabIndex = 0;
-            // 
-            // groupBox3
-            // 
-            this->groupBox3->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->groupBox3->AutoSize = true;
-            this->groupBox3->Controls->Add(this->tlDtiLog);
-            this->groupBox3->Location = System::Drawing::Point(883, 3);
-            this->groupBox3->Name = L"groupBox3";
-            this->groupBox3->Size = System::Drawing::Size(372, 344);
-            this->groupBox3->TabIndex = 1;
-            this->groupBox3->TabStop = false;
-            this->groupBox3->Text = L"DTI Log";
-            // 
-            // tlDtiLog
-            // 
-            this->tlDtiLog->AutoSize = true;
-            this->tlDtiLog->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->tlDtiLog->ColumnCount = 1;
-            this->tlDtiLog->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 50)));
-            this->tlDtiLog->Controls->Add(this->cmdExport, 0, 1);
-            this->tlDtiLog->Controls->Add(this->dgvDtiLog, 0, 0);
-            this->tlDtiLog->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->tlDtiLog->Location = System::Drawing::Point(3, 16);
-            this->tlDtiLog->Name = L"tlDtiLog";
-            this->tlDtiLog->RowCount = 2;
-            this->tlDtiLog->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 85.97561F)));
-            this->tlDtiLog->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 14.02439F)));
-            this->tlDtiLog->Size = System::Drawing::Size(366, 325);
-            this->tlDtiLog->TabIndex = 2;
-            // 
-            // cmdExport
-            // 
-            this->cmdExport->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->cmdExport->Location = System::Drawing::Point(3, 282);
-            this->cmdExport->Name = L"cmdExport";
-            this->cmdExport->Size = System::Drawing::Size(360, 40);
-            this->cmdExport->TabIndex = 1;
-            this->cmdExport->Text = L"&Export";
-            this->cmdExport->UseVisualStyleBackColor = true;
-            this->cmdExport->Click += gcnew System::EventHandler(this, &C3_User_Interface::cmdExport_Click);
-            // 
-            // dgvDtiLog
-            // 
-            this->dgvDtiLog->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->dgvDtiLog->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
-            this->dgvDtiLog->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-            this->dgvDtiLog->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->Column1, this->Column2, 
-                this->Column3});
-            this->dgvDtiLog->Location = System::Drawing::Point(3, 3);
-            this->dgvDtiLog->Name = L"dgvDtiLog";
-            dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-            dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
-            dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
-                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-            dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
-            dataGridViewCellStyle1->NullValue = L"1";
-            dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-            dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-            dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-            this->dgvDtiLog->RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this->dgvDtiLog->RowTemplate->Height = 24;
-            this->dgvDtiLog->ShowEditingIcon = false;
-            this->dgvDtiLog->ShowRowErrors = false;
-            this->dgvDtiLog->Size = System::Drawing::Size(360, 273);
-            this->dgvDtiLog->TabIndex = 0;
-            // 
-            // Column1
-            // 
-            this->Column1->HeaderText = L"Timestamp";
-            this->Column1->Name = L"Column1";
-            this->Column1->ReadOnly = true;
-            // 
-            // Column2
-            // 
-            this->Column2->HeaderText = L"DTI (m)";
-            this->Column2->Name = L"Column2";
-            this->Column2->ReadOnly = true;
-            // 
-            // Column3
-            // 
-            this->Column3->HeaderText = L"PASS / FAIL";
-            this->Column3->Name = L"Column3";
-            this->Column3->ReadOnly = true;
-            // 
-            // groupBox2
-            // 
-            this->groupBox2->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->groupBox2->Controls->Add(this->pbLiveFeed);
-            this->groupBox2->Location = System::Drawing::Point(380, 3);
-            this->groupBox2->Name = L"groupBox2";
-            this->groupBox2->Size = System::Drawing::Size(497, 344);
-            this->groupBox2->TabIndex = 1;
-            this->groupBox2->TabStop = false;
-            this->groupBox2->Text = L"Live Image";
-            // 
-            // pbLiveFeed
-            // 
-            this->pbLiveFeed->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->pbLiveFeed->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLiveFeed.Image")));
-            this->pbLiveFeed->Location = System::Drawing::Point(3, 16);
-            this->pbLiveFeed->Name = L"pbLiveFeed";
-            this->pbLiveFeed->Size = System::Drawing::Size(491, 325);
-            this->pbLiveFeed->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
-            this->pbLiveFeed->TabIndex = 0;
-            this->pbLiveFeed->TabStop = false;
-            // 
-            // groupBox1
-            // 
-            this->groupBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->groupBox1->AutoSize = true;
-            this->groupBox1->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->groupBox1->Controls->Add(this->pPPI);
-            this->groupBox1->Location = System::Drawing::Point(3, 3);
-            this->groupBox1->MinimumSize = System::Drawing::Size(300, 300);
-            this->groupBox1->Name = L"groupBox1";
-            this->groupBox1->Size = System::Drawing::Size(371, 344);
-            this->groupBox1->TabIndex = 0;
-            this->groupBox1->TabStop = false;
-            this->groupBox1->Text = L"PPI Display";
-            // 
-            // pPPI
-            // 
-            this->pPPI->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->pPPI->CausesValidation = false;
-            this->pPPI->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->pPPI->Location = System::Drawing::Point(3, 16);
-            this->pPPI->MinimumSize = System::Drawing::Size(300, 300);
-            this->pPPI->Name = L"pPPI";
-            this->pPPI->Size = System::Drawing::Size(365, 325);
-            this->pPPI->TabIndex = 0;
-            this->pPPI->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &C3_User_Interface::pPPI_Paint);
-            this->pPPI->Resize += gcnew System::EventHandler(this, &C3_User_Interface::pPPI_Redraw);
-            // 
-            // gbAlerts
-            // 
-            this->gbAlerts->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->gbAlerts->AutoSize = true;
-            this->gbAlerts->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->gbAlerts->Controls->Add(this->tbAlertsPanel);
-            this->gbAlerts->Location = System::Drawing::Point(3, 643);
-            this->gbAlerts->Name = L"gbAlerts";
-            this->gbAlerts->Size = System::Drawing::Size(1258, 66);
-            this->gbAlerts->TabIndex = 4;
-            this->gbAlerts->TabStop = false;
-            // 
-            // tbAlertsPanel
-            // 
-            this->tbAlertsPanel->BorderStyle = System::Windows::Forms::BorderStyle::None;
-            this->tbAlertsPanel->Cursor = System::Windows::Forms::Cursors::Arrow;
-            this->tbAlertsPanel->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->tbAlertsPanel->Font = (gcnew System::Drawing::Font(L"Courier New", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-                static_cast<System::Byte>(0)));
-            this->tbAlertsPanel->ForeColor = System::Drawing::Color::Red;
-            this->tbAlertsPanel->Location = System::Drawing::Point(3, 16);
-            this->tbAlertsPanel->Multiline = true;
-            this->tbAlertsPanel->Name = L"tbAlertsPanel";
-            this->tbAlertsPanel->ReadOnly = true;
-            this->tbAlertsPanel->ScrollBars = System::Windows::Forms::ScrollBars::Horizontal;
-            this->tbAlertsPanel->Size = System::Drawing::Size(1252, 47);
-            this->tbAlertsPanel->TabIndex = 0;
-            this->tbAlertsPanel->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-            // 
-            // tlIndicatorsPanel
-            // 
-            this->tlIndicatorsPanel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->tlIndicatorsPanel->AutoSize = true;
-            this->tlIndicatorsPanel->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->tlIndicatorsPanel->ColumnCount = 3;
-            this->tlIndicatorsPanel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
-                33.33333F)));
-            this->tlIndicatorsPanel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
-                33.33333F)));
-            this->tlIndicatorsPanel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
-                33.33333F)));
-            this->tlIndicatorsPanel->Controls->Add(this->groupBox4, 0, 0);
-            this->tlIndicatorsPanel->Controls->Add(this->groupBox6, 2, 0);
-            this->tlIndicatorsPanel->Controls->Add(this->groupBox5, 1, 0);
-            this->tlIndicatorsPanel->Location = System::Drawing::Point(3, 359);
-            this->tlIndicatorsPanel->Name = L"tlIndicatorsPanel";
-            this->tlIndicatorsPanel->RowCount = 1;
-            this->tlIndicatorsPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-            this->tlIndicatorsPanel->Size = System::Drawing::Size(1258, 278);
-            this->tlIndicatorsPanel->TabIndex = 1;
-            // 
-            // groupBox4
-            // 
-            this->groupBox4->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->groupBox4->AutoSize = true;
-            this->groupBox4->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->groupBox4->Controls->Add(this->label2);
-            this->groupBox4->Controls->Add(this->label1);
-            this->groupBox4->Controls->Add(this->pbCameraStatus);
-            this->groupBox4->Controls->Add(this->pbCameraComms);
-            this->groupBox4->Location = System::Drawing::Point(3, 3);
-            this->groupBox4->Name = L"groupBox4";
-            this->groupBox4->Size = System::Drawing::Size(413, 272);
-            this->groupBox4->TabIndex = 1;
-            this->groupBox4->TabStop = false;
-            this->groupBox4->Text = L"Camera";
-            // 
-            // label2
-            // 
-            this->label2->AutoSize = true;
-            this->label2->Location = System::Drawing::Point(85, 123);
-            this->label2->Name = L"label2";
-            this->label2->Size = System::Drawing::Size(37, 13);
-            this->label2->TabIndex = 3;
-            this->label2->Text = L"Status";
-            // 
-            // label1
-            // 
-            this->label1->AutoSize = true;
-            this->label1->Location = System::Drawing::Point(85, 42);
-            this->label1->Name = L"label1";
-            this->label1->Size = System::Drawing::Size(84, 13);
-            this->label1->TabIndex = 2;
-            this->label1->Text = L"Communications";
-            // 
-            // pbCameraStatus
-            // 
-            this->pbCameraStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbCameraStatus.Image")));
-            this->pbCameraStatus->Location = System::Drawing::Point(88, 139);
-            this->pbCameraStatus->Name = L"pbCameraStatus";
-            this->pbCameraStatus->Size = System::Drawing::Size(239, 47);
-            this->pbCameraStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
-            this->pbCameraStatus->TabIndex = 1;
-            this->pbCameraStatus->TabStop = false;
-            // 
-            // pbCameraComms
-            // 
-            this->pbCameraComms->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbCameraComms.Image")));
-            this->pbCameraComms->Location = System::Drawing::Point(88, 58);
-            this->pbCameraComms->Name = L"pbCameraComms";
-            this->pbCameraComms->Size = System::Drawing::Size(239, 47);
-            this->pbCameraComms->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
-            this->pbCameraComms->TabIndex = 0;
-            this->pbCameraComms->TabStop = false;
-            // 
-            // groupBox6
-            // 
-            this->groupBox6->AutoSize = true;
-            this->groupBox6->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->groupBox6->Controls->Add(this->label3);
-            this->groupBox6->Controls->Add(this->label4);
-            this->groupBox6->Controls->Add(this->pbLaserStatus);
-            this->groupBox6->Controls->Add(this->pbLaserComms);
-            this->groupBox6->Dock = System::Windows::Forms::DockStyle::Fill;
-            this->groupBox6->Location = System::Drawing::Point(841, 3);
-            this->groupBox6->Name = L"groupBox6";
-            this->groupBox6->Size = System::Drawing::Size(414, 272);
-            this->groupBox6->TabIndex = 3;
-            this->groupBox6->TabStop = false;
-            this->groupBox6->Text = L"Laser";
-            // 
-            // label3
-            // 
-            this->label3->AutoSize = true;
-            this->label3->Location = System::Drawing::Point(103, 124);
-            this->label3->Name = L"label3";
-            this->label3->Size = System::Drawing::Size(37, 13);
-            this->label3->TabIndex = 7;
-            this->label3->Text = L"Status";
-            // 
-            // label4
-            // 
-            this->label4->AutoSize = true;
-            this->label4->Location = System::Drawing::Point(103, 43);
-            this->label4->Name = L"label4";
-            this->label4->Size = System::Drawing::Size(84, 13);
-            this->label4->TabIndex = 6;
-            this->label4->Text = L"Communications";
-            // 
-            // pbLaserStatus
-            // 
-            this->pbLaserStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserStatus.Image")));
-            this->pbLaserStatus->Location = System::Drawing::Point(106, 140);
-            this->pbLaserStatus->Name = L"pbLaserStatus";
-            this->pbLaserStatus->Size = System::Drawing::Size(239, 47);
-            this->pbLaserStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
-            this->pbLaserStatus->TabIndex = 5;
-            this->pbLaserStatus->TabStop = false;
-            // 
-            // pbLaserComms
-            // 
-            this->pbLaserComms->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserComms.Image")));
-            this->pbLaserComms->Location = System::Drawing::Point(106, 59);
-            this->pbLaserComms->Name = L"pbLaserComms";
-            this->pbLaserComms->Size = System::Drawing::Size(239, 47);
-            this->pbLaserComms->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
-            this->pbLaserComms->TabIndex = 4;
-            this->pbLaserComms->TabStop = false;
-            // 
-            // groupBox5
-            // 
-            this->groupBox5->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-                | System::Windows::Forms::AnchorStyles::Left) 
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->groupBox5->AutoSize = true;
-            this->groupBox5->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->groupBox5->Controls->Add(this->trialControlButton);
-            this->groupBox5->Controls->Add(this->label8);
-            this->groupBox5->Controls->Add(this->CalibrateButton);
-            this->groupBox5->Controls->Add(this->label7);
-            this->groupBox5->Controls->Add(this->label6);
-            this->groupBox5->Controls->Add(this->label5);
-            this->groupBox5->Controls->Add(this->pbLaserActivity);
-            this->groupBox5->Controls->Add(this->pbRoverAcq);
-            this->groupBox5->Controls->Add(this->pbOverallStatus);
-            this->groupBox5->Location = System::Drawing::Point(422, 3);
-            this->groupBox5->Name = L"groupBox5";
-            this->groupBox5->Size = System::Drawing::Size(413, 272);
-            this->groupBox5->TabIndex = 2;
-            this->groupBox5->TabStop = false;
-            this->groupBox5->Text = L"Demo State";
-            // 
-            // trialControlButton
-            // 
-            this->trialControlButton->Enabled = false;
-            this->trialControlButton->Location = System::Drawing::Point(227, 232);
-            this->trialControlButton->Name = L"trialControlButton";
-            this->trialControlButton->Size = System::Drawing::Size(115, 29);
-            this->trialControlButton->TabIndex = 10;
-            this->trialControlButton->Text = L"Start Trial";
-            this->trialControlButton->UseVisualStyleBackColor = true;
-            this->trialControlButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::trialControlButton_Click);
-            // 
-            // label8
-            // 
-            this->label8->AutoSize = true;
-            this->label8->Location = System::Drawing::Point(242, 237);
-            this->label8->Name = L"label8";
-            this->label8->Size = System::Drawing::Size(0, 13);
-            this->label8->TabIndex = 9;
-            // 
-            // CalibrateButton
-            // 
-            this->CalibrateButton->Location = System::Drawing::Point(99, 232);
-            this->CalibrateButton->Name = L"CalibrateButton";
-            this->CalibrateButton->Size = System::Drawing::Size(122, 29);
-            this->CalibrateButton->TabIndex = 8;
-            this->CalibrateButton->Text = L"Ready to Calibrate";
-            this->CalibrateButton->UseVisualStyleBackColor = true;
-            this->CalibrateButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::calibrateButton_Click);
-            // 
-            // label7
-            // 
-            this->label7->AutoSize = true;
-            this->label7->Location = System::Drawing::Point(100, 162);
-            this->label7->Name = L"label7";
-            this->label7->Size = System::Drawing::Size(66, 13);
-            this->label7->TabIndex = 7;
-            this->label7->Text = L"Laser Status";
-            // 
-            // label6
-            // 
-            this->label6->AutoSize = true;
-            this->label6->Location = System::Drawing::Point(100, 96);
-            this->label6->Name = L"label6";
-            this->label6->Size = System::Drawing::Size(69, 13);
-            this->label6->TabIndex = 6;
-            this->label6->Text = L"Rover Status";
-            // 
-            // label5
-            // 
-            this->label5->AutoSize = true;
-            this->label5->Location = System::Drawing::Point(100, 27);
-            this->label5->Name = L"label5";
-            this->label5->Size = System::Drawing::Size(85, 13);
-            this->label5->TabIndex = 5;
-            this->label5->Text = L"WENDE System";
-            // 
-            // pbLaserActivity
-            // 
-            this->pbLaserActivity->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserActivity.Image")));
-            this->pbLaserActivity->Location = System::Drawing::Point(103, 179);
-            this->pbLaserActivity->Name = L"pbLaserActivity";
-            this->pbLaserActivity->Size = System::Drawing::Size(239, 47);
-            this->pbLaserActivity->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
-            this->pbLaserActivity->TabIndex = 4;
-            this->pbLaserActivity->TabStop = false;
-            // 
-            // pbRoverAcq
-            // 
-            this->pbRoverAcq->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbRoverAcq.Image")));
-            this->pbRoverAcq->Location = System::Drawing::Point(103, 112);
-            this->pbRoverAcq->Name = L"pbRoverAcq";
-            this->pbRoverAcq->Size = System::Drawing::Size(239, 47);
-            this->pbRoverAcq->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
-            this->pbRoverAcq->TabIndex = 3;
-            this->pbRoverAcq->TabStop = false;
-            // 
-            // pbOverallStatus
-            // 
-            this->pbOverallStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbOverallStatus.Image")));
-            this->pbOverallStatus->Location = System::Drawing::Point(103, 43);
-            this->pbOverallStatus->Name = L"pbOverallStatus";
-            this->pbOverallStatus->Size = System::Drawing::Size(239, 47);
-            this->pbOverallStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
-            this->pbOverallStatus->TabIndex = 2;
-            this->pbOverallStatus->TabStop = false;
-            // 
-            // C3_User_Interface
-            // 
-            this->AccessibleRole = System::Windows::Forms::AccessibleRole::OutlineButton;
-            this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-            this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-            this->AutoScroll = true;
-            this->AutoSize = true;
-            this->ClientSize = System::Drawing::Size(1264, 712);
-            this->Controls->Add(this->tlOverallView);
-            this->DoubleBuffered = true;
-            this->MinimumSize = System::Drawing::Size(1024, 640);
-            this->Name = L"C3_User_Interface";
-            this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
-            this->Text = L"C3_Subsystem";
-            this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &C3_User_Interface::C3_User_Interface_FormClosing);
-            this->tlOverallView->ResumeLayout(false);
-            this->tlOverallView->PerformLayout();
-            this->tlDtiPpi->ResumeLayout(false);
-            this->tlDtiPpi->PerformLayout();
-            this->groupBox3->ResumeLayout(false);
-            this->groupBox3->PerformLayout();
-            this->tlDtiLog->ResumeLayout(false);
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvDtiLog))->EndInit();
-            this->groupBox2->ResumeLayout(false);
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLiveFeed))->EndInit();
-            this->groupBox1->ResumeLayout(false);
-            this->gbAlerts->ResumeLayout(false);
-            this->gbAlerts->PerformLayout();
-            this->tlIndicatorsPanel->ResumeLayout(false);
-            this->tlIndicatorsPanel->PerformLayout();
-            this->groupBox4->ResumeLayout(false);
-            this->groupBox4->PerformLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbCameraStatus))->EndInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbCameraComms))->EndInit();
-            this->groupBox6->ResumeLayout(false);
-            this->groupBox6->PerformLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserStatus))->EndInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserComms))->EndInit();
-            this->groupBox5->ResumeLayout(false);
-            this->groupBox5->PerformLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserActivity))->EndInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbRoverAcq))->EndInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbOverallStatus))->EndInit();
-            this->ResumeLayout(false);
-            this->PerformLayout();
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(C3_User_Interface::typeid));
+			this->tlOverallView = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->tlDtiPpi = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
+			this->tlDtiLog = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->cmdExport = (gcnew System::Windows::Forms::Button());
+			this->dgvDtiLog = (gcnew System::Windows::Forms::DataGridView());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->pbLiveFeed = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->pPPI = (gcnew System::Windows::Forms::Panel());
+			this->gbAlerts = (gcnew System::Windows::Forms::GroupBox());
+			this->tlIndicatorsPanel = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->pbCameraStatus = (gcnew System::Windows::Forms::PictureBox());
+			this->pbCameraComms = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->pbLaserStatus = (gcnew System::Windows::Forms::PictureBox());
+			this->pbLaserComms = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->trialControlButton = (gcnew System::Windows::Forms::Button());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->CalibrateButton = (gcnew System::Windows::Forms::Button());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->pbLaserActivity = (gcnew System::Windows::Forms::PictureBox());
+			this->pbRoverAcq = (gcnew System::Windows::Forms::PictureBox());
+			this->pbOverallStatus = (gcnew System::Windows::Forms::PictureBox());
+			this->alertsLabel = (gcnew System::Windows::Forms::Label());
+			this->tlOverallView->SuspendLayout();
+			this->tlDtiPpi->SuspendLayout();
+			this->groupBox3->SuspendLayout();
+			this->tlDtiLog->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvDtiLog))->BeginInit();
+			this->groupBox2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLiveFeed))->BeginInit();
+			this->groupBox1->SuspendLayout();
+			this->gbAlerts->SuspendLayout();
+			this->tlIndicatorsPanel->SuspendLayout();
+			this->groupBox4->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbCameraStatus))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbCameraComms))->BeginInit();
+			this->groupBox6->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserStatus))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserComms))->BeginInit();
+			this->groupBox5->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserActivity))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbRoverAcq))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbOverallStatus))->BeginInit();
+			this->SuspendLayout();
+			// 
+			// tlOverallView
+			// 
+			this->tlOverallView->AutoSize = true;
+			this->tlOverallView->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->tlOverallView->ColumnCount = 1;
+			this->tlOverallView->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
+				100)));
+			this->tlOverallView->Controls->Add(this->tlDtiPpi, 0, 0);
+			this->tlOverallView->Controls->Add(this->gbAlerts, 0, 2);
+			this->tlOverallView->Controls->Add(this->tlIndicatorsPanel, 0, 1);
+			this->tlOverallView->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tlOverallView->Location = System::Drawing::Point(0, 0);
+			this->tlOverallView->Name = L"tlOverallView";
+			this->tlOverallView->RowCount = 3;
+			this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 40)));
+			this->tlOverallView->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 10)));
+			this->tlOverallView->Size = System::Drawing::Size(1264, 712);
+			this->tlOverallView->TabIndex = 6;
+			// 
+			// tlDtiPpi
+			// 
+			this->tlDtiPpi->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->tlDtiPpi->AutoSize = true;
+			this->tlDtiPpi->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->tlDtiPpi->ColumnCount = 3;
+			this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 30)));
+			this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 40)));
+			this->tlDtiPpi->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 30)));
+			this->tlDtiPpi->Controls->Add(this->groupBox3, 2, 0);
+			this->tlDtiPpi->Controls->Add(this->groupBox2, 1, 0);
+			this->tlDtiPpi->Controls->Add(this->groupBox1, 0, 0);
+			this->tlDtiPpi->Location = System::Drawing::Point(3, 3);
+			this->tlDtiPpi->Name = L"tlDtiPpi";
+			this->tlDtiPpi->RowCount = 1;
+			this->tlDtiPpi->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
+			this->tlDtiPpi->Size = System::Drawing::Size(1258, 350);
+			this->tlDtiPpi->TabIndex = 0;
+			// 
+			// groupBox3
+			// 
+			this->groupBox3->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->groupBox3->AutoSize = true;
+			this->groupBox3->Controls->Add(this->tlDtiLog);
+			this->groupBox3->Location = System::Drawing::Point(883, 3);
+			this->groupBox3->Name = L"groupBox3";
+			this->groupBox3->Size = System::Drawing::Size(372, 344);
+			this->groupBox3->TabIndex = 1;
+			this->groupBox3->TabStop = false;
+			this->groupBox3->Text = L"DTI Log";
+			// 
+			// tlDtiLog
+			// 
+			this->tlDtiLog->AutoSize = true;
+			this->tlDtiLog->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->tlDtiLog->ColumnCount = 1;
+			this->tlDtiLog->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tlDtiLog->Controls->Add(this->cmdExport, 0, 1);
+			this->tlDtiLog->Controls->Add(this->dgvDtiLog, 0, 0);
+			this->tlDtiLog->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tlDtiLog->Location = System::Drawing::Point(3, 16);
+			this->tlDtiLog->Name = L"tlDtiLog";
+			this->tlDtiLog->RowCount = 2;
+			this->tlDtiLog->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 85.97561F)));
+			this->tlDtiLog->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 14.02439F)));
+			this->tlDtiLog->Size = System::Drawing::Size(366, 325);
+			this->tlDtiLog->TabIndex = 2;
+			// 
+			// cmdExport
+			// 
+			this->cmdExport->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->cmdExport->Location = System::Drawing::Point(3, 282);
+			this->cmdExport->Name = L"cmdExport";
+			this->cmdExport->Size = System::Drawing::Size(360, 40);
+			this->cmdExport->TabIndex = 1;
+			this->cmdExport->Text = L"&Export";
+			this->cmdExport->UseVisualStyleBackColor = true;
+			this->cmdExport->Click += gcnew System::EventHandler(this, &C3_User_Interface::cmdExport_Click);
+			// 
+			// dgvDtiLog
+			// 
+			this->dgvDtiLog->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->dgvDtiLog->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dgvDtiLog->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dgvDtiLog->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->Column1, this->Column2, 
+				this->Column3});
+			this->dgvDtiLog->Location = System::Drawing::Point(3, 3);
+			this->dgvDtiLog->Name = L"dgvDtiLog";
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle2->NullValue = L"1";
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvDtiLog->RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->dgvDtiLog->RowTemplate->Height = 24;
+			this->dgvDtiLog->ShowEditingIcon = false;
+			this->dgvDtiLog->ShowRowErrors = false;
+			this->dgvDtiLog->Size = System::Drawing::Size(360, 273);
+			this->dgvDtiLog->TabIndex = 0;
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Timestamp";
+			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"DTI (m)";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"PASS / FAIL";
+			this->Column3->Name = L"Column3";
+			this->Column3->ReadOnly = true;
+			// 
+			// groupBox2
+			// 
+			this->groupBox2->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->groupBox2->Controls->Add(this->pbLiveFeed);
+			this->groupBox2->Location = System::Drawing::Point(380, 3);
+			this->groupBox2->Name = L"groupBox2";
+			this->groupBox2->Size = System::Drawing::Size(497, 344);
+			this->groupBox2->TabIndex = 1;
+			this->groupBox2->TabStop = false;
+			this->groupBox2->Text = L"Live Image";
+			// 
+			// pbLiveFeed
+			// 
+			this->pbLiveFeed->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pbLiveFeed->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLiveFeed.Image")));
+			this->pbLiveFeed->Location = System::Drawing::Point(3, 16);
+			this->pbLiveFeed->Name = L"pbLiveFeed";
+			this->pbLiveFeed->Size = System::Drawing::Size(491, 325);
+			this->pbLiveFeed->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
+			this->pbLiveFeed->TabIndex = 0;
+			this->pbLiveFeed->TabStop = false;
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->groupBox1->AutoSize = true;
+			this->groupBox1->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->groupBox1->Controls->Add(this->pPPI);
+			this->groupBox1->Location = System::Drawing::Point(3, 3);
+			this->groupBox1->MinimumSize = System::Drawing::Size(300, 300);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(371, 344);
+			this->groupBox1->TabIndex = 0;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"PPI Display";
+			// 
+			// pPPI
+			// 
+			this->pPPI->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->pPPI->CausesValidation = false;
+			this->pPPI->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pPPI->Location = System::Drawing::Point(3, 16);
+			this->pPPI->MinimumSize = System::Drawing::Size(300, 300);
+			this->pPPI->Name = L"pPPI";
+			this->pPPI->Size = System::Drawing::Size(365, 325);
+			this->pPPI->TabIndex = 0;
+			this->pPPI->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &C3_User_Interface::pPPI_Paint);
+			this->pPPI->Resize += gcnew System::EventHandler(this, &C3_User_Interface::pPPI_Redraw);
+			// 
+			// gbAlerts
+			// 
+			this->gbAlerts->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->gbAlerts->AutoSize = true;
+			this->gbAlerts->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->gbAlerts->Controls->Add(this->alertsLabel);
+			this->gbAlerts->Location = System::Drawing::Point(3, 643);
+			this->gbAlerts->Name = L"gbAlerts";
+			this->gbAlerts->Size = System::Drawing::Size(1258, 66);
+			this->gbAlerts->TabIndex = 4;
+			this->gbAlerts->TabStop = false;
+			// 
+			// tlIndicatorsPanel
+			// 
+			this->tlIndicatorsPanel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->tlIndicatorsPanel->AutoSize = true;
+			this->tlIndicatorsPanel->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->tlIndicatorsPanel->ColumnCount = 3;
+			this->tlIndicatorsPanel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
+				33.33333F)));
+			this->tlIndicatorsPanel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
+				33.33333F)));
+			this->tlIndicatorsPanel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
+				33.33333F)));
+			this->tlIndicatorsPanel->Controls->Add(this->groupBox4, 0, 0);
+			this->tlIndicatorsPanel->Controls->Add(this->groupBox6, 2, 0);
+			this->tlIndicatorsPanel->Controls->Add(this->groupBox5, 1, 0);
+			this->tlIndicatorsPanel->Location = System::Drawing::Point(3, 359);
+			this->tlIndicatorsPanel->Name = L"tlIndicatorsPanel";
+			this->tlIndicatorsPanel->RowCount = 1;
+			this->tlIndicatorsPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
+			this->tlIndicatorsPanel->Size = System::Drawing::Size(1258, 278);
+			this->tlIndicatorsPanel->TabIndex = 1;
+			// 
+			// groupBox4
+			// 
+			this->groupBox4->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->groupBox4->AutoSize = true;
+			this->groupBox4->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->groupBox4->Controls->Add(this->label2);
+			this->groupBox4->Controls->Add(this->label1);
+			this->groupBox4->Controls->Add(this->pbCameraStatus);
+			this->groupBox4->Controls->Add(this->pbCameraComms);
+			this->groupBox4->Location = System::Drawing::Point(3, 3);
+			this->groupBox4->Name = L"groupBox4";
+			this->groupBox4->Size = System::Drawing::Size(413, 272);
+			this->groupBox4->TabIndex = 1;
+			this->groupBox4->TabStop = false;
+			this->groupBox4->Text = L"Camera";
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(85, 123);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(37, 13);
+			this->label2->TabIndex = 3;
+			this->label2->Text = L"Status";
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(85, 42);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(84, 13);
+			this->label1->TabIndex = 2;
+			this->label1->Text = L"Communications";
+			// 
+			// pbCameraStatus
+			// 
+			this->pbCameraStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbCameraStatus.Image")));
+			this->pbCameraStatus->Location = System::Drawing::Point(88, 139);
+			this->pbCameraStatus->Name = L"pbCameraStatus";
+			this->pbCameraStatus->Size = System::Drawing::Size(239, 47);
+			this->pbCameraStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pbCameraStatus->TabIndex = 1;
+			this->pbCameraStatus->TabStop = false;
+			// 
+			// pbCameraComms
+			// 
+			this->pbCameraComms->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbCameraComms.Image")));
+			this->pbCameraComms->Location = System::Drawing::Point(88, 58);
+			this->pbCameraComms->Name = L"pbCameraComms";
+			this->pbCameraComms->Size = System::Drawing::Size(239, 47);
+			this->pbCameraComms->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pbCameraComms->TabIndex = 0;
+			this->pbCameraComms->TabStop = false;
+			// 
+			// groupBox6
+			// 
+			this->groupBox6->AutoSize = true;
+			this->groupBox6->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->groupBox6->Controls->Add(this->label3);
+			this->groupBox6->Controls->Add(this->label4);
+			this->groupBox6->Controls->Add(this->pbLaserStatus);
+			this->groupBox6->Controls->Add(this->pbLaserComms);
+			this->groupBox6->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->groupBox6->Location = System::Drawing::Point(841, 3);
+			this->groupBox6->Name = L"groupBox6";
+			this->groupBox6->Size = System::Drawing::Size(414, 272);
+			this->groupBox6->TabIndex = 3;
+			this->groupBox6->TabStop = false;
+			this->groupBox6->Text = L"Laser";
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Location = System::Drawing::Point(103, 124);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(37, 13);
+			this->label3->TabIndex = 7;
+			this->label3->Text = L"Status";
+			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->Location = System::Drawing::Point(103, 43);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(84, 13);
+			this->label4->TabIndex = 6;
+			this->label4->Text = L"Communications";
+			// 
+			// pbLaserStatus
+			// 
+			this->pbLaserStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserStatus.Image")));
+			this->pbLaserStatus->Location = System::Drawing::Point(106, 140);
+			this->pbLaserStatus->Name = L"pbLaserStatus";
+			this->pbLaserStatus->Size = System::Drawing::Size(239, 47);
+			this->pbLaserStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pbLaserStatus->TabIndex = 5;
+			this->pbLaserStatus->TabStop = false;
+			// 
+			// pbLaserComms
+			// 
+			this->pbLaserComms->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserComms.Image")));
+			this->pbLaserComms->Location = System::Drawing::Point(106, 59);
+			this->pbLaserComms->Name = L"pbLaserComms";
+			this->pbLaserComms->Size = System::Drawing::Size(239, 47);
+			this->pbLaserComms->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pbLaserComms->TabIndex = 4;
+			this->pbLaserComms->TabStop = false;
+			// 
+			// groupBox5
+			// 
+			this->groupBox5->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->groupBox5->AutoSize = true;
+			this->groupBox5->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->groupBox5->Controls->Add(this->trialControlButton);
+			this->groupBox5->Controls->Add(this->label8);
+			this->groupBox5->Controls->Add(this->CalibrateButton);
+			this->groupBox5->Controls->Add(this->label7);
+			this->groupBox5->Controls->Add(this->label6);
+			this->groupBox5->Controls->Add(this->label5);
+			this->groupBox5->Controls->Add(this->pbLaserActivity);
+			this->groupBox5->Controls->Add(this->pbRoverAcq);
+			this->groupBox5->Controls->Add(this->pbOverallStatus);
+			this->groupBox5->Location = System::Drawing::Point(422, 3);
+			this->groupBox5->Name = L"groupBox5";
+			this->groupBox5->Size = System::Drawing::Size(413, 272);
+			this->groupBox5->TabIndex = 2;
+			this->groupBox5->TabStop = false;
+			this->groupBox5->Text = L"Demo State";
+			// 
+			// trialControlButton
+			// 
+			this->trialControlButton->Enabled = false;
+			this->trialControlButton->Location = System::Drawing::Point(227, 232);
+			this->trialControlButton->Name = L"trialControlButton";
+			this->trialControlButton->Size = System::Drawing::Size(115, 29);
+			this->trialControlButton->TabIndex = 10;
+			this->trialControlButton->Text = L"Start Trial";
+			this->trialControlButton->UseVisualStyleBackColor = true;
+			this->trialControlButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::trialControlButton_Click);
+			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->Location = System::Drawing::Point(242, 237);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(0, 13);
+			this->label8->TabIndex = 9;
+			// 
+			// CalibrateButton
+			// 
+			this->CalibrateButton->Location = System::Drawing::Point(99, 232);
+			this->CalibrateButton->Name = L"CalibrateButton";
+			this->CalibrateButton->Size = System::Drawing::Size(122, 29);
+			this->CalibrateButton->TabIndex = 8;
+			this->CalibrateButton->Text = L"Ready to Calibrate";
+			this->CalibrateButton->UseVisualStyleBackColor = true;
+			this->CalibrateButton->Click += gcnew System::EventHandler(this, &C3_User_Interface::calibrateButton_Click);
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Location = System::Drawing::Point(100, 162);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(66, 13);
+			this->label7->TabIndex = 7;
+			this->label7->Text = L"Laser Status";
+			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Location = System::Drawing::Point(100, 96);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(69, 13);
+			this->label6->TabIndex = 6;
+			this->label6->Text = L"Rover Status";
+			// 
+			// label5
+			// 
+			this->label5->AutoSize = true;
+			this->label5->Location = System::Drawing::Point(100, 27);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(85, 13);
+			this->label5->TabIndex = 5;
+			this->label5->Text = L"WENDE System";
+			// 
+			// pbLaserActivity
+			// 
+			this->pbLaserActivity->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbLaserActivity.Image")));
+			this->pbLaserActivity->Location = System::Drawing::Point(103, 179);
+			this->pbLaserActivity->Name = L"pbLaserActivity";
+			this->pbLaserActivity->Size = System::Drawing::Size(239, 47);
+			this->pbLaserActivity->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pbLaserActivity->TabIndex = 4;
+			this->pbLaserActivity->TabStop = false;
+			// 
+			// pbRoverAcq
+			// 
+			this->pbRoverAcq->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbRoverAcq.Image")));
+			this->pbRoverAcq->Location = System::Drawing::Point(103, 112);
+			this->pbRoverAcq->Name = L"pbRoverAcq";
+			this->pbRoverAcq->Size = System::Drawing::Size(239, 47);
+			this->pbRoverAcq->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pbRoverAcq->TabIndex = 3;
+			this->pbRoverAcq->TabStop = false;
+			// 
+			// pbOverallStatus
+			// 
+			this->pbOverallStatus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pbOverallStatus.Image")));
+			this->pbOverallStatus->Location = System::Drawing::Point(103, 43);
+			this->pbOverallStatus->Name = L"pbOverallStatus";
+			this->pbOverallStatus->Size = System::Drawing::Size(239, 47);
+			this->pbOverallStatus->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pbOverallStatus->TabIndex = 2;
+			this->pbOverallStatus->TabStop = false;
+			// 
+			// alertsLabel
+			// 
+			this->alertsLabel->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->alertsLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->alertsLabel->Location = System::Drawing::Point(3, 16);
+			this->alertsLabel->Name = L"alertsLabel";
+			this->alertsLabel->Size = System::Drawing::Size(1252, 47);
+			this->alertsLabel->TabIndex = 0;
+			this->alertsLabel->Text = L"label9";
+			this->alertsLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			this->alertsLabel->Click += gcnew System::EventHandler(this, &C3_User_Interface::tbAlertsPanel_Click);
+			// 
+			// C3_User_Interface
+			// 
+			this->AccessibleRole = System::Windows::Forms::AccessibleRole::OutlineButton;
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoScroll = true;
+			this->AutoSize = true;
+			this->ClientSize = System::Drawing::Size(1264, 712);
+			this->Controls->Add(this->tlOverallView);
+			this->DoubleBuffered = true;
+			this->MinimumSize = System::Drawing::Size(1024, 640);
+			this->Name = L"C3_User_Interface";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
+			this->Text = L"C3_Subsystem";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &C3_User_Interface::C3_User_Interface_FormClosing);
+			this->tlOverallView->ResumeLayout(false);
+			this->tlOverallView->PerformLayout();
+			this->tlDtiPpi->ResumeLayout(false);
+			this->tlDtiPpi->PerformLayout();
+			this->groupBox3->ResumeLayout(false);
+			this->groupBox3->PerformLayout();
+			this->tlDtiLog->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvDtiLog))->EndInit();
+			this->groupBox2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLiveFeed))->EndInit();
+			this->groupBox1->ResumeLayout(false);
+			this->gbAlerts->ResumeLayout(false);
+			this->tlIndicatorsPanel->ResumeLayout(false);
+			this->tlIndicatorsPanel->PerformLayout();
+			this->groupBox4->ResumeLayout(false);
+			this->groupBox4->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbCameraStatus))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbCameraComms))->EndInit();
+			this->groupBox6->ResumeLayout(false);
+			this->groupBox6->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserStatus))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserComms))->EndInit();
+			this->groupBox5->ResumeLayout(false);
+			this->groupBox5->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbLaserActivity))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbRoverAcq))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pbOverallStatus))->EndInit();
+			this->ResumeLayout(false);
+			this->PerformLayout();
 
-        }
+		}
 #pragma endregion
 
 		// DELEGATE STUFF
@@ -871,10 +870,10 @@ namespace C3_App {
 			 {
 				 try
 				 {
-					 C3_User_Interface::tbAlertsPanel->Enabled = true;
-					 C3_User_Interface::tbAlertsPanel->Text = sNotification;
-					 C3_User_Interface::tbAlertsPanel->BackColor = tBgColor;
-					 C3_User_Interface::tbAlertsPanel->ForeColor = tFgColor;
+					 C3_User_Interface::alertsLabel->Enabled = true;
+					 C3_User_Interface::alertsLabel->Text = sNotification;
+					 C3_User_Interface::alertsLabel->BackColor = tBgColor;
+					 C3_User_Interface::alertsLabel->ForeColor = tFgColor;
 				 }
 				 catch (...)
 				 {
@@ -1331,9 +1330,9 @@ private: System::Void dgvDtiLog_CellContentClick(System::Object^  sender, System
 				 }
 			 }
 private: System::Void tbAlertsPanel_Click(System::Object^  sender, System::EventArgs^  e) {
-			 tbAlertsPanel->BackColor = System::Drawing::SystemColors::Control;
-			 tbAlertsPanel->Enabled = false;
-			 tbAlertsPanel->Text = " ";	 
+			 alertsLabel->BackColor = System::Drawing::SystemColors::Control;
+			 alertsLabel->Enabled = false;
+			 alertsLabel->Text = " ";	 
 		 }
 private: System::Void tableLayoutPanel4_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
          }
@@ -1468,6 +1467,7 @@ private: System::Void pPPI_Paint(System::Object^  sender, System::Windows::Forms
                     MessageBoxA(NULL,"pPPI_Redraw","error",MB_OKCANCEL);
                 }
             }
+
 };
 }
 
