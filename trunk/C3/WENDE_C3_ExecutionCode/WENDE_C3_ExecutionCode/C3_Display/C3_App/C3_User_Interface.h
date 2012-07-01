@@ -768,7 +768,7 @@ namespace C3_App {
 			this->alertsLabel->Name = L"alertsLabel";
 			this->alertsLabel->Size = System::Drawing::Size(1252, 47);
 			this->alertsLabel->TabIndex = 0;
-			this->alertsLabel->Text = L"label9";
+			this->alertsLabel->Text = L"";
 			this->alertsLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			this->alertsLabel->Click += gcnew System::EventHandler(this, &C3_User_Interface::tbAlertsPanel_Click);
 			// 
