@@ -76,6 +76,7 @@ class C3TrackerManager
 		C3_TRACK_POINT_DOUBLE getPredictedPoint() const;
 		void getPIP(vector<C3_TRACK_POINT_DOUBLE> *r,vector<C3_TRACK_POINT_DOUBLE> *p);
 		double GetDTI()const;
+		void AddShadowCorrection(double azCorrextion, double elCorrection);
 	private:
 		double ClipCommandParam(double param);
 		// determine if a point has already been assigned to the tracker 

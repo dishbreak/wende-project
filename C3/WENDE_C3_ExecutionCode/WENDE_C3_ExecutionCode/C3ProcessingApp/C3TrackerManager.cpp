@@ -269,3 +269,10 @@ void C3TrackerManager::getPIP(vector<C3_TRACK_POINT_DOUBLE> *r,vector<C3_TRACK_P
 		p->push_back(m_tracks[ii]->getPredictionPoint());
 	}
 }
+void C3TrackerManager::AddShadowCorrection(double azCorrextion, double elCorrection)
+{
+	for (unsigned int ii = 0; ii < m_tracks.size(); ii++)
+	{
+		m_tracks[ii]->AddShadowCorrection(azCorrextion, elCorrection);
+	}
+}
