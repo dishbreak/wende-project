@@ -47,7 +47,7 @@ class C3Track
 		double					m_playingFieldRadius;
 		// store the total travel range
 		double					m_travelRange;
-				
+			bool isFirst;
 	public:
 		// is updated 
 		bool					m_isUpdate;
@@ -64,6 +64,7 @@ class C3Track
 
 		C3_TRACK_POINT_DOUBLE C3Track::getPointPropogatedToTime(double time);
 		bool isProsecute()const;
+		void AddShadowCorrection(double azCorrextion, double elCorrection);
 	public:
 		// returns the last saved point containd in the history array
 		C3_TRACK_POINT_DOUBLE getLastHistoryPoint() const;

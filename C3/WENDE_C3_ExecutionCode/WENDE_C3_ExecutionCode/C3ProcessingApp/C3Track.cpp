@@ -41,6 +41,7 @@ C3Track::C3Track(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
 	{
 		m_isProsecuteTrack = false;
 	}
+	isFirst= true;
 }
 
 C3Track::~C3Track(void)
@@ -111,17 +112,27 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 		m_TTI		  = time - m_passTime;
 		// Desired Command
 		tResult1 =  DoTransform(cameraRoverPosition, cameraLaserPosition, laserOrigin);
-		// actual move since last command
-		tResult2 =  DoTransform(cameraLaserPosition, m_prevLaserLocation, laserOrigin);
-		// correction = new move - (prev move - acutal move);
-		result.AZ = tResult1.AZ - (m_prevResultCommand.AZ - tResult2.AZ);
-		result.EL = tResult1.EL - (m_prevResultCommand.EL - tResult2.EL);
+
+		if (isFirst == true)
+		{
+			result = tResult1;
+			isFirst = false;
+		}
+		else
+		{
+			// actual move since last command
+			tResult2 =  DoTransform(cameraLaserPosition, m_prevLaserLocation, laserOrigin);
+			// correction = new move - (prev move - acutal move);
+			result.AZ = tResult1.AZ - (m_prevResultCommand.AZ - tResult2.AZ);
+			result.EL = tResult1.EL - (m_prevResultCommand.EL - tResult2.EL);
+		}
+		
 	}
 
 	// Add to first history point
 	m_prevRoverLocation = cameraRoverPosition;
 	m_prevLaserLocation = cameraLaserPosition;
-	m_prevResultCommand = result;
+	m_prevResultCommand = tResult1;
 	return result;
 }
 C3_TRACK_POINT_DOUBLE C3Track::DoTransform(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,
@@ -201,4 +212,9 @@ C3_TRACK_POINT_DOUBLE C3Track::getPredictedPoint() const
 bool C3Track::isProsecute()const
 {
 	return this->m_isProsecuteTrack;
+}
+void C3Track::AddShadowCorrection(double azCorrextion, double elCorrection)
+{
+	m_prevResultCommand.AZ += azCorrextion;
+	m_prevResultCommand.EL += elCorrection;
 }
