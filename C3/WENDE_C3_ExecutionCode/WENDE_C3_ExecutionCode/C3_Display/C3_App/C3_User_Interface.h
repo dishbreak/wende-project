@@ -1128,7 +1128,7 @@ namespace C3_App {
 					Delegate_Update_Calibration_Button ^ action = 
 						gcnew Delegate_Update_Calibration_Button(this, &C3_User_Interface::Worker_Update_Calibrate_Button);
 					System::String ^ ButtonText = "";
-					bool ButtonIsActive = false;
+					bool ButtonIsActive = true;
 					switch(calibState) {
 						case C3_Alert_Types::CALIBRATION_INIT:
 						case C3_Alert_Types::CALIBRATION_IN_PROGRESS_1:
