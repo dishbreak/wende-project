@@ -63,7 +63,7 @@ bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification,
 /////////////////////////////////////////////////////////////////////////////////
 // MACROS
 /////////////////////////////////////////////////////////////////////////////////
-#define WAIT_MESSAGES    10
+#define WAIT_MESSAGES    30
 #define TICK_OFFSET      1086
 #define TICKS_PER_DEGREE 20.6
 #define DEGREES_TO_TICKS(DEG)(TICK_OFFSET+DEG*TICKS_PER_DEGREE)
@@ -168,9 +168,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	/////////////////////////////////////////////////////////////////////////////////
 	// Spin and process the input messages and send commands
 	////////////////////////////////////////////////////////////////////////////////;
-	int waitTime = 1500;
+	int waitTime = 750;
 	while(1)
 	{
+		/*if (C3NotificationHandler::Instance().Get_IsCalibration() == true)
+		{
+			Sleep(waitTime);
+		}
+		else
+		{
+			Sleep(waitTime + 1000);
+		}*/
 		Sleep(waitTime);
 		// reset the success flag
 		sendMessageSuccess = false;				// set the write flag to false
@@ -197,6 +205,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				if (C3Configuration::Instance().isSkipCalibration == false)
 				{
+							
 					commandOut = getCalibrationPointCommand();
 					laserOnOff = true;
 					// wait until time passes...
@@ -338,6 +347,61 @@ int _tmain(int argc, _TCHAR* argv[])
 						}
 						else
 						{
+							// todo move 1 degree towards camera!!!!!!!
+							//double EL = cos(theta);
+							//double AZ = sin(theta);
+							// TODO ITEM VERIFY THE LASER MACROS!!!!!!!
+							//commandOut.AZ = DEGREES_TO_TICKS(149);
+							//commandOut.EL = DEGREES_TO_TICKS(159);
+							//double bearing = atan2(laserOrigin.Y,laserOrigin.X);
+
+							/*double cameraToLaserX = laserOrigin.X;
+							double cameraToLaserY = laserOrigin.Y;
+
+							double relativeLaserX = cameraLaserPosition.X - cameraToLaserX;
+							double relativeLaserY = cameraLaserPosition.Y - cameraToLaserY;
+
+							double localLaserX = relativeLaserX*cos(theta) - relativeLaserY*sin(theta);
+							double localLaserY = relativeLaserX*sin(theta) + relativeLaserY*cos(theta);*/
+
+							double bearing = atan2(laserPoint.Y,laserPoint.X)*180/M_PI;
+
+							//C3Track::DoTransform(roverPoints, laserPoint, laserOrigin);
+							//double bearingAz = commandOut.AZ/TICKS_PER_DEGREE;
+							//double bearingEl = commandOut.EL/TICKS_PER_DEGREE;
+
+							if (bearing > 0  && bearing <= 90)
+							{
+								//Q1
+								commandOut.AZ = (commandOut.AZ - TICKS_PER_DEGREE);
+								commandOut.EL = (commandOut.EL + TICKS_PER_DEGREE);
+							}
+							else if (bearing > 90.0  && bearing <= 180)
+							{
+								//Q2
+								commandOut.AZ = (commandOut.AZ - TICKS_PER_DEGREE);
+								commandOut.EL = (commandOut.EL + TICKS_PER_DEGREE);
+							}
+							else if (bearing > -180.0  && bearing <= -90)
+							{
+								//Q3
+								commandOut.AZ = (commandOut.AZ - TICKS_PER_DEGREE);
+								commandOut.EL = (commandOut.EL + TICKS_PER_DEGREE);
+							}
+							else if (bearing > -90  && bearing <= 0)
+							{
+								//Q4
+								commandOut.AZ = (commandOut.AZ - TICKS_PER_DEGREE);
+								commandOut.EL = (commandOut.EL + TICKS_PER_DEGREE);
+							}
+							else
+							{
+								FILE_LOG(logDEBUG) <<	"No shadow correction.\n";
+							}
+							
+							tm.AddShadowCorrection(-1.0,1.0);					
+							sendMessageSuccess = true;
+
 							FILE_LOG(logDEBUG) <<	"NO LASER!!!!\n";
 							//sendMessageSuccess = true;
 						}
