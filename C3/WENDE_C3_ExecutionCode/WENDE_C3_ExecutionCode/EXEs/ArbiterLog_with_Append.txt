@@ -1,0 +1,134 @@
+- 18:52:47.000 DEBUG: Arbiter: Loop Time  = 1.47541
+
+- 18:52:55.706 DEBUG: Arbiter: Loop Time  = 0.0698861
+
+- 18:53:03.397 DEBUG: Arbiter: Loop Time  = 0.0702408
+
+- 18:53:10.104 DEBUG: Arbiter: Loop Time  = 0.0697879
+
+- 18:53:11.868 DEBUG: Arbiter: Loop Time  = 0.0700296
+
+- 18:53:19.574 DEBUG: Arbiter: Loop Time  = 0.0693681
+
+- 18:53:27.265 DEBUG: Arbiter: Loop Time  = 0.0704796
+
+- 18:53:34.972 DEBUG: Arbiter: Loop Time  = 0.0714653
+
+- 18:53:35.736 DEBUG: Arbiter: Loop Time  = 0.0698608
+
+- 18:53:43.443 DEBUG: Arbiter: Loop Time  = 0.0711982
+
+- 18:53:50.133 DEBUG: Arbiter: Loop Time  = 0.0699098
+
+- 18:53:58.840 DEBUG: Arbiter: Loop Time  = 0.0702193
+
+- 18:53:59.604 DEBUG: Arbiter: Loop Time  = 0.0703384
+
+- 18:54:07.311 DEBUG: Arbiter: Loop Time  = 0.0694044
+
+- 18:54:14.017 DEBUG: Arbiter: Loop Time  = 0.0701444
+
+- 18:54:22.708 DEBUG: Arbiter: Loop Time  = 0.0703476
+
+- 18:54:23.488 DEBUG: Arbiter: Loop Time  = 0.0703942
+
+- 18:54:31.179 DEBUG: Arbiter: Loop Time  = 0.0701309
+
+- 18:54:38.885 DEBUG: Arbiter: Loop Time  = 0.0696769
+
+- 18:54:46.592 DEBUG: Arbiter: Loop Time  = 0.0764118
+
+- 18:54:50.429 DEBUG: Arbiter: Loop Time  = 0.0714992
+
+- 18:54:51.194 DEBUG: Arbiter: Loop Time  = 0.0712634
+
+- 18:54:51.974 DEBUG: Arbiter: Loop Time  = 0.0713042
+
+- 18:54:52.738 DEBUG: Arbiter: Loop Time  = 0.0715854
+
+- 18:54:53.518 DEBUG: Arbiter: Loop Time  = 0.0718088
+
+- 18:54:54.283 DEBUG: Arbiter: Loop Time  = 0.0717588
+
+- 18:54:54.047 DEBUG: Arbiter: Loop Time  = 0.0726552
+
+- 18:54:55.827 DEBUG: Arbiter: Loop Time  = 0.0723198
+
+- 18:54:56.591 DEBUG: Arbiter: Loop Time  = 0.0732348
+
+- 18:54:57.356 DEBUG: Arbiter: Loop Time  = 0.0719086
+
+- 18:54:57.136 DEBUG: Arbiter: Loop Time  = 0.0717248
+
+- 18:54:58.900 DEBUG: Arbiter: Loop Time  = 0.0722667
+
+- 18:54:59.680 DEBUG: Arbiter: Loop Time  = 0.0722398
+
+- 18:55:00.445 DEBUG: Arbiter: Loop Time  = 0.07664
+
+- 18:55:01.209 DEBUG: Arbiter: Loop Time  = 0.0721919
+
+- 18:55:01.989 DEBUG: Arbiter: Loop Time  = 0.0718119
+
+- 18:55:02.753 DEBUG: Arbiter: Loop Time  = 0.0725706
+
+- 18:55:03.518 DEBUG: Arbiter: Loop Time  = 0.071994
+
+- 18:55:04.298 DEBUG: Arbiter: Loop Time  = 0.0722923
+
+- 18:55:04.062 DEBUG: Arbiter: Loop Time  = 0.0723197
+
+- 18:55:05.827 DEBUG: Arbiter: Loop Time  = 0.072241
+
+- 18:55:06.607 DEBUG: Arbiter: Loop Time  = 0.0719686
+
+- 18:55:07.371 DEBUG: Arbiter: Loop Time  = 0.0724716
+
+- 18:55:07.135 DEBUG: Arbiter: Loop Time  = 0.0720081
+
+- 18:55:08.915 DEBUG: Arbiter: Loop Time  = 0.0712223
+
+- 18:55:09.680 DEBUG: Arbiter: Loop Time  = 0.0724375
+
+- 18:55:10.460 DEBUG: Arbiter: Loop Time  = 0.0726609
+
+- 18:55:11.224 DEBUG: Arbiter: Loop Time  = 0.0730493
+
+- 18:55:11.989 DEBUG: Arbiter: Loop Time  = 0.0725996
+
+- 18:55:12.769 DEBUG: Arbiter: Loop Time  = 0.0721601
+
+- 18:55:13.533 DEBUG: Arbiter: Loop Time  = 0.0725725
+
+- 18:55:14.298 DEBUG: Arbiter: Loop Time  = 0.0724022
+
+- 18:55:14.078 DEBUG: Arbiter: Loop Time  = 0.0721461
+
+- 18:55:15.842 DEBUG: Arbiter: Loop Time  = 0.0725075
+
+- 18:55:16.606 DEBUG: Arbiter: Loop Time  = 0.0725819
+
+- 18:55:17.386 DEBUG: Arbiter: Loop Time  = 0.0722302
+
+- 18:55:17.151 DEBUG: Arbiter: Loop Time  = 0.0719929
+
+- 18:55:18.931 DEBUG: Arbiter: Loop Time  = 0.0721594
+
+- 18:55:19.695 DEBUG: Arbiter: Loop Time  = 0.0720564
+
+- 18:55:20.460 DEBUG: Arbiter: Loop Time  = 0.0719459
+
+- 18:55:21.240 DEBUG: Arbiter: Loop Time  = 0.0726668
+
+- 18:55:21.004 DEBUG: Arbiter: Loop Time  = 0.0724036
+
+- 18:55:22.768 DEBUG: Arbiter: Loop Time  = 0.0713669
+
+- 18:55:23.548 DEBUG: Arbiter: Loop Time  = 0.0734677
+
+- 18:55:24.313 DEBUG: Arbiter: Loop Time  = 0.0725005
+
+- 18:55:24.077 DEBUG: Arbiter: Loop Time  = 0.140054
+
+- 18:55:24.077 DEBUG: Arbiter: connection LOSS!!!0.140054
+
