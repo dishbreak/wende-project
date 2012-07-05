@@ -1,0 +1,762 @@
+- 19:25:33.000 DEBUG: Network Recevie times: 1.46667e-006
+
+- 19:25:34.546 DEBUG: Network Recevie times: 1.46667e-006
+
+- 19:25:34.546 DEBUG: Network Recevie times: 1.46667e-006
+
+- 19:25:34.546 DEBUG: Network Recevie times: 1.46667e-006
+
+- 19:25:35.966 DEBUG: Network Recevie times: 1.96211
+
+- 19:25:36.995 DEBUG: Network Recevie times: 2.4469
+
+- 19:25:36.058 DEBUG: Network Recevie times: 0.0688691
+
+- 19:25:36.136 DEBUG: Network Recevie times: 0.0702846
+
+- 19:25:36.198 DEBUG: Network Recevie times: 0.071127
+
+- 19:25:36.276 DEBUG: Network Recevie times: 0.0679551
+
+- 19:25:36.339 DEBUG: Network Recevie times: 0.0709969
+
+- 19:25:36.417 DEBUG: Network Recevie times: 0.0691799
+
+- 19:25:36.479 DEBUG: Network Recevie times: 0.0706119
+
+- 19:25:37.557 DEBUG: Network Recevie times: 0.0698725
+
+- 19:25:37.619 DEBUG: Network Recevie times: 0.0696409
+
+- 19:25:37.697 DEBUG: Network Recevie times: 0.0703705
+
+- 19:25:37.760 DEBUG: Network Recevie times: 0.0692517
+
+- 19:25:37.838 DEBUG: Network Recevie times: 0.0701633
+
+- 19:25:37.900 DEBUG: Network Recevie times: 0.0703286
+
+- 19:25:37.978 DEBUG: Network Recevie times: 0.0704262
+
+- 19:25:37.041 DEBUG: Network Recevie times: 0.0698203
+
+- 19:25:37.119 DEBUG: Network Recevie times: 0.0692853
+
+- 19:25:37.181 DEBUG: Network Recevie times: 0.0702413
+
+- 19:25:37.259 DEBUG: Network Recevie times: 0.070321
+
+- 19:25:37.321 DEBUG: Network Recevie times: 0.0703434
+
+- 19:25:37.399 DEBUG: Network Recevie times: 0.0698768
+
+- 19:25:37.462 DEBUG: Network Recevie times: 0.0701191
+
+- 19:25:38.540 DEBUG: Network Recevie times: 0.0691709
+
+- 19:25:38.602 DEBUG: Network Recevie times: 0.0703819
+
+- 19:25:38.680 DEBUG: Network Recevie times: 0.0699499
+
+- 19:25:38.743 DEBUG: Network Recevie times: 0.070377
+
+- 19:25:38.821 DEBUG: Network Recevie times: 0.0697776
+
+- 19:25:38.883 DEBUG: Network Recevie times: 0.0704233
+
+- 19:25:38.961 DEBUG: Network Recevie times: 0.0697117
+
+- 19:25:38.023 DEBUG: Network Recevie times: 0.0699789
+
+- 19:25:38.101 DEBUG: Network Recevie times: 0.0699489
+
+- 19:25:38.164 DEBUG: Network Recevie times: 0.0700838
+
+- 19:25:38.242 DEBUG: Network Recevie times: 0.0702297
+
+- 19:25:38.304 DEBUG: Network Recevie times: 0.069277
+
+- 19:25:38.367 DEBUG: Network Recevie times: 0.0702137
+
+- 19:25:38.445 DEBUG: Network Recevie times: 0.0718804
+
+- 19:25:39.523 DEBUG: Network Recevie times: 0.0690087
+
+- 19:25:39.585 DEBUG: Network Recevie times: 0.0688308
+
+- 19:25:39.647 DEBUG: Network Recevie times: 0.0699465
+
+- 19:25:39.725 DEBUG: Network Recevie times: 0.0704458
+
+- 19:25:39.788 DEBUG: Network Recevie times: 0.0704597
+
+- 19:25:39.866 DEBUG: Network Recevie times: 0.0696297
+
+- 19:25:39.928 DEBUG: Network Recevie times: 0.0699674
+
+- 19:25:39.006 DEBUG: Network Recevie times: 0.0700834
+
+- 19:25:39.069 DEBUG: Network Recevie times: 0.0705287
+
+- 19:25:39.147 DEBUG: Network Recevie times: 0.0695148
+
+- 19:25:39.209 DEBUG: Network Recevie times: 0.0694004
+
+- 19:25:39.287 DEBUG: Network Recevie times: 0.0702139
+
+- 19:25:39.349 DEBUG: Network Recevie times: 0.0701424
+
+- 19:25:39.427 DEBUG: Network Recevie times: 0.0708103
+
+- 19:25:40.490 DEBUG: Network Recevie times: 0.069749
+
+- 19:25:40.568 DEBUG: Network Recevie times: 0.0696077
+
+- 19:25:40.630 DEBUG: Network Recevie times: 0.0701162
+
+- 19:25:40.708 DEBUG: Network Recevie times: 0.0693501
+
+- 19:25:40.771 DEBUG: Network Recevie times: 0.0706469
+
+- 19:25:40.849 DEBUG: Network Recevie times: 0.0706164
+
+- 19:25:40.911 DEBUG: Network Recevie times: 0.0689228
+
+- 19:25:40.958 DEBUG: Network Recevie times: 4.99983
+
+- 19:25:40.989 DEBUG: Network Recevie times: 0.0698798
+
+- 19:25:40.051 DEBUG: Network Recevie times: 0.0701802
+
+- 19:25:40.129 DEBUG: Network Recevie times: 0.0705442
+
+- 19:25:40.192 DEBUG: Network Recevie times: 0.0691893
+
+- 19:25:40.270 DEBUG: Network Recevie times: 0.0706618
+
+- 19:25:40.332 DEBUG: Network Recevie times: 0.0708267
+
+- 19:25:40.410 DEBUG: Network Recevie times: 0.0700029
+
+- 19:25:40.473 DEBUG: Network Recevie times: 0.069575
+
+- 19:25:41.551 DEBUG: Network Recevie times: 0.0696448
+
+- 19:25:41.613 DEBUG: Network Recevie times: 0.0695128
+
+- 19:25:41.613 DEBUG: Arbiter: Loop Time  = 0.0694488
+
+- 19:25:41.691 DEBUG: Network Recevie times: 0.0705109
+
+- 19:25:41.753 DEBUG: Network Recevie times: 0.0702119
+
+- 19:25:41.831 DEBUG: Network Recevie times: 0.0708635
+
+- 19:25:41.894 DEBUG: Network Recevie times: 0.0685255
+
+- 19:25:41.972 DEBUG: Network Recevie times: 0.0702797
+
+- 19:25:41.034 DEBUG: Network Recevie times: 0.0704153
+
+- 19:25:41.112 DEBUG: Network Recevie times: 0.0697481
+
+- 19:25:41.175 DEBUG: Network Recevie times: 0.0702072
+
+- 19:25:41.237 DEBUG: Network Recevie times: 0.0691169
+
+- 19:25:41.315 DEBUG: Network Recevie times: 0.0711426
+
+- 19:25:41.393 DEBUG: Network Recevie times: 0.0697971
+
+- 19:25:41.455 DEBUG: Network Recevie times: 0.0691509
+
+- 19:25:42.518 DEBUG: Network Recevie times: 0.0703001
+
+- 19:25:42.596 DEBUG: Network Recevie times: 0.0711336
+
+- 19:25:42.658 DEBUG: Network Recevie times: 0.0696033
+
+- 19:25:42.736 DEBUG: Network Recevie times: 0.0692868
+
+- 19:25:42.799 DEBUG: Network Recevie times: 0.0703265
+
+- 19:25:42.877 DEBUG: Network Recevie times: 0.0701152
+
+- 19:25:42.939 DEBUG: Network Recevie times: 0.0702114
+
+- 19:25:42.017 DEBUG: Network Recevie times: 0.0695822
+
+- 19:25:42.079 DEBUG: Network Recevie times: 0.0697325
+
+- 19:25:42.157 DEBUG: Network Recevie times: 0.0698542
+
+- 19:25:42.220 DEBUG: Network Recevie times: 0.0704436
+
+- 19:25:42.298 DEBUG: Network Recevie times: 0.0704469
+
+- 19:25:42.360 DEBUG: Network Recevie times: 0.0702152
+
+- 19:25:42.438 DEBUG: Network Recevie times: 0.069715
+
+- 19:25:43.501 DEBUG: Network Recevie times: 0.0700401
+
+- 19:25:43.579 DEBUG: Network Recevie times: 0.070023
+
+- 19:25:43.641 DEBUG: Network Recevie times: 0.0698555
+
+- 19:25:43.719 DEBUG: Network Recevie times: 0.0696807
+
+- 19:25:43.781 DEBUG: Network Recevie times: 0.0700805
+
+- 19:25:43.859 DEBUG: Network Recevie times: 0.0701434
+
+- 19:25:43.922 DEBUG: Network Recevie times: 0.0697485
+
+- 19:25:43.000 DEBUG: Network Recevie times: 0.0704117
+
+- 19:25:43.062 DEBUG: Network Recevie times: 0.0701243
+
+- 19:25:43.140 DEBUG: Network Recevie times: 0.0693308
+
+- 19:25:43.203 DEBUG: Network Recevie times: 0.0704109
+
+- 19:25:43.281 DEBUG: Network Recevie times: 0.0699273
+
+- 19:25:43.343 DEBUG: Network Recevie times: 0.0699337
+
+- 19:25:43.421 DEBUG: Network Recevie times: 0.0699187
+
+- 19:25:43.483 DEBUG: Network Recevie times: 0.0701869
+
+- 19:25:44.561 DEBUG: Network Recevie times: 0.0703161
+
+- 19:25:44.624 DEBUG: Network Recevie times: 0.0698491
+
+- 19:25:44.702 DEBUG: Network Recevie times: 0.0701658
+
+- 19:25:44.764 DEBUG: Network Recevie times: 0.0691908
+
+- 19:25:44.842 DEBUG: Network Recevie times: 0.0706711
+
+- 19:25:44.905 DEBUG: Network Recevie times: 0.069976
+
+- 19:25:44.983 DEBUG: Network Recevie times: 0.070266
+
+- 19:25:44.045 DEBUG: Network Recevie times: 0.0694955
+
+- 19:25:44.123 DEBUG: Network Recevie times: 0.0701216
+
+- 19:25:44.185 DEBUG: Network Recevie times: 0.0700173
+
+- 19:25:44.248 DEBUG: Network Recevie times: 0.0701003
+
+- 19:25:44.326 DEBUG: Network Recevie times: 0.0692848
+
+- 19:25:44.388 DEBUG: Network Recevie times: 0.0703839
+
+- 19:25:44.466 DEBUG: Network Recevie times: 0.0700876
+
+- 19:25:45.529 DEBUG: Network Recevie times: 0.0699295
+
+- 19:25:45.607 DEBUG: Network Recevie times: 0.0702758
+
+- 19:25:45.669 DEBUG: Network Recevie times: 0.0704905
+
+- 19:25:45.747 DEBUG: Network Recevie times: 0.0692193
+
+- 19:25:45.809 DEBUG: Network Recevie times: 0.0698147
+
+- 19:25:45.887 DEBUG: Network Recevie times: 0.0708973
+
+- 19:25:45.950 DEBUG: Network Recevie times: 0.0692453
+
+- 19:25:45.965 DEBUG: Network Recevie times: 5.00036
+
+- 19:25:45.028 DEBUG: Network Recevie times: 0.070481
+
+- 19:25:45.090 DEBUG: Network Recevie times: 0.0696427
+
+- 19:25:45.168 DEBUG: Network Recevie times: 0.0703661
+
+- 19:25:45.231 DEBUG: Network Recevie times: 0.0702434
+
+- 19:25:45.309 DEBUG: Network Recevie times: 0.0701825
+
+- 19:25:45.371 DEBUG: Network Recevie times: 0.0694705
+
+- 19:25:45.449 DEBUG: Network Recevie times: 0.0700604
+
+- 19:25:46.511 DEBUG: Network Recevie times: 0.0695928
+
+- 19:25:46.589 DEBUG: Network Recevie times: 0.070009
+
+- 19:25:46.652 DEBUG: Network Recevie times: 0.0701813
+
+- 19:25:46.730 DEBUG: Network Recevie times: 0.0703971
+
+- 19:25:46.792 DEBUG: Network Recevie times: 0.0694482
+
+- 19:25:46.870 DEBUG: Network Recevie times: 0.0701896
+
+- 19:25:46.933 DEBUG: Network Recevie times: 0.0702999
+
+- 19:25:46.011 DEBUG: Network Recevie times: 0.0700152
+
+- 19:25:46.073 DEBUG: Network Recevie times: 0.0699419
+
+- 19:25:46.151 DEBUG: Network Recevie times: 0.069845
+
+- 19:25:46.213 DEBUG: Network Recevie times: 0.0701646
+
+- 19:25:46.291 DEBUG: Network Recevie times: 0.0695811
+
+- 19:25:46.354 DEBUG: Network Recevie times: 0.0703585
+
+- 19:25:46.432 DEBUG: Network Recevie times: 0.0704034
+
+- 19:25:47.494 DEBUG: Network Recevie times: 0.0690345
+
+- 19:25:47.572 DEBUG: Network Recevie times: 0.0699787
+
+- 19:25:47.635 DEBUG: Network Recevie times: 0.0704299
+
+- 19:25:47.713 DEBUG: Network Recevie times: 0.0699277
+
+- 19:25:47.775 DEBUG: Network Recevie times: 0.0703532
+
+- 19:25:47.853 DEBUG: Network Recevie times: 0.069578
+
+- 19:25:47.915 DEBUG: Network Recevie times: 0.0703186
+
+- 19:25:47.978 DEBUG: Network Recevie times: 0.0700535
+
+- 19:25:47.056 DEBUG: Network Recevie times: 0.0700839
+
+- 19:25:47.118 DEBUG: Network Recevie times: 0.0695893
+
+- 19:25:47.196 DEBUG: Network Recevie times: 0.0703297
+
+- 19:25:47.259 DEBUG: Network Recevie times: 0.0698042
+
+- 19:25:47.337 DEBUG: Network Recevie times: 0.0699374
+
+- 19:25:47.399 DEBUG: Network Recevie times: 0.0702679
+
+- 19:25:47.477 DEBUG: Network Recevie times: 0.0696952
+
+- 19:25:48.539 DEBUG: Network Recevie times: 0.0700727
+
+- 19:25:48.617 DEBUG: Network Recevie times: 0.0702975
+
+- 19:25:48.680 DEBUG: Network Recevie times: 0.0700745
+
+- 19:25:48.758 DEBUG: Network Recevie times: 0.069763
+
+- 19:25:48.820 DEBUG: Network Recevie times: 0.0697921
+
+- 19:25:48.898 DEBUG: Network Recevie times: 0.0705093
+
+- 19:25:48.961 DEBUG: Network Recevie times: 0.0692604
+
+- 19:25:48.039 DEBUG: Network Recevie times: 0.0724582
+
+- 19:25:48.101 DEBUG: Network Recevie times: 0.0685477
+
+- 19:25:48.179 DEBUG: Network Recevie times: 0.069725
+
+- 19:25:48.241 DEBUG: Network Recevie times: 0.0694301
+
+- 19:25:48.319 DEBUG: Arbiter: Loop Time  = 0.0697795
+
+- 19:25:48.319 DEBUG: Network Recevie times: 0.069823
+
+- 19:25:48.382 DEBUG: Network Recevie times: 0.070077
+
+- 19:25:48.460 DEBUG: Network Recevie times: 0.0703806
+
+- 19:25:49.522 DEBUG: Network Recevie times: 0.0701835
+
+- 19:25:49.600 DEBUG: Network Recevie times: 0.0699685
+
+- 19:25:49.663 DEBUG: Network Recevie times: 0.0701939
+
+- 19:25:49.741 DEBUG: Network Recevie times: 0.0695167
+
+- 19:25:49.803 DEBUG: Network Recevie times: 0.0704615
+
+- 19:25:49.881 DEBUG: Network Recevie times: 0.0695544
+
+- 19:25:49.943 DEBUG: Network Recevie times: 0.0699482
+
+- 19:25:49.021 DEBUG: Network Recevie times: 0.0704039
+
+- 19:25:49.084 DEBUG: Network Recevie times: 0.0702807
+
+- 19:25:49.162 DEBUG: Network Recevie times: 0.0692603
+
+- 19:25:49.224 DEBUG: Network Recevie times: 0.0702199
+
+- 19:25:49.302 DEBUG: Network Recevie times: 0.0697344
+
+- 19:25:49.365 DEBUG: Network Recevie times: 0.0699695
+
+- 19:25:49.443 DEBUG: Network Recevie times: 0.0702241
+
+- 19:25:50.505 DEBUG: Network Recevie times: 0.0700618
+
+- 19:25:50.567 DEBUG: Network Recevie times: 0.0696707
+
+- 19:25:50.645 DEBUG: Network Recevie times: 0.0704394
+
+- 19:25:50.708 DEBUG: Network Recevie times: 0.0696781
+
+- 19:25:50.786 DEBUG: Network Recevie times: 0.0700894
+
+- 19:25:50.848 DEBUG: Network Recevie times: 0.0703619
+
+- 19:25:50.926 DEBUG: Network Recevie times: 0.0704286
+
+- 19:25:50.957 DEBUG: Network Recevie times: 5.00025
+
+- 19:25:50.989 DEBUG: Network Recevie times: 0.0694901
+
+- 19:25:50.067 DEBUG: Network Recevie times: 0.0703748
+
+- 19:25:50.129 DEBUG: Network Recevie times: 0.0692122
+
+- 19:25:50.207 DEBUG: Network Recevie times: 0.071013
+
+- 19:25:50.269 DEBUG: Network Recevie times: 0.0694414
+
+- 19:25:50.347 DEBUG: Network Recevie times: 0.0696007
+
+- 19:25:50.410 DEBUG: Network Recevie times: 0.0702934
+
+- 19:25:50.488 DEBUG: Network Recevie times: 0.0697194
+
+- 19:25:51.550 DEBUG: Network Recevie times: 0.0699435
+
+- 19:25:51.628 DEBUG: Network Recevie times: 0.0696607
+
+- 19:25:51.691 DEBUG: Network Recevie times: 0.0702181
+
+- 19:25:51.769 DEBUG: Network Recevie times: 0.0706628
+
+- 19:25:51.831 DEBUG: Network Recevie times: 0.0699298
+
+- 19:25:51.909 DEBUG: Network Recevie times: 0.0697734
+
+- 19:25:51.971 DEBUG: Network Recevie times: 0.0703043
+
+- 19:25:51.049 DEBUG: Network Recevie times: 0.0694546
+
+- 19:25:51.112 DEBUG: Network Recevie times: 0.0704679
+
+- 19:25:51.190 DEBUG: Network Recevie times: 0.0698888
+
+- 19:25:51.252 DEBUG: Network Recevie times: 0.0698654
+
+- 19:25:51.330 DEBUG: Network Recevie times: 0.0701545
+
+- 19:25:51.393 DEBUG: Network Recevie times: 0.0696579
+
+- 19:25:51.471 DEBUG: Network Recevie times: 0.07005
+
+- 19:25:52.533 DEBUG: Network Recevie times: 0.0702256
+
+- 19:25:52.611 DEBUG: Network Recevie times: 0.0699446
+
+- 19:25:52.673 DEBUG: Network Recevie times: 0.0700361
+
+- 19:25:52.751 DEBUG: Network Recevie times: 0.0701073
+
+- 19:25:52.814 DEBUG: Network Recevie times: 0.0696417
+
+- 19:25:52.892 DEBUG: Network Recevie times: 0.070551
+
+- 19:25:52.954 DEBUG: Network Recevie times: 0.0697137
+
+- 19:25:52.032 DEBUG: Network Recevie times: 0.0700302
+
+- 19:25:52.095 DEBUG: Network Recevie times: 0.0702784
+
+- 19:25:52.173 DEBUG: Network Recevie times: 0.0704802
+
+- 19:25:52.235 DEBUG: Network Recevie times: 0.0690738
+
+- 19:25:52.313 DEBUG: Network Recevie times: 0.0701591
+
+- 19:25:52.375 DEBUG: Network Recevie times: 0.0695931
+
+- 19:25:52.453 DEBUG: Network Recevie times: 0.0705386
+
+- 19:25:53.516 DEBUG: Network Recevie times: 0.069934
+
+- 19:25:53.578 DEBUG: Network Recevie times: 0.069888
+
+- 19:25:53.656 DEBUG: Network Recevie times: 0.0701785
+
+- 19:25:53.719 DEBUG: Network Recevie times: 0.0701174
+
+- 19:25:53.797 DEBUG: Network Recevie times: 0.0698874
+
+- 19:25:53.859 DEBUG: Network Recevie times: 0.0695981
+
+- 19:25:53.937 DEBUG: Network Recevie times: 0.0704666
+
+- 19:25:53.999 DEBUG: Network Recevie times: 0.0694506
+
+- 19:25:53.077 DEBUG: Network Recevie times: 0.0705947
+
+- 19:25:53.140 DEBUG: Network Recevie times: 0.0700114
+
+- 19:25:53.218 DEBUG: Network Recevie times: 0.0701335
+
+- 19:25:53.280 DEBUG: Network Recevie times: 0.0694835
+
+- 19:25:53.358 DEBUG: Network Recevie times: 0.0704578
+
+- 19:25:53.421 DEBUG: Network Recevie times: 0.069761
+
+- 19:25:54.499 DEBUG: Network Recevie times: 0.0693423
+
+- 19:25:54.561 DEBUG: Network Recevie times: 0.0694669
+
+- 19:25:54.639 DEBUG: Network Recevie times: 0.0698447
+
+- 19:25:54.702 DEBUG: Network Recevie times: 0.0703939
+
+- 19:25:54.780 DEBUG: Network Recevie times: 0.0701421
+
+- 19:25:54.842 DEBUG: Network Recevie times: 0.0696751
+
+- 19:25:54.920 DEBUG: Network Recevie times: 0.07001
+
+- 19:25:54.982 DEBUG: Network Recevie times: 0.0700091
+
+- 19:25:54.060 DEBUG: Network Recevie times: 0.070303
+
+- 19:25:54.123 DEBUG: Network Recevie times: 0.0703079
+
+- 19:25:54.201 DEBUG: Network Recevie times: 0.0699282
+
+- 19:25:54.263 DEBUG: Network Recevie times: 0.0697402
+
+- 19:25:54.341 DEBUG: Network Recevie times: 0.0696905
+
+- 19:25:54.404 DEBUG: Network Recevie times: 0.0701125
+
+- 19:25:54.482 DEBUG: Network Recevie times: 0.0700603
+
+- 19:25:55.544 DEBUG: Network Recevie times: 0.0700067
+
+- 19:25:55.622 DEBUG: Network Recevie times: 0.0714975
+
+- 19:25:55.684 DEBUG: Network Recevie times: 0.0685379
+
+- 19:25:55.762 DEBUG: Network Recevie times: 0.0700053
+
+- 19:25:55.825 DEBUG: Network Recevie times: 0.0700986
+
+- 19:25:55.903 DEBUG: Network Recevie times: 0.0701064
+
+- 19:25:55.965 DEBUG: Network Recevie times: 4.99912
+
+- 19:25:55.965 DEBUG: Network Recevie times: 0.0697324
+
+- 19:25:55.028 DEBUG: Network Recevie times: 0.0701793
+
+- 19:25:55.106 DEBUG: Network Recevie times: 0.0698982
+
+- 19:25:55.168 DEBUG: Network Recevie times: 0.0701911
+
+- 19:25:55.246 DEBUG: Network Recevie times: 0.0699693
+
+- 19:25:55.308 DEBUG: Network Recevie times: 0.0698359
+
+- 19:25:55.386 DEBUG: Network Recevie times: 0.0700076
+
+- 19:25:55.449 DEBUG: Network Recevie times: 0.0700549
+
+- 19:25:56.527 DEBUG: Network Recevie times: 0.0693961
+
+- 19:25:56.589 DEBUG: Network Recevie times: 0.0707375
+
+- 19:25:56.667 DEBUG: Network Recevie times: 0.0710069
+
+- 19:25:56.730 DEBUG: Network Recevie times: 0.0697678
+
+- 19:25:56.808 DEBUG: Network Recevie times: 0.0684971
+
+- 19:25:56.870 DEBUG: Network Recevie times: 0.0702429
+
+- 19:25:56.948 DEBUG: Network Recevie times: 0.0705668
+
+- 19:25:56.010 DEBUG: Network Recevie times: 0.0693816
+
+- 19:25:56.010 DEBUG: Arbiter: Loop Time  = 0.0692758
+
+- 19:25:56.088 DEBUG: Network Recevie times: 0.0704379
+
+- 19:25:56.151 DEBUG: Network Recevie times: 0.0698864
+
+- 19:25:56.229 DEBUG: Network Recevie times: 0.0699167
+
+- 19:25:56.291 DEBUG: Network Recevie times: 0.0696739
+
+- 19:25:56.369 DEBUG: Network Recevie times: 0.0704207
+
+- 19:25:56.432 DEBUG: Network Recevie times: 0.0714513
+
+- 19:25:57.510 DEBUG: Network Recevie times: 0.0688277
+
+- 19:25:57.572 DEBUG: Network Recevie times: 0.0698729
+
+- 19:25:57.650 DEBUG: Network Recevie times: 0.0701127
+
+- 19:25:57.712 DEBUG: Network Recevie times: 0.0700238
+
+- 19:25:57.790 DEBUG: Network Recevie times: 0.0697962
+
+- 19:25:57.853 DEBUG: Network Recevie times: 0.0697181
+
+- 19:25:57.931 DEBUG: Network Recevie times: 0.0704693
+
+- 19:25:57.993 DEBUG: Network Recevie times: 0.0721625
+
+- 19:25:57.071 DEBUG: Network Recevie times: 0.0676453
+
+- 19:25:57.134 DEBUG: Network Recevie times: 0.0697445
+
+- 19:25:57.212 DEBUG: Network Recevie times: 0.0702115
+
+- 19:25:57.274 DEBUG: Network Recevie times: 0.0700646
+
+- 19:25:57.352 DEBUG: Network Recevie times: 0.0697044
+
+- 19:25:57.414 DEBUG: Network Recevie times: 0.0704168
+
+- 19:25:57.492 DEBUG: Network Recevie times: 0.0699141
+
+- 19:25:58.555 DEBUG: Network Recevie times: 0.0700098
+
+- 19:25:58.617 DEBUG: Network Recevie times: 0.0697178
+
+- 19:25:58.695 DEBUG: Network Recevie times: 0.0700033
+
+- 19:25:58.758 DEBUG: Network Recevie times: 0.0703446
+
+- 19:25:58.836 DEBUG: Network Recevie times: 0.0700727
+
+- 19:25:58.898 DEBUG: Network Recevie times: 0.069314
+
+- 19:25:58.976 DEBUG: Network Recevie times: 0.0699403
+
+- 19:25:58.038 DEBUG: Network Recevie times: 0.070394
+
+- 19:25:58.116 DEBUG: Network Recevie times: 0.0703098
+
+- 19:25:58.179 DEBUG: Network Recevie times: 0.0694699
+
+- 19:25:58.257 DEBUG: Network Recevie times: 0.0699333
+
+- 19:25:58.319 DEBUG: Network Recevie times: 0.0703399
+
+- 19:25:58.397 DEBUG: Network Recevie times: 0.0703751
+
+- 19:25:58.460 DEBUG: Network Recevie times: 0.069421
+
+- 19:25:59.538 DEBUG: Network Recevie times: 0.069805
+
+- 19:25:59.600 DEBUG: Network Recevie times: 0.0702501
+
+- 19:25:59.678 DEBUG: Network Recevie times: 0.0706435
+
+- 19:25:59.740 DEBUG: Network Recevie times: 0.0697663
+
+- 19:25:59.818 DEBUG: Network Recevie times: 0.069362
+
+- 19:25:59.881 DEBUG: Network Recevie times: 0.070436
+
+- 19:25:59.959 DEBUG: Network Recevie times: 0.070012
+
+- 19:25:59.021 DEBUG: Network Recevie times: 0.06987
+
+- 19:25:59.099 DEBUG: Network Recevie times: 0.0695953
+
+- 19:25:59.162 DEBUG: Network Recevie times: 0.070544
+
+- 19:25:59.240 DEBUG: Network Recevie times: 0.0698692
+
+- 19:25:59.302 DEBUG: Network Recevie times: 0.0699657
+
+- 19:25:59.380 DEBUG: Network Recevie times: 0.0699588
+
+- 19:25:59.442 DEBUG: Network Recevie times: 0.0704765
+
+- 19:26:00.520 DEBUG: Network Recevie times: 0.0699226
+
+- 19:26:00.583 DEBUG: Network Recevie times: 0.0699515
+
+- 19:26:00.661 DEBUG: Network Recevie times: 0.0700394
+
+- 19:26:00.723 DEBUG: Network Recevie times: 0.0701026
+
+- 19:26:00.801 DEBUG: Network Recevie times: 0.0698061
+
+- 19:26:00.864 DEBUG: Network Recevie times: 0.0696732
+
+- 19:26:00.942 DEBUG: Network Recevie times: 0.0703543
+
+- 19:26:00.957 DEBUG: Network Recevie times: 5.00035
+
+- 19:26:00.004 DEBUG: Network Recevie times: 0.0695568
+
+- 19:26:00.082 DEBUG: Network Recevie times: 0.071125
+
+- 19:26:00.144 DEBUG: Network Recevie times: 0.0696398
+
+- 19:26:00.207 DEBUG: Network Recevie times: 0.0693055
+
+- 19:26:00.285 DEBUG: Network Recevie times: 0.0704247
+
+- 19:26:00.363 DEBUG: Network Recevie times: 0.0700963
+
+- 19:26:00.425 DEBUG: Network Recevie times: 0.0701325
+
+- 19:26:01.488 DEBUG: Network Recevie times: 0.0695533
+
+- 19:26:01.566 DEBUG: Network Recevie times: 0.0702776
+
+- 19:26:01.628 DEBUG: Network Recevie times: 0.069392
+
+- 19:26:01.706 DEBUG: Network Recevie times: 0.0704855
+
+- 19:26:01.768 DEBUG: Network Recevie times: 0.0701799
+
+- 19:26:01.846 DEBUG: Network Recevie times: 0.070006
+
+- 19:26:01.909 DEBUG: Network Recevie times: 0.0699106
+
+- 19:26:01.987 DEBUG: Network Recevie times: 0.069783
+
+- 19:26:01.049 DEBUG: Network Recevie times: 0.0702857
+
+- 19:26:01.127 DEBUG: Network Recevie times: 0.0695322
+
+- 19:26:01.190 DEBUG: Network Recevie times: 0.0704479
+
+- 19:26:01.268 DEBUG: Network Recevie times: 0.069981
+
+- 19:26:01.330 DEBUG: Network Recevie times: 0.069749
+
+- 19:26:01.408 DEBUG: Network Recevie times: 0.0696626
+
+- 19:26:01.470 DEBUG: Network Recevie times: 0.0706607
+
+- 19:26:02.548 DEBUG: Network Recevie times: 0.0698773
+
+- 19:26:02.611 DEBUG: Network Recevie times: 0.0695483
+
+- 19:26:02.689 DEBUG: Network Recevie times: 0.0699993
+
