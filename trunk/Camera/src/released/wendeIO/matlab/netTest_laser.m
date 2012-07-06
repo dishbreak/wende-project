@@ -19,14 +19,14 @@ clear; clc; close all;
 % Change this to be wherever you have this files at.
 % cd c:\java\wendeIO\matlab;
 cd 'C:\Documents and Settings\jford7\My Documents\ELDP\TDC\2011-2012\wende-project\Camera\src\released\wendeIO\matlab';
-javaaddpath ..\bin;
+javaaddpath ..\bin3;
 
 % Create Java Class
 net = SendMsg
 % Initialize Network Ports ( port based on config file)
-netFlagStat = net.initNet(0)
-netFlagTrack = net.initNet(1)
-netFlagImage = net.initNet(2)
+netFlagStat = net.initNet(0);
+netFlagTrack = net.initNet(1);
+netFlagImage = net.initNet(2);
 
 %%
 % Function Parameter List
@@ -73,7 +73,7 @@ for n = 1:1:totalLoops
     end
         net.setSystemStatus(3);
     if(mod(n,statusEvery) == 0 && netFlagStat)
-        net.setStatus(100000, net.getSystemStatus , 0, statusString);
+        net.setStatus(now, net.getSystemStatus , 0, [statusString,num2str(n)]);
         netFlagStat = net.sendStatus;
         countStatus = countStatus + netFlagStat;
     end
@@ -92,16 +92,16 @@ for n = 1:1:totalLoops
     end
     
     if(mod(n,trackEvery) == 0 && netFlagTrack)
-%         net.setTracks(1001, net.getSystemStatus, [[2000*n/totalLoops,1000*n/totalLoops],[700,-700]], [[700,700]], 0);
-%         net.setTracks(1001, net.getSystemStatus, [[1000*sin(n/10),1000*cos(n/10)],[700,-700]], [[700,700]], 1,1,0);
-        net.setTracks(1001, net.getSystemStatus, [tracks(1),tracks(2)], [[700,700]], 1,1,0);
+%         net.setTracks(now, net.getSystemStatus, [[2000*n/totalLoops,1000*n/totalLoops],[700,-700]], [[700,700]], 0);
+%         net.setTracks(now, net.getSystemStatus, [[1000*sin(n/10),1000*cos(n/10)],[700,-700]], [[700,700]], 1,1,0);
+        net.setTracks(now, net.getSystemStatus, [tracks(1),tracks(2)], [[700,n]], 1,1,0);
         
         netFlagTrack = net.sendTracks
         countTrk = countTrk + netFlagTrack;
     end
 %    
 %     if(mod(n,imageEvery) == 0 && netFlagImage)
-%         net.setImage(1012221, 3, 300, 180, serialArray);
+%         net.setImage(now, 3, 300, 180, serialArray);
 %         netFlagImage = net.sendImage;
 %         countImg = countImg + netFlagImage;
 %     end
@@ -125,7 +125,7 @@ fprintf('Sent %d Image  Messages at %.3f messages per second\n',countImg, countI
 
 %%
 % close Network Connections
-net.closeNet(0)
-net.closeNet(1)
-net.closeNet(2)
+net.closeNet(0);
+net.closeNet(1);
+net.closeNet(2);
 
