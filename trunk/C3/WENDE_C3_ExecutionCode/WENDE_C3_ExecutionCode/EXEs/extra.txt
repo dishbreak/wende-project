@@ -1,0 +1,1 @@
+<EXTRA delayTime="750" divideNumber="2" azStep="20.46" elStep="22.28" />
