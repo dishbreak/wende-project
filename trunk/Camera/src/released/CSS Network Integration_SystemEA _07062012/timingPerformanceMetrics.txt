@@ -1,0 +1,168 @@
+Timing Performance Metrics for 6/24/2012
+I&T Weekend 
+
+-----------------------------------
+Total Frames : 110
+Get Frame Time: 0.049656 52.7391%
+Track Motion Time: 0.018883 20.0553%
+Process Laser Frame Time: 0.0065983 7.0079%
+Process Rover Frame Time: 0.019017 20.1977%
+Total Time : 0.094155
+-----------------------------------
+
+
+-----------------------------------
+Total Frames : 2966
+Get Frame Time: 0.031695 48.0103%
+Track Motion Time: 0.015307 23.1866%
+Process Laser Frame Time: 0.005629 8.5265%
+Process Rover Frame Time: 0.013386 20.2766%
+Total Time : 0.066017
+-----------------------------------
+
+-----------------------------------
+Total Frames : 100
+Get Frame Time: 0.039221 52.4289%
+Track Motion Time: 0.016713 22.3408%
+Process Laser Frame Time: 0.0055537 7.424%
+Process Rover Frame Time: 0.01332 17.8062%
+Total Time : 0.074807
+-----------------------------------
+Avg Frame to Frame Error: 0.037828 cm
+-----------------------------------
+
+DONE!
+-----------------------------------
+Total Frames : 55
+Get Frame Time: 0.040115 53.2889%
+Track Motion Time: 0.016191 21.5086%
+Process Laser Frame Time: 0.0056976 7.5688%
+Process Rover Frame Time: 0.013274 17.6338%
+Total Time : 0.075278
+-----------------------------------
+Avg Frame to Frame Error: 0.2632 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 74
+Get Frame Time: 0.043703 54.1566%
+Track Motion Time: 0.01651 20.4589%
+Process Laser Frame Time: 0.0054227 6.7199%
+Process Rover Frame Time: 0.015062 18.6647%
+Total Time : 0.080697
+-----------------------------------
+Avg Frame to Frame Error: 0.18162 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 115
+Get Frame Time: 0.031292 46.4255%
+Track Motion Time: 0.015583 23.1201%
+Process Laser Frame Time: 0.0052797 7.8332%
+Process Rover Frame Time: 0.015247 22.6213%
+Total Time : 0.067402
+-----------------------------------
+Avg Frame to Frame Error: 0.054335 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 170
+Get Frame Time: 0.029282 44.1376%
+Track Motion Time: 0.015523 23.3975%
+Process Laser Frame Time: 0.0052803 7.9592%
+Process Rover Frame Time: 0.016258 24.5058%
+Total Time : 0.066343
+-----------------------------------
+Avg Frame to Frame Error: 0.08532 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 111
+Get Frame Time: 0.026803 41.6542%
+Track Motion Time: 0.015581 24.2142%
+Process Laser Frame Time: 0.0054655 8.4937%
+Process Rover Frame Time: 0.016497 25.6379%
+Total Time : 0.064347
+-----------------------------------
+Avg Frame to Frame Error: 0.054232 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 144
+Get Frame Time: 0.026728 43.8457%
+Track Motion Time: 0.015467 25.3719%
+Process Laser Frame Time: 0.0052662 8.6388%
+Process Rover Frame Time: 0.013499 22.1436%
+Total Time : 0.06096
+-----------------------------------
+Avg Frame to Frame Error: 0.39295 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 148
+Get Frame Time: 0.025743 43.0257%
+Track Motion Time: 0.015423 25.7768%
+Process Laser Frame Time: 0.0052801 8.8248%
+Process Rover Frame Time: 0.013386 22.3727%
+Total Time : 0.059832
+-----------------------------------
+Avg Frame to Frame Error: 1.0635 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 129
+Get Frame Time: 0.025135 42.4298%
+Track Motion Time: 0.015427 26.0418%
+Process Laser Frame Time: 0.0052531 8.8677%
+Process Rover Frame Time: 0.013424 22.6607%
+Total Time : 0.059239
+-----------------------------------
+Avg Frame to Frame Error: 0.031386 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 139
+Get Frame Time: 0.024743 42.0882%
+Track Motion Time: 0.015485 26.3408%
+Process Laser Frame Time: 0.0052509 8.9318%
+Process Rover Frame Time: 0.013309 22.6392%
+Total Time : 0.058788
+-----------------------------------
+Avg Frame to Frame Error: 0.12195 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 136
+Get Frame Time: 0.023659 40.8419%
+Track Motion Time: 0.015463 26.6936%
+Process Laser Frame Time: 0.00528 9.1145%
+Process Rover Frame Time: 0.013527 23.35%
+Total Time : 0.057929
+-----------------------------------
+Avg Frame to Frame Error: 0.74465 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 144
+Get Frame Time: 0.022987 40.1784%
+Track Motion Time: 0.015427 26.9637%
+Process Laser Frame Time: 0.0053282 9.3127%
+Process Rover Frame Time: 0.013471 23.5452%
+Total Time : 0.057214
+-----------------------------------
+Avg Frame to Frame Error: 0.20401 cm
+-----------------------------------
+
+-----------------------------------
+Total Frames : 192
+Get Frame Time: 0.02561 43.737%
+Track Motion Time: 0.015542 26.5429%
+Process Laser Frame Time: 0.0051652 8.8211%
+Process Rover Frame Time: 0.012238 20.899%
+Total Time : 0.058555
+-----------------------------------
+Avg Frame to Frame Error: 0.73848 cm
+-----------------------------------
+
+
+
