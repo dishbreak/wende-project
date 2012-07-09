@@ -33,6 +33,8 @@
 #include <crtdbg.h>
 #include "SocketComm.h"
 #include "Utilties.h"
+#include "../NetworkArbiterA/Log.h"
+
 const DWORD DEFAULT_TIMEOUT = 100L;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,7 +90,8 @@ CSocketComm::CSocketComm() :
     m_bServer(false), m_bSmartAddressing(false), m_bBroadcast(false),
     m_hComm(INVALID_HANDLE_VALUE), m_hThread(NULL), m_hMutex(NULL)
 {
-
+	start1.QuadPart = 0;
+	end2.QuadPart = 0;
 }
 
 CSocketComm::~CSocketComm()
@@ -1025,28 +1028,47 @@ void CSocketComm::Run()
 
     while( IsOpen() )
     {
+		//FILE_LOG(logDEBUG) <<	"Read Data" << "\n";
+		LARGE_INTEGER start;
+		::QueryPerformanceCounter(&start);
+		
+		if (start1.QuadPart == 0 && end2.QuadPart == 0)
+		{
+			::QueryPerformanceCounter(&start1);
+		}
+		else
+		{
+			start1 = end2;
+		}
+		LARGE_INTEGER countsPerSecond;
+		::QueryPerformanceCounter(&end2);
+		::QueryPerformanceFrequency(&countsPerSecond);
+		double elapsed = (double)(end2.QuadPart - start1.QuadPart) / countsPerSecond.QuadPart;
+		FILE_LOG(logDEBUG) <<	"Network Receive times: " << elapsed << "\n";
+
         // Blocking mode: Wait for event
 		//length
-		char temp[256];
+		/*char temp[256];
 		sprintf(temp,"Waiting To Read Length\r\n");
-		AppendMessage(temp);
+		AppendMessage(temp);*/
         dwBytes1 = ReadComm(lpData, sizeof(unsigned char)*4, dwTimeout);
 		DWORD readSize = CUtilities::BytesToInt(lpData);
 		readSize = ntohl(readSize);
-		sprintf(temp,"Read Length = %d [%d,%d,%d,%d]\r\n",readSize,lpData[0],lpData[1],lpData[2],lpData[3]);
-		AppendMessage(temp);
+		/*sprintf(temp,"Read Length = %d [%d,%d,%d,%d]\r\n",readSize,lpData[0],lpData[1],lpData[2],lpData[3]);
+		AppendMessage(temp);*/
 		
 		//Type
-		sprintf(temp,"Waiting To Read Type\r\n");
-		AppendMessage(temp);
+		/*sprintf(temp,"Waiting To Read Type\r\n");
+		AppendMessage(temp);*/
         dwBytes3 = ReadComm(lpData, sizeof(unsigned char), dwTimeout);
 		type = lpData[0];
-		sprintf(temp,"Read Type = %d \r\n",type);
-		AppendMessage(temp);
+		//FILE_LOG(logDEBUG) <<	"type" << "\n";
+		/*sprintf(temp,"Read Type = %d \r\n",type);
+		AppendMessage(temp);*/
 		
 		// Not Guarentee that all data comes in single read.
-		sprintf(temp,"Waiting To Read packet\r\n");
-		AppendMessage(temp);
+		/*sprintf(temp,"Waiting To Read packet\r\n");
+		AppendMessage(temp);*/
 		DWORD index = 0;
 		while(readSize != 0)
 		{
@@ -1054,11 +1076,11 @@ void CSocketComm::Run()
 			dwBytes2 = ReadComm(&lpData[index], min(dwSize,readSize), dwTimeout);
 			readSize -= dwBytes2; 
 			index    += dwBytes2;
-			sprintf(temp,"Read Packet [read = %d, Remaining = %d]\r\n",index,readSize);
-			AppendMessage(temp);
+			/*sprintf(temp,"Read Packet [read = %d, Remaining = %d]\r\n",index,readSize);
+			AppendMessage(temp);*/
 		}
-		sprintf(temp,"Read Packet\r\n");
-		AppendMessage(temp);
+		/*sprintf(temp,"Read Packet\r\n");
+		AppendMessage(temp);*/
         // Error? - need to signal error
         if (index == (DWORD)-1L)
         {
@@ -1086,8 +1108,6 @@ void CSocketComm::Run()
         }
         else if (dwBytes2 > 0L)
         {
-			LARGE_INTEGER start;
-			::QueryPerformanceCounter(&start);
             OnDataReceived( lpData, index,(__int64)start.QuadPart,type);
         }
 

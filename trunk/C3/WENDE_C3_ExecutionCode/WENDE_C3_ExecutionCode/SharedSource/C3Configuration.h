@@ -86,4 +86,8 @@ public:
 	string processingStartPath;
 	string arbiterStartPath;
 	double   LASER_HEIGHT;
+	int delayTime;
+	int divideNumber;
+	double azStep;
+	double elStep;
 };

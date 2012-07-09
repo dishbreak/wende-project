@@ -103,8 +103,8 @@ C3_TRACK_POINT_DOUBLE C3TrackerManager::UpdateTracks(const vector<C3_TRACK_POINT
 		result.EL = ClipCommandParam(result.EL/7.5);
 	}*/
 
-	result.AZ = (result.AZ/2);
-	result.EL = (result.EL/2);
+	result.AZ = (result.AZ)/C3Configuration::Instance().divideNumber;
+	result.EL = (result.EL)/C3Configuration::Instance().divideNumber;
 
 	printf("Time = %f     Tracks = %d\n",time,m_tracks.size());
 	return result;

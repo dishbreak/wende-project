@@ -133,6 +133,10 @@ C3_TRACK_POINT_DOUBLE C3Track::UpdateTrack(const C3_TRACK_POINT_DOUBLE cameraRov
 	m_prevRoverLocation = cameraRoverPosition;
 	m_prevLaserLocation = cameraLaserPosition;
 	m_prevResultCommand = tResult1;
+	/*m_prevResultCommand.AZ /= C3Configuration::Instance().divideNumber;
+	m_prevResultCommand.EL /= C3Configuration::Instance().divideNumber;
+	result.AZ /= C3Configuration::Instance().divideNumber;
+	result.EL /= C3Configuration::Instance().divideNumber;*/
 	return result;
 }
 C3_TRACK_POINT_DOUBLE C3Track::DoTransform(const C3_TRACK_POINT_DOUBLE cameraRoverPosition,

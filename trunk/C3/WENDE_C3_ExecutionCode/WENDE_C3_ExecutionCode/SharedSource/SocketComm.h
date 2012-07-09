@@ -127,7 +127,8 @@ protected:
     void UnlockList();          // Unlock the object
 
     static UINT WINAPI SocketThreadProc(LPVOID pParam);
-
+	LARGE_INTEGER start1;
+	LARGE_INTEGER end2;
 private:
 };
 

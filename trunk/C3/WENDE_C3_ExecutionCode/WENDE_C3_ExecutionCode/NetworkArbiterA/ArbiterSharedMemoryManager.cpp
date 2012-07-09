@@ -61,18 +61,19 @@ int CArbiterSharedMemoryManager::DecodeCameraStatusMessage_DEBUG(cameraStatus *s
 	// variables
 	static char timeStr[256];
 	static int  cameraStatusMessageCount = 0;
-	// debug string for time
-	time_t messageTime;// = ss->time();
-	time( &messageTime ) ;	
-	ss->set_time(messageTime);
-	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
-	// debug string for display 
-	sprintf(temp, "+CAMERA STATUS MESSAGE(%d)\r\n", ++cameraStatusMessageCount);
-		sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,ss->laseron());
-	    sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
-		sprintf(temp, "%s|-->str = %s   \r\n", temp,ss->text().c_str());
-		sprintf(temp, "%s|-->Status = %s   \r\n", temp,DecodeStatus((int)ss->status()).c_str());
-		sprintf(temp, "%s\r\n\r\n", temp);
+	++cameraStatusMessageCount;
+	//// debug string for time
+	//time_t messageTime;// = ss->time();
+	//time( &messageTime ) ;	
+	//ss->set_time(messageTime);
+	//strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
+	//// debug string for display 
+	//sprintf(temp, "+CAMERA STATUS MESSAGE(%d)\r\n", cameraStatusMessageCount);
+	//	sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,ss->laseron());
+	//    sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
+	//	sprintf(temp, "%s|-->str = %s   \r\n", temp,ss->text().c_str());
+	//	sprintf(temp, "%s|-->Status = %s   \r\n", temp,DecodeStatus((int)ss->status()).c_str());
+	//	sprintf(temp, "%s\r\n\r\n", temp);
 
 	return cameraStatusMessageCount;
 }
@@ -135,7 +136,8 @@ int CArbiterSharedMemoryManager::DecodeCameraTrackMessage_DEBUG(cameraTracks *tr
 	static char timeStr[256];
 	static int cameraTrackMessageCount = 0;
 	// debug string for display 
-	sprintf(temp, "+CAMERA TRACK MESSAGE(%d)\r\n", ++cameraTrackMessageCount);
+	++cameraTrackMessageCount;
+	/*sprintf(temp, "+CAMERA TRACK MESSAGE(%d)\r\n", cameraTrackMessageCount);
 	sprintf(temp, "%s|-->Laser  = %d   \r\n", temp,tr->laseron());
 	sprintf(temp, "%s|-->Status = %s   \r\n", temp,DecodeStatus((int)tr->status()).c_str());
 	sprintf(temp, "%s|-->Tracks = %d   \r\n", temp,tr->target_size());
@@ -148,7 +150,7 @@ int CArbiterSharedMemoryManager::DecodeCameraTrackMessage_DEBUG(cameraTracks *tr
 	{
 		sprintf(temp, "%s|-->Tack %d = [%d , %d]  \r\n", temp,ii,tr->laser(ii).x(),tr->laser(ii).y());
 	}
-	sprintf(temp, "%s\r\n\r\n", temp);
+	sprintf(temp, "%s\r\n\r\n", temp);*/
 
 	return cameraTrackMessageCount;
 }
@@ -220,15 +222,16 @@ int CArbiterSharedMemoryManager::DecodeCameraImageMessage_DEBUG(cameraImage *im,
 	//variables
 	static char timeStr[256];
 	static int cameraImageMessageCount = 0;
-	// debug string for time
-	time_t messageTime;// = ss->time();
-	time( &messageTime ) ;	
-	im->set_time(messageTime);
-	strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
-	// debug string for display 
-	sprintf(temp, "+CAMERA IMAGE MESSAGE(%d)\r\n", ++cameraImageMessageCount);
-	sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
-	sprintf(temp, "%s\r\n\r\n", temp);
+	++cameraImageMessageCount;
+	//// debug string for time
+	//time_t messageTime;// = ss->time();
+	//time( &messageTime ) ;	
+	//im->set_time(messageTime);
+	//strftime(timeStr, 20, "%Y-%m-%d %H:%M:%S", localtime(&messageTime));
+	//// debug string for display 
+	//sprintf(temp, "+CAMERA IMAGE MESSAGE(%d)\r\n", ++cameraImageMessageCount);
+	//sprintf(temp, "%s|-->Time   = %s   \r\n", temp,timeStr);
+	//sprintf(temp, "%s\r\n\r\n", temp);
 
 	return cameraImageMessageCount;
 }
@@ -367,12 +370,13 @@ int CArbiterSharedMemoryManager::DecodeLaserStatusMessage_DEBUG(CLaserStatus *ss
 {
 	// variables
 	static int  laserStatusMessageCount = 0;
+	++laserStatusMessageCount;
 	// debug string for display 
-	sprintf(temp, "+LASER STATUS MESSAGE(%d)\r\n", ++laserStatusMessageCount);
+	/*sprintf(temp, "+LASER STATUS MESSAGE(%d)\r\n", ++laserStatusMessageCount);
 	sprintf(temp, "%s|-->Status = %s   \r\n", temp,DecodeStatus((int)ss->LaserStatus.status).c_str());
 	sprintf(temp, "%s|-->AZ     = %d   \r\n", temp,(int)ss->LaserStatus.PWM_AZ);
 	sprintf(temp, "%s|-->EL     = %d   \r\n", temp,(int)ss->LaserStatus.PWM_EL);
-	sprintf(temp, "%s\r\n\r\n", temp);
+	sprintf(temp, "%s\r\n\r\n", temp);*/
 
 	return laserStatusMessageCount;
 }

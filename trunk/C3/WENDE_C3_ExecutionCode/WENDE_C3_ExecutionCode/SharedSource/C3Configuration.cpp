@@ -80,8 +80,13 @@ C3Configuration::C3Configuration(void)
 		//
 		LaserOriginX				= 1.85;
 		LaserOriginY				= 1.26;
+		delayTime					= 750;
+		divideNumber				= 2;
+		azStep						= 20.46;
+		elStep						= 22.28;			
 		//
 		WriteXMLFile();
+
 	}
 }
 
@@ -235,6 +240,16 @@ void C3Configuration::ReadXMLFile()
 				pElem->QueryDoubleAttribute("FAILURE_LINE_RADIUS",&WENDE_FAILURE_LINE_RADIUS);
 			}
 			else { /* ERROR ???? */ }
+			pElem=hRoot.FirstChild("EXTRA").Element();
+			if (pElem)
+			{
+				// Read the 2-State Kalman parameters
+				pElem->QueryIntAttribute("divideNumber",&divideNumber);
+				pElem->QueryIntAttribute("delayTime",&delayTime);
+				pElem->QueryDoubleAttribute("azStep",&azStep);
+				pElem->QueryDoubleAttribute("elStep",&elStep);
+			}
+			else { /* ERROR ???? */ }
 			pElem=hRoot.FirstChild("DEBUG_PANNEL").Element();
 			if (pElem)
 			{
@@ -385,5 +400,13 @@ void C3Configuration::WriteXMLFile()
 	calibration->SetAttribute("IsCalibration", isSkipCalibration);
 	calibration->SetDoubleAttribute("LaserOriginX",LaserOriginX);
 	calibration->SetDoubleAttribute("LaserOriginY",LaserOriginY);
+
+	TiXmlElement *extra = new TiXmlElement("EXTRA");
+	root->LinkEndChild(extra);
+	extra->SetAttribute("delayTime", delayTime);
+	extra->SetAttribute("divideNumber", divideNumber);
+	extra->SetDoubleAttribute("azStep",azStep);
+	extra->SetDoubleAttribute("elStep",elStep);
+			
 	doc.SaveFile( CfgFile.c_str() ); 
 }
