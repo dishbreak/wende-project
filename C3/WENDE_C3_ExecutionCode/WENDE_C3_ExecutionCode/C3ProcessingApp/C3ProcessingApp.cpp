@@ -66,6 +66,8 @@ bool SendPPINotification(CSharedStruct<PPI_DEBUG_MSG_SHM> *notification,
 #define WAIT_MESSAGES    30
 #define TICK_OFFSET      1086
 #define TICKS_PER_DEGREE 20.6
+//#define TICKS_PER_DEGREE_AZ 20.46
+//#define TICKS_PER_DEGREE_EL 22.28
 #define DEGREES_TO_TICKS(DEG)(TICK_OFFSET+DEG*TICKS_PER_DEGREE)
 #define MM_TO_M(x)(x/1000.0)
 #define M_TO_MM(x)(x*1000.0)
@@ -168,7 +170,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	/////////////////////////////////////////////////////////////////////////////////
 	// Spin and process the input messages and send commands
 	////////////////////////////////////////////////////////////////////////////////;
-	int waitTime = 750;
+	FILE_LOG(logDEBUG) <<	"EL " << C3Configuration::Instance().elStep << "\n";
+	FILE_LOG(logDEBUG) <<	"AZ " << C3Configuration::Instance().azStep << "\n";
+	FILE_LOG(logDEBUG) <<	"divide " << C3Configuration::Instance().divideNumber<< "\n";
+	FILE_LOG(logDEBUG) <<	"delay " << C3Configuration::Instance().delayTime  << "\n";
 	while(1)
 	{
 		/*if (C3NotificationHandler::Instance().Get_IsCalibration() == true)
@@ -179,7 +184,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		{
 			Sleep(waitTime + 1000);
 		}*/
-		Sleep(waitTime);
+		Sleep(C3Configuration::Instance().delayTime);
 		// reset the success flag
 		sendMessageSuccess = false;				// set the write flag to false
 		// Remove the previous points
@@ -205,7 +210,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				if (C3Configuration::Instance().isSkipCalibration == false)
 				{
-							
+							FILE_LOG(logDEBUG) <<	"******ENTER CALIBRATION******\n";
 					commandOut = getCalibrationPointCommand();
 					laserOnOff = true;
 					// wait until time passes...
@@ -214,6 +219,7 @@ int _tmain(int argc, _TCHAR* argv[])
 						// make sure the camera saw the laser
 						if (inData.ValidLasers != 0)
 						{
+							FILE_LOG(logDEBUG) <<	"******SAVE A POINT******\n";
 							testPoints[calIndex].X = inData.Lasers[0].X;
 							testPoints[calIndex].Y = inData.Lasers[0].Y;
 						// Log laser commands for requirements sell-off
@@ -329,8 +335,8 @@ int _tmain(int argc, _TCHAR* argv[])
 								laserOnOff = true;//(commandOut.AZ != 0 && commandOut.EL != 0)? true : false;
 								if(abs(temp.AZ) >= 0.0001 && abs(temp.EL) >=0.001)
 								{
-									commandOut.AZ = (temp.AZ * TICKS_PER_DEGREE + commandOut.AZ);
-									commandOut.EL = (temp.EL * TICKS_PER_DEGREE + commandOut.EL);
+									commandOut.AZ = (temp.AZ * C3Configuration::Instance().azStep + commandOut.AZ);
+									commandOut.EL = (temp.EL * C3Configuration::Instance().elStep + commandOut.EL);
 								
 									sendMessageSuccess = true;
 								}	
@@ -509,6 +515,7 @@ bool SendNotification(CSharedStruct<ALGORITHM_INTERFACE_MSG_SHM> *notification)
 	if((*notification).isCreated() && 
 		(*notification).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 	{
+		FILE_LOG(logDEBUG) <<	"SendNotification\n";
 		(*notification)->AlertType = C3NotificationHandler::Instance().Get_Process_State();
 		(*notification)->DTI       = C3NotificationHandler::Instance().Get_DTI_Value();
 		(*notification)->POCResult = C3NotificationHandler::Instance().Get_Trial_Result();
@@ -537,6 +544,7 @@ bool SendOutputMessage(bool										sendMessageSuccess,
 	if (sendMessageSuccess == true && (*lCommand).isCreated() &&
 		(*lCommand).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 	{
+		FILE_LOG(logDEBUG) <<	"Write Output\n";
 		// set the output data
 		(*lCommand)->LaserOnOff		  = laserOnOff;							
 		(*lCommand)->PacketNumber	  = cameraTrackMessageCount;			
@@ -578,6 +586,7 @@ bool ReadInputMessage(CSharedStruct<CAMERA_TRACK_MSG_SHM> *shm,
 		// aquire the mutex ---> just for coding standard not really needed in our setup
 		if ((*shm).WaitForCommunicationEventMutex() == WAIT_OBJECT_0)
 		{
+			FILE_LOG(logDEBUG) <<	"Read Input\n";
 			// store the data in current struct
 			(*trk) = *(*shm).GetStruct();
 			
@@ -614,30 +623,35 @@ C3_TRACK_POINT_DOUBLE getCalibrationPointCommand()
 	{
 		case CALIBRATION_IN_PROGRESS_1:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_1\n";
 				command.AZ = DEGREES_TO_TICKS(90);
 				command.EL = DEGREES_TO_TICKS(90);
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_2:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_2\n";
 				command.AZ = DEGREES_TO_TICKS(90);
 				command.EL = DEGREES_TO_TICKS(95);
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_3:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_3\n";
 				command.AZ = DEGREES_TO_TICKS(95);
 				command.EL = DEGREES_TO_TICKS(90);
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_4:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_4\n";
 				command.AZ = DEGREES_TO_TICKS(95);
 				command.EL = DEGREES_TO_TICKS(95);
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_5:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_5\n";
 				command.AZ = DEGREES_TO_TICKS(95);
 				command.EL = DEGREES_TO_TICKS(95);
 				break;
@@ -651,26 +665,31 @@ void updateCalibrationState()
 	{
 		case CALIBRATION_IN_PROGRESS_1:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_1  ---> CALIBRATION_IN_PROGRESS_2\n";
 				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_IN_PROGRESS_2);	
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_2:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_2  ---> CALIBRATION_IN_PROGRESS_3\n";
 				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_IN_PROGRESS_3);	
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_3:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_3  ---> CALIBRATION_IN_PROGRESS_4\n";
 				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_IN_PROGRESS_4);	
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_4:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_4  ---> CALIBRATION_IN_PROGRESS_5\n";
 				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_IN_PROGRESS_5);	
 				break;
 			}
 		case CALIBRATION_IN_PROGRESS_5:
 			{
+				FILE_LOG(logDEBUG) <<	"CALIBRATION_IN_PROGRESS_5  ---> CALIBRATION_SUCCESS\n";
 				// set to success
 				C3NotificationHandler::Instance().Set_Process_State(C3_Alert_Types::CALIBRATION_SUCCESS);	
 				C3NotificationHandler::Instance().Set_IsCalibration(false);	
@@ -681,7 +700,8 @@ void updateCalibrationState()
 };
 
 // Calibration Method
-C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points){
+C3_TRACK_POINT_DOUBLE calibrate(C3_TRACK_POINT_DOUBLE *points)
+{
 
 	C3_TRACK_POINT_DOUBLE laserPosition;
 	double m1;
