@@ -1,0 +1,1 @@
+The Watchful Eye for Natural Disasters and Emergencies (WENDE) system uses a camera and a laser to track evacuees in an emergency situation.
